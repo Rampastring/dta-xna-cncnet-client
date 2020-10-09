@@ -262,9 +262,7 @@ namespace DTAConfig
 
         public void PostInit()
         {
-#if !YR
             displayOptionsPanel.PostInit();
-#endif
         }
     }
 }

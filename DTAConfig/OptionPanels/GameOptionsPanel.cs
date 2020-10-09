@@ -26,12 +26,9 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkTargetLines;
         private XNAClientCheckBox chkScrollCoasting;
         private XNAClientCheckBox chkTooltips;
-#if YR
-        private XNAClientCheckBox chkShowHiddenObjects;
-#elif TS
+
         private XNAClientCheckBox chkAltToUndeploy;
         private XNAClientCheckBox chkBlackChatBackground;
-#endif
 
         private XNAControl topBar;
 
@@ -93,30 +90,10 @@ namespace DTAConfig.OptionPanels
             lblPlayerName.Name = "lblPlayerName";
             lblPlayerName.Text = "Player Name*:";
 
-#if YR
-            chkShowHiddenObjects = new XNAClientCheckBox(WindowManager);
-            chkShowHiddenObjects.Name = "chkShowHiddenObjects";
-            chkShowHiddenObjects.ClientRectangle = new Rectangle(
-                lblScrollRate.X,
-                chkTargetLines.Bottom + 24, 0, 0);
-            chkShowHiddenObjects.Text = "Show Hidden Objects";
-
-            chkTooltips.ClientRectangle = new Rectangle(
-                lblScrollRate.X,
-                chkShowHiddenObjects.Bottom + 24, 0, 0);
-
-            lblPlayerName.ClientRectangle = new Rectangle(
-                lblScrollRate.X,
-                chkTooltips.Bottom + 30, 0, 0);
-
-            AddChild(chkShowHiddenObjects);
-#else
             chkTooltips.ClientRectangle = new Rectangle(
                 lblScrollRate.X,
                 chkTargetLines.Bottom + 24, 0, 0);
-#endif
 
-#if TS
             chkBlackChatBackground = new XNAClientCheckBox(WindowManager);
             chkBlackChatBackground.Name = "chkBlackChatBackground";
             chkBlackChatBackground.ClientRectangle = new Rectangle(
@@ -125,9 +102,7 @@ namespace DTAConfig.OptionPanels
             chkBlackChatBackground.Text = "Use black background for in-game chat messages";
 
             AddChild(chkBlackChatBackground);
-#endif
 
-#if TS
             chkAltToUndeploy = new XNAClientCheckBox(WindowManager);
             chkAltToUndeploy.Name = "chkAltToUndeploy";
             chkAltToUndeploy.ClientRectangle = new Rectangle(
@@ -140,10 +115,6 @@ namespace DTAConfig.OptionPanels
             lblPlayerName.ClientRectangle = new Rectangle(
                 lblScrollRate.X,
                 chkAltToUndeploy.Bottom + 30, 0, 0);
-#endif
-
-
-
 
             tbPlayerName = new XNATextBox(WindowManager);
             tbPlayerName.Name = "tbPlayerName";
@@ -218,14 +189,9 @@ namespace DTAConfig.OptionPanels
             chkScrollCoasting.Checked = !Convert.ToBoolean(IniSettings.ScrollCoasting);
             chkTargetLines.Checked = IniSettings.TargetLines;
             chkTooltips.Checked = IniSettings.Tooltips;
-#if YR
-            chkShowHiddenObjects.Checked = IniSettings.ShowHiddenObjects;
-#endif
 
-#if TS
             chkAltToUndeploy.Checked = !IniSettings.MoveToUndeploy;
             chkBlackChatBackground.Checked = IniSettings.TextBackgroundColor == TEXT_BACKGROUND_COLOR_BLACK;
-#endif
             tbPlayerName.Text = UserINISettings.Instance.PlayerName;
         }
 
@@ -238,17 +204,12 @@ namespace DTAConfig.OptionPanels
             IniSettings.ScrollCoasting.Value = Convert.ToInt32(!chkScrollCoasting.Checked);
             IniSettings.TargetLines.Value = chkTargetLines.Checked;
             IniSettings.Tooltips.Value = chkTooltips.Checked;
-#if YR
-            IniSettings.ShowHiddenObjects.Value = chkShowHiddenObjects.Checked;
-#endif
 
-#if TS
             IniSettings.MoveToUndeploy.Value = !chkAltToUndeploy.Checked;
             if (chkBlackChatBackground.Checked)
                 IniSettings.TextBackgroundColor.Value = TEXT_BACKGROUND_COLOR_BLACK;
             else
                 IniSettings.TextBackgroundColor.Value = TEXT_BACKGROUND_COLOR_TRANSPARENT;
-#endif
 
             string playerName = NameValidator.GetValidOfflineName(tbPlayerName.Text);
 

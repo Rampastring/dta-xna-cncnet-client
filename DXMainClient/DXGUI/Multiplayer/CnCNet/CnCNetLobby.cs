@@ -2,6 +2,7 @@
 using ClientCore.CnCNet5;
 using ClientGUI;
 using DTAClient.Domain;
+using DTAClient.Domain.Multiplayer;
 using DTAClient.Domain.Multiplayer.CnCNet;
 using DTAClient.DXGUI.Generic;
 using DTAClient.DXGUI.Multiplayer.GameLobby;
@@ -70,6 +71,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
         private XNAClientDropDown ddColor;
         private XNAClientDropDown ddCurrentChannel;
+
+        private XNASuggestionTextBox tbGameSearch;
 
         private DarkeningPanel gameCreationPanel;
 
@@ -151,7 +154,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             btnLogout.Text = "Log Out";
             btnLogout.LeftClick += BtnLogout_LeftClick;
 
-            lbGameList = new GameListBox(WindowManager, localGameID);
+            lbGameList = new GameListBox(WindowManager, localGameID, HostedGameMatches);
             lbGameList.Name = nameof(lbGameList);
             lbGameList.ClientRectangle = new Rectangle(btnNewGame.X,
                 41, btnJoinGame.Right - btnNewGame.X,
@@ -265,6 +268,15 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             lblOnlineCount.FontIndex = 1;
             lblOnlineCount.Disable();
 
+            tbGameSearch = new XNASuggestionTextBox(WindowManager);
+            tbGameSearch.Name = nameof(tbGameSearch);
+            tbGameSearch.ClientRectangle = new Rectangle(lbGameList.X,
+                12, lbGameList.Width, 21);
+            tbGameSearch.Suggestion = "Filter by name, map, game mode, player...";
+            tbGameSearch.MaximumTextLength = 64;
+            tbGameSearch.InputReceived += TbGameSearch_InputReceived;
+            tbGameSearch.Disable();
+
             InitializeGameList();
 
             AddChild(btnNewGame);
@@ -281,6 +293,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             AddChild(playerContextMenu);
             AddChild(lblOnline);
             AddChild(lblOnlineCount);
+            AddChild(tbGameSearch);
 
             CnCNetPlayerCountTask.CnCNetGameCountUpdated += OnCnCNetGameCountUpdated;
             UpdateOnlineCount(CnCNetPlayerCountTask.PlayerCount);
@@ -292,8 +305,21 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             PostUIInit();
         }
 
-        private void OnCnCNetGameCountUpdated(object sender, PlayerCountEventArgs e) =>
-            UpdateOnlineCount(e.PlayerCount);
+        private void TbGameSearch_InputReceived(object sender, EventArgs e)
+        {
+            lbGameList.SortAndRefreshHostedGames();
+            lbGameList.ViewTop = 0;
+        }
+
+        private bool HostedGameMatches(GenericHostedGame hg) => 
+            string.IsNullOrWhiteSpace(tbGameSearch?.Text) ||
+            tbGameSearch.Text == tbGameSearch.Suggestion ||
+            hg.RoomName.ToUpper().Contains(tbGameSearch.Text.ToUpper()) ||
+            hg.GameMode.ToUpper().Equals(tbGameSearch.Text.ToUpper()) ||
+            hg.Map.ToUpper().Contains(tbGameSearch.Text.ToUpper()) ||
+            hg.Players.Where(pl => pl.ToUpper().Equals(tbGameSearch.Text.ToUpper())).Any();
+
+        private void OnCnCNetGameCountUpdated(object sender, PlayerCountEventArgs e) => UpdateOnlineCount(e.PlayerCount);
 
         private void UpdateOnlineCount(int playerCount) => lblOnlineCount.Text = playerCount.ToString();
 
@@ -672,7 +698,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 }
                 else
                 {
-                    IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + "Saved Games\\spawnSG.ini");
+                    IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + "Saved Games/spawnSG.ini");
                     password = Utilities.CalculateSHA1ForString(
                         spawnSGIni.GetStringValue("Settings", "GameID", string.Empty)).Substring(0, 10);
                 }
@@ -954,37 +980,10 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             cncnetChannel.Join();
 
             string localGameChatChannelName = gameCollection.GetGameChatChannelNameFromIdentifier(localGameID);
-            bool chatChannelMissing = false;
-            if (string.IsNullOrEmpty(localGameChatChannelName))
-            {
-                chatChannelMissing = true;
-                Logger.Log("Could not find chat channel info for current local game " + localGameID + ".");
-            }
-            else
-            {
-                Channel localGameChatChannel = connectionManager.FindChannel(localGameChatChannelName);
-                localGameChatChannel.Join();
-            }
+            connectionManager.FindChannel(localGameChatChannelName).Join();
 
             string localGameBroadcastChannel = gameCollection.GetGameBroadcastingChannelNameFromIdentifier(localGameID);
-            bool broadcastChannelMissing = false;
-            if (string.IsNullOrEmpty(localGameBroadcastChannel))
-            {
-                btnNewGame.AllowClick = false;
-                broadcastChannelMissing = true;
-                Logger.Log("Could not find game broadcast channel info for current local game " + localGameID + ".");
-            }
-            else
-                connectionManager.FindChannel(localGameBroadcastChannel).Join();
-
-            if (chatChannelMissing || broadcastChannelMissing)
-                XNAMessageBox.Show(WindowManager, "Error joining channels", "Following problems were encountered " +
-                    "when attempting to join channels for the currently set local game " + localGameID +":" + Environment.NewLine + Environment.NewLine +
-                    (chatChannelMissing ? "- Chat channel info could not be found. No chat channel will be available for this game in Current Channel dropdown." +
-                    Environment.NewLine + Environment.NewLine : "") +
-                    (broadcastChannelMissing ? "- Broadcast channel info could not be found. Creating & hosting games will be disabled." +
-                    Environment.NewLine + Environment.NewLine : "") +
-                    "Please check that the local game is set correctly in client configuration, and if using a custom-defined game, that its channel info is set properly.");
+            connectionManager.FindChannel(localGameBroadcastChannel).Join();
 
             foreach (CnCNetGame game in gameCollection.GameList)
             {
@@ -1285,7 +1284,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             string msg = e.Message.Substring(5); // Cut out GAME part
             string[] splitMessage = msg.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (splitMessage.Length < 11 || splitMessage.Length > 12) // Support for optional isRA2Mode param
+            if (splitMessage.Length != 11) 
             {
                 Logger.Log("Ignoring CTCP game message because of an invalid amount of parameters.");
                 return;
@@ -1315,7 +1314,6 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 int tunnelPort = int.Parse(tunnelAddressAndPort[1]);
 
                 string loadedGameId = splitMessage[10];
-                bool isRA2Mode = 11 < splitMessage.Length ? Conversions.BooleanFromString(splitMessage[11], false) : false;
 
                 CnCNetGame cncnetGame = gameCollection.GameList.Find(g => g.GameBroadcastChannel == channel.ChannelName);
 
@@ -1377,7 +1375,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             }
             catch (Exception ex)
             {
-                Logger.Log("Game parsing error:" + ex.Message);
+                Logger.Log("Game parsing error: " + ex.Message);
             }
         }
 

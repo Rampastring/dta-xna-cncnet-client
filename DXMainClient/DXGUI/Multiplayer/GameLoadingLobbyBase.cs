@@ -44,7 +44,7 @@ namespace DTAClient.DXGUI.Multiplayer
         protected ChatListBox lbChatMessages;
         protected XNATextBox tbChatInput;
 
-        protected EnhancedSoundEffect sndGetReady;
+        protected EnhancedSoundEffect sndGetReadySound;
         protected EnhancedSoundEffect sndJoinSound;
         protected EnhancedSoundEffect sndLeaveSound;
         protected EnhancedSoundEffect sndMessageSound;
@@ -189,10 +189,10 @@ namespace DTAClient.DXGUI.Multiplayer
 
             base.Initialize();
 
-            sndGetReady = new EnhancedSoundEffect("getready.wav");
-            sndJoinSound = new EnhancedSoundEffect("joingame.wav");
-            sndLeaveSound = new EnhancedSoundEffect("leavegame.wav");
-            sndMessageSound = new EnhancedSoundEffect("message.wav");
+            sndJoinSound = new EnhancedSoundEffect("joingame.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyJoinCooldown);
+            sndLeaveSound = new EnhancedSoundEffect("leavegame.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyLeaveCooldown);
+            sndMessageSound = new EnhancedSoundEffect("message.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundMessageCooldown);
+            sndGetReadySound = new EnhancedSoundEffect("getready.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyGetReadyCooldown);
 
             MPColors = MultiplayerColor.LoadColors();
 
@@ -267,7 +267,9 @@ namespace DTAClient.DXGUI.Multiplayer
         protected virtual void GetReadyNotification()
         {
             AddNotice("The game host wants to load the game but cannot because not all players are ready!");
-            SoundPlayer.Play(sndGetReady);
+
+            if (!IsHost && !Players.Find(p => p.Name == ProgramConstants.PLAYERNAME).Ready)
+                sndGetReadySound.Play();
 
             WindowManager.FlashWindow();
         }
@@ -281,7 +283,7 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             File.Delete(ProgramConstants.GamePath + "spawn.ini");
 
-            File.Copy(ProgramConstants.GamePath + "Saved Games\\spawnSG.ini", ProgramConstants.GamePath + "spawn.ini");
+            File.Copy(ProgramConstants.GamePath + "Saved Games/spawnSG.ini", ProgramConstants.GamePath + "spawn.ini");
 
             IniFile spawnIni = new IniFile(ProgramConstants.GamePath + "spawn.ini");
 
@@ -389,7 +391,7 @@ namespace DTAClient.DXGUI.Multiplayer
             ddSavedGame.AllowDropDown = isHost;
             btnLoadGame.Text = isHost ? "Load Game" : "I'm Ready";
 
-            IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + "Saved Games\\spawnSG.ini");
+            IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + "Saved Games/spawnSG.ini");
 
             loadedGameID = spawnSGIni.GetStringValue("Settings", "GameID", "0");
             lblMapNameValue.Text = spawnSGIni.GetStringValue("Settings", "UIMapName", string.Empty);

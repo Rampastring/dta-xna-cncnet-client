@@ -3,7 +3,6 @@ using ClientCore.Statistics;
 using ClientGUI;
 using DTAClient.Domain;
 using DTAClient.Domain.Multiplayer;
-using DTAClient.Domain.Multiplayer.CnCNet;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.Tools;
@@ -13,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
@@ -152,14 +150,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected int RandomSelectorCount { get; private set; } = 1;
 
         protected List<int[]> RandomSelectors = new List<int[]>();
-
-
-#if YR
-        /// <summary>
-        /// Controls whether Red Alert 2 mode is enabled for CnCNet YR. 
-        /// </summary>
-        protected bool RA2Mode = false;
-#endif
 
         private readonly bool isMultiplayer = false;
 
@@ -311,7 +301,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             tbMapSearch.Name = "tbMapSearch";
             tbMapSearch.ClientRectangle = new Rectangle(lbMapList.X,
                 lbMapList.Bottom + 3, lbMapList.Width, 21);
-            tbMapSearch.Suggestion = "Search map..";
+            tbMapSearch.Suggestion = "Search map...";
             tbMapSearch.MaximumTextLength = 64;
             tbMapSearch.InputReceived += TbMapSearch_InputReceived;
 
@@ -816,25 +806,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
         }
 
-#if YR
-        protected void CheckRa2Mode()
-        {
-            // TODO obsolete, remove when it's certain that this is not needed anywhere
-
-            foreach (GameLobbyCheckBox checkBox in CheckBoxes)
-            {
-                if (checkBox.Name == "chkRA2Mode" && checkBox.Checked)
-                {
-                    RA2Mode = true;
-                }
-                else if (checkBox.Name == "chkRA2Mode" && !checkBox.Checked)
-                {
-                    RA2Mode = false;
-                }
-            }
-        }
-#endif
-
         private int GetSpectatorSideIndex() => SideCount + RandomSelectorCount;
 
         /// <summary>
@@ -1333,7 +1304,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             IniFile mapIni = Map.GetMapIni();
 
-            IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI\\Map Code\\GlobalCode.ini");
+            IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
 
             MapCodeHelper.ApplyMapCode(mapIni, GameMode.GetMapRulesIniFile());
             MapCodeHelper.ApplyMapCode(mapIni, globalCodeIni);
@@ -1489,29 +1460,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             CopyPlayerDataToUI();
 
-            if (ClientConfiguration.Instance.ProcessScreenshots)
-            {
-                Logger.Log("GameProcessExited: Processing screenshots.");
-                Thread thread = new Thread(ProcessScreenshots);
-                thread.Start();
-            }
-
             UpdateDiscordPresence(true);
-        }
-
-        private void ProcessScreenshots()
-        {
-            string[] filenames = Directory.GetFiles(ProgramConstants.GamePath, "SCRN*.bmp");
-            string screenshotsDirectory = ProgramConstants.GamePath + "Screenshots";
-            foreach (string filename in filenames)
-            {
-                Directory.CreateDirectory(screenshotsDirectory);
-                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(filename);
-                bitmap.Save(screenshotsDirectory + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(filename) + 
-                    ".png", System.Drawing.Imaging.ImageFormat.Png);
-                bitmap.Dispose();
-                File.Delete(filename);
-            }
         }
 
         /// <summary>

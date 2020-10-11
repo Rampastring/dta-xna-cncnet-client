@@ -40,7 +40,6 @@ namespace DTAConfig.OptionPanels
         private string defaultRenderer;
         private DirectDrawWrapper selectedRenderer = null;
 
-#if !YR
         private XNALabel lblCompatibilityFixes;
         private XNALabel lblGameCompatibilityFix;
         private XNALabel lblMapEditorCompatibilityFix;
@@ -50,8 +49,6 @@ namespace DTAConfig.OptionPanels
         private bool GameCompatFixInstalled = false;
         private bool FinalSunCompatFixInstalled = false;
         private bool GameCompatFixDeclined = false;
-        //private bool FinalSunCompatFixDeclined = false;
-#endif
 
 
         public override void Initialize()
@@ -240,7 +237,6 @@ namespace DTAConfig.OptionPanels
             for (int i = 0; i < themeCount; i++)
                 ddClientTheme.AddItem(ClientConfiguration.Instance.GetThemeInfoFromIndex(i)[0]);
 
-#if !YR
             lblCompatibilityFixes = new XNALabel(WindowManager);
             lblCompatibilityFixes.Name = "lblCompatibilityFixes";
             lblCompatibilityFixes.FontIndex = 1;
@@ -286,7 +282,6 @@ namespace DTAConfig.OptionPanels
             AddChild(btnGameCompatibilityFix);
             AddChild(lblMapEditorCompatibilityFix);
             AddChild(btnMapEditorCompatibilityFix);
-#endif
 
             AddChild(chkWindowedMode);
             AddChild(chkBorderlessWindowedMode);
@@ -363,8 +358,6 @@ namespace DTAConfig.OptionPanels
             GameProcessLogic.UseQres = selectedRenderer.UseQres;
             GameProcessLogic.SingleCoreAffinity = selectedRenderer.SingleCoreAffinity;
 		}
-
-#if !YR
 
         /// <summary>
         /// Asks the user whether they want to install the DTA/TI/TS compatibility fix.
@@ -530,8 +523,6 @@ namespace DTAConfig.OptionPanels
             }
         }
 
-#endif
-
         private void ChkBorderlessMenu_CheckedChanged(object sender, EventArgs e)
         {
             if (chkBorderlessClient.Checked)
@@ -655,9 +646,6 @@ namespace DTAConfig.OptionPanels
                 ddi => ddi.Text == UserINISettings.Instance.ClientTheme);
             ddClientTheme.SelectedIndex = selectedThemeIndex > -1 ? selectedThemeIndex : 0;
 
-#if YR
-            chkBackBufferInVRAM.Checked = UserINISettings.Instance.BackBufferInVRAM;
-#else
             chkBackBufferInVRAM.Checked = !UserINISettings.Instance.BackBufferInVRAM;
 
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Tiberian Sun Client");
@@ -696,7 +684,6 @@ namespace DTAConfig.OptionPanels
             //{
             //    FinalSunCompatFixDeclined = true;
             //}
-#endif
         }
 
         public override bool Save()
@@ -748,11 +735,7 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.ClientTheme.Value = ddClientTheme.SelectedItem.Text;
 
-#if YR
-            IniSettings.BackBufferInVRAM.Value = chkBackBufferInVRAM.Checked;
-#else
             IniSettings.BackBufferInVRAM.Value = !chkBackBufferInVRAM.Checked;
-#endif
 
             if (selectedRenderer != originalRenderer || 
                 !File.Exists(ProgramConstants.GamePath + selectedRenderer.ConfigFileName))
@@ -792,7 +775,6 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.Renderer.Value = selectedRenderer.InternalName;
 
-#if !YR
             File.Delete(ProgramConstants.GamePath + "Language.dll");
 
             if (ingameRes[0] >= 1024 && ingameRes[1] >= 720)
@@ -801,7 +783,6 @@ namespace DTAConfig.OptionPanels
                 File.Copy(ProgramConstants.GamePath + "Resources/language_800x600.dll", ProgramConstants.GamePath + "Language.dll");
             else
                 File.Copy(ProgramConstants.GamePath + "Resources/language_640x480.dll", ProgramConstants.GamePath + "Language.dll");
-#endif
 
             return restartRequired;
         }

@@ -98,11 +98,7 @@ namespace DTAClient.Online
 
         private void Instance_SettingsSaved(object sender, EventArgs e)
         {
-#if YR
-            notifyOnUserListChange = false;
-#else
             notifyOnUserListChange = UserINISettings.Instance.NotifyOnUserListChange;
-#endif
         }
 
         public void AddUser(ChannelUser user)
@@ -120,10 +116,8 @@ namespace DTAClient.Online
                 AddMessage(new ChatMessage(user.IRCUser.Name + " has joined " + UIName + "."));
             }
 
-#if !YR
             if (Persistent && IsChatChannel && user.IRCUser.Name == ProgramConstants.PLAYERNAME)
                 RequestUserInfo();
-#endif
         }
 
         public void OnUserListReceived(List<ChannelUser> userList)
@@ -293,7 +287,7 @@ namespace DTAClient.Online
             // Wait a random amount of time before joining to prevent join/part floods
             if (Persistent)
             {
-                int rn = connection.Rng.Next(1, 10000);
+                int rn = connection.Rng.Next(1, 1000);
 
                 if (string.IsNullOrEmpty(Password))
                     connection.QueueMessage(QueuedMessageType.SYSTEM_MESSAGE, 9, rn, "JOIN " + ChannelName);

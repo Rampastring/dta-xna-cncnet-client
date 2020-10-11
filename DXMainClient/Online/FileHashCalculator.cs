@@ -17,40 +17,6 @@ namespace DTAClient.Online
 
         string[] fileNamesToCheck = new string[]
         {
-#if ARES
-            "Ares.dll",
-            "Ares.dll.inj",
-            "Ares.mix",
-            "Syringe.exe",
-            "cncnet5.dll",
-            "rulesmd.ini",
-            "artmd.ini",
-            "soundmd.ini",
-            "aimd.ini",
-            "shroud.shp",
-#elif YR
-            "spawner.xdp",
-            "spawner2.xdp",
-            "artmd.ini",
-            "soundmd.ini",
-            "aimd.ini",
-            "shroud.shp",
-            "INI/Map Code/Cooperative.ini",
-            "INI/Map Code/Free For All.ini",
-            "INI/Map Code/Land Rush.ini",
-            "INI/Map Code/Meat Grinder.ini",
-            "INI/Map Code/Megawealth.ini",
-            "INI/Map Code/Naval War.ini",
-            "INI/Map Code/Standard.ini",
-            "INI/Map Code/Team Alliance.ini",
-            "INI/Map Code/Unholy Alliance.ini",
-            "INI/Game Options/Allies Allowed.ini",
-            "INI/Game Options/Brutal AI.ini",
-            "INI/Game Options/No Dog Engi Eat.ini",
-            "INI/Game Options/No Spawn Previews.ini",
-            "INI/Game Options/RA2 Classic Mode.ini",
-            "INI/Map Code/GlobalCode.ini",
-#else
             "spawner.xdp",
             "rules.ini",
             "ai.ini",
@@ -65,7 +31,6 @@ namespace DTAClient.Online
             "INI/AI.ini",
             "INI/AIE.ini",
             "INI/AIFS.ini",
-#endif
         };
 
         public FileHashCalculator() => ParseConfigFile();
@@ -106,9 +71,7 @@ namespace DTAClient.Online
 
             string[] iniPaths = new string[]
             {
-#if !YR
                 ProgramConstants.GamePath + "INI/Map Code",
-#endif
                 ProgramConstants.GamePath + "INI/Game Options"
             };
 

@@ -28,13 +28,7 @@ namespace DTAClient.DXGUI
 
         private bool initialized = false;
         private bool nativeCursorUsed = false;
-
-#if ARES
-        private List<string> debugSnapshotDirectories;
-        private DateTime debugLogLastWriteTime;
-#else
         private bool deletingLogFilesFailed = false;
-#endif
 
         public override void Initialize()
         {
@@ -74,23 +68,10 @@ namespace DTAClient.DXGUI
 
             Visible = false;
             Enabled = false;
-
-#if ARES
-            try
-            {
-                if (File.Exists(ProgramConstants.GamePath + "debug/debug.log"))
-                    debugLogLastWriteTime = File.GetLastWriteTimeUtc(ProgramConstants.GamePath + "debug/debug.log");
-            }
-            catch { }
-#endif
         }
 
         private void SharedUILogic_GameProcessStarted()
         {
-
-#if ARES
-            debugSnapshotDirectories = GetAllDebugSnapshotDirectories();
-#else
             try
             {
                 File.Delete(ProgramConstants.GamePath + "EXCEPT.TXT");
@@ -100,12 +81,11 @@ namespace DTAClient.DXGUI
 
                 deletingLogFilesFailed = false;
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
                 Logger.Log("Exception when deleting error log files! Message: " + ex.Message);
                 deletingLogFilesFailed = true;
             }
-#endif
 
             Visible = true;
             Enabled = true;
@@ -116,7 +96,6 @@ namespace DTAClient.DXGUI
             Game.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / POWER_SAVING_FPS);
             if (UserINISettings.Instance.MinimizeWindowsOnGameStart)
                 WindowManager.MinimizeWindow();
-
         }
 
         private void SharedUILogic_GameProcessExited()
@@ -154,49 +133,11 @@ namespace DTAClient.DXGUI
 
             DateTime dtn = DateTime.Now;
 
-#if ARES
-            Task.Factory.StartNew(ProcessScreenshots);
-
-            // TODO: Ares debug log handling should be addressed in Ares DLL itself.
-            // For now the following are handled here:
-            // 1. Make a copy of syringe.log in debug snapshot directory on both crash and desync.
-            // 2. Move SYNCX.txt from game directory to debug snapshot directory on desync.
-            // 3. Make a debug snapshot directory & copy debug.log to it on desync even if full crash dump wasn't created.
-            // 4. Handle the empty snapshot directories created on a crash if debug logging was disabled.
-
-            string snapshotDirectory = GetNewestDebugSnapshotDirectory();
-            bool snapshotCreated = snapshotDirectory != null;
-
-            snapshotDirectory = snapshotDirectory ?? ProgramConstants.GamePath + "debug/snapshot-" +
-                dtn.ToString("yyyyMMdd-HHmmss");
-
-            bool debugLogModified = false;
-            string debugLogPath = ProgramConstants.GamePath + "debug/debug.log";
-            DateTime lastWriteTime = new DateTime();
-
-            if (File.Exists(debugLogPath))
-                lastWriteTime = File.GetLastWriteTimeUtc(debugLogPath);
-
-            if (!lastWriteTime.Equals(debugLogLastWriteTime))
-            {
-                debugLogModified = true;
-                debugLogLastWriteTime = lastWriteTime;
-            }
-
-            if (CopySyncErrorLogs(snapshotDirectory, null) || snapshotCreated)
-            {
-                if (File.Exists(debugLogPath) && !File.Exists(snapshotDirectory + "/debug.log") && debugLogModified)
-                    File.Copy(debugLogPath, snapshotDirectory + "/debug.log");
-
-                CopyErrorLog(snapshotDirectory, "syringe.log", null);
-            }
-#else
             if (deletingLogFilesFailed)
                 return;
 
             CopyErrorLog(ProgramConstants.ClientUserFilesPath + "GameCrashLogs", "EXCEPT.TXT", dtn);
             CopySyncErrorLogs(ProgramConstants.ClientUserFilesPath + "SyncErrorLogs", dtn);
-#endif
         }
 
         /// <summary>
@@ -275,96 +216,5 @@ namespace DTAClient.DXGUI
             }
             return copied;
         }
-
-#if ARES
-        /// <summary>
-        /// Returns the first debug snapshot directory found in Ares debug log directory that was created after last game launch and isn't empty.
-        /// Additionally any empty snapshot directories encountered are deleted.
-        /// </summary>
-        /// <returns>Full path of the debug snapshot directory. If one isn't found, null is returned.</returns>
-        private string GetNewestDebugSnapshotDirectory()
-        {
-            string snapshotDirectory = null;
-
-            if (debugSnapshotDirectories != null)
-            {
-                var newDirectories = GetAllDebugSnapshotDirectories().Except(debugSnapshotDirectories);
-
-                foreach (string directory in newDirectories)
-                {
-                    if (Directory.EnumerateFileSystemEntries(directory).Any())
-                        snapshotDirectory = directory;
-                    else
-                    {
-                        try
-                        {
-                            Directory.Delete(directory);
-                        }
-                        catch { }
-                    }
-                }
-            }
-
-            return snapshotDirectory;
-        }
-
-        /// <summary>
-        /// Returns list of all debug snapshot directories in Ares debug logs directory.
-        /// </summary>
-        /// <returns>List of all debug snapshot directories in Ares debug logs directory. Empty list if none are found or an error was encountered.</returns>
-        private List<string> GetAllDebugSnapshotDirectories()
-        {
-            List<string> directories = new List<string>();
-
-            try
-            {
-                directories.AddRange(Directory.GetDirectories(ProgramConstants.GamePath + "debug", "snapshot-*"));
-            }
-            catch { }
-
-            return directories;
-        }
-
-        /// <summary>
-        /// Converts BMP screenshots to PNG and copies them from game directory to Screenshots sub-directory.
-        /// </summary>
-        private void ProcessScreenshots()
-        {
-            string[] filenames = Directory.GetFiles(ProgramConstants.GamePath, "SCRN*.bmp");
-            string screenshotsDirectory = ProgramConstants.GamePath + "Screenshots";
-
-            if (!Directory.Exists(screenshotsDirectory))
-            {
-                try
-                {
-                    Directory.CreateDirectory(screenshotsDirectory);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("ProcessScreenshots: An error occured trying to create Screenshots directory. Message: " + ex.Message);
-                    return;
-                }
-            }
-
-            foreach (string filename in filenames)
-            {
-                try
-                {
-                    System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(filename);
-                    bitmap.Save(screenshotsDirectory + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(filename) +
-                        ".png", System.Drawing.Imaging.ImageFormat.Png);
-                    bitmap.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("ProcessScreenshots: Error occured when trying to save " + Path.GetFileNameWithoutExtension(filename) + ".png. Message: " + ex.Message);
-                    continue;
-                }
-
-                Logger.Log("ProcessScreenshots: " + Path.GetFileNameWithoutExtension(filename) + ".png has been saved to Screenshots directory.");
-                File.Delete(filename);
-            }
-        }
-#endif
     }
 }

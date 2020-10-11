@@ -38,13 +38,9 @@ namespace ClientCore
             const string MULTIPLAYER = "MultiPlayer";
             const string OPTIONS = "Options";
             const string AUDIO = "Audio";
-#if YR || ARES
-            const string WINDOWED_MODE_KEY = "Video.Windowed";
-            BackBufferInVRAM = new BoolSetting(iniFile, VIDEO, "VideoBackBuffer", false);
-#else
+
             const string WINDOWED_MODE_KEY = "Video.Windowed";
             BackBufferInVRAM = new BoolSetting(iniFile, VIDEO, "UseGraphicsPatch", true);
-#endif
 
             IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", 1024);
             IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", 768);

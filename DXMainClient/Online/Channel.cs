@@ -287,7 +287,7 @@ namespace DTAClient.Online
             // Wait a random amount of time before joining to prevent join/part floods
             if (Persistent)
             {
-                int rn = connection.Rng.Next(1, 10000);
+                int rn = connection.Rng.Next(1, 1000);
 
                 if (string.IsNullOrEmpty(Password))
                     connection.QueueMessage(QueuedMessageType.SYSTEM_MESSAGE, 9, rn, "JOIN " + ChannelName);

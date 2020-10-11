@@ -227,29 +227,7 @@ namespace DTAClient.Domain.Multiplayer
                     Bases = Convert.ToInt32(Conversions.BooleanFromString(bases, false));
                 }
 
-                int i = 0;
-                while (true)
-                {
-                    // Format example:
-                    // ExtraTexture0=oilderrick.png,200,150
-
-                    string value = section.GetStringValue("ExtraTexture" + i, null);
-                    if (string.IsNullOrWhiteSpace(value))
-                        break;
-
-                    string[] parts = value.Split(',');
-                    if (parts.Length != 3)
-                    {
-                        Logger.Log($"Invalid format for ExtraTexture{i} in map " + BaseFilePath);
-                        continue;
-                    }
-
-                    bool success = int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int x);
-                    success &= int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int y);
-                    extraTextures.Add(new ExtraMapPreviewTexture(parts[0], new Point(x, y)));
-
-                    i++;
-                }
+                ReadExtraTextures(section);
 
                 if (IsCoop)
                 {
@@ -272,7 +250,7 @@ namespace DTAClient.Domain.Multiplayer
                 localSize = section.GetStringValue("LocalSize", "0,0,0,0").Split(',');
                 actualSize = section.GetStringValue("Size", "0,0,0,0").Split(',');
 
-                for (i = 0; i < MAX_PLAYERS; i++)
+                for (int i = 0; i < MAX_PLAYERS; i++)
                 {
                     string waypoint = section.GetStringValue("Waypoint" + i, string.Empty);
 
@@ -387,7 +365,7 @@ namespace DTAClient.Domain.Multiplayer
                     Logger.Log("Custom map " + path + " has no game modes!");
                     return false;
                 }
-                
+
                 for (int i = 0; i < GameModes.Length; i++)
                 {
                     string gameMode = GameModes[i].Trim();
@@ -420,6 +398,8 @@ namespace DTAClient.Domain.Multiplayer
                 {
                     Bases = Convert.ToInt32(Conversions.BooleanFromString(bases, false));
                 }
+
+                ReadExtraTextures(basicSection);
 
                 if (IsCoop)
                 {
@@ -461,6 +441,33 @@ namespace DTAClient.Domain.Multiplayer
             {
                 Logger.Log("Loading custom map " + path + " failed!");
                 return false;
+            }
+        }
+
+        private void ReadExtraTextures(IniSection section)
+        {
+            int i = 0;
+            while (true)
+            {
+                // Format example:
+                // ExtraTexture0=oilderrick.png,200,150
+
+                string value = section.GetStringValue("ExtraTexture" + i, null);
+                if (string.IsNullOrWhiteSpace(value))
+                    break;
+
+                string[] parts = value.Split(',');
+                if (parts.Length != 3)
+                {
+                    Logger.Log($"Invalid format for ExtraTexture{i} in map " + BaseFilePath);
+                    continue;
+                }
+
+                bool success = int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int x);
+                success &= int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int y);
+                extraTextures.Add(new ExtraMapPreviewTexture(parts[0], new Point(x, y)));
+
+                i++;
             }
         }
 

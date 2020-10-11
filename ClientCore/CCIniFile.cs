@@ -18,7 +18,7 @@ namespace ClientCore
                 string path = string.Empty;
                 if (basedOn.Contains("$THEME_DIR$"))
                 {
-                    path = basedOn.Replace("$THEME_DIR$/", ProgramConstants.GetResourcePath());
+                    path = basedOn.Replace("$THEME_DIR$/", ProgramConstants.GetResourcePath()).Replace("$THEME_DIR$\\", ProgramConstants.GetResourcePath());
                 }
                 else
                     path = Path.GetDirectoryName(FileName) + "/" + basedOn;

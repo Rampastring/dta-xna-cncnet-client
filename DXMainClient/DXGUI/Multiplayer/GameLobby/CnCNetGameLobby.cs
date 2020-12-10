@@ -934,7 +934,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             int partIndex = checkBoxIntegerCount + DropDowns.Count;
 
-            if (parts.Length < partIndex + 6)
+            if (parts.Length < partIndex + 7)
             {
                 AddNotice("The game host has sent an invalid game options message! " +
                     "The game host's game version might be different from yours.", Color.Red);
@@ -1068,21 +1068,31 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     return;
                 }
 
-                GameLobbyDropDown dd = DropDowns[i - checkBoxIntegerCount];
-
-                if (ddSelectedIndex < -1 || ddSelectedIndex >= dd.Items.Count)
-                    continue;
-
-                if (dd.SelectedIndex != ddSelectedIndex)
+                if (i - checkBoxIntegerCount >= DropDowns.Count)
                 {
-                    string ddName = dd.OptionName;
-                    if (dd.OptionName == null)
-                        ddName = dd.Name;
-
-                    AddNotice("The game host has set " + ddName + " to " + dd.Items[ddSelectedIndex].Text);
+                    AddNotice("The game host has sent an invalid game options message! " +
+                        "The game host's game version might be different from yours.", Color.Red);
+                    return;
                 }
 
-                DropDowns[i - checkBoxIntegerCount].SelectedIndex = ddSelectedIndex;
+                GameLobbyDropDown dropDown = DropDowns[i - checkBoxIntegerCount];
+
+                if (ddSelectedIndex < -1 || ddSelectedIndex >= dropDown.Items.Count)
+                    continue;
+
+                if (dropDown.SelectedIndex != ddSelectedIndex)
+                {
+                    string ddName = dropDown.OptionName;
+                    if (dropDown.OptionName == null)
+                        ddName = dropDown.Name;
+
+                    if (ddSelectedIndex > -1)
+                        AddNotice("The game host has set " + ddName + " to " + dropDown.Items[ddSelectedIndex].Text);
+                    else
+                        AddNotice("The game host has cleared " + ddName);
+                }
+
+                dropDown.SelectedIndex = ddSelectedIndex;
             }
 
             int randomSeed;

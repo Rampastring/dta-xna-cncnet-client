@@ -43,19 +43,33 @@ namespace DTAClient.Domain.Multiplayer
         public int Ping { get; set; } = -1;
 
         /// <summary>
-        /// Returns the "reversed" AI level ("how it was in Tiberian Sun UI") of the AI.
-        /// 2 = Hard, 1 = Medium, 0 = Easy.
-        /// </summary>
-        public int ReversedAILevel
-        {
-            get { return Math.Abs(AILevel - 2); }
-        }
-
-        /// <summary>
-        /// The AI level of the AI for the [HouseHandicaps] section in spawn.ini.
-        /// 2 = Easy, 1 = Medium, 0 = Hard.
+        /// The difficulty level of an AI player for in-client purposes.
+        /// Logical increasing scale, like in the vanilla Tiberian Sun UI.
+        /// 3 = Very Hard, 2 = Hard, 1 = Medium, 0 = Easy.
         /// </summary>
         public int AILevel { get; set; }
+
+        /// <summary>
+        /// Returns the level of the AI for the [HouseHandicaps] section in spawn.ini.
+        /// 3 = Very Hard, 2 = Easy, 1 = Medium, 0 = Hard.
+        /// </summary>
+        /// <returns></returns>
+        public int GetHouseHandicapAILevel()
+        {
+            switch (AILevel)
+            {
+                case 3:
+                    return 3;
+                case 2:
+                    return 0;
+                case 1:
+                    return 1;
+                case 0:
+                    return 2;
+                default:
+                    throw new InvalidOperationException(nameof(GetHouseHandicapAILevel) + ": Unknown AI level " + AILevel);
+            }
+        }
 
         public override string ToString()
         {

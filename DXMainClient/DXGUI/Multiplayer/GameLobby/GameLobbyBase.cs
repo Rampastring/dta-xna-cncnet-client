@@ -634,9 +634,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     locationY + (DROP_DOWN_HEIGHT + playerOptionVecticalMargin) * i,
                     playerNameWidth, DROP_DOWN_HEIGHT);
                 ddPlayerName.AddItem(String.Empty);
-                ddPlayerName.AddItem("Easy AI");
-                ddPlayerName.AddItem("Medium AI");
-                ddPlayerName.AddItem("Hard AI");
+                ddPlayerName.AddItem(AILevelToName(0));
+                ddPlayerName.AddItem(AILevelToName(1));
+                ddPlayerName.AddItem(AILevelToName(2));
+                ddPlayerName.AddItem(AILevelToName(3));
                 ddPlayerName.AllowDropDown = true;
                 ddPlayerName.SelectedIndexChanged += CopyPlayerDataFromUI;
                 ddPlayerName.Tag = true;
@@ -1155,7 +1156,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                     string keyName = "Multi" + multiId;
 
-                    spawnIni.SetIntValue("HouseHandicaps", keyName, AIPlayers[aiId].AILevel);
+                    spawnIni.SetIntValue("HouseHandicaps", keyName, AIPlayers[aiId].GetHouseHandicapAILevel());
                     spawnIni.SetIntValue("HouseCountries", keyName, houseInfos[Players.Count + aiId].SideIndex);
                     spawnIni.SetIntValue("HouseColors", keyName, houseInfos[Players.Count + aiId].ColorIndex);
                 }
@@ -1287,7 +1288,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 matchStatistics.AddPlayer("Computer", false, true, false,
                     pHouseInfo.SideIndex + 1, aiInfo.TeamId,
                     MPColors.FindIndex(c => c.GameColorIndex == pHouseInfo.ColorIndex),
-                    aiInfo.ReversedAILevel);
+                    aiInfo.AILevel);
             }
         }
 
@@ -1497,12 +1498,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     case 0:
                         break;
                     case 1:
+                    case 2:
                         ddName.SelectedIndex = 0;
                         break;
-                    case 2:
+                    case 3:
                         KickPlayer(pId);
                         break;
-                    case 3:
+                    case 4:
                         BanPlayer(pId);
                         break;
                 }
@@ -1520,7 +1522,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 PlayerInfo aiPlayer = new PlayerInfo
                 {
                     Name = dd.Items[dd.SelectedIndex].Text,
-                    AILevel = 2 - (dd.SelectedIndex - 1),
+                    AILevel = dd.SelectedIndex - 1,
                     SideId = Math.Max(ddPlayerSides[cmbId].SelectedIndex, 0),
                     ColorId = Math.Max(ddPlayerColors[cmbId].SelectedIndex, 0),
                     StartingLocation = Math.Max(ddPlayerStarts[cmbId].SelectedIndex, 0),
@@ -1569,8 +1571,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 XNADropDown ddPlayerName = ddPlayerNames[pId];
                 ddPlayerName.Items[0].Text = pInfo.Name;
                 ddPlayerName.Items[1].Text = string.Empty;
-                ddPlayerName.Items[2].Text = "Kick";
-                ddPlayerName.Items[3].Text = "Ban";
+                ddPlayerName.Items[2].Text = string.Empty;
+                ddPlayerName.Items[3].Text = "Kick";
+                ddPlayerName.Items[4].Text = "Ban";
                 ddPlayerName.SelectedIndex = 0;
                 ddPlayerName.AllowDropDown = false;
 
@@ -1604,10 +1607,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 XNADropDown ddPlayerName = ddPlayerNames[index];
                 ddPlayerName.Items[0].Text = "-";
-                ddPlayerName.Items[1].Text = "Easy AI";
-                ddPlayerName.Items[2].Text = "Medium AI";
-                ddPlayerName.Items[3].Text = "Hard AI";
-                ddPlayerName.SelectedIndex = 3 - aiInfo.AILevel;
+                ddPlayerName.Items[1].Text = AILevelToName(0);
+                ddPlayerName.Items[2].Text = AILevelToName(1);
+                ddPlayerName.Items[3].Text = AILevelToName(2);
+                ddPlayerName.Items[4].Text = AILevelToName(3);
+                ddPlayerName.SelectedIndex = aiInfo.AILevel + 1;
                 ddPlayerName.AllowDropDown = allowOptionsChange;
 
                 ddPlayerSides[index].SelectedIndex = aiInfo.SideId;
@@ -1634,9 +1638,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 XNADropDown ddPlayerName = ddPlayerNames[ddIndex];
                 ddPlayerName.AllowDropDown = false;
                 ddPlayerName.Items[0].Text = string.Empty;
-                ddPlayerName.Items[1].Text = "Easy AI";
-                ddPlayerName.Items[2].Text = "Medium AI";
-                ddPlayerName.Items[3].Text = "Hard AI";
+                ddPlayerName.Items[1].Text = AILevelToName(0);
+                ddPlayerName.Items[2].Text = AILevelToName(1);
+                ddPlayerName.Items[3].Text = AILevelToName(2);
+                ddPlayerName.Items[4].Text = AILevelToName(3);
                 ddPlayerName.SelectedIndex = 0;
 
                 ddPlayerSides[ddIndex].SelectedIndex = -1;
@@ -1877,11 +1882,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             switch (aiLevel)
             {
-                case 0:
+                case 3:
+                    return "Very Hard AI";
+                case 2:
                     return "Hard AI";
                 case 1:
                     return "Medium AI";
-                case 2:
+                case 0:
                     return "Easy AI";
             }
 
@@ -1934,13 +1941,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 if (aiPlayer.TeamId > 0 && aiPlayer.TeamId == localPlayer.TeamId)
                 {
-                    if (aiPlayer.ReversedAILevel > highestAllyAILevel)
-                        highestAllyAILevel = aiPlayer.ReversedAILevel;
+                    if (aiPlayer.AILevel > highestAllyAILevel)
+                        highestAllyAILevel = aiPlayer.AILevel;
                 }
                 else
                 {
-                    if (aiPlayer.ReversedAILevel < lowestEnemyAILevel)
-                        lowestEnemyAILevel = aiPlayer.ReversedAILevel;
+                    if (aiPlayer.AILevel < lowestEnemyAILevel)
+                        lowestEnemyAILevel = aiPlayer.AILevel;
                 }
             }
 

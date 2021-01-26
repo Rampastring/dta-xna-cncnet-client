@@ -449,7 +449,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Players.Add(new PlayerInfo(ProgramConstants.PLAYERNAME, 0, 0, 0, 0));
             PlayerInfo aiPlayer = new PlayerInfo("Easy AI", 0, 0, 0, 0);
             aiPlayer.IsAI = true;
-            aiPlayer.AILevel = 2;
+            aiPlayer.AILevel = ProgramConstants.EASY_AI_INDEX;
             AIPlayers.Add(aiPlayer);
 
             LoadDefaultMap();

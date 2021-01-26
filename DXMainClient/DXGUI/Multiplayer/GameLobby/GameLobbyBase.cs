@@ -1880,19 +1880,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected string AILevelToName(int aiLevel)
         {
-            switch (aiLevel)
-            {
-                case 3:
-                    return "Very Hard AI";
-                case 2:
-                    return "Hard AI";
-                case 1:
-                    return "Medium AI";
-                case 0:
-                    return "Easy AI";
-            }
-
-            return string.Empty;
+            return ProgramConstants.GetAILevelName(aiLevel);
         }
 
         protected GameType GetGameType()

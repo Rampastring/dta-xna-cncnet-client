@@ -174,12 +174,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             WindowManager.CenterControlOnScreen(this);
             BackgroundTexture = AssetLoader.LoadTexture("gamelobbybg.png");
 
-            RankTextures = new Texture2D[4]
+            RankTextures = new Texture2D[]
             {
                 AssetLoader.LoadTexture("rankNone.png"),
                 AssetLoader.LoadTexture("rankEasy.png"),
                 AssetLoader.LoadTexture("rankNormal.png"),
-                AssetLoader.LoadTexture("rankHard.png")
+                AssetLoader.LoadTexture("rankHard.png"),
+                AssetLoader.LoadTexture("rankBrutal.png")
             };
 
             MPColors = MultiplayerColor.LoadColors();

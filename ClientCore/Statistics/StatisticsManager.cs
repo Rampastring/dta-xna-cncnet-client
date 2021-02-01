@@ -12,6 +12,9 @@ namespace ClientCore.Statistics
         private const string VERSION = "1.06";
         private const string SCORE_FILE_PATH = "Client/dscore.dat";
         private const string OLD_SCORE_FILE_PATH = "dscore.dat";
+
+        private const int AI_LEVEL_MAX = 3;
+
         private static StatisticsManager _instance;
 
         public event EventHandler GameAdded;
@@ -401,13 +404,13 @@ namespace ClientCore.Statistics
 
             foreach (MatchStatistics ms in matches)
             {
-                rank = Math.Max(rank, GetRankForCoopMatch(ms));
+                rank = Math.Max(rank, GetRankForDefaultMapCoopMatch(ms));
             }
 
             return rank;
         }
 
-        int GetRankForCoopMatch(MatchStatistics ms)
+        private int GetRankForDefaultMapCoopMatch(MatchStatistics ms)
         {
             PlayerStatistics localPlayer = ms.Players.Find(p => p.IsLocalPlayer);
 
@@ -427,7 +430,7 @@ namespace ClientCore.Statistics
                 return -1; // Discard matches that had no enemies
 
             int[] teamMemberCounts = new int[5];
-            int lowestEnemyAILevel = 2;
+            int lowestEnemyAILevel = AI_LEVEL_MAX;
             int highestAllyAILevel = 0;
 
             for (int i = 0; i < ms.Players.Count; i++)
@@ -570,7 +573,7 @@ namespace ClientCore.Statistics
                     continue;
 
                 int[] teamMemberCounts = new int[5];
-                int lowestEnemyAILevel = 2;
+                int lowestEnemyAILevel = AI_LEVEL_MAX;
                 int highestAllyAILevel = 0;
 
                 for (int i = 0; i < ms.Players.Count; i++)
@@ -650,7 +653,7 @@ namespace ClientCore.Statistics
                 {
                     rank = lowestEnemyAILevel;
 
-                    if (rank == 2)
+                    if (rank == AI_LEVEL_MAX)
                         return rank; // Best possible rank
                 }
             }

@@ -82,7 +82,7 @@ namespace ClientCore
             switch (aiLevel)
             {
                 case 3:
-                    return "Very Hard AI";
+                    return "Brutal AI";
                 case 2:
                     return "Hard AI";
                 case 1:

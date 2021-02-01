@@ -1921,7 +1921,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             // These variables are used by both the skirmish and multiplayer code paths
             int[] teamMemberCounts = new int[5];
-            int lowestEnemyAILevel = 2;
+            int lowestEnemyAILevel = 3;
             int highestAllyAILevel = 0;
 
             foreach (PlayerInfo aiPlayer in AIPlayers)

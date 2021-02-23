@@ -64,10 +64,9 @@ namespace DTAClient.DXGUI
 
             window.CenterOnParent();
 
-            Game.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / FPS);
+            Game.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / UserINISettings.Instance.ClientFPS);
 
-            Visible = false;
-            Enabled = false;
+            Disable();
         }
 
         private void SharedUILogic_GameProcessStarted()
@@ -87,8 +86,7 @@ namespace DTAClient.DXGUI
                 deletingLogFilesFailed = true;
             }
 
-            Visible = true;
-            Enabled = true;
+            Enable();
             WindowManager.Cursor.Visible = false;
             nativeCursorUsed = Game.IsMouseVisible;
             Game.IsMouseVisible = false;
@@ -105,14 +103,13 @@ namespace DTAClient.DXGUI
 
         private void HandleGameProcessExited()
         {
-            Visible = false;
-            Enabled = false;
+            Disable();
             if (nativeCursorUsed)
                 Game.IsMouseVisible = true;
             else
                 WindowManager.Cursor.Visible = true;
             ProgramConstants.IsInGame = false;
-            Game.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / FPS);
+            Game.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / UserINISettings.Instance.ClientFPS);
             if (UserINISettings.Instance.MinimizeWindowsOnGameStart)
                 WindowManager.MaximizeWindow();
 

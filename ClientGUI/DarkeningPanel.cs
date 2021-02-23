@@ -10,7 +10,7 @@ namespace ClientGUI
     /// </summary>
     public class DarkeningPanel : XNAPanel
     {
-        private const float ALPHA_RATE = 0.6f;
+        public const float ALPHA_RATE = 0.6f;
 
         public DarkeningPanel(WindowManager windowManager) : base(windowManager)
         {
@@ -24,7 +24,7 @@ namespace ClientGUI
             Name = "DarkeningPanel";
 
             SetPositionAndSize();
-            
+
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
             DrawBorders = false;

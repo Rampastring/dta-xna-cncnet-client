@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DTA CnCNet Client")]
 [assembly: AssemblyDescription("Dawn of the Tiberium Age CnCNet Client")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CnCNet")]
+[assembly: AssemblyCompany("Rampastring")]
 [assembly: AssemblyProduct("CnCNet")]
 [assembly: AssemblyCopyright("Copyright © Rampastring 2011-2021")]
 [assembly: AssemblyTrademark("")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.6.9.3")]
-[assembly: AssemblyFileVersion("2.6.9.3")]
+[assembly: AssemblyVersion("2.6.9.4")]
+[assembly: AssemblyFileVersion("2.6.9.4")]

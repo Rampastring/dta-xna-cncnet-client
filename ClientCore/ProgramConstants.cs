@@ -33,6 +33,7 @@ namespace ClientCore
         public const int LAN_GAME_LOBBY_PORT = 1233;
         public const char LAN_DATA_SEPARATOR = (char)01;
         public const char LAN_MESSAGE_SEPARATOR = (char)02;
+        public const string LAN_PING_COMMAND = "PING";
 
         public const string SPAWNMAP_INI = "spawnmap.ini";
         public const string SPAWNER_SETTINGS = "spawn.ini";

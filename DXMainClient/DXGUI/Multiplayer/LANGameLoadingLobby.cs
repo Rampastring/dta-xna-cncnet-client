@@ -50,7 +50,8 @@ namespace DTAClient.DXGUI.Multiplayer
             {
                 new ClientStringCommandHandler(CHAT_COMMAND, Client_HandleChatMessage),
                 new ClientStringCommandHandler(OPTIONS_COMMAND, Client_HandleOptionsMessage),
-                new ClientNoParamCommandHandler(GAME_LAUNCH_COMMAND, Client_HandleStartCommand)
+                new ClientNoParamCommandHandler(GAME_LAUNCH_COMMAND, Client_HandleStartCommand),
+                new ClientNoParamCommandHandler(ProgramConstants.LAN_PING_COMMAND, Client_HandlePingCommand)
             };
 
             WindowManager.GameClosing += WindowManager_GameClosing;
@@ -225,8 +226,7 @@ namespace DTAClient.DXGUI.Multiplayer
                 break;
             }
 
-            if (lpInfo.TcpClient.Connected)
-                lpInfo.TcpClient.Close();
+            CleanUpPlayer(lpInfo);
         }
 
         private void AddPlayer(LANPlayerInfo lpInfo)
@@ -235,7 +235,7 @@ namespace DTAClient.DXGUI.Multiplayer
                 Players.Count >= SGPlayers.Count || 
                 SGPlayers.Find(p => p.Name == lpInfo.Name) == null)
             {
-                lpInfo.TcpClient.Close();
+                CleanUpPlayer(lpInfo);
                 return;
             }
 
@@ -293,6 +293,8 @@ namespace DTAClient.DXGUI.Multiplayer
 
         private void CleanUpPlayer(LANPlayerInfo lpInfo)
         {
+            Logger.Log("Cleaning up LAN player " + lpInfo.Name);
+            Players.Remove(lpInfo);
             lpInfo.MessageReceived -= LpInfo_MessageReceived;
             lpInfo.TcpClient.Close();
         }
@@ -399,8 +401,12 @@ namespace DTAClient.DXGUI.Multiplayer
                 SendMessageToHost(PLAYER_QUIT_COMMAND);
             }
 
-            if (this.client.Connected)
-                this.client.Close();
+            if (client.Connected)
+            {
+                client.Close();
+            }
+
+            client = null;
         }
 
         protected override void AddNotice(string message, Color color)
@@ -553,6 +559,11 @@ namespace DTAClient.DXGUI.Multiplayer
             started = true;
 
             LoadGame();
+        }
+
+        private void Client_HandlePingCommand()
+        {
+            SendMessageToHost(ProgramConstants.LAN_PING_COMMAND);
         }
 
         #endregion

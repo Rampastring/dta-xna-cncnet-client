@@ -65,7 +65,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 new ClientStringCommandHandler(LAUNCH_GAME_COMMAND, HandleGameLaunchCommand),
                 new ClientStringCommandHandler(GAME_OPTIONS_COMMAND, HandleGameOptionsMessage),
                 new ClientStringCommandHandler(DICE_ROLL_COMMAND, Client_HandleDiceRoll),
-                new ClientNoParamCommandHandler("PING", HandlePing),
+                new ClientNoParamCommandHandler(ProgramConstants.LAN_PING_COMMAND, HandlePing),
             };
 
             localGame = ClientConfiguration.Instance.LocalGame;
@@ -1056,7 +1056,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void HandlePing()
         {
-            SendMessageToHost("PING");
+            SendMessageToHost(ProgramConstants.LAN_PING_COMMAND);
         }
 
         protected override void BroadcastDiceRoll(int dieSides, int[] results)

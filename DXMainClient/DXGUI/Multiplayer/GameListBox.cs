@@ -141,8 +141,6 @@ namespace DTAClient.DXGUI.Multiplayer
             HostedGames.Clear();
         }
 
-        protected override int GetRenderTargetWidth() => Width + panelGameInformation.Width;
-
         public override void Initialize()
         {
             txLockedGame = AssetLoader.LoadTexture("lockedgame.png");

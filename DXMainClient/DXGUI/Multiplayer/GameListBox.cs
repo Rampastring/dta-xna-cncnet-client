@@ -159,6 +159,7 @@ namespace DTAClient.DXGUI.Multiplayer
             panelGameInformation.InputEnabled = false;
             panelGameInformation.Alpha = 0f;
             AddChild(panelGameInformation);
+            panelGameInformation.Detach();
 
             HoveredIndexChanged += GameListBox_HoveredIndexChanged;
 

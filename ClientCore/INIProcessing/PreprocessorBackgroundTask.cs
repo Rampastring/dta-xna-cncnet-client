@@ -40,6 +40,14 @@ namespace ClientCore.INIProcessing
             task = Task.Factory.StartNew(() => CheckFiles());
         }
 
+        public void CheckException()
+        {
+            if (task.IsFaulted)
+            {
+                throw task.Exception.InnerException;
+            }
+        }
+
         private void CheckFiles()
         {
             Logger.Log("Starting background processing of INI files.");

@@ -46,6 +46,9 @@ namespace ClientCore.INIProcessing
             if (string.IsNullOrWhiteSpace(baseSectionName))
                 return section;
 
+            if (baseSectionName == sectionName)
+                throw new InvalidOperationException(sectionName + " is pointing to itself via BaseSection=!");
+
             IniSection baseSection = ProcessSection(iniFile, baseSectionName);
             if (baseSection == null)
                 return section;

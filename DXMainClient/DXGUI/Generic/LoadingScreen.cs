@@ -1,5 +1,6 @@
 ﻿using ClientCore;
 using ClientCore.CnCNet5;
+using ClientCore.INIProcessing;
 using ClientGUI;
 using DTAClient.Domain;
 using DTAClient.Domain.Multiplayer;
@@ -165,6 +166,8 @@ namespace DTAClient.DXGUI.Generic
             WindowManager.RemoveControl(this);
 
             Cursor.Visible = visibleSpriteCursor;
+
+            PreprocessorBackgroundTask.Instance.CheckException();
         }
 
         public override void Update(GameTime gameTime)

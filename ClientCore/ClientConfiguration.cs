@@ -202,6 +202,8 @@ namespace ClientCore
 
         public string StatisticsLogFileName => clientDefinitionsIni.GetStringValue(SETTINGS, "StatisticsLogFileName", "DTA.LOG");
 
+        public int SinglePlayerAutoSaveInterval => clientDefinitionsIni.GetIntValue(SETTINGS, "SinglePlayerAutoSaveInterval", 10800);
+
         public string[] GetThemeInfoFromIndex(int themeIndex) => clientDefinitionsIni.GetStringValue("Themes", themeIndex.ToString(), ",").Split(',');
 
         /// <summary>

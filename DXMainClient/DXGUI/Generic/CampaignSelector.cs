@@ -291,6 +291,7 @@ namespace DTAClient.DXGUI.Generic
             swriter.WriteLine("SidebarHack=" + ClientConfiguration.Instance.SidebarHack);
             swriter.WriteLine("Side=" + mission.Side);
             swriter.WriteLine("BuildOffAlly=" + mission.BuildOffAlly);
+            swriter.WriteLine("AutoSaveGame=" + ClientConfiguration.Instance.SinglePlayerAutoSaveInterval);
 
             UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value;
 

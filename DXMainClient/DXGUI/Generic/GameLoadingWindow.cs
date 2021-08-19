@@ -115,6 +115,22 @@ namespace DTAClient.DXGUI.Generic
             sw.WriteLine("SidebarHack=" + ClientConfiguration.Instance.SidebarHack);
             sw.WriteLine("Firestorm=No");
             sw.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
+            if (UserINISettings.Instance.EnableSPAutoSave)
+                sw.WriteLine("AutoSaveGame=" + ClientConfiguration.Instance.SinglePlayerAutoSaveInterval);
+
+            const int AutoSaveStringLength = 8;
+            if (sg.FileName.StartsWith("AUTOSAVE") && sg.FileName.Length > AutoSaveStringLength)
+            {
+                // Parse and assign next auto-save number
+                int pointIndex = sg.FileName.IndexOf('.');
+                if (pointIndex > -1)
+                {
+                    int autoSaveIndex = Conversions.IntFromString(sg.FileName.Substring(AutoSaveStringLength, 1), -1);
+                    if (autoSaveIndex > -1)
+                        sw.WriteLine("NextSPAutoSaveId=" + autoSaveIndex); // The spawner increments the ID by 1 before actually saving
+                }
+            }
+
             sw.WriteLine();
             sw.Close();
 

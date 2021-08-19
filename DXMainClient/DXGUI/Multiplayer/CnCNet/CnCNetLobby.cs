@@ -180,13 +180,13 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             playerContextMenu.ClientRectangle = new Rectangle(0, 0, 150, 2);
             playerContextMenu.Enabled = false;
             playerContextMenu.Visible = false;
-            playerContextMenu.AddItem("Private Message", () => 
+            playerContextMenu.AddItem("Private Message", () =>
                 PerformUserListContextMenuAction(iu => pmWindow.InitPM(iu.Name)));
-            playerContextMenu.AddItem("Add Friend", () => 
+            playerContextMenu.AddItem("Add Friend", () =>
                 PerformUserListContextMenuAction(iu => cncnetUserData.ToggleFriend(iu.Name)));
-            playerContextMenu.AddItem("Ignore User", () => 
+            playerContextMenu.AddItem("Ignore User", () =>
                 PerformUserListContextMenuAction(iu => cncnetUserData.ToggleIgnoreUser(iu.Ident)));
-            playerContextMenu.AddItem("Join", () => 
+            playerContextMenu.AddItem("Join", () =>
                 PerformUserListContextMenuAction(iu => JoinUser(iu, connectionManager.MainChannel)));
 
             lbChatMessages = new ChatListBox(WindowManager);
@@ -236,7 +236,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             int selectedColor = UserINISettings.Instance.ChatColor;
 
             ddColor.SelectedIndex = selectedColor >= ddColor.Items.Count || selectedColor < 0
-                ? ClientConfiguration.Instance.DefaultPersonalChatColorIndex:
+                ? ClientConfiguration.Instance.DefaultPersonalChatColorIndex :
                 selectedColor;
             SetChatColor();
             ddColor.SelectedIndexChanged += DdColor_SelectedIndexChanged;
@@ -299,7 +299,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             CnCNetPlayerCountTask.CnCNetGameCountUpdated += OnCnCNetGameCountUpdated;
             UpdateOnlineCount(CnCNetPlayerCountTask.PlayerCount);
-            
+
             pmWindow.SetJoinUserAction(JoinUser);
 
             base.Initialize();
@@ -315,7 +315,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             lbGameList.ViewTop = 0;
         }
 
-        private bool HostedGameMatches(GenericHostedGame hg) => 
+        private bool HostedGameMatches(GenericHostedGame hg) =>
             string.IsNullOrWhiteSpace(tbGameSearch?.Text) ||
             tbGameSearch.Text == tbGameSearch.Suggestion ||
             hg.RoomName.ToUpper().Contains(tbGameSearch.Text.ToUpper()) ||
@@ -655,7 +655,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             return GetJoinGameErrorBase();
         }
-        
+
         /// <summary>
         /// Returns an error message if game is not join-able, otherwise null.
         /// </summary>
@@ -684,9 +684,9 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 return false;
             }
 
-            return JoinGame((HostedCnCNetGame) lbGameList.Items[gameIndex].Tag, password, connectionManager.MainChannel);
+            return JoinGame((HostedCnCNetGame)lbGameList.Items[gameIndex].Tag, password, connectionManager.MainChannel);
         }
-        
+
         /// <summary>
         /// Attempt to join a game
         /// </summary>
@@ -702,13 +702,13 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 messageView.AddMessage(new ChatMessage(Color.White, error));
                 return false;
             }
-            
+
             if (isInGameRoom)
             {
                 topBar.SwitchToPrimary();
                 return false;
             }
-            
+
             // if (hg.GameVersion != ProgramConstants.GAME_VERSION)
             // TODO Show warning
 
@@ -1317,7 +1317,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             string msg = e.Message.Substring(5); // Cut out GAME part
             string[] splitMessage = msg.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (splitMessage.Length != 11) 
+            if (splitMessage.Length != 11)
             {
                 Logger.Log("Ignoring CTCP game message because of an invalid amount of parameters.");
                 return;

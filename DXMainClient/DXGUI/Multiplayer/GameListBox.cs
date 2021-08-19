@@ -52,6 +52,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
         private Color hoverOnGameColor;
 
+
         /// <summary>
         /// Removes a game from the list.
         /// </summary>
@@ -143,6 +144,8 @@ namespace DTAClient.DXGUI.Multiplayer
 
         public override void Initialize()
         {
+            base.Initialize();
+
             txLockedGame = AssetLoader.LoadTexture("lockedgame.png");
             txIncompatibleGame = AssetLoader.LoadTexture("incompatible.png");
             txPasswordedGame = AssetLoader.LoadTexture("passwordedgame.png");
@@ -156,15 +159,12 @@ namespace DTAClient.DXGUI.Multiplayer
             panelGameInformation.Disable();
             panelGameInformation.InputEnabled = false;
             panelGameInformation.Alpha = 0f;
-            AddChild(panelGameInformation);
-            panelGameInformation.Detach();
+            Parent.AddChild(panelGameInformation);
 
             HoveredIndexChanged += GameListBox_HoveredIndexChanged;
 
             hoverOnGameColor = AssetLoader.GetColorFromString(
                 ClientConfiguration.Instance.HoverOnGameColor);
-
-            base.Initialize();
 
             loadedGameTextWidth = (int)Renderer.GetTextDimensions(LOADED_GAME_TEXT, FontIndex).X;
         }
@@ -178,8 +178,8 @@ namespace DTAClient.DXGUI.Multiplayer
             }
 
             panelGameInformation.Enable();
-            panelGameInformation.X = Width;
-            panelGameInformation.Y = Math.Min((HoveredIndex - TopIndex) * LineHeight,
+            panelGameInformation.X = Right;
+            panelGameInformation.Y = Y + Math.Min((HoveredIndex - TopIndex) * LineHeight,
                          Height - panelGameInformation.Height);
 
             panelGameInformation.AlphaRate = 0.5f;
@@ -204,8 +204,6 @@ namespace DTAClient.DXGUI.Multiplayer
 
             if (hg.Game.InternalName != localGameIdentifier.ToLower())
                 lbItem.TextColor = UISettings.ActiveSettings.TextColor;
-            //else // made unnecessary by new Rampastring.XNAUI
-            //    lbItem.TextColor = UISettings.ActiveSettings.AltColor;
 
             if (hg.Incompatible || hg.Locked)
             {

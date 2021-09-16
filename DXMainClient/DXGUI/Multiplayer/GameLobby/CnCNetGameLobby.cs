@@ -138,7 +138,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public override void Initialize()
         {
-            IniNameOverride = nameof(LANGameLobby);
+            IniNameOverride = nameof(CnCNetGameLobby);
             base.Initialize();
 
             btnChangeTunnel = FindChild<XNAClientButton>(nameof(btnChangeTunnel));

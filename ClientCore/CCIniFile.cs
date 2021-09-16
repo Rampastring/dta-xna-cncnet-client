@@ -21,7 +21,16 @@ namespace ClientCore
                     continue;
                 }
 
-                section.Keys.InsertRange(0, baseSection.Keys);
+                int addedKeyCount = 0;
+
+                foreach (var kvp in baseSection.Keys)
+                {
+                    if (!section.KeyExists(kvp.Key))
+                    {
+                        section.Keys.Insert(addedKeyCount, kvp);
+                        addedKeyCount++;
+                    }
+                }
             }
         }
 

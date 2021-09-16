@@ -88,6 +88,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 AddChild(indicator);
             }
 
+            briefingBox = new CoopBriefingBox(WindowManager);
+            AddChild(briefingBox);
+            briefingBox.Disable();
+
             ClientRectangleUpdated += (s, e) => UpdateMap();
         }
 
@@ -160,10 +164,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             contextMenu.ClientRectangle = new Rectangle(0, 0, 150, 2);
             AddChild(contextMenu);
             contextMenu.Disable();
-
-            briefingBox = new CoopBriefingBox(WindowManager);
-            AddChild(briefingBox);
-            briefingBox.Disable();
 
             sndClickSound = new EnhancedSoundEffect("button.wav");
 

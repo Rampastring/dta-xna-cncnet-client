@@ -7,7 +7,22 @@ namespace ClientCore
     {
         public CCIniFile(string path) : base(path)
         {
+            foreach (IniSection section in Sections)
+            {
+                string baseSectionName = section.GetStringValue("$BaseSection", null);
 
+                if (string.IsNullOrWhiteSpace(baseSectionName))
+                    continue;
+
+                var baseSection = Sections.Find(s => s.SectionName == baseSectionName);
+                if (baseSection == null)
+                {
+                    Logger.Log($"Base section not found in INI file {path}, section {section.SectionName}, base section name: {baseSectionName}");
+                    continue;
+                }
+
+                section.Keys.InsertRange(0, baseSection.Keys);
+            }
         }
 
         protected override void ApplyBaseIni()

@@ -116,6 +116,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public override void Initialize()
         {
+            IniNameOverride = nameof(LANGameLobby);
             base.Initialize();
             PostInitialize();
         }

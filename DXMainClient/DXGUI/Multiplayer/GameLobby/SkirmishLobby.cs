@@ -25,25 +25,25 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public event EventHandler Exited;
 
-        TopBar topBar;
+        private readonly TopBar topBar;
+
 
         public override void Initialize()
         {
+            Name = nameof(SkirmishLobby);
             base.Initialize();
 
             RandomSeed = new Random().Next();
 
-            //InitPlayerOptionDropdowns(128, 98, 90, 48, 55, new Point(6, 24));
             InitPlayerOptionDropdowns();
 
             btnLeaveGame.Text = "Main Menu";
-
-            //MapPreviewBox.EnableContextMenu = true;
 
             ddPlayerSides[0].AddItem("Spectator", AssetLoader.LoadTexture("spectatoricon.png"));
 
             MapPreviewBox.LocalStartingLocationSelected += MapPreviewBox_LocalStartingLocationSelected;
             MapPreviewBox.StartingLocationApplied += MapPreviewBox_StartingLocationApplied;
+            MapPreviewBox.EnableContextMenu = true;
 
             InitializeWindow();
 

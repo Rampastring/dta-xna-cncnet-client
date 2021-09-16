@@ -85,6 +85,13 @@ namespace DTAClient.DXGUI.Generic
             if (!string.IsNullOrEmpty(ClientConfiguration.Instance.DiscordAppId))
                 discordHandler = new DiscordHandler(WindowManager);
 
+            ClientGUICreator.Instance.AddControl(typeof(GameLobbyCheckBox));
+            ClientGUICreator.Instance.AddControl(typeof(GameLobbyDropDown));
+            ClientGUICreator.Instance.AddControl(typeof(MapPreviewBox));
+            ClientGUICreator.Instance.AddControl(typeof(GameLaunchButton));
+            ClientGUICreator.Instance.AddControl(typeof(ChatListBox));
+            ClientGUICreator.Instance.AddControl(typeof(XNAChatTextBox));
+
             var gameCollection = new GameCollection();
             gameCollection.Initialize(GraphicsDevice);
 
@@ -93,7 +100,6 @@ namespace DTAClient.DXGUI.Generic
             var cncnetUserData = new CnCNetUserData(WindowManager);
             var cncnetManager = new CnCNetManager(WindowManager, gameCollection);
             var tunnelHandler = new TunnelHandler(WindowManager, cncnetManager);
-            
 
             var topBar = new TopBar(WindowManager, cncnetManager);
 

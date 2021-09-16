@@ -27,11 +27,34 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private int defaultIndex;
 
+        public override void Initialize()
+        {
+            XNAControl parent = Parent;
+            while (true)
+            {
+                if (parent == null)
+                    break;
+
+                // oh no, we have a circular class reference here!
+                if (parent is GameLobbyBase gameLobby)
+                {
+                    gameLobby.DropDowns.Add(this);
+                    break;
+                }
+
+                parent = parent.Parent;
+            }
+
+            base.Initialize();
+        }
+
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
         {
             switch (key)
             {
                 case "Items":
+                    Items.Clear();
+
                     string[] items = value.Split(',');
                     string[] itemlabels = iniFile.GetStringValue(Name, "ItemLabels", "").Split(',');
                     for (int i = 0; i < items.Length; i++)

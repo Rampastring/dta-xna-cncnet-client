@@ -20,5 +20,18 @@ namespace ClientGUI
             AddControl(typeof(XNALinkButton));
             AddControl(typeof(XNAExtraPanel));
         }
+
+
+        private static ClientGUICreator _instance;
+        public static ClientGUICreator Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new ClientGUICreator();
+
+                return _instance;
+            }
+        }
     }
 }

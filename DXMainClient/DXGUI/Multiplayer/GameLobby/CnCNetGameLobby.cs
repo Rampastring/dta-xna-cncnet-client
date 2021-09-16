@@ -138,15 +138,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public override void Initialize()
         {
+            IniNameOverride = nameof(LANGameLobby);
             base.Initialize();
 
-            btnChangeTunnel = new XNAClientButton(WindowManager);
-            btnChangeTunnel.Name = nameof(btnChangeTunnel);
-            btnChangeTunnel.ClientRectangle = new Rectangle(btnLeaveGame.Right - btnLeaveGame.Width - 145,
-                btnLeaveGame.Y, 133, 23);
-            btnChangeTunnel.Text = "Change Tunnel";
+            btnChangeTunnel = FindChild<XNAClientButton>(nameof(btnChangeTunnel));
             btnChangeTunnel.LeftClick += BtnChangeTunnel_LeftClick;
-            AddChild(btnChangeTunnel);
 
             gameBroadcastTimer = new XNATimerControl(WindowManager);
             gameBroadcastTimer.AutoReset = true;

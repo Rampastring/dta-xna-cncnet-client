@@ -359,7 +359,6 @@ namespace DTAClient.DXGUI.Multiplayer
             new Thread(new ThreadStart(Listen)).Start();
 
             SendAlive();
-            GameCreationWindow_NewGame(this, EventArgs.Empty);
         }
 
         private void SendMessage(string message)

@@ -645,7 +645,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ReadINIForControl(lbChatMessages);
             ReadINIForControl(tbChatInput);
             ReadINIForControl(lbMapList);
-            ReadINIForControl(lblMapName);
+            // ReadINIForControl(lblMapName);
             ReadINIForControl(lblMapAuthor);
             ReadINIForControl(lblGameMode);
             ReadINIForControl(lblMapSize);
@@ -653,8 +653,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void ShowMapList()
         {
-            lbChatMessages.Name = "lbChatMessages_Host";
-            tbChatInput.Name = "tbChatInput_Host";
+            lbChatMessages.Name = "lbChatMessages";
+            tbChatInput.Name = "tbChatInput";
             MapPreviewBox.Name = "MapPreviewBox";
             lblMapName.Name = "lblMapName";
             lblMapAuthor.Name = "lblMapAuthor";
@@ -670,7 +670,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ReadINIForControl(lbChatMessages);
             ReadINIForControl(tbChatInput);
             ReadINIForControl(lbMapList);
-            ReadINIForControl(lblMapName);
+            //ReadINIForControl(lblMapName);
             ReadINIForControl(lblMapAuthor);
             ReadINIForControl(lblGameMode);
             ReadINIForControl(lblMapSize);

@@ -95,7 +95,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ClientRectangleUpdated += (s, e) => UpdateMap();
         }
 
-        Map _map;
+        private Map _map;
         public Map Map
         {
             get { return _map; }

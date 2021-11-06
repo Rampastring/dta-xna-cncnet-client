@@ -9,6 +9,7 @@ using Rampastring.XNAUI.XNAControls;
 using Rampastring.XNAUI;
 using Rampastring.Tools;
 using Updater;
+using DTAClient.Domain.Singleplayer;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -17,9 +18,9 @@ namespace DTAClient.DXGUI.Generic
         private const int DEFAULT_WIDTH = 650;
         private const int DEFAULT_HEIGHT = 600;
 
-        private static string[] DifficultyNames = new string[] { "Easy", "Medium", "Hard" };
+        private static readonly string[] DifficultyNames = new string[] { "Easy", "Medium", "Hard" };
 
-        private static string[] DifficultyIniPaths = new string[]
+        private static readonly string[] DifficultyIniPaths = new string[]
         {
             "INI/Map Code/Difficulty Easy.ini",
             "INI/Map Code/Difficulty Medium.ini",
@@ -41,7 +42,7 @@ namespace DTAClient.DXGUI.Generic
 
         private CheaterWindow cheaterWindow;
 
-        private string[] filesToCheck = new string[]
+        private readonly string[] filesToCheck = new string[]
         {
             "INI/AI.ini",
             "INI/AIE.ini",
@@ -370,7 +371,9 @@ namespace DTAClient.DXGUI.Generic
                 if (!battleIni.SectionExists(battleSection))
                     continue;
 
-                var mission = new Mission(battleIni, battleSection);
+                IniSection section = battleIni.GetSection(battleSection);
+
+                var mission = new Mission(section, false);
 
                 Missions.Add(mission);
                

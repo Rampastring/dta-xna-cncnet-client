@@ -13,13 +13,19 @@ namespace ClientGUI
         {
         }
 
+        private void CreateToolTip()
+        {
+            if (ToolTip == null)
+                ToolTip = new ToolTip(WindowManager, this);
+        }
+
         public override void Initialize()
         {
             CheckSoundEffect = new EnhancedSoundEffect("checkbox.wav");
 
-            CreateToolTip();
-
             base.Initialize();
+
+            CreateToolTip();
         }
 
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
@@ -32,12 +38,6 @@ namespace ClientGUI
             }
 
             base.ParseAttributeFromINI(iniFile, key, value);
-        }
-
-        private void CreateToolTip()
-        {
-            if (ToolTip == null)
-                ToolTip = new ToolTip(WindowManager, this);
         }
     }
 }

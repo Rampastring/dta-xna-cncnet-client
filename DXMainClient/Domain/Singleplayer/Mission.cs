@@ -24,6 +24,7 @@ namespace DTAClient.Domain.Singleplayer
             RequiredAddon = iniSection.GetBooleanValue(nameof(RequiredAddon), false);
             Enabled = iniSection.GetBooleanValue(nameof(Enabled), true);
             BuildOffAlly = iniSection.GetBooleanValue(nameof(BuildOffAlly), false);
+            WarnOnHardWithoutMediumPlayed = iniSection.GetBooleanValue(nameof(WarnOnHardWithoutMediumPlayed), WarnOnHardWithoutMediumPlayed);
             PlayerAlwaysOnNormalDifficulty = iniSection.GetBooleanValue(nameof(PlayerAlwaysOnNormalDifficulty), false);
 
             CampaignInternalName = iniSection.GetStringValue(nameof(CampaignInternalName), null);
@@ -60,7 +61,14 @@ namespace DTAClient.Domain.Singleplayer
         public bool RequiredAddon { get; }
         public bool Enabled { get; }
         public bool BuildOffAlly { get; }
+
         public bool PlayerAlwaysOnNormalDifficulty { get; }
+
+        /// <summary>
+        /// Should the player be given a warning when starting 
+        /// this mission on Hard if they haven't beat the mission on Medium first?
+        /// </summary>
+        public bool WarnOnHardWithoutMediumPlayed { get; } = true;
 
         /// <summary>
         /// If not null, this is not a mission but a dummy entry for a campaign.

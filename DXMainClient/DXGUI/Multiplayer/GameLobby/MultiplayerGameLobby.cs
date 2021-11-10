@@ -127,8 +127,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             ReadyBoxes = new XNACheckBox[MAX_PLAYER_COUNT];
 
-            int readyBoxX = GameOptionsIni.GetIntValue(Name, "PlayerReadyBoxX", 7);
-            int readyBoxY = GameOptionsIni.GetIntValue(Name, "PlayerReadyBoxY", 4);
+            int readyBoxX = ConfigIni.GetIntValue(Name, "PlayerReadyBoxX", 7);
+            int readyBoxY = ConfigIni.GetIntValue(Name, "PlayerReadyBoxY", 4);
 
             for (int i = 0; i < MAX_PLAYER_COUNT; i++)
             {

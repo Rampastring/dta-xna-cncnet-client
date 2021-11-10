@@ -261,14 +261,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             OnGameOptionChanged();
         }
 
-        /// <summary>
-        /// Initializes the underlying window class.
-        /// </summary>
-        protected void InitializeWindow()
-        {
-            return;
-        }
-
         protected virtual void OnGameOptionChanged()
         {
             CheckDisallowedSides();

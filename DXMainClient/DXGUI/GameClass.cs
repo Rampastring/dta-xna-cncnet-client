@@ -223,6 +223,12 @@ namespace DTAClient.DXGUI
                 ratio = xRatio;
             }
 
+            if ((windowWidth == 1366 || windowWidth == 1360) && windowHeight == 768)
+            {
+                renderResolutionX = windowWidth;
+                renderResolutionY = windowHeight;
+            }
+
             if (ratio > 1.0)
             {
                 // Check whether we could sharp-scale our client window

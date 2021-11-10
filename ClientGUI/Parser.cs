@@ -290,7 +290,8 @@ namespace ClientGUI
         private void ConsumeChar(char token)
         {
             if (Input[tokenPlace] != token)
-                throw new INIConfigException("Parse error: expected '" + token + "' in expression " + Input);
+                throw new INIConfigException($"Parse error: expected '{token}' in expression {Input}. Instead encountered '{Input[tokenPlace]}'.");
+
             tokenPlace++;
         }
 

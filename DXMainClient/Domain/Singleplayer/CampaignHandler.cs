@@ -2,6 +2,7 @@
 using Rampastring.Tools;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DTAClient.Domain.Singleplayer
 {
@@ -20,6 +21,11 @@ namespace DTAClient.Domain.Singleplayer
         private CampaignHandler()
         {
             InitCampaigns();
+
+            ReadBattleIni("INI/Battle.ini");
+            ReadBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
+
+            MissionRankHandler.LoadData(missions, GlobalVariables);
         }
 
         private static CampaignHandler _instance;
@@ -27,7 +33,15 @@ namespace DTAClient.Domain.Singleplayer
         public List<CampaignGlobalVariable> GlobalVariables { get; } = new List<CampaignGlobalVariable>();
         public List<Campaign> Campaigns { get; } = new List<Campaign>();
 
+        /// <summary>
+        /// A list of all missions in the entire game.
+        /// </summary>
         private List<Mission> missions = new List<Mission>();
+
+        /// <summary>
+        /// The combined mission and campaign list to be displayed in the main campaign selector menu.
+        /// </summary>
+        public List<Mission> BattleList = new List<Mission>();
 
         /// <summary>
         /// Singleton pattern. We only need one instance of this class.
@@ -148,7 +162,13 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         private void SanityCheckCampaigns()
         {
-            Campaigns.ForEach(c => c.Missions.ForEach(m => missions.Add(m)));
+            Campaigns.ForEach(c => c.Missions.ForEach(m => 
+            {
+                if (missions.Exists(otherMission => otherMission.InternalName == m.InternalName))
+                    throw new CampaignConfigException("Mission named " + m.InternalName + " exists more than once!");
+
+                missions.Add(m);
+            }));
 
             foreach (var campaign in Campaigns)
             {
@@ -178,7 +198,6 @@ namespace DTAClient.Domain.Singleplayer
                     Environment.NewLine + Environment.NewLine +
                     $"If you are an end-user, please delete the INI/Campaigns.ini file and start the client then, or contact the game/mod authors for support.");
             }
-                
         }
 
         private void VerifyGlobalVariableExists(string globalVariableName)
@@ -189,6 +208,42 @@ namespace DTAClient.Domain.Singleplayer
                     $"but the global variable itself does not exist. Check the INI/Campaigns.ini file for mistakes." +
                     Environment.NewLine + Environment.NewLine + 
                     $"If you are an end-user, please delete the INI/Campaigns.ini file and start the client then, or contact the game/mod authors for support.");
+            }
+        }
+
+        public void ReadBattleIni(string path)
+        {
+            string battleIniPath = ProgramConstants.GamePath + path;
+            if (!File.Exists(battleIniPath))
+            {
+                Logger.Log("File " + path + " not found. Ignoring.");
+                return;
+            }
+
+            var battleIni = new IniFile(battleIniPath);
+
+            List<string> battleKeys = battleIni.GetSectionKeys("Battles");
+
+            if (battleKeys == null)
+                return; // File exists but [Battles] doesn't
+
+            foreach (string battleEntry in battleKeys)
+            {
+                string battleSection = battleIni.GetStringValue("Battles", battleEntry, "NOT FOUND");
+
+                if (!battleIni.SectionExists(battleSection))
+                    continue;
+
+                IniSection section = battleIni.GetSection(battleSection);
+
+                var mission = new Mission(section, false);
+
+                BattleList.Add(mission);
+
+                if (missions.Exists(m => m.InternalName == mission.InternalName))
+                    throw new CampaignConfigException("Mission named " + mission.InternalName + " exists in both " + path + " and Campaigns.ini!");
+
+                missions.Add(mission);
             }
         }
     }

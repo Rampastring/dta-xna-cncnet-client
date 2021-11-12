@@ -227,6 +227,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Singleplayer\DifficultyRank.cs" />
     <Compile Include="Domain\Singleplayer\GlobalVariableCondition.cs" />
     <Compile Include="Domain\Singleplayer\ConditionalMissionUnlock.cs" />
     <Compile Include="Domain\Multiplayer\AllianceHolder.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Domain\Singleplayer\Campaign.cs" />
     <Compile Include="Domain\Singleplayer\CampaignGlobalVariable.cs" />
     <Compile Include="Domain\Singleplayer\CampaignHandler.cs" />
+    <Compile Include="Domain\Singleplayer\MissionRankHandler.cs" />
     <Compile Include="Domain\StatisticsSender.cs" />
     <Compile Include="DXGUI\Generic\CheaterWindow.cs" />
     <Compile Include="Domain\Multiplayer\Map.cs" />

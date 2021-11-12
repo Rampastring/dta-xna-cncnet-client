@@ -10,6 +10,8 @@ namespace DTAClient.Domain.Singleplayer
     /// </summary>
     public class Mission
     {
+        private const int DifficultyLabelCount = 3;
+
         public Mission(IniSection iniSection, bool isCampaignMission)
         {
             InternalName = iniSection.SectionName;
@@ -26,6 +28,17 @@ namespace DTAClient.Domain.Singleplayer
             BuildOffAlly = iniSection.GetBooleanValue(nameof(BuildOffAlly), false);
             WarnOnHardWithoutMediumPlayed = iniSection.GetBooleanValue(nameof(WarnOnHardWithoutMediumPlayed), WarnOnHardWithoutMediumPlayed);
             PlayerAlwaysOnNormalDifficulty = iniSection.GetBooleanValue(nameof(PlayerAlwaysOnNormalDifficulty), false);
+
+            if (iniSection.KeyExists("DifficultyLabels"))
+            {
+                DifficultyLabels = iniSection.GetListValue("DifficultyLabels", ',', s => s).ToArray();
+
+                if (DifficultyLabels.Length != DifficultyLabelCount)
+                {
+                    throw new NotSupportedException($"Invalid number of DifficultyLabels= specified for mission { InternalName }: " +
+                        $"{DifficultyLabels.Length}, expected {DifficultyLabelCount}");
+                }
+            }
 
             CampaignInternalName = iniSection.GetStringValue(nameof(CampaignInternalName), null);
             GlobalVariables = iniSection.GetStringValue(nameof(GlobalVariables), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -64,6 +77,8 @@ namespace DTAClient.Domain.Singleplayer
 
         public bool PlayerAlwaysOnNormalDifficulty { get; }
 
+        public string[] DifficultyLabels { get; }
+
         /// <summary>
         /// Should the player be given a warning when starting 
         /// this mission on Hard if they haven't beat the mission on Medium first?
@@ -89,7 +104,12 @@ namespace DTAClient.Domain.Singleplayer
         /// If this is a mission that requires unlocking,
         /// has the player unlocked this mission?
         /// </summary>
-        public bool IsUnlocked { get; private set; }
+        public bool IsUnlocked { get; set; }
+
+        /// <summary>
+        /// Which difficulty level has the player beat this mission on, if any?
+        /// </summary>
+        public DifficultyRank Rank { get; set; }
 
         /// <summary>
         /// The internal names of missions that winning this mission unlocks

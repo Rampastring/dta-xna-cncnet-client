@@ -1,7 +1,6 @@
 ﻿using ClientCore;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using DTAClient.Domain;
 using System.IO;
 using ClientGUI;
@@ -10,15 +9,133 @@ using Rampastring.XNAUI;
 using Rampastring.Tools;
 using Updater;
 using DTAClient.Domain.Singleplayer;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DTAClient.DXGUI.Generic
 {
+    /// <summary>
+    /// A battle (as in Battle.ini entry) list box that can
+    /// draw difficulty rank icons on its items.
+    /// </summary>
+    public class BattleListBox : XNAListBox
+    {
+        public BattleListBox(WindowManager windowManager) : base(windowManager)
+        {
+        }
+
+        private Texture2D[] rankTextures;
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            rankTextures = new Texture2D[]
+            {
+                AssetLoader.LoadTexture("rankEasy.png"),
+                AssetLoader.LoadTexture("rankNormal.png"),
+                AssetLoader.LoadTexture("rankHard.png")
+            };
+        }
+
+        private Texture2D DifficultyRankToTexture(DifficultyRank rank)
+        {
+            if (rank == DifficultyRank.NONE)
+                return null;
+
+            return rankTextures[(int)rank - 1];
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            DrawPanel();
+
+            int height = 2;
+
+            for (int i = TopIndex; i < Items.Count; i++)
+            {
+                XNAListBoxItem lbItem = Items[i];
+
+                if (height > Height)
+                    break;
+
+                int x = TextBorderDistance;
+
+                if (i == SelectedIndex)
+                {
+                    int drawnWidth;
+
+                    if (DrawSelectionUnderScrollbar || !ScrollBar.IsDrawn() || !EnableScrollbar)
+                    {
+                        drawnWidth = Width - 2;
+                    }
+                    else
+                    {
+                        drawnWidth = Width - 2 - ScrollBar.Width;
+                    }
+
+                    FillRectangle(new Rectangle(1, height, drawnWidth,
+                        lbItem.TextLines.Count * LineHeight),
+                        FocusColor);
+                }
+
+                int textureYPosition = 0;
+
+                if (lbItem.Texture != null)
+                {
+                    int textureHeight = lbItem.Texture.Height;
+                    int textureWidth = lbItem.Texture.Width;
+
+                    if (lbItem.Texture.Height > LineHeight)
+                    {
+                        double scaleRatio = textureHeight / (double)LineHeight;
+                        textureHeight = LineHeight;
+                        textureWidth = (int)(textureWidth / scaleRatio);
+                    }
+                    else
+                        textureYPosition = (LineHeight - textureHeight) / 2;
+
+                    DrawTexture(lbItem.Texture,
+                        new Rectangle(x, height + textureYPosition,
+                        textureWidth, textureHeight), Color.White);
+
+                    x += textureWidth + 2;
+                }
+
+                var mission = (Mission)lbItem.Tag;
+                Texture2D rankTexture = DifficultyRankToTexture(mission.Rank);
+                if (rankTexture != null)
+                {
+                    DrawTexture(rankTexture,
+                        new Rectangle(Width - rankTexture.Width - TextBorderDistance, height + textureYPosition,
+                        rankTexture.Width, rankTexture.Height), Color.White);
+                }
+
+                x += lbItem.TextXPadding;
+
+                for (int j = 0; j < lbItem.TextLines.Count; j++)
+                {
+                    DrawStringWithShadow(lbItem.TextLines[j], FontIndex,
+                        new Vector2(x, height + j * LineHeight + lbItem.TextYPadding),
+                        lbItem.TextColor);
+                }
+
+                height += lbItem.TextLines.Count * LineHeight;
+            }
+
+            if (DrawBorders)
+                DrawPanelBorders();
+
+            DrawChildren(gameTime);
+        }
+    }
+
     public class CampaignSelector : XNAWindow
     {
         private const int DEFAULT_WIDTH = 650;
         private const int DEFAULT_HEIGHT = 600;
 
         private static readonly string[] DifficultyNames = new string[] { "Easy", "Medium", "Hard" };
+        private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD" };
 
         private static readonly string[] DifficultyIniPaths = new string[]
         {
@@ -34,11 +151,14 @@ namespace DTAClient.DXGUI.Generic
 
         private DiscordHandler discordHandler;
 
-        private List<Mission> Missions = new List<Mission>();
         private XNAListBox lbCampaignList;
         private XNAClientButton btnLaunch;
         private XNATextBlock tbMissionDescription;
         private XNATrackbar trbDifficultySelector;
+
+        private XNALabel lblEasy;
+        private XNALabel lblNormal;
+        private XNALabel lblHard;
 
         private CheaterWindow cheaterWindow;
 
@@ -71,7 +191,7 @@ namespace DTAClient.DXGUI.Generic
             lblSelectCampaign.ClientRectangle = new Rectangle(12, 12, 0, 0);
             lblSelectCampaign.Text = "MISSIONS:";
 
-            lbCampaignList = new XNAListBox(WindowManager);
+            lbCampaignList = new BattleListBox(WindowManager);
             lbCampaignList.Name = "lbCampaignList";
             lbCampaignList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 2, 2);
             lbCampaignList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
@@ -120,29 +240,27 @@ namespace DTAClient.DXGUI.Generic
             trbDifficultySelector.ButtonTexture = AssetLoader.LoadTextureUncached(
                 "trackbarButton_difficulty.png");
 
-            var lblEasy = new XNALabel(WindowManager);
+            lblEasy = new XNALabel(WindowManager);
             lblEasy.Name = "lblEasy";
+            lblEasy.TextAnchor = LabelTextAnchorInfo.RIGHT;
+            lblEasy.AnchorPoint = new Vector2(trbDifficultySelector.X,
+                trbDifficultySelector.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN);
             lblEasy.FontIndex = 1;
-            lblEasy.Text = "EASY";
-            lblEasy.ClientRectangle = new Rectangle(trbDifficultySelector.X,
-                trbDifficultySelector.Bottom + 6, 1, 1);
+            lblEasy.Text = DifficultyNamesUIDefault[0];
 
-            var lblNormal = new XNALabel(WindowManager);
+            lblNormal = new XNALabel(WindowManager);
             lblNormal.Name = "lblNormal";
+            lblNormal.TextAnchor = LabelTextAnchorInfo.HORIZONTAL_CENTER;
+            lblNormal.AnchorPoint = new Vector2(trbDifficultySelector.ClientRectangle.Center.X, lblEasy.AnchorPoint.Y);
             lblNormal.FontIndex = 1;
-            lblNormal.Text = "NORMAL";
-            textSize = Renderer.GetTextDimensions(lblNormal.Text, lblNormal.FontIndex);
-            lblNormal.ClientRectangle = new Rectangle(
-                tbMissionDescription.X + (tbMissionDescription.Width - (int)textSize.X) / 2,
-                lblEasy.Y, (int)textSize.X, (int)textSize.Y);
+            lblNormal.Text = DifficultyNamesUIDefault[1];
 
-            var lblHard = new XNALabel(WindowManager);
+            lblHard = new XNALabel(WindowManager);
             lblHard.Name = "lblHard";
+            lblHard.TextAnchor = LabelTextAnchorInfo.LEFT;
+            lblHard.AnchorPoint = new Vector2(trbDifficultySelector.Right, lblEasy.AnchorPoint.Y);
             lblHard.FontIndex = 1;
-            lblHard.Text = "HARD";
-            lblHard.ClientRectangle = new Rectangle(
-                tbMissionDescription.Right - lblHard.Width,
-                lblEasy.Y, 1, 1);
+            lblHard.Text = DifficultyNamesUIDefault[2];
 
             btnLaunch = new XNAClientButton(WindowManager);
             btnLaunch.Name = "btnLaunch";
@@ -178,9 +296,6 @@ namespace DTAClient.DXGUI.Generic
 
             trbDifficultySelector.Value = UserINISettings.Instance.Difficulty;
 
-            ParseBattleIni("INI/Battle.ini");
-            ParseBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
-
             cheaterWindow = new CheaterWindow(WindowManager);
             DarkeningPanel dp = new DarkeningPanel(WindowManager);
             dp.AddChild(cheaterWindow);
@@ -189,6 +304,14 @@ namespace DTAClient.DXGUI.Generic
             cheaterWindow.CenterOnParent();
             cheaterWindow.YesClicked += CheaterWindow_YesClicked;
             cheaterWindow.Disable();
+
+            EnabledChanged += CampaignSelector_EnabledChanged;
+        }
+
+        private void CampaignSelector_EnabledChanged(object sender, EventArgs e)
+        {
+            if (Enabled)
+                ListBattles();
         }
 
         private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
@@ -200,7 +323,7 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
-            Mission mission = Missions[lbCampaignList.SelectedIndex];
+            var mission = lbCampaignList.SelectedItem.Tag as Mission;
 
             if (string.IsNullOrEmpty(mission.Scenario))
             {
@@ -208,6 +331,11 @@ namespace DTAClient.DXGUI.Generic
                 btnLaunch.AllowClick = false;
                 return;
             }
+
+            string[] difficultyLabels = mission.DifficultyLabels != null ? mission.DifficultyLabels : DifficultyNamesUIDefault;
+            lblEasy.Text = difficultyLabels[0].ToUpperInvariant();
+            lblNormal.Text = difficultyLabels[1].ToUpperInvariant();
+            lblHard.Text = difficultyLabels[2].ToUpperInvariant();
 
             tbMissionDescription.Text = mission.GUIDescription;
 
@@ -229,7 +357,7 @@ namespace DTAClient.DXGUI.Generic
         {
             int selectedMissionId = lbCampaignList.SelectedIndex;
 
-            Mission mission = Missions[selectedMissionId];
+            var mission = lbCampaignList.SelectedItem.Tag as Mission;
 
             if (!ClientConfiguration.Instance.ModMode && 
                 (!CUpdater.IsFileNonexistantOrOriginal(mission.Scenario) || AreFilesModified()))
@@ -341,49 +469,20 @@ namespace DTAClient.DXGUI.Generic
             discordHandler?.UpdatePresence();
         }
 
-        /// <summary>
-        /// Parses a Battle(E).ini file. Returns true if succesful (file found), otherwise false.
-        /// </summary>
-        /// <param name="path">The path of the file, relative to the game directory.</param>
-        /// <returns>True if succesful, otherwise false.</returns>
-        private bool ParseBattleIni(string path)
+        public void ListBattles()
         {
-            Logger.Log("Attempting to parse " + path + " to populate mission list.");
+            lbCampaignList.Clear();
 
-            string battleIniPath = ProgramConstants.GamePath + path;
-            if (!File.Exists(battleIniPath))
+            CampaignHandler.Instance.BattleList.ForEach(mission =>
             {
-                Logger.Log("File " + path + " not found. Ignoring.");
-                return false;
-            }
-
-            IniFile battleIni = new IniFile(battleIniPath);
-
-            List<string> battleKeys = battleIni.GetSectionKeys("Battles");
-
-            if (battleKeys == null)
-                return false; // File exists but [Battles] doesn't
-
-            foreach (string battleEntry in battleKeys)
-            {
-                string battleSection = battleIni.GetStringValue("Battles", battleEntry, "NOT FOUND");
-
-                if (!battleIni.SectionExists(battleSection))
-                    continue;
-
-                IniSection section = battleIni.GetSection(battleSection);
-
-                var mission = new Mission(section, false);
-
-                Missions.Add(mission);
-               
                 XNAListBoxItem item = new XNAListBoxItem();
+                item.Tag = mission;
                 item.Text = mission.GUIName;
                 if (!mission.Enabled)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
                 }
-                else if (string.IsNullOrEmpty(mission.Scenario))
+                else if (string.IsNullOrEmpty(mission.Scenario) && string.IsNullOrWhiteSpace(mission.CampaignInternalName))
                 {
                     item.TextColor = AssetLoader.GetColorFromString(
                         ClientConfiguration.Instance.ListBoxHeaderColor);
@@ -396,13 +495,10 @@ namespace DTAClient.DXGUI.Generic
                 }
 
                 if (!string.IsNullOrEmpty(mission.IconPath))
-                    item.Texture = AssetLoader.LoadTexture(mission.IconPath + "icon.png");
+                    item.Texture = AssetLoader.LoadTexture(mission.IconPath);
 
                 lbCampaignList.AddItem(item);
-            }
-
-            Logger.Log("Finished parsing " + path + ".");
-            return true;
+            });
         }
 
         public override void Draw(GameTime gameTime)

@@ -170,7 +170,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             sndGetReadySound = new EnhancedSoundEffect("getready.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyGetReadyCooldown);
             sndReturnSound = new EnhancedSoundEffect("return.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyReturnCooldown);
 
-            if (SavedGameManager.AreSavedGamesAvailable())
+            if (MultiplayerSaveGameManager.AreSavedGamesAvailable())
             {
                 fsw = new FileSystemWatcher(ProgramConstants.GamePath + "Saved Games", "*.NET");
                 fsw.Created += fsw_Created;
@@ -204,7 +204,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 if (!gameSaved)
                 {
-                    bool success = SavedGameManager.InitSavedGames();
+                    bool success = MultiplayerSaveGameManager.InitSavedGames();
 
                     if (!success)
                         return;
@@ -212,7 +212,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 gameSaved = true;
 
-                SavedGameManager.RenameSavedGame();
+                MultiplayerSaveGameManager.RenameSavedGame();
             }
         }
 
@@ -617,7 +617,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             lbChatMessages.AddItem("Type / to view a list of available chat commands.", Color.Silver, true);
 
-            if (SavedGameManager.GetSaveGameCount() > 0)
+            if (MultiplayerSaveGameManager.GetSaveGameCount() > 0)
             {
                 lbChatMessages.AddItem("Multiplayer saved games from a previous match have been detected. " +
                     "The saved games of the previous match will be deleted if you create new saves during this match.",

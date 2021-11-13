@@ -1,9 +1,9 @@
 ﻿using ClientCore;
 using Rampastring.Tools;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using OpenMcdf;
+using System.Text;
 
 namespace DTAClient.Domain
 {
@@ -12,16 +12,22 @@ namespace DTAClient.Domain
     /// </summary>
     public class SavedGame
     {
-        const string SAVED_GAME_PATH = "Saved Games/";
+        private const string SAVED_GAME_PATH = "Saved Games/";
 
-        public SavedGame(string fileName)
+        public SavedGame(string filePath, long uniqueSessionId)
         {
-            FileName = fileName;
+            FilePath = filePath;
+            UniqueSessionId = uniqueSessionId;
         }
 
-        public string FileName { get; private set; }
+        public long UniqueSessionId { get; }
+        public GameSessionType SessionType { get; private set; } = GameSessionType.UNKNOWN;
+        public string FilePath { get; private set; }
+        public string FileName => Path.GetFileName(FilePath);
         public string GUIName { get; private set; }
         public DateTime LastModified { get; private set; }
+
+        
 
         /// <summary>
         /// Get the saved game's name from a .sav file.
@@ -45,12 +51,15 @@ namespace DTAClient.Domain
         {
             try
             {
-                using (Stream file = (File.Open(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName, FileMode.Open, FileAccess.Read)))
+                using (Stream file = (File.Open(FilePath, FileMode.Open, FileAccess.Read)))
                 {
                     GUIName = GetArchiveName(file);
                 }
 
                 LastModified = File.GetLastWriteTime(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName);
+
+                ParseMetadata();
+
                 return true;
             }
             catch (Exception ex)
@@ -58,6 +67,30 @@ namespace DTAClient.Domain
                 Logger.Log("An error occured while parsing saved game " + FileName + ":" +
                     ex.Message);
                 return false;
+            }
+        }
+
+        private void ParseMetadata()
+        {
+            string metaFilePath = Path.ChangeExtension(FilePath, GameSessionInfo.SavedGameMetaExtension);
+
+            if (File.Exists(metaFilePath))
+            {
+                byte[] data = File.ReadAllBytes(metaFilePath);
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = (byte)~data[i];
+                }
+
+                string dataAsString = Encoding.UTF8.GetString(data);
+                string[] parts = dataAsString.Split(',');
+                if (parts.Length != 3)
+                {
+                    Logger.Log("Unexpected saved game meta file format in file " + metaFilePath);
+                    int gameSessionTypeInt = Conversions.IntFromString(parts[0], -1);
+                    if (gameSessionTypeInt > -1 && gameSessionTypeInt <= (int)GameSessionType.SESSION_TYPE_MAX)
+                        SessionType = (GameSessionType)gameSessionTypeInt;
+                }
             }
         }
     }

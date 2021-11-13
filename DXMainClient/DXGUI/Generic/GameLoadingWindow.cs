@@ -7,6 +7,7 @@ using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -103,7 +104,10 @@ namespace DTAClient.DXGUI.Generic
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
-            Logger.Log("Loading saved game " + sg.FileName);
+            Logger.Log("Loading saved game " + sg.FilePath);
+
+            var gameSessionInfo = new GameSessionInfo(sg.SessionType, sg.UniqueSessionId, WindowManager.AddCallback);
+            gameSessionInfo.StartSession(); // Starting the session copies the saved games for this session to the main saved games directory
 
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
             StreamWriter sw = new StreamWriter(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
@@ -147,7 +151,7 @@ namespace DTAClient.DXGUI.Generic
             Enabled = false;
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
-            GameProcessLogic.StartGameProcess();
+            GameProcessLogic.StartGameProcess(gameSessionInfo);
         }
 
         private void BtnDelete_LeftClick(object sender, EventArgs e)
@@ -201,9 +205,21 @@ namespace DTAClient.DXGUI.Generic
                 SAVED_GAMES_DIRECTORY + Path.DirectorySeparatorChar,
                 "*.SAV", SearchOption.TopDirectoryOnly);
 
-            foreach (string file in files)
+            string[] directories = Directory.GetDirectories(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY);
+
+            foreach (string dirPath in directories)
             {
-                ParseSaveGame(file);
+                string _dirPath = dirPath.Replace('\\', '/');
+                int lastDirectorySeparatorIndex = _dirPath.LastIndexOf('/');
+                string dirName = _dirPath.Substring(lastDirectorySeparatorIndex + 1);
+
+                long.TryParse(dirName, NumberStyles.None, CultureInfo.InvariantCulture, out long uniqueSessionId);
+
+                string[] saveNames = Directory.GetFiles(dirPath, "*.SAV");
+                foreach (string file in saveNames)
+                {
+                    ParseSaveGame(file, uniqueSessionId);
+                }
             }
 
             savedGames = savedGames.OrderBy(sg => sg.LastModified.Ticks).ToList();
@@ -218,11 +234,9 @@ namespace DTAClient.DXGUI.Generic
             }
         }
 
-        private void ParseSaveGame(string fileName)
+        private void ParseSaveGame(string filePath, long uniqueSessionId)
         {
-            string shortName = Path.GetFileName(fileName);
-
-            SavedGame sg = new SavedGame(shortName);
+            SavedGame sg = new SavedGame(filePath, uniqueSessionId);
             if (sg.ParseInfo())
                 savedGames.Add(sg);
         }

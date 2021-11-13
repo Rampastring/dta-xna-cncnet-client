@@ -8,15 +8,17 @@ namespace ClientCore
     /// <summary>
     /// A class for handling saved multiplayer games.
     /// </summary>
-    public static class SavedGameManager
+    public static class MultiplayerSaveGameManager
     {
         private const string SAVED_GAMES_DIRECTORY = "Saved Games";
+        public const string SAVED_GAMES_MP_DIRECTORY = "Saved Games/Multiplayer";
+        public const string SPAWN_INI_NAME = "spawnSG.ini";
 
         private static bool saveRenameInProgress = false;
 
         public static int GetSaveGameCount()
         {
-            string saveGameDirectory = GetSaveGameDirectoryPath() + "/";
+            string saveGameDirectory = GetSaveGamePostSessionDirectoryPath() + "/";
 
             if (!AreSavedGamesAvailable())
                 return 0;
@@ -38,7 +40,7 @@ namespace ClientCore
 
             List<string> timestamps = new List<string>();
 
-            string saveGameDirectory = GetSaveGameDirectoryPath() + "/";
+            string saveGameDirectory = GetSaveGamePostSessionDirectoryPath() + "/";
 
             for (int i = 0; i < saveGameCount; i++)
             {
@@ -65,6 +67,11 @@ namespace ClientCore
             return ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY;
         }
 
+        private static string GetSaveGamePostSessionDirectoryPath()
+        {
+            return ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY;
+        }
+
         /// <summary>
         /// Initializes saved MP games for a match.
         /// </summary>
@@ -78,8 +85,10 @@ namespace ClientCore
             try
             {
                 Logger.Log("Writing spawn.ini for saved game.");
-                File.Delete(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + "/spawnSG.ini");
-                File.Copy(ProgramConstants.GamePath + "spawn.ini", ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + "/spawnSG.ini");
+                Directory.CreateDirectory(ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY);
+                File.Delete(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + "/" + SPAWN_INI_NAME);
+                File.Delete(ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY + "/" + SPAWN_INI_NAME);
+                File.Copy(ProgramConstants.GamePath + "spawn.ini", ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY + "/" + SPAWN_INI_NAME);
             }
             catch (Exception ex)
             {
@@ -167,7 +176,7 @@ namespace ClientCore
             {
                 for (int i = 0; i < 1000; i++)
                 {
-                    File.Delete(GetSaveGameDirectoryPath() + 
+                    File.Delete(GetSaveGamePostSessionDirectoryPath() + 
                         "/" + string.Format("SVGM_{0}.NET", i.ToString("D3")));
                 }
             }

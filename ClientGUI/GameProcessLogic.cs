@@ -23,11 +23,15 @@ namespace ClientGUI
         public static bool UseQres { get; set; }
         public static bool SingleCoreAffinity { get; set; }
 
+        public static GameSessionInfo GameSessionInfo { get; private set; }
+
         /// <summary>
         /// Starts the main game process.
         /// </summary>
-        public static void StartGameProcess()
+        public static void StartGameProcess(GameSessionInfo sessionInfo)
         {
+            GameSessionInfo = sessionInfo;
+
             Logger.Log("About to launch main game executable.");
 
             // In the relatively unlikely event that INI preprocessing is still going on, just wait until it's done.
@@ -149,6 +153,7 @@ namespace ClientGUI
             Process proc = (Process)sender;
             proc.Exited -= Process_Exited;
             proc.Dispose();
+            GameSessionInfo.EndSession();
             GameProcessExited?.Invoke();
         }
     }

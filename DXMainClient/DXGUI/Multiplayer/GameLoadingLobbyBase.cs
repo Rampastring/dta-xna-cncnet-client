@@ -198,7 +198,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             WindowManager.CenterControlOnScreen(this);
 
-            if (SavedGameManager.AreSavedGamesAvailable())
+            if (MultiplayerSaveGameManager.AreSavedGamesAvailable())
             {
                 fsw = new FileSystemWatcher(ProgramConstants.GamePath + "Saved Games", "*.NET");
                 fsw.EnableRaisingEvents = false;
@@ -235,7 +235,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             if (Path.GetFileName(e.FullPath) == "SAVEGAME.NET")
             {
-                SavedGameManager.RenameSavedGame();
+                MultiplayerSaveGameManager.RenameSavedGame();
             }
         }
 
@@ -283,7 +283,7 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             File.Delete(ProgramConstants.GamePath + "spawn.ini");
 
-            File.Copy(ProgramConstants.GamePath + "Saved Games/spawnSG.ini", ProgramConstants.GamePath + "spawn.ini");
+            File.Copy(ProgramConstants.GamePath + "Saved Games/Multiplayer/spawnSG.ini", ProgramConstants.GamePath + "spawn.ini");
 
             IniFile spawnIni = new IniFile(ProgramConstants.GamePath + "spawn.ini");
 
@@ -329,8 +329,10 @@ namespace DTAClient.DXGUI.Multiplayer
 
             gameLoadTime = DateTime.Now;
 
+            var gameSessionInfo = new GameSessionInfo(GameSessionType.MULTIPLAYER, 0, WindowManager.AddCallback);
+            gameSessionInfo.StartSession();
             GameProcessLogic.GameProcessExited += SharedUILogic_GameProcessExited;
-            GameProcessLogic.StartGameProcess();
+            GameProcessLogic.StartGameProcess(gameSessionInfo);
 
             fsw.EnableRaisingEvents = true;
             UpdateDiscordPresence(true);
@@ -432,7 +434,7 @@ namespace DTAClient.DXGUI.Multiplayer
                 lblPlayerNames[i].Visible = false;
             }
 
-            List<string> timestamps = SavedGameManager.GetSaveGameTimestamps();
+            List<string> timestamps = MultiplayerSaveGameManager.GetSaveGameTimestamps();
             timestamps.Reverse(); // Most recent saved game first
 
             timestamps.ForEach(ts => ddSavedGame.AddItem(ts));

@@ -103,6 +103,8 @@ namespace DTAClient
 
             FinalSunSettings.WriteFinalSunIni();
 
+            GameSessionInfo.ClearSavedGamesDirectory();
+
             WriteInstallPathToRegistry();
 
             ClientConfiguration.Instance.RefreshSettings();

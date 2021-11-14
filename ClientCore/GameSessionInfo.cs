@@ -162,7 +162,7 @@ namespace ClientCore
 
                 string destination = unknownSaveDirPath + Path.GetFileName(save);
                 bool isUnknown = true;
-                
+
                 if (File.Exists(metaFilePath))
                 {
                     GameSessionInfo meta = GameSessionInfo.ParseFromFile(metaFilePath);
@@ -179,6 +179,13 @@ namespace ClientCore
 
                 if (isUnknown)
                     Logger.Log("Moving saved game " + Path.GetFileName(save) + " to UNKNOWN saves directory.");
+
+                var random = new Random();
+                while (File.Exists(destination))
+                {
+                    // Add random numbers to file name instead of letting the client crash
+                    destination = Path.GetDirectoryName(destination) + "/" + Path.GetFileNameWithoutExtension(destination) + random.Next(0, 10).ToString(CultureInfo.InvariantCulture) + ".SAV";
+                }
 
                 File.Move(save, destination);
             }

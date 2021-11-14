@@ -1,4 +1,4 @@
-﻿namespace DTAClient.Domain.Singleplayer
+﻿namespace ClientCore
 {
     public enum DifficultyRank
     {

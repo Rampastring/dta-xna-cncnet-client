@@ -329,7 +329,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             gameLoadTime = DateTime.Now;
 
-            var gameSessionInfo = new GameSessionManager(GameSessionType.MULTIPLAYER, 0, WindowManager.AddCallback);
+            var gameSessionInfo = new GameSessionManager(new GameSessionInfo(GameSessionType.MULTIPLAYER, 0), WindowManager.AddCallback);
             gameSessionInfo.StartSession();
             GameProcessLogic.GameProcessExited += SharedUILogic_GameProcessExited;
             GameProcessLogic.StartGameProcess(gameSessionInfo);

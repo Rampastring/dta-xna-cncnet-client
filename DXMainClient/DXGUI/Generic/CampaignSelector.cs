@@ -451,7 +451,13 @@ namespace DTAClient.DXGUI.Generic
             discordHandler?.UpdatePresence(mission.GUIName, difficultyName, mission.IconPath, true);
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
-            GameProcessLogic.StartGameProcess(new GameSessionManager(GameSessionType.SINGLEPLAYER, DateTime.Now.Ticks, WindowManager.AddCallback));
+            GameProcessLogic.StartGameProcess(new GameSessionManager(
+                new GameSessionInfo(GameSessionType.SINGLEPLAYER,
+                DateTime.Now.Ticks,
+                mission.InternalName,
+                mission.Side,
+                (DifficultyRank)(trbDifficultySelector.Value + 1)),
+                WindowManager.AddCallback));
         }
 
         private int GetComputerDifficulty() =>

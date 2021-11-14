@@ -21,18 +21,39 @@ namespace ClientCore
     /// </summary>
     public class GameSessionInfo
     {
-        public GameSessionInfo(GameSessionType sessionType, long uniqueId)
+        private const int EXPECTED_FIELD_COUNT = 6;
+
+        public GameSessionInfo(
+            GameSessionType sessionType,
+            long uniqueId,
+            string missionInternalName = "",
+            int sideIndex = -1,
+            DifficultyRank difficulty = DifficultyRank.NONE)
         {
             SessionType = sessionType;
             UniqueId = uniqueId;
+            MissionInternalName = missionInternalName;
+            SideIndex = sideIndex;
+            Difficulty = difficulty;
         }
 
         public GameSessionType SessionType { get; }
         public long UniqueId { get; }
+        public string MissionInternalName { get; }
+        public int SideIndex { get; }
+        public DifficultyRank Difficulty { get; }
 
         public void WriteToFile(string path, string associateFileName)
         {
-            string meta = $"{ ((int)SessionType).ToString(CultureInfo.InvariantCulture) },{ UniqueId.ToString(CultureInfo.InvariantCulture) },{ Path.GetFileName(path) }";
+            string meta = 
+                $"{ ((int)SessionType).ToString(CultureInfo.InvariantCulture) }," +
+                $"{ UniqueId.ToString(CultureInfo.InvariantCulture) }," +
+                $"{ Path.GetFileName(path) }," +
+                $"{ MissionInternalName }," +
+                $"{ SideIndex.ToString(CultureInfo.InvariantCulture) }," +
+                $"{ ((int)Difficulty).ToString(CultureInfo.InvariantCulture) }";
+
+
             byte[] bytes = Encoding.UTF8.GetBytes(meta);
             for (int i = 0; i < bytes.Length; i++)
             {
@@ -61,7 +82,7 @@ namespace ClientCore
 
                 string dataAsString = Encoding.UTF8.GetString(data);
                 string[] parts = dataAsString.Split(',');
-                if (parts.Length != 3)
+                if (parts.Length != EXPECTED_FIELD_COUNT)
                 {
                     Logger.Log("Unexpected saved game meta file format in file " + path);
                     return null;
@@ -79,7 +100,12 @@ namespace ClientCore
                     return null;
                 }
 
-                return new GameSessionInfo(sessionType, uniqueId);
+                string missionInternalName = parts[3];
+                int sideIndex = Conversions.IntFromString(parts[4], -1);
+                int difficultyInt = Conversions.IntFromString(parts[5], 0);
+                DifficultyRank difficulty = (difficultyInt < 0 || difficultyInt > (int)DifficultyRank.HARD) ? DifficultyRank.NONE : (DifficultyRank)difficultyInt;
+
+                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty);
             }
 
             return null;
@@ -96,9 +122,9 @@ namespace ClientCore
         public const string SavedGameMetaExtension = ".sgmeta";
         public const int SavedGameMetaFieldCount = 3;
 
-        public GameSessionManager(GameSessionType sessionType, long uniqueId, Action<Delegate, object[]> callbackAction)
+        public GameSessionManager(GameSessionInfo sessionInfo, Action<Delegate, object[]> callbackAction)
         {
-            SessionInfo = new GameSessionInfo(sessionType, uniqueId);
+            SessionInfo = sessionInfo;
             this.callbackAction = callbackAction;
         }
 

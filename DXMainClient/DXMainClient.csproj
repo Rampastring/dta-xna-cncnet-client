@@ -227,7 +227,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Singleplayer\DifficultyRank.cs" />
     <Compile Include="Domain\Singleplayer\GlobalVariableCondition.cs" />
     <Compile Include="Domain\Singleplayer\ConditionalMissionUnlock.cs" />
     <Compile Include="Domain\Multiplayer\AllianceHolder.cs" />

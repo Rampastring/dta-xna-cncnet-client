@@ -175,7 +175,8 @@ namespace DTAClient.DXGUI.Generic
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
 
             Logger.Log("Deleting saved game " + sg.FileName);
-            File.Delete(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + Path.DirectorySeparatorChar + sg.FileName);
+            File.Delete(sg.FilePath);
+            File.Delete(Path.ChangeExtension(sg.FilePath, GameSessionManager.SavedGameMetaExtension));
             ListSaves();
         }
         

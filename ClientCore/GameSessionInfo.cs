@@ -84,7 +84,7 @@ namespace ClientCore
                 string[] parts = dataAsString.Split(',');
                 if (parts.Length != EXPECTED_FIELD_COUNT)
                 {
-                    Logger.Log("Unexpected saved game meta file format in file " + path);
+                    Logger.Log("Unexpected saved game meta file format in file " + path + ": " + dataAsString);
                     return null;
                 }
 
@@ -96,7 +96,7 @@ namespace ClientCore
 
                 if (!long.TryParse(parts[1], out long uniqueId))
                 {
-                    Logger.Log("FAILED to parse unique ID in saved game meta file " + path);
+                    Logger.Log("FAILED to parse unique ID in saved game meta file " + path + ": " + dataAsString);
                     return null;
                 }
 
@@ -243,11 +243,11 @@ namespace ClientCore
                 {
                     foreach (string savePath in saveFiles)
                     {
-                        File.Move(savePath, ProgramConstants.GamePath + SavedGamesDirectory + Path.GetFileName(savePath));
+                        File.Move(savePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(savePath));
                         string metaFilePath = Path.ChangeExtension(savePath, SavedGameMetaExtension);
                         
                         if (File.Exists(metaFilePath))
-                            File.Move(metaFilePath, ProgramConstants.GamePath + SavedGamesDirectory + Path.GetFileName(metaFilePath));
+                            File.Move(metaFilePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(metaFilePath));
                     }
                 }
                 catch (IOException ex)

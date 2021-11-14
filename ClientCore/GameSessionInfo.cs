@@ -48,7 +48,7 @@ namespace ClientCore
             string meta = 
                 $"{ ((int)SessionType).ToString(CultureInfo.InvariantCulture) }," +
                 $"{ UniqueId.ToString(CultureInfo.InvariantCulture) }," +
-                $"{ Path.GetFileName(path) }," +
+                $"{ associateFileName }," +
                 $"{ MissionInternalName }," +
                 $"{ SideIndex.ToString(CultureInfo.InvariantCulture) }," +
                 $"{ ((int)Difficulty).ToString(CultureInfo.InvariantCulture) }";
@@ -384,25 +384,7 @@ namespace ClientCore
         private void CreateSavedGameMetaFile(string saveFilePath)
         {
             string metaFilePath = Path.ChangeExtension(saveFilePath, SavedGameMetaExtension);
-
-            if (File.Exists(metaFilePath))
-                return;
-
-            string meta = $"{ ((int)SessionType).ToString(CultureInfo.InvariantCulture) },{ UniqueId.ToString(CultureInfo.InvariantCulture) },{ Path.GetFileName(saveFilePath) }";
-            byte[] bytes = Encoding.UTF8.GetBytes(meta);
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                bytes[i] = (byte)~bytes[i];
-            }
-
-            try
-            {
-                File.WriteAllBytes(metaFilePath, bytes);
-            }
-            catch (IOException ex)
-            {
-                Logger.Log("FAILED to write saved game meta file for " + Path.GetFileName(saveFilePath) + ": " + ex.Message);
-            }
+            SessionInfo.WriteToFile(metaFilePath, Path.GetFileName(saveFilePath));
         }
     }
 }

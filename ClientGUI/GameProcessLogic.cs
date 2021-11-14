@@ -23,12 +23,12 @@ namespace ClientGUI
         public static bool UseQres { get; set; }
         public static bool SingleCoreAffinity { get; set; }
 
-        public static GameSessionInfo GameSessionInfo { get; private set; }
+        public static GameSessionManager GameSessionInfo { get; private set; }
 
         /// <summary>
         /// Starts the main game process.
         /// </summary>
-        public static void StartGameProcess(GameSessionInfo sessionInfo)
+        public static void StartGameProcess(GameSessionManager sessionInfo)
         {
             GameSessionInfo = sessionInfo;
 

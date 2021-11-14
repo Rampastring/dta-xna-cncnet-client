@@ -103,7 +103,7 @@ namespace DTAClient
 
             FinalSunSettings.WriteFinalSunIni();
 
-            GameSessionInfo.ClearSavedGamesDirectory();
+            GameSessionManager.CheckForSavesInMainSaveDirectory();
 
             WriteInstallPathToRegistry();
 

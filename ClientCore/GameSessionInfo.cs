@@ -17,24 +17,94 @@ namespace ClientCore
     }
 
     /// <summary>
+    /// Contains information on a unique game session.
+    /// </summary>
+    public class GameSessionInfo
+    {
+        public GameSessionInfo(GameSessionType sessionType, long uniqueId)
+        {
+            SessionType = sessionType;
+            UniqueId = uniqueId;
+        }
+
+        public GameSessionType SessionType { get; }
+        public long UniqueId { get; }
+
+        public void WriteToFile(string path, string associateFileName)
+        {
+            string meta = $"{ ((int)SessionType).ToString(CultureInfo.InvariantCulture) },{ UniqueId.ToString(CultureInfo.InvariantCulture) },{ Path.GetFileName(path) }";
+            byte[] bytes = Encoding.UTF8.GetBytes(meta);
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = (byte)~bytes[i];
+            }
+
+            try
+            {
+                File.WriteAllBytes(path, bytes);
+            }
+            catch (IOException ex)
+            {
+                Logger.Log("FAILED to write saved game meta file for " + Path.GetFileName(path) + ": " + ex.Message);
+            }
+        }
+
+        public static GameSessionInfo ParseFromFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                byte[] data = File.ReadAllBytes(path);
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = (byte)~data[i];
+                }
+
+                string dataAsString = Encoding.UTF8.GetString(data);
+                string[] parts = dataAsString.Split(',');
+                if (parts.Length != 3)
+                {
+                    Logger.Log("Unexpected saved game meta file format in file " + path);
+                    return null;
+                }
+
+                GameSessionType sessionType = GameSessionType.UNKNOWN;
+
+                int gameSessionTypeInt = Conversions.IntFromString(parts[0], -1);
+                if (gameSessionTypeInt > -1 && gameSessionTypeInt <= (int)GameSessionType.SESSION_TYPE_MAX)
+                    sessionType = (GameSessionType)gameSessionTypeInt;
+
+                if (!long.TryParse(parts[1], out long uniqueId))
+                {
+                    Logger.Log("FAILED to parse unique ID in saved game meta file " + path);
+                    return null;
+                }
+
+                return new GameSessionInfo(sessionType, uniqueId);
+            }
+
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Contains information on a game session
     /// and manages a session's saved games.
     /// </summary>
-    public class GameSessionInfo
+    public class GameSessionManager
     {
         public const string SavedGamesDirectory = "Saved Games";
         public const string SavedGameMetaExtension = ".sgmeta";
         public const int SavedGameMetaFieldCount = 3;
 
-        public GameSessionInfo(GameSessionType sessionType, long uniqueId, Action<Delegate, object[]> callbackAction)
+        public GameSessionManager(GameSessionType sessionType, long uniqueId, Action<Delegate, object[]> callbackAction)
         {
-            SessionType = sessionType;
-            UniqueId = uniqueId;
+            SessionInfo = new GameSessionInfo(sessionType, uniqueId);
             this.callbackAction = callbackAction;
         }
 
-        public GameSessionType SessionType { get; }
-        public long UniqueId { get; }
+        public GameSessionInfo SessionInfo { get; }
+        public GameSessionType SessionType => SessionInfo.SessionType;
+        public long UniqueId => SessionInfo.UniqueId;
 
         /// <summary>
         /// A callback used to execute functions on the main UI thread.
@@ -51,20 +121,40 @@ namespace ClientCore
         /// Clears the in-game saved games directory by moving saves
         /// to sub-directories.
         /// </summary>
-        public static void ClearSavedGamesDirectory()
+        public static void CheckForSavesInMainSaveDirectory()
         {
             if (!Directory.Exists(ProgramConstants.GamePath + SavedGamesDirectory))
                 return;
 
             string[] saveFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*.SAV");
 
-            string unknownSaveDirPath = ProgramConstants.GamePath + SavedGamesDirectory + "/Unknown";
+            string unknownSaveDirPath = ProgramConstants.GamePath + SavedGamesDirectory + "/Unknown/";
             Directory.CreateDirectory(unknownSaveDirPath);
             foreach (string save in saveFiles)
             {
-                // TODO parse the meta files to figure out whether the saves are truly unknown
-                Logger.Log("Moving saved game " + Path.GetFileName(save) + " to UNKNOWN saves directory.");
-                File.Move(save, unknownSaveDirPath + "/" + Path.GetFileName(save));
+                string metaFilePath = Path.ChangeExtension(save, SavedGameMetaExtension);
+
+                string destination = unknownSaveDirPath + Path.GetFileName(save);
+                bool isUnknown = true;
+                
+                if (File.Exists(metaFilePath))
+                {
+                    GameSessionInfo meta = GameSessionInfo.ParseFromFile(metaFilePath);
+
+                    if (meta != null && meta.SessionType != GameSessionType.UNKNOWN)
+                    {
+                        isUnknown = false;
+                        string uniqueIdString = meta.UniqueId.ToString(CultureInfo.InvariantCulture);
+                        destination = ProgramConstants.GamePath + SavedGamesDirectory + "/" + uniqueIdString + "/" + Path.GetFileName(save);
+                        Logger.Log($"Moving saved game {Path.GetFileName(save)} to {uniqueIdString} saves directory.");
+                        File.Move(metaFilePath, Path.ChangeExtension(destination, SavedGameMetaExtension));
+                    }
+                }
+
+                if (isUnknown)
+                    Logger.Log("Moving saved game " + Path.GetFileName(save) + " to UNKNOWN saves directory.");
+
+                File.Move(save, destination);
             }
 
             string[] mpSaveFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*.NET");

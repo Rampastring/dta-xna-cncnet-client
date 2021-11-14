@@ -106,7 +106,7 @@ namespace DTAClient.DXGUI.Generic
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
             Logger.Log("Loading saved game " + sg.FilePath);
 
-            var gameSessionInfo = new GameSessionInfo(sg.SessionType, sg.UniqueSessionId, WindowManager.AddCallback);
+            var gameSessionInfo = new GameSessionManager(sg.SessionInfo.SessionType, sg.SessionInfo.UniqueId, WindowManager.AddCallback);
             gameSessionInfo.StartSession(); // Starting the session copies the saved games for this session to the main saved games directory
 
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);

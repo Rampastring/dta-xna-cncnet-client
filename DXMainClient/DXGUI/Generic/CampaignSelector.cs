@@ -162,6 +162,8 @@ namespace DTAClient.DXGUI.Generic
 
         private CheaterWindow cheaterWindow;
 
+        private MissionCompletionNotification missionCompletionNotification;
+
         private readonly string[] filesToCheck = new string[]
         {
             "INI/AI.ini",
@@ -306,6 +308,19 @@ namespace DTAClient.DXGUI.Generic
             cheaterWindow.Disable();
 
             EnabledChanged += CampaignSelector_EnabledChanged;
+
+            missionCompletionNotification = new MissionCompletionNotification(WindowManager);
+            WindowManager.AddAndInitializeControl(missionCompletionNotification);
+            missionCompletionNotification.DrawOrder = 9999;
+            missionCompletionNotification.UpdateOrder = 9999;
+            missionCompletionNotification.Disable();
+
+            CampaignHandler.Instance.MissionRankUpdated += CampaignHandler_MissionRankUpdated;
+        }
+
+        private void CampaignHandler_MissionRankUpdated(object sender, MissionCompletionEventArgs e)
+        {
+            missionCompletionNotification.Show(e.Mission);
         }
 
         private void CampaignSelector_EnabledChanged(object sender, EventArgs e)
@@ -440,7 +455,10 @@ namespace DTAClient.DXGUI.Generic
             {
                 IniFile mapIni = new IniFile(ProgramConstants.GamePath + mission.Scenario);
                 IniFile.ConsolidateIniFiles(mapIni, difficultyIni);
+
+                // Force values of EndOfGame and SkipScore as our progression tracking currently relies on them
                 mapIni.SetBooleanValue("Basic", "EndOfGame", true);
+                mapIni.SetBooleanValue("Basic", "SkipScore", false);
                 mapIni.WriteIniFile(ProgramConstants.GamePath + "spawnmap.ini");
             }
 
@@ -474,6 +492,7 @@ namespace DTAClient.DXGUI.Generic
             GameProcessLogic.GameProcessExited -= GameProcessExited_Callback;
             // Logger.Log("GameProcessExited: Updating Discord Presence.");
             discordHandler?.UpdatePresence();
+            CampaignHandler.Instance.PostGameExitOnSingleplayerMission(GameProcessLogic.GameSessionManager.SessionInfo);
         }
 
         public void ListBattles()

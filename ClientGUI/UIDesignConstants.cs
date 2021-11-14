@@ -18,6 +18,8 @@ namespace ClientGUI
         public const int CONTROL_VERTICAL_MARGIN = 6;
         public const int CONTROL_HORIZONTAL_MARGIN = 6;
 
+        public const int BOLD_FONT_INDEX = 1;
+
         public const int BUTTON_HEIGHT = 23;
         public const int BUTTON_WIDTH_92 = 92;
     }

@@ -274,6 +274,7 @@
     <Compile Include="Domain\MainClientConstants.cs" />
     <Compile Include="Domain\UserAgentHandler.cs" />
     <Compile Include="DXGUI\Generic\CampaignSelector.cs" />
+    <Compile Include="DXGUI\Generic\MissionCompletionNotification.cs" />
     <Compile Include="DXGUI\Generic\PrivacyNotification.cs" />
     <Compile Include="DXGUI\Generic\TopBar.cs" />
     <Compile Include="DXGUI\IMessageView.cs" />

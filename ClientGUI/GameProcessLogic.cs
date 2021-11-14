@@ -23,14 +23,14 @@ namespace ClientGUI
         public static bool UseQres { get; set; }
         public static bool SingleCoreAffinity { get; set; }
 
-        public static GameSessionManager GameSessionInfo { get; private set; }
+        public static GameSessionManager GameSessionManager { get; private set; }
 
         /// <summary>
         /// Starts the main game process.
         /// </summary>
-        public static void StartGameProcess(GameSessionManager sessionInfo)
+        public static void StartGameProcess(GameSessionManager sessionManager)
         {
-            GameSessionInfo = sessionInfo;
+            GameSessionManager = sessionManager;
 
             Logger.Log("About to launch main game executable.");
 
@@ -153,7 +153,7 @@ namespace ClientGUI
             Process proc = (Process)sender;
             proc.Exited -= Process_Exited;
             proc.Dispose();
-            GameSessionInfo.EndSession();
+            GameSessionManager.EndSession();
             GameProcessExited?.Invoke();
         }
     }

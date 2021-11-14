@@ -159,6 +159,7 @@
     <Compile Include="Statistics\GameParsers\LogFileStatisticsParser.cs" />
     <Compile Include="Statistics\GenericMatchParser.cs" />
     <Compile Include="Statistics\GenericStatisticsManager.cs" />
+    <Compile Include="Statistics\LogFileFinder.cs" />
     <Compile Include="Statistics\MatchStatistics.cs" />
     <Compile Include="Statistics\PlayerStatistics.cs" />
     <Compile Include="Statistics\StatisticsManager.cs" />

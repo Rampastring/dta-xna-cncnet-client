@@ -1,4 +1,5 @@
 ﻿using ClientCore;
+using ClientCore.Statistics;
 using Rampastring.Tools;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,16 @@ namespace DTAClient.Domain.Singleplayer
         }
     }
 
+    public class MissionCompletionEventArgs : EventArgs
+    {
+        public MissionCompletionEventArgs(Mission mission)
+        {
+            Mission = mission;
+        }
+
+        public Mission Mission { get; }
+    }
+
     /// <summary>
     /// The central parser and container for campaigns and global variables.
     /// </summary>
@@ -25,8 +36,10 @@ namespace DTAClient.Domain.Singleplayer
             ReadBattleIni("INI/Battle.ini");
             ReadBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
 
-            MissionRankHandler.LoadData(missions, GlobalVariables);
+            MissionRankHandler.LoadData(Missions, GlobalVariables);
         }
+
+        public event EventHandler<MissionCompletionEventArgs> MissionRankUpdated;
 
         private static CampaignHandler _instance;
 
@@ -36,7 +49,7 @@ namespace DTAClient.Domain.Singleplayer
         /// <summary>
         /// A list of all missions in the entire game.
         /// </summary>
-        private List<Mission> missions = new List<Mission>();
+        public List<Mission> Missions = new List<Mission>();
 
         /// <summary>
         /// The combined mission and campaign list to be displayed in the main campaign selector menu.
@@ -164,10 +177,10 @@ namespace DTAClient.Domain.Singleplayer
         {
             Campaigns.ForEach(c => c.Missions.ForEach(m => 
             {
-                if (missions.Exists(otherMission => otherMission.InternalName == m.InternalName))
+                if (Missions.Exists(otherMission => otherMission.InternalName == m.InternalName))
                     throw new CampaignConfigException("Mission named " + m.InternalName + " exists more than once!");
 
-                missions.Add(m);
+                Missions.Add(m);
             }));
 
             foreach (var campaign in Campaigns)
@@ -191,7 +204,7 @@ namespace DTAClient.Domain.Singleplayer
 
         private void VerifyMissionExists(string missionName)
         {
-            if (!missions.Exists(m => m.InternalName == missionName))
+            if (!Missions.Exists(m => m.InternalName == missionName))
             {
                 throw new CampaignConfigException($"Reference to singleplayer campaign mission '{missionName}' defined, " +
                     $"but the mission itself does not exist. Check the INI/Campaigns.ini file for mistakes." +
@@ -240,11 +253,78 @@ namespace DTAClient.Domain.Singleplayer
 
                 BattleList.Add(mission);
 
-                if (missions.Exists(m => m.InternalName == mission.InternalName))
+                if (Missions.Exists(m => m.InternalName == mission.InternalName))
                     throw new CampaignConfigException("Mission named " + mission.InternalName + " exists in both " + path + " and Campaigns.ini!");
 
-                missions.Add(mission);
+                Missions.Add(mission);
             }
+        }
+
+        /// <summary>
+        /// Parses singleplayer mission completion info from the game output files.
+        /// Call this when the game has exited after the user has started or loaded
+        /// a singleplayer mission.
+        /// </summary>
+        public void PostGameExitOnSingleplayerMission(GameSessionInfo sessionInfo)
+        {
+            if (sessionInfo.SessionType != GameSessionType.SINGLEPLAYER)
+            {
+                throw new ArgumentException(nameof(CampaignHandler) + "." + nameof(PostGameExitOnSingleplayerMission) + " should only be called after playing a singleplayer mission.");
+            }
+
+            string logFileName = LogFileFinder.GetLogFilePath();
+
+            if (!File.Exists(ProgramConstants.GamePath + logFileName))
+            {
+                Logger.Log("WARNING: Could not parse log file after game end because the log file was not found!");
+                return;
+            }
+
+            string[] lines = File.ReadAllLines(ProgramConstants.GamePath + logFileName);
+            bool scoreScreenLineFound = false;
+            foreach (string line in lines)
+            {
+                if (line.StartsWith("ScoreScreen: Loaded "))
+                    scoreScreenLineFound = true;
+            }
+
+            if (!scoreScreenLineFound)
+            {
+                Logger.Log("Relevant line not found, assuming the player did not win the mission.");
+                return;
+            }
+
+            Mission mission = Missions.Find(m => m.InternalName == sessionInfo.MissionInternalName);
+            if (mission == null)
+            {
+                Logger.Log("WARNING: Failed to set mission progression data; could not find mission " + sessionInfo.MissionInternalName);
+                return;
+            }
+
+            if ((int)mission.Rank < (int)sessionInfo.Difficulty)
+            {
+                Logger.Log("Setting completion rank of " + mission.InternalName + " to " + sessionInfo.Difficulty);
+                mission.Rank = sessionInfo.Difficulty;
+                MissionRankUpdated?.Invoke(this, new MissionCompletionEventArgs(mission));
+            }
+
+            Logger.Log("Finding and unlocking missions related to " + mission.InternalName);
+            foreach (string unlockMissionName in mission.UnlockMissions)
+            {
+                Mission otherMission = Missions.Find(m => m.InternalName == unlockMissionName);
+                if (otherMission == null)
+                {
+                    Logger.Log("FAILED to unlock mission " + unlockMissionName + "because it was not found!");
+                    continue;
+                }
+
+                otherMission.IsUnlocked = true;
+                Logger.Log("Unlocked mission " + mission.InternalName);
+            }
+
+            // TODO unlock global variables as well
+
+            MissionRankHandler.WriteData(Missions, GlobalVariables);
         }
     }
 }

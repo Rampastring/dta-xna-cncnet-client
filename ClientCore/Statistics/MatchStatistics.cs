@@ -65,26 +65,7 @@ namespace ClientCore.Statistics
 
             LengthInSeconds = (int)(DateTime.Now - DateAndTime).TotalSeconds;
 
-            string logFileName = ClientConfiguration.Instance.StatisticsLogFileName;
-            if (File.Exists(ProgramConstants.GamePath + "LaunchVinifera.exe"))
-            {
-                if (Directory.Exists(ProgramConstants.GamePath + "Debug"))
-                {
-                    string[] files = Directory.GetFiles(ProgramConstants.GamePath + "Debug", "DEBUG_*");
-
-                    // Find the latest debug file
-                    DateTime latestDate = DateTime.MinValue;
-                    foreach (string viniferaDebugLogPath in files)
-                    {
-                        DateTime fileWriteTime = File.GetLastWriteTime(viniferaDebugLogPath);
-                        if (fileWriteTime > latestDate)
-                        {
-                            latestDate = fileWriteTime;
-                            logFileName = "Debug/" + Path.GetFileName(viniferaDebugLogPath); 
-                        }
-                    }
-                }
-            }
+            string logFileName = LogFileFinder.GetLogFilePath();
 
             var parser = new LogFileStatisticsParser(this, isLoadedGame);
             parser.ParseStats(gamePath, logFileName);

@@ -1,6 +1,7 @@
 using ClientCore;
 using ClientGUI;
 using DTAClient.Domain;
+using DTAClient.Domain.Singleplayer;
 using Microsoft.Xna.Framework;
 using Rampastring.Tools;
 using Rampastring.XNAUI;
@@ -187,6 +188,11 @@ namespace DTAClient.DXGUI.Generic
         {
             GameProcessLogic.GameProcessExited -= GameProcessExited_Callback;
             discordHandler?.UpdatePresence();
+
+            if (GameProcessLogic.GameSessionManager.SessionType == GameSessionType.SINGLEPLAYER)
+            {
+                CampaignHandler.Instance.PostGameExitOnSingleplayerMission(GameProcessLogic.GameSessionManager.SessionInfo);
+            }
         }
 
         public void ListSaves()

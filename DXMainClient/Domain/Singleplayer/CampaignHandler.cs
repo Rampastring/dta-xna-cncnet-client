@@ -29,6 +29,8 @@ namespace DTAClient.Domain.Singleplayer
     /// </summary>
     public class CampaignHandler
     {
+        private const int GLOBAL_VARIABLE_MAX = 50;
+
         private CampaignHandler()
         {
             InitCampaigns();
@@ -282,10 +284,24 @@ namespace DTAClient.Domain.Singleplayer
 
             string[] lines = File.ReadAllLines(ProgramConstants.GamePath + logFileName);
             bool scoreScreenLineFound = false;
+            bool[] globalVariableStates = new bool[GLOBAL_VARIABLE_MAX];
+
             foreach (string line in lines)
             {
                 if (line.StartsWith("ScoreScreen: Loaded "))
                     scoreScreenLineFound = true;
+
+                // Also parse global variables from the log file
+                if (line.StartsWith("Global variables: "))
+                {
+                    string gvarString = line.Substring(18);
+                    string[] gVarValues = gvarString.Split(',');
+
+                    for (int i = 0; i < gVarValues.Length && i < globalVariableStates.Length; i++)
+                    {
+                        globalVariableStates[i] = gVarValues[i] == "1";
+                    }
+                }
             }
 
             if (!scoreScreenLineFound)
@@ -322,7 +338,64 @@ namespace DTAClient.Domain.Singleplayer
                 Logger.Log("Unlocked mission " + mission.InternalName);
             }
 
-            // TODO unlock global variables as well
+            Logger.Log("Finding and unlocking conditionally unlocked missions related to " + mission.InternalName);
+            foreach (var conditionalMissionUnlock in mission.ConditionalMissionUnlocks)
+            {
+                bool conditionsMet = true;
+
+                foreach (var globalVariableCondition in conditionalMissionUnlock.PrerequisiteGlobalVariableStates)
+                {
+                    var globalVariable = GlobalVariables.Find(gv => gv.InternalName == globalVariableCondition.GlobalVariableName);
+
+                    if (globalVariable == null)
+                    {
+                        Logger.Log("FAILED to check condition of global variable " + globalVariableCondition.GlobalVariableName + " because it was not found!");
+                        continue;
+                    }
+
+                    if (globalVariableStates[globalVariable.Index] != globalVariableCondition.Enabled)
+                    {
+                        conditionsMet = false;
+                        break;
+                    }
+                }
+                
+                if (conditionsMet)
+                {
+                    Mission otherMission = Missions.Find(m => m.InternalName == conditionalMissionUnlock.UnlockMissionName);
+                    if (otherMission == null)
+                    {
+                        Logger.Log("FAILED to unlock conditional mission " + conditionalMissionUnlock.UnlockMissionName + " because it was not found!");
+                        continue;
+                    }
+
+                    otherMission.IsUnlocked = true;
+                    Logger.Log("Unlocked conditional mission " + mission.InternalName);
+                }
+            }
+
+            Logger.Log("Finding and unlocking global variable states related to " + mission.InternalName);
+            foreach (var globalVariableName in mission.UnlockGlobalVariables)
+            {
+                var globalVariable = GlobalVariables.Find(gv => gv.InternalName == globalVariableName);
+
+                if (globalVariable == null)
+                {
+                    Logger.Log("FAILED to unlock global variable " + globalVariableName + " because it was not found!");
+                    continue;
+                }
+
+                if (globalVariableStates[globalVariable.Index])
+                {
+                    Logger.Log("Unlocked 'enabled' state of " + globalVariable.InternalName);
+                    globalVariable.IsEnabledUnlocked = true;
+                }
+                else
+                {
+                    Logger.Log("Unlocked 'disabled' state of " + globalVariable.InternalName);
+                    globalVariable.IsDisabledUnlocked = true;
+                }
+            }
 
             MissionRankHandler.WriteData(Missions, GlobalVariables);
         }

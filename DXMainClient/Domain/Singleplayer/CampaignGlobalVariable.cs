@@ -18,12 +18,12 @@ namespace DTAClient.Domain.Singleplayer
         /// <summary>
         /// The index of this global variable.
         /// </summary>
-        public int Index { get; set; }
+        public int Index { get; }
 
         /// <summary>
         /// The internal name (INI name) of this global variable.
         /// </summary>
-        public string InternalName { get; set; }
+        public string InternalName { get; }
 
         /// <summary>
         /// The name of this global variable as displayed in the campaign UI.

@@ -440,6 +440,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 IniFile mapIni = new IniFile(ProgramConstants.GamePath + mission.Scenario);
                 IniFile.ConsolidateIniFiles(mapIni, difficultyIni);
+                mapIni.SetBooleanValue("Basic", "EndOfGame", true);
                 mapIni.WriteIniFile(ProgramConstants.GamePath + "spawnmap.ini");
             }
 

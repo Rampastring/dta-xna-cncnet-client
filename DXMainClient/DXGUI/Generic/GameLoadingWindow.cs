@@ -177,6 +177,9 @@ namespace DTAClient.DXGUI.Generic
             Logger.Log("Deleting saved game " + sg.FileName);
             File.Delete(sg.FilePath);
             File.Delete(Path.ChangeExtension(sg.FilePath, GameSessionManager.SavedGameMetaExtension));
+            if (Directory.GetFiles(Path.GetDirectoryName(sg.FilePath)).Length == 0)
+                Directory.Delete(Path.GetDirectoryName(sg.FilePath));
+
             ListSaves();
         }
         

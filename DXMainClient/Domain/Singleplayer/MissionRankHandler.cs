@@ -149,7 +149,7 @@ namespace DTAClient.Domain.Singleplayer
                     spScoreIni.SetStringValue(
                         GLOBAL_VARIABLES_SECTION,
                         globalVariable.InternalName,
-                        $"{globalVariable.IsDisabledUnlocked},{globalVariable.IsEnabledUnlocked}");
+                        $"{ (globalVariable.IsDisabledUnlocked ? "1" : "0" ) },{ (globalVariable.IsEnabledUnlocked ? "1" : "0") }");
                 }
             }
 

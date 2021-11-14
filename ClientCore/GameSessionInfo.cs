@@ -343,8 +343,6 @@ namespace ClientCore
                 subDirPath += UniqueId.ToString(CultureInfo.InvariantCulture) + "/";
             }
 
-            Directory.CreateDirectory(ProgramConstants.GamePath + subDirPath);
-
             string[] saveFiles;
 
             if (SessionType == GameSessionType.MULTIPLAYER)
@@ -358,6 +356,9 @@ namespace ClientCore
 
             try
             {
+                if (saveFiles.Length > 0)
+                    Directory.CreateDirectory(ProgramConstants.GamePath + subDirPath);
+
                 foreach (string file in saveFiles)
                 {
                     File.Move(file, ProgramConstants.GamePath + subDirPath + Path.GetFileName(file));

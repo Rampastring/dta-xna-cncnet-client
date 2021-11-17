@@ -255,8 +255,8 @@ namespace DTAClient.Domain.Singleplayer
 
                 BattleList.Add(mission);
 
-                if (Missions.Exists(m => m.InternalName == mission.InternalName))
-                    throw new CampaignConfigException("Mission named " + mission.InternalName + " exists in both " + path + " and Campaigns.ini!");
+                if (Missions.Exists(m => m.InternalName == mission.InternalName && !string.IsNullOrWhiteSpace(m.Scenario)))
+                    throw new CampaignConfigException("Mission named " + mission.InternalName + " exists multiple times! (Maybe it exists in both " + path + " and Campaigns.ini?)");
 
                 Missions.Add(mission);
             }

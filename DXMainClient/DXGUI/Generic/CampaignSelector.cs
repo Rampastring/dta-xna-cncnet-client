@@ -1,15 +1,15 @@
 ﻿using ClientCore;
-using Microsoft.Xna.Framework;
-using System;
-using DTAClient.Domain;
-using System.IO;
 using ClientGUI;
-using Rampastring.XNAUI.XNAControls;
-using Rampastring.XNAUI;
-using Rampastring.Tools;
-using Updater;
+using DTAClient.Domain;
 using DTAClient.Domain.Singleplayer;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Rampastring.Tools;
+using Rampastring.XNAUI;
+using Rampastring.XNAUI.XNAControls;
+using System;
+using System.IO;
+using Updater;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -27,6 +27,8 @@ namespace DTAClient.DXGUI.Generic
 
         public override void Initialize()
         {
+            EnableScrollbar = true;
+
             base.Initialize();
 
             rankTextures = new Texture2D[]
@@ -45,87 +47,20 @@ namespace DTAClient.DXGUI.Generic
             return rankTextures[(int)rank - 1];
         }
 
-        public override void Draw(GameTime gameTime)
+        protected override void DrawListBoxItem(int index, int y)
         {
-            DrawPanel();
+            base.DrawListBoxItem(index, y);
 
-            int height = 2;
+            var lbItem = Items[index];
 
-            for (int i = TopIndex; i < Items.Count; i++)
+            var mission = (Mission)lbItem.Tag;
+            Texture2D rankTexture = DifficultyRankToTexture(mission.Rank);
+            if (rankTexture != null)
             {
-                XNAListBoxItem lbItem = Items[i];
-
-                if (height > Height)
-                    break;
-
-                int x = TextBorderDistance;
-
-                if (i == SelectedIndex)
-                {
-                    int drawnWidth;
-
-                    if (DrawSelectionUnderScrollbar || !ScrollBar.IsDrawn() || !EnableScrollbar)
-                    {
-                        drawnWidth = Width - 2;
-                    }
-                    else
-                    {
-                        drawnWidth = Width - 2 - ScrollBar.Width;
-                    }
-
-                    FillRectangle(new Rectangle(1, height, drawnWidth,
-                        lbItem.TextLines.Count * LineHeight),
-                        FocusColor);
-                }
-
-                int textureYPosition = 0;
-
-                if (lbItem.Texture != null)
-                {
-                    int textureHeight = lbItem.Texture.Height;
-                    int textureWidth = lbItem.Texture.Width;
-
-                    if (lbItem.Texture.Height > LineHeight)
-                    {
-                        double scaleRatio = textureHeight / (double)LineHeight;
-                        textureHeight = LineHeight;
-                        textureWidth = (int)(textureWidth / scaleRatio);
-                    }
-                    else
-                        textureYPosition = (LineHeight - textureHeight) / 2;
-
-                    DrawTexture(lbItem.Texture,
-                        new Rectangle(x, height + textureYPosition,
-                        textureWidth, textureHeight), Color.White);
-
-                    x += textureWidth + 2;
-                }
-
-                var mission = (Mission)lbItem.Tag;
-                Texture2D rankTexture = DifficultyRankToTexture(mission.Rank);
-                if (rankTexture != null)
-                {
-                    DrawTexture(rankTexture,
-                        new Rectangle(Width - rankTexture.Width - TextBorderDistance, height + textureYPosition,
-                        rankTexture.Width, rankTexture.Height), Color.White);
-                }
-
-                x += lbItem.TextXPadding;
-
-                for (int j = 0; j < lbItem.TextLines.Count; j++)
-                {
-                    DrawStringWithShadow(lbItem.TextLines[j], FontIndex,
-                        new Vector2(x, height + j * LineHeight + lbItem.TextYPadding),
-                        lbItem.TextColor);
-                }
-
-                height += lbItem.TextLines.Count * LineHeight;
+                DrawTexture(rankTexture,
+                    new Rectangle(Width - rankTexture.Width - TextBorderDistance - ScrollBar.Width, y + (LineHeight - rankTexture.Height) / 2,
+                    rankTexture.Width, rankTexture.Height), Color.White);
             }
-
-            if (DrawBorders)
-                DrawPanelBorders();
-
-            DrawChildren(gameTime);
         }
     }
 
@@ -321,6 +256,9 @@ namespace DTAClient.DXGUI.Generic
         private void CampaignHandler_MissionRankUpdated(object sender, MissionCompletionEventArgs e)
         {
             missionCompletionNotification.Show(e.Mission);
+
+            if (Enabled)
+                ListBattles();
         }
 
         private void CampaignSelector_EnabledChanged(object sender, EventArgs e)
@@ -331,14 +269,22 @@ namespace DTAClient.DXGUI.Generic
 
         private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lbCampaignList.SelectedIndex == -1)
+            var mission = lbCampaignList.SelectedItem != null ? lbCampaignList.SelectedItem.Tag as Mission : null;
+
+            string[] difficultyLabels = DifficultyNamesUIDefault;
+            if (mission != null && mission.DifficultyLabels != null && (!mission.RequiresUnlocking || mission.IsUnlocked))
+                difficultyLabels = mission.DifficultyLabels;
+
+            lblEasy.Text = difficultyLabels[0].ToUpperInvariant();
+            lblNormal.Text = difficultyLabels[1].ToUpperInvariant();
+            lblHard.Text = difficultyLabels[2].ToUpperInvariant();
+
+            if (mission == null)
             {
                 tbMissionDescription.Text = string.Empty;
                 btnLaunch.AllowClick = false;
                 return;
             }
-
-            var mission = lbCampaignList.SelectedItem.Tag as Mission;
 
             if (string.IsNullOrEmpty(mission.Scenario))
             {
@@ -347,10 +293,12 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
-            string[] difficultyLabels = mission.DifficultyLabels != null ? mission.DifficultyLabels : DifficultyNamesUIDefault;
-            lblEasy.Text = difficultyLabels[0].ToUpperInvariant();
-            lblNormal.Text = difficultyLabels[1].ToUpperInvariant();
-            lblHard.Text = difficultyLabels[2].ToUpperInvariant();
+            if (mission.RequiresUnlocking && !mission.IsUnlocked)
+            {
+                tbMissionDescription.Text = "You have not yet unlocked this mission.";
+                btnLaunch.AllowClick = false;
+                return;
+            }
 
             tbMissionDescription.Text = mission.GUIDescription;
 
@@ -515,12 +463,18 @@ namespace DTAClient.DXGUI.Generic
                     item.IsHeader = true;
                     item.Selectable = false;
                 }
+                else if (mission.RequiresUnlocking && !mission.IsUnlocked)
+                {
+                    item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
+                    item.Text = "Locked Mission";
+                    item.Texture = AssetLoader.LoadTexture("randomicon.png");
+                }
                 else
                 {
                     item.TextColor = lbCampaignList.DefaultItemColor;
                 }
 
-                if (!string.IsNullOrEmpty(mission.IconPath))
+                if (item.Texture == null && !string.IsNullOrEmpty(mission.IconPath))
                     item.Texture = AssetLoader.LoadTexture(mission.IconPath);
 
                 lbCampaignList.AddItem(item);

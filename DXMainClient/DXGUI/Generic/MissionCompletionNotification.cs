@@ -42,7 +42,7 @@ namespace DTAClient.DXGUI.Generic
                 AssetLoader.LoadTexture("rankHard.png")
             };
 
-            Width = 250;
+            Width = 300;
             Height = 60;
             Y = 200;
 
@@ -84,7 +84,7 @@ namespace DTAClient.DXGUI.Generic
                 case DifficultyRank.EASY:
                     return "Easy";
                 case DifficultyRank.NORMAL:
-                    return "Medium";
+                    return "Normal";
                 case DifficultyRank.HARD:
                     return "Hard";
                 default:

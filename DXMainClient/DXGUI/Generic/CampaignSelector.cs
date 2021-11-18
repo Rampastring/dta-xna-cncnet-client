@@ -37,6 +37,8 @@ namespace DTAClient.DXGUI.Generic
                 AssetLoader.LoadTexture("rankNormal.png"),
                 AssetLoader.LoadTexture("rankHard.png")
             };
+
+            EnableScrollbar = true;
         }
 
         private Texture2D DifficultyRankToTexture(DifficultyRank rank)
@@ -64,8 +66,73 @@ namespace DTAClient.DXGUI.Generic
         }
     }
 
+    /// <summary>
+    /// A text block that can draw an additional custom,
+    /// darkened background texture in addition to its main background texture.
+    /// </summary>
+    public class MissionDescriptionBox : XNATextBlock
+    {
+        public MissionDescriptionBox(WindowManager windowManager) : base(windowManager)
+        {
+        }
+
+        private Texture2D missionBackgroundTexture;
+        private Texture2D darkeningTexture;
+
+        public override void Initialize()
+        {
+            darkeningTexture = AssetLoader.CreateTexture(Color.Black, 2, 2);
+            base.Initialize();
+        }
+
+        public void LoadMissionBackgroundTexture(string texturePath)
+        {
+            if (missionBackgroundTexture != null)
+            {
+                missionBackgroundTexture.Dispose();
+                missionBackgroundTexture = null;
+            }
+
+            if (!string.IsNullOrWhiteSpace(texturePath))
+            {
+                missionBackgroundTexture = AssetLoader.LoadTextureUncached(texturePath);
+            }
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            DrawPanel();
+
+            if (missionBackgroundTexture != null)
+            {
+                PanelBackgroundImageDrawMode originalDrawMode = PanelBackgroundDrawMode;
+
+                PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.CENTERED;
+                DrawBackgroundTexture(missionBackgroundTexture, new Color(40, 40, 40, 255));
+                PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
+                // DrawBackgroundTexture(darkeningTexture, new Color(0, 0, 0, 200));
+                PanelBackgroundDrawMode = originalDrawMode;
+            }
+
+            if (!string.IsNullOrEmpty(Text))
+            {
+                var windowRectangle = RenderRectangle();
+
+                DrawStringWithShadow(Text, FontIndex,
+                    new Vector2(TextXMargin, TextYPosition), TextColor);
+            }
+
+            if (DrawBorders)
+                DrawPanelBorders();
+
+            DrawChildren(gameTime);
+        }
+    }
+
     public class CampaignSelector : XNAWindow
     {
+        private const int MAX_GLOBAL_COUNT = 4;
+
         private const int DEFAULT_WIDTH = 650;
         private const int DEFAULT_HEIGHT = 600;
 
@@ -88,12 +155,16 @@ namespace DTAClient.DXGUI.Generic
 
         private XNAListBox lbCampaignList;
         private XNAClientButton btnLaunch;
-        private XNATextBlock tbMissionDescription;
+        private MissionDescriptionBox tbMissionDescription;
         private XNATrackbar trbDifficultySelector;
 
         private XNALabel lblEasy;
         private XNALabel lblNormal;
         private XNALabel lblHard;
+
+        private XNALabel lblPreconditionsHeader;
+        private XNALabel[] globalVariableNames = new XNALabel[MAX_GLOBAL_COUNT];
+        private XNADropDown[] globalVariableValues = new XNADropDown[MAX_GLOBAL_COUNT];
 
         private CheaterWindow cheaterWindow;
 
@@ -144,7 +215,7 @@ namespace DTAClient.DXGUI.Generic
                 lblSelectCampaign.Y, 0, 0);
             lblMissionDescriptionHeader.Text = "MISSION DESCRIPTION:";
 
-            tbMissionDescription = new XNATextBlock(WindowManager);
+            tbMissionDescription = new MissionDescriptionBox(WindowManager);
             tbMissionDescription.Name = "tbMissionDescription";
             tbMissionDescription.ClientRectangle = new Rectangle(
                 lblMissionDescriptionHeader.X, 
@@ -176,6 +247,50 @@ namespace DTAClient.DXGUI.Generic
                 new Color(0, 0, 0, 128), 2, 2);
             trbDifficultySelector.ButtonTexture = AssetLoader.LoadTextureUncached(
                 "trackbarButton_difficulty.png");
+
+            int y = lblDifficultyLevel.Y - UIDesignConstants.EMPTY_SPACE_BOTTOM;
+
+            // Create controls for global variable customization
+            // The indexes increase from bottom to top, meaning
+            // that with 4 lines the global indexes go like this:
+            // global slot #3
+            // global slot #2
+            // global slot #1
+            // global slot #0
+            for (int i = 0; i < MAX_GLOBAL_COUNT; i++)
+            {
+                globalVariableValues[i] = new XNADropDown(WindowManager);
+                globalVariableValues[i].Name = "globalVariableValue" + i;
+                globalVariableValues[i].X = trbDifficultySelector.X;
+                globalVariableValues[i].Width = trbDifficultySelector.Width;
+                globalVariableValues[i].AddItem("Disabled");
+                globalVariableValues[i].AddItem("Enabled");
+                AddChild(globalVariableValues[i]);
+                globalVariableValues[i].Y = y - (UIDesignConstants.EMPTY_SPACE_BOTTOM * 2) - globalVariableValues[i].Height;
+                globalVariableValues[i].Disable();
+
+                globalVariableNames[i] = new XNALabel(WindowManager);
+                globalVariableNames[i].Name = "globalVariableName" + i;
+                globalVariableNames[i].Text = "Global Variable #" + i;
+                globalVariableNames[i].TextAnchor = LabelTextAnchorInfo.RIGHT;
+                globalVariableNames[i].AnchorPoint = new Vector2(globalVariableValues[i].X, globalVariableValues[i].Y - globalVariableNames[i].Height);
+                AddChild(globalVariableNames[i]);
+                globalVariableNames[i].Disable();
+
+                y = globalVariableNames[i].Y;
+            }
+
+            lblPreconditionsHeader = new XNALabel(WindowManager);
+            lblPreconditionsHeader.Name = nameof(lblPreconditionsHeader);
+            lblPreconditionsHeader.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblPreconditionsHeader.TextAnchor = LabelTextAnchorInfo.HORIZONTAL_CENTER;
+            lblPreconditionsHeader.AnchorPoint = new Vector2(trbDifficultySelector.ClientRectangle.Center.X,
+                globalVariableNames[0].Y - UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2);
+            lblPreconditionsHeader.Text = "PRECONDITIONS";
+            AddChild(lblPreconditionsHeader);
+            lblPreconditionsHeader.Disable();
+
+            PreconditionUIConfig(null);
 
             lblEasy = new XNALabel(WindowManager);
             lblEasy.Name = "lblEasy";
@@ -281,24 +396,26 @@ namespace DTAClient.DXGUI.Generic
 
             if (mission == null)
             {
-                tbMissionDescription.Text = string.Empty;
-                btnLaunch.AllowClick = false;
+                MissionList_InvalidMission();
                 return;
             }
 
             if (string.IsNullOrEmpty(mission.Scenario))
             {
-                tbMissionDescription.Text = string.Empty;
-                btnLaunch.AllowClick = false;
+                MissionList_InvalidMission();
                 return;
             }
 
             if (mission.RequiresUnlocking && !mission.IsUnlocked)
             {
+                MissionList_InvalidMission();
                 tbMissionDescription.Text = "You have not yet unlocked this mission.";
-                btnLaunch.AllowClick = false;
                 return;
             }
+
+            tbMissionDescription.LoadMissionBackgroundTexture(mission.PreviewImagePath);
+
+            PreconditionUIConfig(mission);
 
             tbMissionDescription.Text = mission.GUIDescription;
 
@@ -311,6 +428,91 @@ namespace DTAClient.DXGUI.Generic
             btnLaunch.AllowClick = true;
         }
 
+        /// <summary>
+        /// Sets up the UI for a non-launchable mission state.
+        /// </summary>
+        private void MissionList_InvalidMission()
+        {
+            tbMissionDescription.LoadMissionBackgroundTexture(null);
+            tbMissionDescription.Text = string.Empty;
+            btnLaunch.AllowClick = false;
+            PreconditionUIConfig(null);
+        }
+
+        /// <summary>
+        /// Configures the preconditions / globals UI for a mission.
+        /// </summary>
+        /// <param name="mission">The mission. Can be null.</param>
+        private void PreconditionUIConfig(Mission mission)
+        {
+            if (mission != null && mission.UsedGlobalVariables.Length > 0)
+            {
+                lblPreconditionsHeader.Enable();
+
+                for (int i = 0; i < mission.UsedGlobalVariables.Length && i < MAX_GLOBAL_COUNT; i++)
+                {
+                    CampaignGlobalVariable global = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == mission.UsedGlobalVariables[i]);
+
+                    globalVariableNames[i].Text = global.UIName;
+                    globalVariableNames[i].TextColor = UISettings.ActiveSettings.TextColor;
+                    globalVariableNames[i].Enable();
+
+                    if (global.IsDisabledUnlocked)
+                    {
+                        globalVariableValues[i].Items[0].Text = global.UIDisabledOption ?? "No";
+                    }
+                    else
+                    {
+                        globalVariableValues[i].Items[0].Text = "Option not unlocked";
+                    }
+
+                    if (global.IsEnabledUnlocked)
+                    {
+                        globalVariableValues[i].Items[1].Text = global.UIEnabledOption ?? "Yes";
+                    }
+                    else
+                    {
+                        globalVariableValues[i].Items[1].Text = "Option not unlocked";
+                    }
+
+                    globalVariableValues[i].Items[0].Selectable = global.IsDisabledUnlocked;
+                    globalVariableValues[i].Items[1].Selectable = global.IsEnabledUnlocked;
+                    globalVariableValues[i].SelectedIndex = 0;
+                    if (global.IsEnabledUnlocked && !global.IsDisabledUnlocked)
+                        globalVariableValues[i].SelectedIndex = 1;
+
+                    if (global.HideIfNotEnabledUnlocked)
+                    {
+                        globalVariableValues[i].Items[0].Text = "-";
+                        globalVariableValues[i].Items[1].Text = "-";
+                        globalVariableNames[i].Text = "Unknown Condition (not yet unlocked)";
+                        globalVariableNames[i].TextColor = UISettings.ActiveSettings.DisabledItemColor;
+                    }
+
+                    globalVariableValues[i].Enable();
+                }
+
+                int preconditionsHeaderY = mission.UsedGlobalVariables.Length >= MAX_GLOBAL_COUNT ? globalVariableNames[0].Y :
+                    globalVariableNames[mission.UsedGlobalVariables.Length - 1].Y;
+                preconditionsHeaderY -= UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+                lblPreconditionsHeader.Y = preconditionsHeaderY;
+                lblPreconditionsHeader.Enable();
+
+                tbMissionDescription.Height = lblPreconditionsHeader.Y - (UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2) - tbMissionDescription.Y;
+            }
+            else
+            {
+                lblPreconditionsHeader.Disable();
+                for (int i = 0; i < MAX_GLOBAL_COUNT; i++)
+                {
+                    globalVariableNames[i].Disable();
+                    globalVariableValues[i].Disable();
+                }
+
+                tbMissionDescription.Height = globalVariableValues[0].Bottom - tbMissionDescription.Y;
+            }
+        }
+
         private void BtnCancel_LeftClick(object sender, EventArgs e)
         {
             Enabled = false;
@@ -318,8 +520,6 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            int selectedMissionId = lbCampaignList.SelectedIndex;
-
             var mission = lbCampaignList.SelectedItem.Tag as Mission;
 
             if (!ClientConfiguration.Instance.ModMode && 

@@ -24,6 +24,7 @@ namespace DTAClient.Domain.Singleplayer
 
             IconPath = iniSection.GetStringValue(nameof(IconPath), string.Empty);
             GUIDescription = iniSection.GetStringValue("LongDescription", string.Empty);
+            PreviewImagePath = iniSection.GetStringValue(nameof(PreviewImagePath), string.Empty);
             RequiredAddon = iniSection.GetBooleanValue(nameof(RequiredAddon), false);
             Enabled = iniSection.GetBooleanValue(nameof(Enabled), true);
             BuildOffAlly = iniSection.GetBooleanValue(nameof(BuildOffAlly), false);
@@ -72,6 +73,7 @@ namespace DTAClient.Domain.Singleplayer
         public string GUIName { get; }
         public string IconPath { get; }
         public string GUIDescription { get; }
+        public string PreviewImagePath { get; }
         public bool RequiredAddon { get; }
         public bool Enabled { get; }
         public bool BuildOffAlly { get; }

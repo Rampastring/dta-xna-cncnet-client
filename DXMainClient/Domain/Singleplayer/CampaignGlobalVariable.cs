@@ -57,11 +57,18 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public bool IsDisabledUnlocked { get; set; }
 
+        /// <summary>
+        /// Should this global variable be hidden in the mission selection screen 
+        /// if "Enabled" status has not been unlocked for it?
+        /// </summary>
+        public bool HideIfNotEnabledUnlocked { get; set; }
+
         public void InitFromIniSection(IniSection iniSection)
         {
             UIName = iniSection.GetStringValue(nameof(UIName), UIName);
             UIEnabledOption = iniSection.GetStringValue(nameof(UIEnabledOption), UIEnabledOption);
             UIDisabledOption = iniSection.GetStringValue(nameof(UIDisabledOption), UIDisabledOption);
+            HideIfNotEnabledUnlocked = iniSection.GetBooleanValue(nameof(HideIfNotEnabledUnlocked), HideIfNotEnabledUnlocked);
         }
     }
 }

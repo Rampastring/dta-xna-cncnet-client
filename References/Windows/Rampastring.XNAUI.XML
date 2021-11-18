@@ -1990,6 +1990,23 @@
             If the panel is transparent, it'll become non-transparent at this rate.
             </summary>
         </member>
+        <member name="F:Rampastring.XNAUI.XNAControls.PanelBackgroundImageDrawMode.TILED">
+            <summary>
+            The texture is tiled to fill the whole surface of the panel.
+            </summary>
+        </member>
+        <member name="F:Rampastring.XNAUI.XNAControls.PanelBackgroundImageDrawMode.STRETCHED">
+            <summary>
+            The texture is stretched to fill the whole surface of the panel.
+            </summary>
+        </member>
+        <member name="F:Rampastring.XNAUI.XNAControls.PanelBackgroundImageDrawMode.CENTERED">
+            <summary>
+            The texture is drawn once, centered on the panel.
+            If the texture is too large for the panel, parts
+            that would end up outside of the panel are cut off.
+            </summary>
+        </member>
         <member name="T:Rampastring.XNAUI.XNAControls.XNATabControl">
             <summary>
             A control that has multiple tabs, of which only one can be selected at a time.

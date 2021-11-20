@@ -446,6 +446,16 @@ namespace DTAClient.DXGUI.Generic
         /// <param name="mission">The mission. Can be null.</param>
         private void PreconditionUIConfig(Mission mission)
         {
+            lblPreconditionsHeader.Disable();
+            for (int i = 0; i < MAX_GLOBAL_COUNT; i++)
+            {
+                globalVariableNames[i].Disable();
+                globalVariableValues[i].Disable();
+            }
+
+            tbMissionDescription.Height = globalVariableValues[0].Bottom - tbMissionDescription.Y;
+
+
             if (mission != null && mission.UsedGlobalVariables.Length > 0)
             {
                 lblPreconditionsHeader.Enable();
@@ -495,22 +505,11 @@ namespace DTAClient.DXGUI.Generic
 
                 int preconditionsHeaderY = mission.UsedGlobalVariables.Length >= MAX_GLOBAL_COUNT ? globalVariableNames[0].Y :
                     globalVariableNames[mission.UsedGlobalVariables.Length - 1].Y;
-                preconditionsHeaderY -= UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+                preconditionsHeaderY -= UIDesignConstants.CONTROL_VERTICAL_MARGIN * 3;
                 lblPreconditionsHeader.Y = preconditionsHeaderY;
                 lblPreconditionsHeader.Enable();
 
                 tbMissionDescription.Height = lblPreconditionsHeader.Y - (UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2) - tbMissionDescription.Y;
-            }
-            else
-            {
-                lblPreconditionsHeader.Disable();
-                for (int i = 0; i < MAX_GLOBAL_COUNT; i++)
-                {
-                    globalVariableNames[i].Disable();
-                    globalVariableValues[i].Disable();
-                }
-
-                tbMissionDescription.Height = globalVariableValues[0].Bottom - tbMissionDescription.Y;
             }
         }
 

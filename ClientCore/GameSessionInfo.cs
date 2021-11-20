@@ -1,7 +1,9 @@
 ﻿using Rampastring.Tools;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ClientCore
@@ -62,6 +64,7 @@ namespace ClientCore
 
             try
             {
+                File.Delete(path);
                 File.WriteAllBytes(path, bytes);
             }
             catch (IOException ex)
@@ -118,6 +121,7 @@ namespace ClientCore
     /// </summary>
     public class GameSessionManager
     {
+        private const string AutoSavesDirectoryName = "Autosaves";
         public const string SavedGamesDirectory = "Saved Games";
         public const string SavedGameMetaExtension = ".sgmeta";
         public const int SavedGameMetaFieldCount = 3;
@@ -171,9 +175,20 @@ namespace ClientCore
                     {
                         isUnknown = false;
                         string uniqueIdString = meta.UniqueId.ToString(CultureInfo.InvariantCulture);
-                        destination = ProgramConstants.GamePath + SavedGamesDirectory + "/" + uniqueIdString + "/" + Path.GetFileName(save);
-                        Logger.Log($"Moving saved game {Path.GetFileName(save)} to {uniqueIdString} saves directory.");
-                        File.Move(metaFilePath, Path.ChangeExtension(destination, SavedGameMetaExtension));
+                        if (Path.GetFileName(save).StartsWith("AUTOSAVE"))
+                        {
+                            destination = ProgramConstants.GamePath + SavedGamesDirectory + "/" + AutoSavesDirectoryName + "/" + Path.GetFileName(save);
+                            Logger.Log($"Moving saved game {Path.GetFileName(save)} to auto-saves directory.");
+                        }
+                        else
+                        {
+                            destination = ProgramConstants.GamePath + SavedGamesDirectory + "/" + uniqueIdString + "/" + Path.GetFileName(save);
+                            Logger.Log($"Moving saved game {Path.GetFileName(save)} to {uniqueIdString} saves directory.");
+                        }
+
+                        string metaFileDestination = Path.ChangeExtension(destination, SavedGameMetaExtension);
+                        File.Delete(metaFileDestination);
+                        File.Move(metaFilePath, metaFileDestination);
                     }
                 }
 
@@ -216,12 +231,12 @@ namespace ClientCore
             // Move possible saved games of this session to the main saved games directory
 
             // Build a list of save files to move
-            string[] saveFiles = null;
+            List<string> saveFiles = null;
             if (SessionType == GameSessionType.MULTIPLAYER)
             {
                 if (Directory.Exists(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY))
                 {
-                    saveFiles = Directory.GetFiles(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY, "*.NET");
+                    saveFiles = Directory.GetFiles(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY, "*.NET").ToList();
                 }
             }
             else if (SessionType == GameSessionType.UNKNOWN)
@@ -229,7 +244,7 @@ namespace ClientCore
                 string saveDirPath = ProgramConstants.GamePath + SavedGamesDirectory + "/Unknown";
                 if (Directory.Exists(saveDirPath))
                 {
-                    saveFiles = Directory.GetFiles(saveDirPath, "*.SAV");
+                    saveFiles = Directory.GetFiles(saveDirPath, "*.SAV").ToList();
                 }
             }
             else
@@ -237,24 +252,40 @@ namespace ClientCore
                 string saveDirPath = ProgramConstants.GamePath + SavedGamesDirectory + "/" + UniqueId.ToString(CultureInfo.InvariantCulture);
                 if (Directory.Exists(saveDirPath))
                 {
-                    saveFiles = Directory.GetFiles(saveDirPath, "*.SAV");
+                    saveFiles = Directory.GetFiles(saveDirPath, "*.SAV").ToList();
                 }
+            }
+
+            // Check for auto-saves
+            string autoSaveDirectoryPath = ProgramConstants.GamePath + SavedGamesDirectory + "/" + AutoSavesDirectoryName;
+            if (Directory.Exists(autoSaveDirectoryPath))
+            {
+                string[] autoSaveFiles = Directory.GetFiles(autoSaveDirectoryPath);
+                saveFiles.AddRange(autoSaveFiles);
             }
 
             // Move the files and any potential meta files
             if (saveFiles != null)
             {
-                Logger.Log("Moving " + saveFiles.Length + " save files from sub-directory to main saved games directory.");
+                Logger.Log("Moving up to " + saveFiles.Count + " save files from sub-directories to main saved games directory.");
 
                 try
                 {
                     foreach (string savePath in saveFiles)
                     {
-                        File.Move(savePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(savePath));
                         string metaFilePath = Path.ChangeExtension(savePath, SavedGameMetaExtension);
-                        
                         if (File.Exists(metaFilePath))
+                        {
+                            var meta = GameSessionInfo.ParseFromFile(metaFilePath);
+                            if (meta.SessionType != SessionType && meta.UniqueId != UniqueId)
+                                continue;
+
                             File.Move(metaFilePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(metaFilePath));
+                        }
+
+                        Logger.Log("Moving save " + savePath.Substring(ProgramConstants.GamePath.Length));
+
+                        File.Move(savePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(savePath));
                     }
                 }
                 catch (IOException ex)
@@ -337,6 +368,9 @@ namespace ClientCore
 
             // Move the saved games of this session into a sub-directory
             string subDirPath = SavedGamesDirectory + "/";
+            string autosaveSubDirPath = subDirPath + AutoSavesDirectoryName + "/";
+
+            // Build sub-directory path depending on session type
             if (SessionType == GameSessionType.MULTIPLAYER)
             {
                 subDirPath += "Multiplayer/";
@@ -368,11 +402,20 @@ namespace ClientCore
 
                 foreach (string file in saveFiles)
                 {
-                    File.Move(file, ProgramConstants.GamePath + subDirPath + Path.GetFileName(file));
+                    string targetSubDir = subDirPath;
+
+                    // Move auto-saves to common auto-save directory
+                    if (Path.GetFileName(file).StartsWith("AUTOSAVE"))
+                    {
+                        targetSubDir = autosaveSubDirPath;
+                        Directory.CreateDirectory(ProgramConstants.GamePath + autosaveSubDirPath);
+                    }
+
+                    File.Move(file, ProgramConstants.GamePath + targetSubDir + Path.GetFileName(file));
 
                     string metaFilePath = Path.ChangeExtension(file, SavedGameMetaExtension);
                     if (File.Exists(metaFilePath))
-                        File.Move(metaFilePath, ProgramConstants.GamePath + subDirPath + Path.GetFileName(metaFilePath));
+                        File.Move(metaFilePath, ProgramConstants.GamePath + targetSubDir + Path.GetFileName(metaFilePath));
                 }
             }
             catch (IOException ex)
@@ -383,7 +426,14 @@ namespace ClientCore
             // Create meta files for the saved games
             foreach (string file in saveFiles)
             {
-                string newPath = ProgramConstants.GamePath + subDirPath + Path.GetFileName(file);
+                string targetSubDir = subDirPath;
+                if (Path.GetFileName(file).StartsWith("AUTOSAVE"))
+                {
+                    targetSubDir = autosaveSubDirPath;
+                    Directory.CreateDirectory(ProgramConstants.GamePath + autosaveSubDirPath);
+                }
+
+                string newPath = ProgramConstants.GamePath + targetSubDir + Path.GetFileName(file);
                 CreateSavedGameMetaFile(newPath);
             }
         }

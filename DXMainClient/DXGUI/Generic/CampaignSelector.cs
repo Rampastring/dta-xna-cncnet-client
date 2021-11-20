@@ -8,6 +8,7 @@ using Rampastring.Tools;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
+using System.Globalization;
 using System.IO;
 using Updater;
 
@@ -591,13 +592,34 @@ namespace DTAClient.DXGUI.Generic
             swriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : trbDifficultySelector.Value.ToString()));
             swriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty());
 
-            IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + DifficultyIniPaths[trbDifficultySelector.Value]);
-            string difficultyName = DifficultyNames[trbDifficultySelector.Value];
+            // Write global flag information
+            if (mission.UsedGlobalVariables.Length > 0)
+            {
+                swriter.WriteLine();
+                swriter.WriteLine("[GlobalFlags]");
+                for (int i = 0; i < mission.UsedGlobalVariables.Length && i < MAX_GLOBAL_COUNT; i++)
+                {
+                    string globalFlagName = mission.UsedGlobalVariables[i];
+
+                    CampaignGlobalVariable globalVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == globalFlagName);
+                    if (globalVariable != null)
+                    {
+                        if (globalVariableValues[i].SelectedIndex > 0)
+                        {
+                            string flagIndex = globalVariable.Index.ToString(CultureInfo.InvariantCulture);
+                            swriter.WriteLine($"GlobalFlag{ flagIndex }=yes");
+                        }
+                    }
+                }
+            }
 
             swriter.WriteLine();
             swriter.WriteLine();
             swriter.WriteLine();
             swriter.Close();
+
+            IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + DifficultyIniPaths[trbDifficultySelector.Value]);
+            string difficultyName = DifficultyNames[trbDifficultySelector.Value];
 
             if (copyMapsToSpawnmapINI)
             {

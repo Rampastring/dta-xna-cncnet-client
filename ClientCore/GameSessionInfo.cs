@@ -368,7 +368,7 @@ namespace ClientCore
 
             // Move the saved games of this session into a sub-directory
             string subDirPath = SavedGamesDirectory + "/";
-            string autosaveSubDirPath = subDirPath + AutoSavesDirectoryName + "/";
+            string autosaveSubDirPath = SavedGamesDirectory + "/" + AutoSavesDirectoryName + "/";
 
             // Build sub-directory path depending on session type
             if (SessionType == GameSessionType.MULTIPLAYER)
@@ -397,9 +397,6 @@ namespace ClientCore
 
             try
             {
-                if (saveFiles.Length > 0)
-                    Directory.CreateDirectory(ProgramConstants.GamePath + subDirPath);
-
                 foreach (string file in saveFiles)
                 {
                     string targetSubDir = subDirPath;
@@ -409,13 +406,21 @@ namespace ClientCore
                     {
                         targetSubDir = autosaveSubDirPath;
                         Directory.CreateDirectory(ProgramConstants.GamePath + autosaveSubDirPath);
+                        File.Delete(ProgramConstants.GamePath + targetSubDir + Path.GetFileName(file));
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(ProgramConstants.GamePath + subDirPath);
                     }
 
                     File.Move(file, ProgramConstants.GamePath + targetSubDir + Path.GetFileName(file));
 
                     string metaFilePath = Path.ChangeExtension(file, SavedGameMetaExtension);
+                    File.Delete(ProgramConstants.GamePath + targetSubDir + Path.GetFileName(metaFilePath));
                     if (File.Exists(metaFilePath))
+                    {
                         File.Move(metaFilePath, ProgramConstants.GamePath + targetSubDir + Path.GetFileName(metaFilePath));
+                    }
                 }
             }
             catch (IOException ex)

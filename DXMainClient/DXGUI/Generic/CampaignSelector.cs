@@ -468,7 +468,10 @@ namespace DTAClient.DXGUI.Generic
                     globalVariableNames[i].TextColor = UISettings.ActiveSettings.TextColor;
                     globalVariableNames[i].Enable();
 
-                    if (global.IsDisabledUnlocked)
+                    bool disabledSelectable = global.IsDisabledUnlocked || global.DisableOptionFreeUnlock;
+                    bool enabledSelectable = global.IsEnabledUnlocked;
+
+                    if (disabledSelectable)
                     {
                         globalVariableValues[i].Items[0].Text = global.UIDisabledOption ?? "No";
                     }
@@ -477,7 +480,7 @@ namespace DTAClient.DXGUI.Generic
                         globalVariableValues[i].Items[0].Text = "Option not unlocked";
                     }
 
-                    if (global.IsEnabledUnlocked)
+                    if (enabledSelectable)
                     {
                         globalVariableValues[i].Items[1].Text = global.UIEnabledOption ?? "Yes";
                     }
@@ -486,8 +489,8 @@ namespace DTAClient.DXGUI.Generic
                         globalVariableValues[i].Items[1].Text = "Option not unlocked";
                     }
 
-                    globalVariableValues[i].Items[0].Selectable = global.IsDisabledUnlocked;
-                    globalVariableValues[i].Items[1].Selectable = global.IsEnabledUnlocked;
+                    globalVariableValues[i].Items[0].Selectable = disabledSelectable;
+                    globalVariableValues[i].Items[1].Selectable = enabledSelectable;
                     globalVariableValues[i].SelectedIndex = 0;
                     if (global.IsEnabledUnlocked && !global.IsDisabledUnlocked)
                         globalVariableValues[i].SelectedIndex = 1;

@@ -58,6 +58,12 @@ namespace DTAClient.Domain.Singleplayer
         public bool IsDisabledUnlocked { get; set; }
 
         /// <summary>
+        /// Is the "disabled" option of this global variable always selectable
+        /// by the player?
+        /// </summary>
+        public bool DisableOptionFreeUnlock { get; set; }
+
+        /// <summary>
         /// Should this global variable be hidden in the mission selection screen 
         /// if "Enabled" status has not been unlocked for it?
         /// </summary>
@@ -68,6 +74,7 @@ namespace DTAClient.Domain.Singleplayer
             UIName = iniSection.GetStringValue(nameof(UIName), UIName);
             UIEnabledOption = iniSection.GetStringValue(nameof(UIEnabledOption), UIEnabledOption);
             UIDisabledOption = iniSection.GetStringValue(nameof(UIDisabledOption), UIDisabledOption);
+            DisableOptionFreeUnlock = iniSection.GetBooleanValue(nameof(DisableOptionFreeUnlock), DisableOptionFreeUnlock);
             HideIfNotEnabledUnlocked = iniSection.GetBooleanValue(nameof(HideIfNotEnabledUnlocked), HideIfNotEnabledUnlocked);
         }
     }

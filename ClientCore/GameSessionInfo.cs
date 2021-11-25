@@ -260,12 +260,16 @@ namespace ClientCore
             string autoSaveDirectoryPath = ProgramConstants.GamePath + SavedGamesDirectory + "/" + AutoSavesDirectoryName;
             if (Directory.Exists(autoSaveDirectoryPath))
             {
-                string[] autoSaveFiles = Directory.GetFiles(autoSaveDirectoryPath);
+                string[] autoSaveFiles = Directory.GetFiles(autoSaveDirectoryPath, "*.SAV");
+
+                if (saveFiles == null)
+                    saveFiles = new List<string>();
+
                 saveFiles.AddRange(autoSaveFiles);
             }
 
             // Move the files and any potential meta files
-            if (saveFiles != null)
+            if (saveFiles != null && saveFiles.Count > 0)
             {
                 Logger.Log("Moving up to " + saveFiles.Count + " save files from sub-directories to main saved games directory.");
 

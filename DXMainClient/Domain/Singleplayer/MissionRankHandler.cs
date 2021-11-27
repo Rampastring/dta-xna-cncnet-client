@@ -138,7 +138,7 @@ namespace DTAClient.Domain.Singleplayer
                     spScoreIni.SetStringValue(
                         MISSIONS_SECTION,
                         mission.InternalName,
-                        $"{ (isUnlocked ? "1" : "0") },{ rank.ToString(CultureInfo.InvariantCulture)} ");
+                        $"{ (isUnlocked ? "1" : "0") },{ rank.ToString(CultureInfo.InvariantCulture)}");
                 }
             }
 

@@ -8,6 +8,7 @@ using Rampastring.Tools;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Updater;
@@ -367,14 +368,65 @@ namespace DTAClient.DXGUI.Generic
             missionCompletionNotification.Disable();
 
             CampaignHandler.Instance.MissionRankUpdated += CampaignHandler_MissionRankUpdated;
+            CampaignHandler.Instance.MissionCompleted += CampaignHandler_MissionCompleted;
+        }
+
+        private void CampaignHandler_MissionCompleted(object sender, MissionCompletionEventArgs e)
+        {
+            var parentPanel = (MainMenuDarkeningPanel)Parent;
+            parentPanel.Show(this);
+            parentPanel.Alpha = 1.0f;
+
+            ListBattles();
+
+            // If another mission follows the completed mission, select the following mission.
+            // Otherwise select the mission itself.
+
+            // Build a list of missions that follow the completed mission
+            var followList = new List<string>();
+            Array.ForEach(e.Mission.UnlockMissions, unlockedMissionName => followList.Add(unlockedMissionName));
+            e.Mission.ConditionalMissionUnlocks.ForEach(c => followList.Add(c.UnlockMissionName));
+
+            if (followList.Count == 0)
+            {
+                // No mission follows, select the entry that matches our current mission
+
+                SelectMission(e.Mission);
+                return;
+            }
+
+            foreach (string missionName in followList)
+            {
+                // At least one mission follows, iterate through possibly unlocked missions until we find one
+
+                int index = lbCampaignList.Items.FindIndex(item => 
+                {
+                    var mission = (Mission)item.Tag;
+                    return mission.InternalName == missionName && mission.IsAvailableToPlay;
+                });
+
+                if (index > -1)
+                {
+                    lbCampaignList.SelectedIndex = index;
+                    break;
+                }
+            }
+
+            // If no following mission was unlocked, then select the entry that matches our current mission
+            if (lbCampaignList.SelectedItem == null)
+            {
+                SelectMission(e.Mission);
+            }
+        }
+
+        private void SelectMission(Mission mission)
+        {
+            lbCampaignList.SelectedIndex = lbCampaignList.Items.FindIndex(item => ((Mission)item.Tag) == mission);
         }
 
         private void CampaignHandler_MissionRankUpdated(object sender, MissionCompletionEventArgs e)
         {
             missionCompletionNotification.Show(e.Mission);
-
-            if (Enabled)
-                ListBattles();
         }
 
         private void CampaignSelector_EnabledChanged(object sender, EventArgs e)

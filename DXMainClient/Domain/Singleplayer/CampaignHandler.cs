@@ -42,6 +42,7 @@ namespace DTAClient.Domain.Singleplayer
         }
 
         public event EventHandler<MissionCompletionEventArgs> MissionRankUpdated;
+        public event EventHandler<MissionCompletionEventArgs> MissionCompleted;
 
         private static CampaignHandler _instance;
 
@@ -317,13 +318,6 @@ namespace DTAClient.Domain.Singleplayer
                 return;
             }
 
-            if ((int)mission.Rank < (int)sessionInfo.Difficulty)
-            {
-                Logger.Log("Setting completion rank of " + mission.InternalName + " to " + sessionInfo.Difficulty);
-                mission.Rank = sessionInfo.Difficulty;
-                MissionRankUpdated?.Invoke(this, new MissionCompletionEventArgs(mission));
-            }
-
             Logger.Log("Finding and unlocking missions related to " + mission.InternalName);
             foreach (string unlockMissionName in mission.UnlockMissions)
             {
@@ -335,7 +329,7 @@ namespace DTAClient.Domain.Singleplayer
                 }
 
                 otherMission.IsUnlocked = true;
-                Logger.Log("Unlocked mission " + mission.InternalName);
+                Logger.Log("Unlocked mission " + otherMission.InternalName);
             }
 
             Logger.Log("Finding and unlocking conditionally unlocked missions related to " + mission.InternalName);
@@ -397,7 +391,15 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 
+            if ((int)mission.Rank < (int)sessionInfo.Difficulty)
+            {
+                Logger.Log("Setting completion rank of " + mission.InternalName + " to " + sessionInfo.Difficulty);
+                mission.Rank = sessionInfo.Difficulty;
+                MissionRankUpdated?.Invoke(this, new MissionCompletionEventArgs(mission));
+            }
+
             MissionRankHandler.WriteData(Missions, GlobalVariables);
+            MissionCompleted?.Invoke(this, new MissionCompletionEventArgs(mission));
         }
     }
 }

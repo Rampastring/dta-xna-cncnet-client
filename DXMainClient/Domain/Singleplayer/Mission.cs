@@ -109,6 +109,8 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public bool IsUnlocked { get; set; }
 
+        public bool IsAvailableToPlay => !RequiresUnlocking || IsUnlocked;
+
         /// <summary>
         /// Which difficulty level has the player beat this mission on, if any?
         /// </summary>

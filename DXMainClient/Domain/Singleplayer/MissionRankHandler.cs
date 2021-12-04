@@ -18,6 +18,7 @@ namespace DTAClient.Domain.Singleplayer
         private const string GLOBAL_VARIABLES_SECTION = "GlobalVariables";
         private const int RANK_MIN = 1;
         private const int RANK_MAX = 3;
+        private const int EXPECTED_GLOBAL_VARIBLE_FIELD_COUNT = 3;
 
         // Data format:
         // [Missions]
@@ -89,7 +90,7 @@ namespace DTAClient.Domain.Singleplayer
                     string globalName = kvp.Key;
                     string[] unlocks = kvp.Value.Split(',');
 
-                    if (unlocks.Length != 2)
+                    if (unlocks.Length != EXPECTED_GLOBAL_VARIBLE_FIELD_COUNT)
                     {
                         Logger.Log("Invalid global variable unlock data for global variable " + globalName + ": " + kvp.Value);
                         continue;
@@ -97,12 +98,14 @@ namespace DTAClient.Domain.Singleplayer
 
                     bool isDisabledOptionUnlocked = unlocks[0] == "1";
                     bool isEnabledOptionUnlocked = unlocks[1] == "1";
+                    bool isEnabledThroughPreviousScenario = unlocks[2] == "1";
 
                     CampaignGlobalVariable globalVariable = globalVariables.Find(gvar => gvar.InternalName == globalName);
                     if (globalVariable != null)
                     {
                         globalVariable.IsDisabledUnlocked = isDisabledOptionUnlocked;
                         globalVariable.IsEnabledUnlocked = isEnabledOptionUnlocked;
+                        globalVariable.EnabledThroughPreviousScenario = isEnabledThroughPreviousScenario;
                     }
                 }
             }
@@ -149,7 +152,7 @@ namespace DTAClient.Domain.Singleplayer
                     spScoreIni.SetStringValue(
                         GLOBAL_VARIABLES_SECTION,
                         globalVariable.InternalName,
-                        $"{ (globalVariable.IsDisabledUnlocked ? "1" : "0" ) },{ (globalVariable.IsEnabledUnlocked ? "1" : "0") }");
+                        $"{ (globalVariable.IsDisabledUnlocked ? "1" : "0" ) },{ (globalVariable.IsEnabledUnlocked ? "1" : "0") },{ (globalVariable.EnabledThroughPreviousScenario ? "1" : "0") }");
                 }
             }
 

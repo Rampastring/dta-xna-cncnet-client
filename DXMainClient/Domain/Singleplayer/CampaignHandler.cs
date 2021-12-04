@@ -383,11 +383,36 @@ namespace DTAClient.Domain.Singleplayer
                 {
                     Logger.Log("Unlocked 'enabled' state of " + globalVariable.InternalName);
                     globalVariable.IsEnabledUnlocked = true;
+                    globalVariable.EnabledThroughPreviousScenario = true;
                 }
                 else
                 {
                     Logger.Log("Unlocked 'disabled' state of " + globalVariable.InternalName);
                     globalVariable.IsDisabledUnlocked = true;
+                    globalVariable.EnabledThroughPreviousScenario = false;
+                }
+            }
+
+            Logger.Log("Finding and setting default enabled states of global variables used in " + mission.InternalName);
+            foreach (var globalVariableName in mission.UsedGlobalVariables)
+            {
+                var globalVariable = GlobalVariables.Find(gv => gv.InternalName == globalVariableName);
+
+                if (globalVariable == null)
+                {
+                    Logger.Log("FAILED to set default state of global variable " + globalVariableName + " because it was not found!");
+                    continue;
+                }
+
+                if (globalVariableStates[globalVariable.Index])
+                {
+                    Logger.Log("Set default state to 'enabled' for " + globalVariable.InternalName);
+                    globalVariable.EnabledThroughPreviousScenario = true;
+                }
+                else
+                {
+                    Logger.Log("Set default state to 'disabled' for " + globalVariable.InternalName);
+                    globalVariable.EnabledThroughPreviousScenario = false;
                 }
             }
 

@@ -69,6 +69,13 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public bool HideIfNotEnabledUnlocked { get; set; }
 
+        /// <summary>
+        /// Was this global variable enabled at the end of the previous scenario
+        /// that the player played? If so, it should be enabled by
+        /// default when starting the next scenario that this variable is relevant to.
+        /// </summary>
+        public bool EnabledThroughPreviousScenario { get; set; }
+
         public void InitFromIniSection(IniSection iniSection)
         {
             UIName = iniSection.GetStringValue(nameof(UIName), UIName);

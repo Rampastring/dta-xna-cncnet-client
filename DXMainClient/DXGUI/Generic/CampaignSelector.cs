@@ -544,8 +544,11 @@ namespace DTAClient.DXGUI.Generic
                     globalVariableValues[i].Items[0].Selectable = disabledSelectable;
                     globalVariableValues[i].Items[1].Selectable = enabledSelectable;
                     globalVariableValues[i].SelectedIndex = 0;
-                    if (global.IsEnabledUnlocked && !global.IsDisabledUnlocked)
-                        globalVariableValues[i].SelectedIndex = 1;
+                    if (global.IsEnabledUnlocked)
+                    {
+                        if (!global.IsDisabledUnlocked || global.EnabledThroughPreviousScenario)
+                            globalVariableValues[i].SelectedIndex = 1;
+                    }
 
                     if (global.HideIfNotEnabledUnlocked)
                     {

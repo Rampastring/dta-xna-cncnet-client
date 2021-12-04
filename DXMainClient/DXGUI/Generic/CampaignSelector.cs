@@ -382,7 +382,16 @@ namespace DTAClient.DXGUI.Generic
             // If another mission follows the completed mission, select the following mission.
             // Otherwise select the mission itself.
 
-            // Build a list of missions that follow the completed mission
+            // If we unlocked a specific mission, select it.
+            if (e.PrimaryUnlockedMission != null)
+            {
+                SelectMission(e.PrimaryUnlockedMission);
+                return;
+            }
+
+            // Otherwise, build a list of all missions that follow the completed mission
+            // and select one of them. Could be that the user has already previously unlocked
+            // all missions that follow the completed mission, hence there were no new unlocks.
             var followList = new List<string>();
             Array.ForEach(e.Mission.UnlockMissions, unlockedMissionName => followList.Add(unlockedMissionName));
             e.Mission.ConditionalMissionUnlocks.ForEach(c => followList.Add(c.UnlockMissionName));

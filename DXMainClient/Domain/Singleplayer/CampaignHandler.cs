@@ -16,12 +16,23 @@ namespace DTAClient.Domain.Singleplayer
 
     public class MissionCompletionEventArgs : EventArgs
     {
-        public MissionCompletionEventArgs(Mission mission)
+        public MissionCompletionEventArgs(Mission mission, Mission primaryUnlockedMission)
         {
             Mission = mission;
+            PrimaryUnlockedMission = primaryUnlockedMission;
         }
 
+
+        /// <summary>
+        /// The mission that was completed.
+        /// </summary>
         public Mission Mission { get; }
+
+        /// <summary>
+        /// The 'primary' mission that was unlocked by completing the mission.
+        /// If set, this mission should be the next default-selected mission.
+        /// </summary>
+        public Mission PrimaryUnlockedMission { get; }
     }
 
     /// <summary>
@@ -318,6 +329,8 @@ namespace DTAClient.Domain.Singleplayer
                 return;
             }
 
+            var unlockedMissions = new List<Mission>();
+
             Logger.Log("Finding and unlocking missions related to " + mission.InternalName);
             foreach (string unlockMissionName in mission.UnlockMissions)
             {
@@ -328,8 +341,12 @@ namespace DTAClient.Domain.Singleplayer
                     continue;
                 }
 
-                otherMission.IsUnlocked = true;
-                Logger.Log("Unlocked mission " + otherMission.InternalName);
+                if (!otherMission.IsUnlocked)
+                {
+                    otherMission.IsUnlocked = true;
+                    unlockedMissions.Add(otherMission);
+                    Logger.Log("Unlocked mission " + otherMission.InternalName);
+                }
             }
 
             Logger.Log("Finding and unlocking conditionally unlocked missions related to " + mission.InternalName);
@@ -363,8 +380,12 @@ namespace DTAClient.Domain.Singleplayer
                         continue;
                     }
 
-                    otherMission.IsUnlocked = true;
-                    Logger.Log("Unlocked conditional mission " + mission.InternalName);
+                    if (!otherMission.IsUnlocked)
+                    {
+                        otherMission.IsUnlocked = true;
+                        unlockedMissions.Add(otherMission);
+                        Logger.Log("Unlocked conditional mission " + mission.InternalName);
+                    }
                 }
             }
 
@@ -416,15 +437,17 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 
+            Mission primaryUnlockedMission = unlockedMissions.Count > 0 ? unlockedMissions[0] : null;
+
             if ((int)mission.Rank < (int)sessionInfo.Difficulty)
             {
                 Logger.Log("Setting completion rank of " + mission.InternalName + " to " + sessionInfo.Difficulty);
                 mission.Rank = sessionInfo.Difficulty;
-                MissionRankUpdated?.Invoke(this, new MissionCompletionEventArgs(mission));
+                MissionRankUpdated?.Invoke(this, new MissionCompletionEventArgs(mission, primaryUnlockedMission));
             }
 
             MissionRankHandler.WriteData(Missions, GlobalVariables);
-            MissionCompleted?.Invoke(this, new MissionCompletionEventArgs(mission));
+            MissionCompleted?.Invoke(this, new MissionCompletionEventArgs(mission, primaryUnlockedMission));
         }
     }
 }

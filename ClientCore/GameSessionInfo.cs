@@ -23,20 +23,25 @@ namespace ClientCore
     /// </summary>
     public class GameSessionInfo
     {
-        private const int EXPECTED_FIELD_COUNT = 6;
+        private const int OLD_EXPECTED_FIELD_COUNT = 6;
+        private const int EXPECTED_FIELD_COUNT = 7;
+
+        private const string GLOBAL_FLAGS_NONE = "none";
 
         public GameSessionInfo(
             GameSessionType sessionType,
             long uniqueId,
             string missionInternalName = "",
             int sideIndex = -1,
-            DifficultyRank difficulty = DifficultyRank.NONE)
+            DifficultyRank difficulty = DifficultyRank.NONE,
+            Dictionary<int, bool> globalFlagValues = null)
         {
             SessionType = sessionType;
             UniqueId = uniqueId;
             MissionInternalName = missionInternalName;
             SideIndex = sideIndex;
             Difficulty = difficulty;
+            GlobalFlagValues = globalFlagValues;
         }
 
         public GameSessionType SessionType { get; }
@@ -44,16 +49,29 @@ namespace ClientCore
         public string MissionInternalName { get; }
         public int SideIndex { get; }
         public DifficultyRank Difficulty { get; }
+        public Dictionary<int, bool> GlobalFlagValues { get; }
+
+        public bool SessionMatches(GameSessionInfo other)
+        {
+            return other.SessionType == SessionType && other.UniqueId == UniqueId;
+        }
 
         public void WriteToFile(string path, string associateFileName)
         {
+            string globalFlagValues = GLOBAL_FLAGS_NONE;
+            if (GlobalFlagValues != null && GlobalFlagValues.Count > 0)
+            {
+                globalFlagValues = string.Join("|", GlobalFlagValues.Select(gflag => $"{gflag.Key.ToString(CultureInfo.InvariantCulture)}:{(gflag.Value ? "1" : "0")}"));
+            }
+
             string meta = 
                 $"{ ((int)SessionType).ToString(CultureInfo.InvariantCulture) }," +
                 $"{ UniqueId.ToString(CultureInfo.InvariantCulture) }," +
                 $"{ associateFileName }," +
                 $"{ MissionInternalName }," +
                 $"{ SideIndex.ToString(CultureInfo.InvariantCulture) }," +
-                $"{ ((int)Difficulty).ToString(CultureInfo.InvariantCulture) }";
+                $"{ ((int)Difficulty).ToString(CultureInfo.InvariantCulture) }," + 
+                globalFlagValues;
 
 
             byte[] bytes = Encoding.UTF8.GetBytes(meta);
@@ -85,7 +103,7 @@ namespace ClientCore
 
                 string dataAsString = Encoding.UTF8.GetString(data);
                 string[] parts = dataAsString.Split(',');
-                if (parts.Length != EXPECTED_FIELD_COUNT)
+                if (parts.Length != EXPECTED_FIELD_COUNT && parts.Length != OLD_EXPECTED_FIELD_COUNT)
                 {
                     Logger.Log("Unexpected saved game meta file format in file " + path + ": " + dataAsString);
                     return null;
@@ -108,7 +126,29 @@ namespace ClientCore
                 int difficultyInt = Conversions.IntFromString(parts[5], 0);
                 DifficultyRank difficulty = (difficultyInt < 0 || difficultyInt > (int)DifficultyRank.HARD) ? DifficultyRank.NONE : (DifficultyRank)difficultyInt;
 
-                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty);
+                Dictionary<int, bool> globalFlagsDictionary = null;
+                if (parts.Length >= 7 && parts[6] != GLOBAL_FLAGS_NONE)
+                {
+                    string[] globalFlagParts = parts[6].Split('|');
+                    globalFlagsDictionary = new Dictionary<int, bool>();
+
+                    foreach (string gflagInfo in globalFlagParts)
+                    {
+                        string[] globalIndexAndState = gflagInfo.Split(':');
+                        if (globalIndexAndState.Length != 2)
+                        {
+                            Logger.Log("FAILED to parse global flag index and state from game session info: " + gflagInfo + ", complete string: " + parts[6]);
+                            continue;
+                        }
+
+                        int globalIndex = int.Parse(globalIndexAndState[0], CultureInfo.InvariantCulture);
+                        bool globalState = globalIndexAndState[1] == "1";
+
+                        globalFlagsDictionary.Add(globalIndex, globalState);
+                    }
+                }
+                
+                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty, globalFlagsDictionary);
             }
 
             return null;
@@ -187,6 +227,7 @@ namespace ClientCore
                         }
 
                         string metaFileDestination = Path.ChangeExtension(destination, SavedGameMetaExtension);
+                        Directory.CreateDirectory(Path.GetDirectoryName(metaFileDestination));
                         File.Delete(metaFileDestination);
                         File.Move(metaFilePath, metaFileDestination);
                     }
@@ -281,7 +322,8 @@ namespace ClientCore
                         if (File.Exists(metaFilePath))
                         {
                             var meta = GameSessionInfo.ParseFromFile(metaFilePath);
-                            if (meta.SessionType != SessionType && meta.UniqueId != UniqueId)
+
+                            if (meta == null || !meta.SessionMatches(SessionInfo))
                                 continue;
 
                             File.Move(metaFilePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(metaFilePath));

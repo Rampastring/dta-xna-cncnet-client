@@ -47,6 +47,9 @@ namespace ClientGUI
         /// </summary>
         public Action<XNAMessageBox> CancelClickedAction { get; set; }
 
+        public XNAButton btnYes { get; private set; }
+        public XNAButton btnNo { get; private set; }
+
 
         private string caption;
         private string description;
@@ -117,32 +120,28 @@ namespace ClientGUI
 
         private void AddYesNoButtons()
         {
-            XNAButton btnYes = new XNAButton(WindowManager);
+            XNAButton btnYes = new XNAClientButton(WindowManager);
             btnYes.FontIndex = 1;
-            btnYes.ClientRectangle = new Rectangle(0, 0, 75, 23);
-            btnYes.IdleTexture = AssetLoader.LoadTexture("75pxbtn.png");
-            btnYes.HoverTexture = AssetLoader.LoadTexture("75pxbtn_c.png");
-            btnYes.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnYes.ClientRectangle = new Rectangle(0, 0, 92, 23);
             btnYes.Name = "btnYes";
             btnYes.Text = "Yes";
             btnYes.LeftClick += BtnYes_LeftClick;
             btnYes.HotKey = Keys.Y;
+            this.btnYes = btnYes;
 
             AddChild(btnYes);
 
             btnYes.ClientRectangle = new Rectangle((Width - ((btnYes.Width + 5) * 2)) / 2,
                 Height - 28, btnYes.Width, btnYes.Height);
 
-            XNAButton btnNo = new XNAButton(WindowManager);
+            XNAButton btnNo = new XNAClientButton(WindowManager);
             btnNo.FontIndex = 1;
-            btnNo.ClientRectangle = new Rectangle(0, 0, 75, 23);
-            btnNo.IdleTexture = AssetLoader.LoadTexture("75pxbtn.png");
-            btnNo.HoverTexture = AssetLoader.LoadTexture("75pxbtn_c.png");
-            btnNo.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnNo.ClientRectangle = new Rectangle(0, 0, 92, 23);
             btnNo.Name = "btnNo";
             btnNo.Text = "No";
             btnNo.LeftClick += BtnNo_LeftClick;
             btnNo.HotKey = Keys.N;
+            this.btnNo = btnNo;
 
             AddChild(btnNo);
 
@@ -152,12 +151,9 @@ namespace ClientGUI
 
         private void AddOKCancelButtons()
         {
-            XNAButton btnOK = new XNAButton(WindowManager);
+            XNAButton btnOK = new XNAClientButton(WindowManager);
             btnOK.FontIndex = 1;
-            btnOK.ClientRectangle = new Rectangle(0, 0, 75, 23);
-            btnOK.IdleTexture = AssetLoader.LoadTexture("75pxbtn.png");
-            btnOK.HoverTexture = AssetLoader.LoadTexture("75pxbtn_c.png");
-            btnOK.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnOK.ClientRectangle = new Rectangle(0, 0, 92, 23);
             btnOK.Name = "btnOK";
             btnOK.Text = "OK";
             btnOK.LeftClick += BtnYes_LeftClick;
@@ -168,12 +164,9 @@ namespace ClientGUI
             btnOK.ClientRectangle = new Rectangle((Width - ((btnOK.Width + 5) * 2)) / 2,
                 Height - 28, btnOK.Width, btnOK.Height);
 
-            XNAButton btnCancel = new XNAButton(WindowManager);
+            XNAButton btnCancel = new XNAClientButton(WindowManager);
             btnCancel.FontIndex = 1;
-            btnCancel.ClientRectangle = new Rectangle(0, 0, 75, 23);
-            btnCancel.IdleTexture = AssetLoader.LoadTexture("75pxbtn.png");
-            btnCancel.HoverTexture = AssetLoader.LoadTexture("75pxbtn_c.png");
-            btnCancel.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnCancel.ClientRectangle = new Rectangle(0, 0, 92, 23);
             btnCancel.Name = "btnCancel";
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnCancel_LeftClick;

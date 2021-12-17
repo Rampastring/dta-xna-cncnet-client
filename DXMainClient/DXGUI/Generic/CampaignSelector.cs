@@ -180,6 +180,11 @@ namespace DTAClient.DXGUI.Generic
             "INI/ArtE.ini",
             "INI/Enhance.ini",
             "INI/Rules.ini",
+            "INI/Base/AI.ini",
+            "INI/Base/AIE.ini",
+            "INI/Base/Art.ini",
+            "INI/Base/Rules.ini",
+            "INI/Base/Enhance.ini",
             "INI/Map Code/Difficulty Hard.ini",
             "INI/Map Code/Difficulty Medium.ini",
             "INI/Map Code/Difficulty Easy.ini"
@@ -589,16 +594,45 @@ namespace DTAClient.DXGUI.Generic
         {
             var mission = lbCampaignList.SelectedItem.Tag as Mission;
 
+            missionToLaunch = mission;
+
             if (!ClientConfiguration.Instance.ModMode && 
                 (!CUpdater.IsFileNonexistantOrOriginal(mission.Scenario) || AreFilesModified()))
             {
                 // Confront the user by showing the cheater screen
-                missionToLaunch = mission;
                 cheaterWindow.Enable();
                 return;
             }
 
-            LaunchMission(mission);
+            PostCheaterWindow();
+        }
+
+        /// <summary>
+        /// Executed after the "Cheater" dialog has been resolved (iow. never displayed,
+        /// or it was displayed and the user didn't care about cheating).
+        /// </summary>
+        private void PostCheaterWindow()
+        {
+            // Is this mission probably too hard for the user? If so, display a warning dialog.
+            if (trbDifficultySelector.Value == 2 && missionToLaunch.WarnOnHardWithoutMediumPlayed && (int)missionToLaunch.Rank < (int)DifficultyRank.NORMAL)
+            {
+                var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                    "Difficulty warning",
+                    "This mission can be quite challenging. It's recommended to clear it on lower" + Environment.NewLine +
+                    "difficulty levels first before attempting it on the hardest difficulty level." + Environment.NewLine + Environment.NewLine +
+                    "Are you still feeling suicidal enough to attempt it on the hardest difficulty level?");
+                messageBox.btnYes.Text = "Yes";
+                messageBox.btnNo.Text = "I'll reconsider";
+                messageBox.YesClickedAction = PostDifficultyWarning;
+                return;
+            }
+
+            LaunchMission(missionToLaunch);
+        }
+
+        private void PostDifficultyWarning(XNAMessageBox messageBox)
+        {
+            LaunchMission(missionToLaunch);
         }
 
         private bool AreFilesModified()
@@ -614,11 +648,11 @@ namespace DTAClient.DXGUI.Generic
 
         /// <summary>
         /// Called when the user wants to proceed to the mission despite having
-        /// being called a cheater.
+        /// been called a cheater.
         /// </summary>
         private void CheaterWindow_YesClicked(object sender, EventArgs e)
         {
-            LaunchMission(missionToLaunch);
+            PostCheaterWindow();
         }
 
         /// <summary>

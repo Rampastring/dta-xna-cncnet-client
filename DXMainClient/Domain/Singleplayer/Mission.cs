@@ -86,7 +86,7 @@ namespace DTAClient.Domain.Singleplayer
         /// Should the player be given a warning when starting 
         /// this mission on Hard if they haven't beat the mission on Medium first?
         /// </summary>
-        public bool WarnOnHardWithoutMediumPlayed { get; } = true;
+        public bool WarnOnHardWithoutMediumPlayed { get; } = false;
 
         /// <summary>
         /// If not null, this is not a mission but a dummy entry for a campaign.

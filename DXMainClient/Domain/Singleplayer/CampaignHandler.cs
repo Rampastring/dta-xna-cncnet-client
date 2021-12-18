@@ -523,7 +523,11 @@ namespace DTAClient.Domain.Singleplayer
 
             Mission primaryUnlockedMission = unlockedMissions.Count > 0 ? unlockedMissions[0] : null;
 
-            if ((int)mission.Rank < (int)sessionInfo.Difficulty)
+            if (sessionInfo.IsCheatSession)
+            {
+                Logger.Log("The player finished the mission with modified files, skipping setting of completion rank.");
+            }
+            else if ((int)mission.Rank < (int)sessionInfo.Difficulty)
             {
                 Logger.Log("Setting completion rank of " + mission.InternalName + " to " + sessionInfo.Difficulty);
                 mission.Rank = sessionInfo.Difficulty;

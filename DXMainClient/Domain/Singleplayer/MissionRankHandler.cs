@@ -1,5 +1,6 @@
 ﻿using ClientCore;
 using Rampastring.Tools;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -42,17 +43,35 @@ namespace DTAClient.Domain.Singleplayer
                 return;
             }
 
-            string b64data = File.ReadAllText(filePath, Encoding.Unicode);
-            //byte[] decoded = Convert.FromBase64String(b64data);
+            IniFile iniFile = null;
 
-            // IniFile iniFile;
-            // 
-            // using (var memoryStream = new MemoryStream(decoded))
-            // {
-            //     iniFile = new IniFile(memoryStream, Encoding.UTF8);
-            // }
+            try
+            {
+                string data = File.ReadAllText(filePath, Encoding.UTF8);
 
-            IniFile iniFile = new IniFile(filePath);
+                if (data.Length > 0 && data.StartsWith("["))
+                {
+                    // We're dealing with raw INI data (before obfuscation)
+                    iniFile = new IniFile(filePath);
+                }
+                else
+                {
+                    // We're dealing with base64-encoded data (unless it's just corrupted, but let's hope it's not)
+
+                    byte[] decoded = Convert.FromBase64String(data);
+
+                    using (var memoryStream = new MemoryStream(decoded))
+                    {
+                        iniFile = new IniFile(memoryStream, Encoding.UTF8);
+                    }
+
+                }
+            }
+            catch (FormatException ex)
+            {
+                Logger.Log("FAILED to load mission competion data due to FormatException: " + ex.Message);
+                return;
+            }
 
             var missionsSection = iniFile.GetSection(MISSIONS_SECTION);
             if (missionsSection != null)
@@ -130,6 +149,7 @@ namespace DTAClient.Domain.Singleplayer
             }
 
             IniFile spScoreIni = new IniFile();
+            spScoreIni.Encoding = Encoding.UTF8;
 
             foreach (var mission in missions)
             {
@@ -157,6 +177,12 @@ namespace DTAClient.Domain.Singleplayer
             }
 
             spScoreIni.WriteIniFile(ProgramConstants.GamePath + SP_SCORE_FILE);
+
+            string fullINIText = File.ReadAllText(ProgramConstants.GamePath + SP_SCORE_FILE, spScoreIni.Encoding);
+            byte[] bytes = spScoreIni.Encoding.GetBytes(fullINIText);
+            string base64 = Convert.ToBase64String(bytes);
+            File.Delete(ProgramConstants.GamePath + SP_SCORE_FILE);
+            File.WriteAllText(ProgramConstants.GamePath + SP_SCORE_FILE, base64, Encoding.UTF8);
 
             Logger.Log("Completed writing single-player mission rank data.");
         }

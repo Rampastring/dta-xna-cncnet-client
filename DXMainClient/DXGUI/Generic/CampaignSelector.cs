@@ -191,6 +191,7 @@ namespace DTAClient.DXGUI.Generic
         };
 
         private Mission missionToLaunch;
+        private bool isCheater;
 
         public override void Initialize()
         {
@@ -594,12 +595,14 @@ namespace DTAClient.DXGUI.Generic
         {
             var mission = lbCampaignList.SelectedItem.Tag as Mission;
 
+            isCheater = false;
             missionToLaunch = mission;
 
             if (!ClientConfiguration.Instance.ModMode && 
                 (!CUpdater.IsFileNonexistantOrOriginal(mission.Scenario) || AreFilesModified()))
             {
                 // Confront the user by showing the cheater screen
+                isCheater = true;
                 cheaterWindow.Enable();
                 return;
             }
@@ -705,7 +708,8 @@ namespace DTAClient.DXGUI.Generic
                 mission.InternalName,
                 mission.Side,
                 (DifficultyRank)(trbDifficultySelector.Value + 1),
-                globalFlagInfo),
+                globalFlagInfo,
+                isCheater),
                 WindowManager.AddCallback));
         }
 

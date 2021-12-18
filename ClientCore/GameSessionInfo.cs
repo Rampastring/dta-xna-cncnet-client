@@ -23,8 +23,8 @@ namespace ClientCore
     /// </summary>
     public class GameSessionInfo
     {
-        private const int OLD_EXPECTED_FIELD_COUNT = 6;
-        private const int EXPECTED_FIELD_COUNT = 7;
+        private const int MIN_EXPECTED_FIELD_COUNT = 6;
+        private const int EXPECTED_FIELD_COUNT = 8;
 
         private const string GLOBAL_FLAGS_NONE = "none";
 
@@ -34,7 +34,8 @@ namespace ClientCore
             string missionInternalName = "",
             int sideIndex = -1,
             DifficultyRank difficulty = DifficultyRank.NONE,
-            Dictionary<int, bool> globalFlagValues = null)
+            Dictionary<int, bool> globalFlagValues = null,
+            bool isCheatSession = false)
         {
             SessionType = sessionType;
             UniqueId = uniqueId;
@@ -42,6 +43,7 @@ namespace ClientCore
             SideIndex = sideIndex;
             Difficulty = difficulty;
             GlobalFlagValues = globalFlagValues;
+            IsCheatSession = isCheatSession;
         }
 
         public GameSessionType SessionType { get; }
@@ -50,6 +52,7 @@ namespace ClientCore
         public int SideIndex { get; }
         public DifficultyRank Difficulty { get; }
         public Dictionary<int, bool> GlobalFlagValues { get; }
+        public bool IsCheatSession { get; }
 
         public bool SessionMatches(GameSessionInfo other)
         {
@@ -71,7 +74,8 @@ namespace ClientCore
                 $"{ MissionInternalName }," +
                 $"{ SideIndex.ToString(CultureInfo.InvariantCulture) }," +
                 $"{ ((int)Difficulty).ToString(CultureInfo.InvariantCulture) }," + 
-                globalFlagValues;
+                globalFlagValues + "," +
+                (IsCheatSession ? "1" : "0");
 
 
             byte[] bytes = Encoding.UTF8.GetBytes(meta);
@@ -103,7 +107,7 @@ namespace ClientCore
 
                 string dataAsString = Encoding.UTF8.GetString(data);
                 string[] parts = dataAsString.Split(',');
-                if (parts.Length != EXPECTED_FIELD_COUNT && parts.Length != OLD_EXPECTED_FIELD_COUNT)
+                if (parts.Length < MIN_EXPECTED_FIELD_COUNT || parts.Length > EXPECTED_FIELD_COUNT)
                 {
                     Logger.Log("Unexpected saved game meta file format in file " + path + ": " + dataAsString);
                     return null;
@@ -147,8 +151,14 @@ namespace ClientCore
                         globalFlagsDictionary.Add(globalIndex, globalState);
                     }
                 }
+
+                bool isCheatSession = false;
+                if (parts.Length >= 8)
+                {
+                    isCheatSession = parts[7] == "1";
+                }
                 
-                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty, globalFlagsDictionary);
+                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty, globalFlagsDictionary, isCheatSession);
             }
 
             return null;

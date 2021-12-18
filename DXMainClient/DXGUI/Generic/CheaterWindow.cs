@@ -32,6 +32,9 @@ namespace DTAClient.DXGUI.Generic
             lblDescription.Text = "Modified game files have been detected. They could affect" + Environment.NewLine + 
                 "the game experience." +
                 Environment.NewLine + Environment.NewLine +
+                "You can progress through campaigns with modified files, but" + Environment.NewLine + 
+                "you won't be able to earn completion ranks." +
+                Environment.NewLine + Environment.NewLine +
                 "Do you really lack the skill for winning the mission without" + Environment.NewLine + "cheating?";
 
             var imagePanel = new XNAPanel(WindowManager);

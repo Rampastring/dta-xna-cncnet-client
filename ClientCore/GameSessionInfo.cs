@@ -307,16 +307,20 @@ namespace ClientCore
                 }
             }
 
-            // Check for auto-saves
-            string autoSaveDirectoryPath = ProgramConstants.GamePath + SavedGamesDirectory + "/" + AutoSavesDirectoryName;
-            if (Directory.Exists(autoSaveDirectoryPath))
+            if (SessionType != GameSessionType.MULTIPLAYER)
             {
-                string[] autoSaveFiles = Directory.GetFiles(autoSaveDirectoryPath, "*.SAV");
+                // Check for auto-saves
 
-                if (saveFiles == null)
-                    saveFiles = new List<string>();
+                string autoSaveDirectoryPath = ProgramConstants.GamePath + SavedGamesDirectory + "/" + AutoSavesDirectoryName;
+                if (Directory.Exists(autoSaveDirectoryPath))
+                {
+                    string[] autoSaveFiles = Directory.GetFiles(autoSaveDirectoryPath, "*.SAV");
 
-                saveFiles.AddRange(autoSaveFiles);
+                    if (saveFiles == null)
+                        saveFiles = new List<string>();
+
+                    saveFiles.AddRange(autoSaveFiles);
+                }
             }
 
             // Move the files and any potential meta files

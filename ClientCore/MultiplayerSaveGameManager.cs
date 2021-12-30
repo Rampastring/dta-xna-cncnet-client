@@ -88,7 +88,7 @@ namespace ClientCore
                 Directory.CreateDirectory(ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY);
                 File.Delete(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + "/" + SPAWN_INI_NAME);
                 File.Delete(ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY + "/" + SPAWN_INI_NAME);
-                File.Copy(ProgramConstants.GamePath + "spawn.ini", ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY + "/" + SPAWN_INI_NAME);
+                File.Copy(ProgramConstants.GamePath + "spawn.ini", ProgramConstants.GamePath + SAVED_GAMES_MP_DIRECTORY + "/" + SPAWN_INI_NAME, true);
             }
             catch (Exception ex)
             {

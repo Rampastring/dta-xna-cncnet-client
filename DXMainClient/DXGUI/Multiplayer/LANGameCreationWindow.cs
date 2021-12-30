@@ -124,6 +124,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             IniFile iniFile = new IniFile(ProgramConstants.GamePath + 
                 ProgramConstants.SAVED_GAME_SPAWN_INI);
+
             if (iniFile.GetStringValue("Settings", "Name", string.Empty) != ProgramConstants.PLAYERNAME)
                 return false;
 

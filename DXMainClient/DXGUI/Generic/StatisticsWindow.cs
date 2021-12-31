@@ -848,6 +848,7 @@ namespace DTAClient.DXGUI.Generic
             int numEasyAIs = 0;
             int numMediumAIs = 0;
             int numHardAIs = 0;
+            int numBrutalAIs = 0;
 
             foreach (int gameIndex in listedGameIndexes)
             {
@@ -899,8 +900,10 @@ namespace DTAClient.DXGUI.Generic
                                     numEasyAIs++;
                                 else if (ps.AILevel == 1)
                                     numMediumAIs++;
-                                else
+                                else if (ps.AILevel == 2)
                                     numHardAIs++;
+                                else
+                                    numBrutalAIs++;
                             }
                         }
                     }
@@ -956,12 +959,14 @@ namespace DTAClient.DXGUI.Generic
             lblTotalScoreValue.Text = totalScore.ToString();
             lblFavouriteSideValue.Text = sides[GetHighestIndex(sideGameCounts)];
 
-            if (numEasyAIs >= numMediumAIs && numEasyAIs >= numHardAIs)
+            if (numEasyAIs >= numMediumAIs && numEasyAIs >= numHardAIs && numEasyAIs >= numBrutalAIs)
                 lblAverageAILevelValue.Text = "Easy";
-            else if (numMediumAIs >= numEasyAIs && numMediumAIs >= numHardAIs)
+            else if (numMediumAIs >= numEasyAIs && numMediumAIs >= numHardAIs && numMediumAIs >= numBrutalAIs)
                 lblAverageAILevelValue.Text = "Medium";
-            else
+            else if (numHardAIs >= numEasyAIs && numHardAIs >= numMediumAIs && numHardAIs >= numBrutalAIs)
                 lblAverageAILevelValue.Text = "Hard";
+            else
+                lblAverageAILevelValue.Text = "Brutal";
         }
 
         private PlayerStatistics FindLocalPlayer(MatchStatistics ms)

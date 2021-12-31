@@ -199,6 +199,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblMapSize = FindChild<XNALabel>(nameof(lblMapSize));
 
             lbMapList = FindChild<XNAMultiColumnListBox>(nameof(lbMapList));
+            lbMapList.AllowKeyboardInput = !isMultiplayer;
             lbMapList.SelectedIndexChanged += LbMapList_SelectedIndexChanged;
             lbMapList.RightClick += LbMapList_RightClick;
 

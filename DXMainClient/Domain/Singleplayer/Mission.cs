@@ -43,7 +43,6 @@ namespace DTAClient.Domain.Singleplayer
             }
 
             CampaignInternalName = iniSection.GetStringValue(nameof(CampaignInternalName), null);
-            GlobalVariables = iniSection.GetStringValue(nameof(GlobalVariables), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             RequiresUnlocking = iniSection.GetBooleanValue(nameof(RequiresUnlocking), isCampaignMission);
             UnlockMissions = iniSection.GetStringValue(nameof(UnlockMissions), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             UsedGlobalVariables = iniSection.GetStringValue(nameof(UsedGlobalVariables), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -92,11 +91,6 @@ namespace DTAClient.Domain.Singleplayer
         /// If not null, this is not a mission but a dummy entry for a campaign.
         /// </summary>
         public string CampaignInternalName { get; }
-
-        /// <summary>
-        /// The global variables relevant to this mission.
-        /// </summary>
-        public List<string> GlobalVariables { get; private set; } = new List<string>(0);
 
         /// <summary>
         /// Is this a mission that is unlocked by playing other missions?

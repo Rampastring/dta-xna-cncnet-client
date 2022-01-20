@@ -94,5 +94,20 @@ namespace ClientCore
                     return string.Empty;
             }
         }
+
+        public static string DifficultyRankToName(DifficultyRank difficultyRank)
+        {
+            switch (difficultyRank)
+            {
+                case DifficultyRank.EASY:
+                    return "Easy";
+                case DifficultyRank.NORMAL:
+                    return "Normal";
+                case DifficultyRank.HARD:
+                    return "Hard";
+                default:
+                    return "Unknown Difficulty";
+            }
+        }
     }
 }

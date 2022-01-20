@@ -33,6 +33,11 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnDelete;
         private XNAClientButton btnCancel;
 
+        private XNALabel lblSessionTypeValue;
+        private XNALabel lblMissionNameValue;
+        private XNALabel lblDifficultyLevelValue;
+        private XNALabel lblGlobalFlagsValue;
+
         private List<SavedGame> savedGames = new List<SavedGame>();
 
         public override void Initialize()
@@ -40,7 +45,7 @@ namespace DTAClient.DXGUI.Generic
             Name = "GameLoadingWindow";
             BackgroundTexture = AssetLoader.LoadTexture("loadmissionbg.png");
 
-            ClientRectangle = new Rectangle(0, 0, 600, 380);
+            ClientRectangle = new Rectangle(0, 0, 800, 380);
             CenterOnParent();
 
             lbSaveGameList = new XNAMultiColumnListBox(WindowManager);
@@ -55,28 +60,100 @@ namespace DTAClient.DXGUI.Generic
 
             btnLaunch = new XNAClientButton(WindowManager);
             btnLaunch.Name = nameof(btnLaunch);
-            btnLaunch.ClientRectangle = new Rectangle(125, 345, 110, 23);
+            btnLaunch.ClientRectangle = new Rectangle(0, 345, 110, 23);
             btnLaunch.Text = "Load";
             btnLaunch.AllowClick = false;
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
 
             btnDelete = new XNAClientButton(WindowManager);
             btnDelete.Name = nameof(btnDelete);
-            btnDelete.ClientRectangle = new Rectangle(btnLaunch.Right + 10, btnLaunch.Y, 110, 23);
+            btnDelete.ClientRectangle = new Rectangle(0, btnLaunch.Y, 110, 23);
             btnDelete.Text = "Delete";
             btnDelete.AllowClick = false;
             btnDelete.LeftClick += BtnDelete_LeftClick;
 
             btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = nameof(btnCancel);
-            btnCancel.ClientRectangle = new Rectangle(btnDelete.Right + 10, btnLaunch.Y, 110, 23);
+            btnCancel.ClientRectangle = new Rectangle(0, btnLaunch.Y, 110, 23);
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnCancel_LeftClick;
+
+            var lblSaveInfoHeader = new XNALabel(WindowManager);
+            lblSaveInfoHeader.Name = nameof(lblSaveInfoHeader);
+            lblSaveInfoHeader.Y = lbSaveGameList.Y;
+            lblSaveInfoHeader.X = lbSaveGameList.Right + UIDesignConstants.CONTROL_HORIZONTAL_MARGIN * 2;
+            lblSaveInfoHeader.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblSaveInfoHeader.Text = "SAVE INFORMATION";
+            AddChild(lblSaveInfoHeader);
+
+            var lblSessionType = new XNALabel(WindowManager);
+            lblSessionType.Name = nameof(lblSessionType);
+            lblSessionType.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblSessionType.Y = lblSaveInfoHeader.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblSessionType.X = lblSaveInfoHeader.X;
+            lblSessionType.Text = "Session Type:";
+            AddChild(lblSessionType);
+
+            lblSessionTypeValue = new XNALabel(WindowManager);
+            lblSessionTypeValue.Name = nameof(lblSessionTypeValue);
+            lblSessionTypeValue.Y = lblSessionType.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            lblSessionTypeValue.X = lblSaveInfoHeader.X;
+            lblSessionTypeValue.Text = " ";
+            AddChild(lblSessionTypeValue);
+
+            var lblMissionName = new XNALabel(WindowManager);
+            lblMissionName.Name = nameof(lblMissionName);
+            lblMissionName.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblMissionName.Y = lblSessionTypeValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblMissionName.X = lblSaveInfoHeader.X;
+            lblMissionName.Text = "Mission Name:";
+            AddChild(lblMissionName);
+
+            lblMissionNameValue = new XNALabel(WindowManager);
+            lblMissionNameValue.Name = nameof(lblMissionNameValue);
+            lblMissionNameValue.Y = lblMissionName.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            lblMissionNameValue.X = lblSessionTypeValue.X;
+            lblMissionNameValue.Text = " ";
+            AddChild(lblMissionNameValue);
+
+            var lblDifficultyLevel = new XNALabel(WindowManager);
+            lblDifficultyLevel.Name = nameof(lblDifficultyLevel);
+            lblDifficultyLevel.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblDifficultyLevel.Y = lblMissionNameValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblDifficultyLevel.X = lblSaveInfoHeader.X;
+            lblDifficultyLevel.Text = "Difficulty Level:";
+            AddChild(lblDifficultyLevel);
+
+            lblDifficultyLevelValue = new XNALabel(WindowManager);
+            lblDifficultyLevelValue.Name = nameof(lblDifficultyLevelValue);
+            lblDifficultyLevelValue.Y = lblDifficultyLevel.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            lblDifficultyLevelValue.X = lblSaveInfoHeader.X;
+            lblDifficultyLevelValue.Text = " ";
+            AddChild(lblDifficultyLevelValue);
+
+            var lblGlobalFlags = new XNALabel(WindowManager);
+            lblGlobalFlags.Name = nameof(lblGlobalFlags);
+            lblGlobalFlags.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblGlobalFlags.Y = lblDifficultyLevelValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblGlobalFlags.X = lblSaveInfoHeader.X;
+            lblGlobalFlags.Text = "Preconditions:";
+            AddChild(lblGlobalFlags);
+
+            lblGlobalFlagsValue = new XNALabel(WindowManager);
+            lblGlobalFlagsValue.Name = nameof(lblGlobalFlagsValue);
+            lblGlobalFlagsValue.Y = lblGlobalFlags.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            lblGlobalFlagsValue.X = lblSaveInfoHeader.X;
+            lblGlobalFlagsValue.Text = " ";
+            AddChild(lblGlobalFlagsValue);
 
             AddChild(lbSaveGameList);
             AddChild(btnLaunch);
             AddChild(btnDelete);
             AddChild(btnCancel);
+
+            btnDelete.CenterOnParentHorizontally();
+            btnLaunch.X = btnDelete.X - 10 - btnLaunch.Width;
+            btnCancel.X = btnDelete.Right + 10;
 
             base.Initialize();
 
@@ -89,12 +166,93 @@ namespace DTAClient.DXGUI.Generic
             {
                 btnLaunch.AllowClick = false;
                 btnDelete.AllowClick = false;
+                ClearSaveInformation(string.Empty);
+                return;
             }
-            else
+
+            btnLaunch.AllowClick = true;
+            btnDelete.AllowClick = true;
+
+            SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
+
+            if (sg.SessionInfo == null)
             {
-                btnLaunch.AllowClick = true;
-                btnDelete.AllowClick = true;
+                ClearSaveInformation(string.Empty);
+                lblSessionTypeValue.Text = "Unknown";
+                return;
             }
+
+            switch (sg.SessionInfo.SessionType)
+            {
+                case GameSessionType.SKIRMISH:
+                    ClearSaveInformation(string.Empty);
+                    lblSessionTypeValue.Text = "Skirmish";
+                    break;
+                case GameSessionType.MULTIPLAYER:
+                    ClearSaveInformation(string.Empty);
+                    lblSessionTypeValue.Text = "Multiplayer";
+                    break;
+                case GameSessionType.SINGLEPLAYER:
+                    var mission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == sg.SessionInfo.MissionInternalName);
+                    if (mission == null)
+                    {
+                        ClearSaveInformation("Unknown");
+                    }
+                    else
+                    {
+                        string difficultyName = ProgramConstants.DifficultyRankToName(sg.SessionInfo.Difficulty);
+                        if (mission.DifficultyLabels != null)
+                            difficultyName = mission.DifficultyLabels[(int)sg.SessionInfo.Difficulty - 1];
+
+                        if (difficultyName.Length > 1)
+                            difficultyName = difficultyName[0].ToString() + difficultyName.ToLower().Substring(1);
+
+                        string globalFlagInfo;
+
+                        if (sg.SessionInfo.GlobalFlagValues != null)
+                        {
+                            globalFlagInfo = string.Empty;
+
+                            foreach (var kvp in sg.SessionInfo.GlobalFlagValues)
+                            {
+                                int globalFlagIndex = kvp.Key;
+                                bool enabled = kvp.Value;
+
+                                if (CampaignHandler.Instance.GlobalVariables.Count > globalFlagIndex)
+                                {
+                                    var globalVariable = CampaignHandler.Instance.GlobalVariables[globalFlagIndex];
+                                    globalFlagInfo += globalVariable.UIName + ": " + (enabled ? "Yes" : "No");
+                                }
+                                else
+                                {
+                                    globalFlagInfo += "(Unknown variable) " + globalFlagIndex + ": " + (enabled ? "Yes" : "No");
+                                }
+
+                                globalFlagInfo += Environment.NewLine;
+                            }
+                        }
+                        else
+                        {
+                            globalFlagInfo = "None";
+                        }
+
+                        lblMissionNameValue.Text = mission.GUIName;
+                        lblDifficultyLevelValue.Text = difficultyName;
+                        lblGlobalFlagsValue.Text = globalFlagInfo;
+                    }
+
+                    lblSessionTypeValue.Text = "Singleplayer";
+
+                    break;
+            }
+        }
+
+        private void ClearSaveInformation(string defaultText)
+        {
+            lblSessionTypeValue.Text = defaultText;
+            lblMissionNameValue.Text = defaultText;
+            lblDifficultyLevelValue.Text = defaultText;
+            lblGlobalFlagsValue.Text = defaultText;
         }
 
         private void BtnCancel_LeftClick(object sender, EventArgs e)

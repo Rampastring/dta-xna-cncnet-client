@@ -32,15 +32,16 @@ namespace DTAClient.Domain
         {
             var cf = new CompoundFile(file);
 
-            byte[] archiveNameBytes = cf.RootStorage.GetStream("Scenario Description").GetData();
-            string archiveName = System.Text.Encoding.Unicode.GetString(archiveNameBytes);
-            archiveName = archiveName.TrimEnd(new char[] { '\0' });
-            GUIName = archiveName;
+            GUIName = GetStringFromCompoundFile(cf, "Scenario Description");
+            PlayerHouseName = GetStringFromCompoundFile(cf, "Player House");
+        }
 
-            byte[] playerHouseBytes = cf.RootStorage.GetStream("Player House").GetData();
-            string playerHouseName = System.Text.Encoding.Unicode.GetString(playerHouseBytes);
-            playerHouseName = playerHouseName.TrimEnd(new char[] { '\0' });
-            PlayerHouseName = playerHouseName;
+        private string GetStringFromCompoundFile(CompoundFile cf, string streamName)
+        {
+            byte[] bytes = cf.RootStorage.GetStream(streamName).GetData();
+            string str = System.Text.Encoding.Unicode.GetString(bytes);
+            str = str.TrimEnd('\0');
+            return str;
         }
 
         /// <summary>

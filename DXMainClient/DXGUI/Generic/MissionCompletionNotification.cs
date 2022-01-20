@@ -77,32 +77,20 @@ namespace DTAClient.DXGUI.Generic
             base.Initialize();
         }
 
-        private string DifficultyRankToName(DifficultyRank difficultyRank)
-        {
-            switch (difficultyRank)
-            {
-                case DifficultyRank.EASY:
-                    return "Easy";
-                case DifficultyRank.NORMAL:
-                    return "Normal";
-                case DifficultyRank.HARD:
-                    return "Hard";
-                default:
-                    return "Unknown Difficulty";
-            }
-        }
-
         public void Show(Mission mission)
         {
             lblMissionName.Text = mission.GUIName.ToUpper();
 
-            string difficultyName = DifficultyRankToName(mission.Rank);
+            string difficultyName = ProgramConstants.DifficultyRankToName(mission.Rank);
             if (mission.DifficultyLabels != null)
             {
                 difficultyName = mission.DifficultyLabels[(int)mission.Rank - 1];
             }
 
-            lblDescription.Text = "Completed on " + difficultyName[0].ToString() + difficultyName.ToLower().Substring(1);
+            if (difficultyName.Length > 1)
+                difficultyName = difficultyName[0].ToString() + difficultyName.ToLower().Substring(1);
+
+            lblDescription.Text = "Completed on " + difficultyName;
 
             starIconPanel.BackgroundTexture = rankTextures[(int)mission.Rank];
 

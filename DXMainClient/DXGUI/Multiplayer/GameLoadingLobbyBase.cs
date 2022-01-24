@@ -67,7 +67,6 @@ namespace DTAClient.DXGUI.Multiplayer
         private string loadedGameID;
 
         private bool isSettingUp = false;
-        private FileSystemWatcher fsw;
 
         private int uniqueGameId = 0;
         private DateTime gameLoadTime;
@@ -197,14 +196,6 @@ namespace DTAClient.DXGUI.Multiplayer
             MPColors = MultiplayerColor.LoadColors();
 
             WindowManager.CenterControlOnScreen(this);
-
-            if (MultiplayerSaveGameManager.AreSavedGamesAvailable())
-            {
-                fsw = new FileSystemWatcher(ProgramConstants.GamePath + "Saved Games", "*.NET");
-                fsw.EnableRaisingEvents = false;
-                fsw.Created += fsw_Created;
-                fsw.Changed += fsw_Created;
-            }
         }
 
         /// <summary>
@@ -224,19 +215,6 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             GameLeft?.Invoke(this, EventArgs.Empty);
             ResetDiscordPresence();
-        }
-
-        private void fsw_Created(object sender, FileSystemEventArgs e) =>
-            AddCallback(new Action<FileSystemEventArgs>(HandleFSWEvent), e);
-
-        private void HandleFSWEvent(FileSystemEventArgs e)
-        {
-            Logger.Log("FSW Event: " + e.FullPath);
-
-            if (Path.GetFileName(e.FullPath) == "SAVEGAME.NET")
-            {
-                MultiplayerSaveGameManager.RenameSavedGame();
-            }
         }
 
         private void BtnLoadGame_LeftClick(object sender, EventArgs e)
@@ -288,9 +266,9 @@ namespace DTAClient.DXGUI.Multiplayer
             IniFile spawnIni = new IniFile(ProgramConstants.GamePath + "spawn.ini");
 
             int sgIndex = (ddSavedGame.Items.Count - 1) - ddSavedGame.SelectedIndex;
+            string sgFileName = string.Format("SVGM_{0}.NET", sgIndex.ToString("D3"));
 
-            spawnIni.SetStringValue("Settings", "SaveGameName",
-                string.Format("SVGM_{0}.NET", sgIndex.ToString("D3")));
+            spawnIni.SetStringValue("Settings", "SaveGameName", sgFileName);
             spawnIni.SetBooleanValue("Settings", "LoadSaveGame", true);
 
             PlayerInfo localPlayer = Players.Find(p => p.Name == ProgramConstants.PLAYERNAME);
@@ -329,12 +307,20 @@ namespace DTAClient.DXGUI.Multiplayer
 
             gameLoadTime = DateTime.Now;
 
-            var gameSessionInfo = new GameSessionManager(new GameSessionInfo(GameSessionType.MULTIPLAYER, 0), WindowManager.AddCallback);
+            string saveFilePath = ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY + "/" + sgFileName;
+            string metaFilePath = Path.ChangeExtension(saveFilePath, GameSessionManager.SavedGameMetaExtension);
+            var meta = GameSessionInfo.ParseFromFile(metaFilePath);
+            if (meta == null)
+            {
+                XNAMessageBox.Show(WindowManager, "Failed to load saved multiplayer game", "Failed to load saved game: saved game meta could not be parsed!");
+                return;
+            }
+
+            var gameSessionInfo = new GameSessionManager(new GameSessionInfo(GameSessionType.MULTIPLAYER, meta.UniqueId), WindowManager.AddCallback);
             gameSessionInfo.StartSession();
             GameProcessLogic.GameProcessExited += SharedUILogic_GameProcessExited;
             GameProcessLogic.StartGameProcess(gameSessionInfo);
 
-            fsw.EnableRaisingEvents = true;
             UpdateDiscordPresence(true);
         }
 
@@ -343,14 +329,14 @@ namespace DTAClient.DXGUI.Multiplayer
 
         protected virtual void HandleGameProcessExited()
         {
-            fsw.EnableRaisingEvents = false;
-
             GameProcessLogic.GameProcessExited -= SharedUILogic_GameProcessExited;
 
             var matchStatistics = StatisticsManager.Instance.GetMatchWithGameID(uniqueGameId);
 
             if (matchStatistics != null)
             {
+                Logger.Log("GameLoadingLobbyBase: Updating match statistics for unique game ID " + uniqueGameId);
+
                 int oldLength = matchStatistics.LengthInSeconds;
                 int newLength = matchStatistics.LengthInSeconds +
                     (int)(DateTime.Now - gameLoadTime).TotalSeconds;
@@ -362,6 +348,11 @@ namespace DTAClient.DXGUI.Multiplayer
 
                 StatisticsManager.Instance.SaveDatabase();
             }
+            else
+            {
+                Logger.Log("GameLoadingLobbyBase: Match statistics not found for unique game ID " + uniqueGameId);
+            }
+
             UpdateDiscordPresence(true);
         }
 

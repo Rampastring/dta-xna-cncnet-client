@@ -11,11 +11,6 @@ namespace DTAClient.Domain.Multiplayer
         public List<int> DisallowedPlayerSides = new List<int>();
         public List<int> DisallowedPlayerColors = new List<int>();
 
-        public void SetHouseInfos(IniSection iniSection)
-        {
-            EnemyHouses = GetGenericHouseInfo(iniSection, "EnemyHouse");
-            AllyHouses = GetGenericHouseInfo(iniSection, "AllyHouse");
-        }
 
         private List<CoopHouseInfo> GetGenericHouseInfo(IniSection iniSection, string keyName)
         {
@@ -36,6 +31,32 @@ namespace DTAClient.Domain.Multiplayer
             }
 
             return houseList;
+        }
+
+        public void ReadFromINI(IniSection iniSection)
+        {
+            EnemyHouses = GetGenericHouseInfo(iniSection, "EnemyHouse");
+            AllyHouses = GetGenericHouseInfo(iniSection, "AllyHouse");
+            DisallowedPlayerSides = iniSection.GetListValue("DisallowedPlayerSides", ',', s => int.Parse(s));
+            DisallowedPlayerColors = iniSection.GetListValue("DisallowedPlayerColors", ',', s => int.Parse(s));
+        }
+
+        public void WriteToINI(IniSection iniSection)
+        {
+            for (int i = 0; i < EnemyHouses.Count; i++)
+            {
+                var enemyHouseInfo = EnemyHouses[i];
+                iniSection.SetStringValue($"EnemyHouse{i}", $"{enemyHouseInfo.Side},{enemyHouseInfo.Color},{enemyHouseInfo.StartingLocation}");
+            }
+
+            for (int i = 0; i < AllyHouses.Count; i++)
+            {
+                var allyHouseInfo = AllyHouses[i];
+                iniSection.SetStringValue($"AllyHouse{i}", $"{allyHouseInfo.Side},{allyHouseInfo.Color},{allyHouseInfo.StartingLocation}");
+            }
+
+            iniSection.SetStringValue("DisallowedPlayerSides", string.Join(",", DisallowedPlayerSides));
+            iniSection.SetStringValue("DisallowedPlayerColors", string.Join(",", DisallowedPlayerColors));
         }
     }
 }

@@ -425,7 +425,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 RemoveStartingLocations = newValue;
                 if (RemoveStartingLocations)
-                    AddNotice("The game host has enabled completely random starting locations (only works for regular maps)..");
+                    AddNotice("The game host has enabled completely random starting locations (only works for regular maps).");
                 else
                     AddNotice("The game host has disabled completely random starting locations.");
             }

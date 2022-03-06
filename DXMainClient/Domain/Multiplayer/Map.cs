@@ -420,6 +420,7 @@ namespace DTAClient.Domain.Multiplayer
                 iniFile.AddSection("ForcedOptions");
                 iniFile.AddSection("ForcedSpawnIniOptions");
                 iniFile.AddSection("Structures");
+                iniFile.AddSection("INISystem");
                 iniFile.AllowNewSections = false;
 
                 iniFile.Parse();
@@ -458,16 +459,11 @@ namespace DTAClient.Domain.Multiplayer
                 }
 
                 MinPlayers = basicSection.GetIntValue("ClientMinPlayer", 0);
-
-                if (basicSection.KeyExists("ClientMaxPlayer"))
-                    MaxPlayers = basicSection.GetIntValue("ClientMaxPlayer", 0);
-                else
-                    MaxPlayers = basicSection.GetIntValue("MaxPlayer", 0);
-                EnforceMaxPlayers = basicSection.GetBooleanValue("EnforceMaxPlayers", true);
-                //PreviewPath = Path.GetDirectoryName(BaseFilePath) + "/" +
-                //    iniFile.GetStringValue(BaseFilePath, "PreviewImage", Path.GetFileNameWithoutExtension(BaseFilePath) + ".png");
+                MaxPlayers = basicSection.GetIntValue("MaxPlayer", 0);
+                MaxPlayers = basicSection.GetIntValue("ClientMaxPlayer", MaxPlayers);
+                EnforceMaxPlayers = basicSection.GetBooleanValue("EnforceMaxPlayers", !Official);
                 Briefing = basicSection.GetStringValue("Briefing", string.Empty).Replace("@", Environment.NewLine);
-                IsCoop = basicSection.GetBooleanValue("IsCoopMission", false);
+                IsCoop = basicSection.GetBooleanValue("IsCoopMission", IsCoop);
                 Credits = basicSection.GetIntValue("Credits", -1);
                 UnitCount = basicSection.GetIntValue("UnitCount", -1);
                 NeutralHouseColor = basicSection.GetIntValue("NeutralColor", -1);
@@ -475,7 +471,10 @@ namespace DTAClient.Domain.Multiplayer
                 HumanPlayersOnly = basicSection.GetBooleanValue("HumanPlayersOnly", false);
                 ForceRandomStartLocations = basicSection.GetBooleanValue("ForceRandomStartLocations", false);
                 ForceNoTeams = basicSection.GetBooleanValue("ForceNoTeams", false);
-                PreviewPath = Path.ChangeExtension(path.Substring(ProgramConstants.GamePath.Length), ".png");
+
+                if (string.IsNullOrWhiteSpace(PreviewPath))
+                    PreviewPath = Path.ChangeExtension(path.Substring(ProgramConstants.GamePath.Length), ".png");
+
                 MultiplayerOnly = basicSection.GetBooleanValue("ClientMultiplayerOnly", false);
 
                 string bases = basicSection.GetStringValue("Bases", string.Empty);
@@ -485,7 +484,9 @@ namespace DTAClient.Domain.Multiplayer
                 }
 
                 ReadExtraTextures(basicSection);
-                AutoFillExtraTextures(mapIni);
+                bool autoFillExtraTextures = basicSection.GetBooleanValue("AutoFillExtraTextures", !IsCoop);
+                if (autoFillExtraTextures)
+                    AutoFillExtraTextures(mapIni);
 
                 if (IsCoop)
                 {
@@ -496,7 +497,9 @@ namespace DTAClient.Domain.Multiplayer
                 localSize = iniFile.GetStringValue("Map", "LocalSize", "0,0,0,0").Split(',');
                 actualSize = iniFile.GetStringValue("Map", "Size", "0,0,0,0").Split(',');
 
-                for (int i = 0; i < MAX_PLAYERS; i++)
+                int startingWaypointCount = basicSection.GetIntValue("StartingWaypointCount", MaxPlayers);
+
+                for (int i = 0; i < MAX_PLAYERS && i < startingWaypointCount; i++)
                 {
                     string waypoint = mapIni.GetStringValue("Waypoints", i.ToString(), string.Empty);
 
@@ -515,7 +518,7 @@ namespace DTAClient.Domain.Multiplayer
             }
             catch
             {
-                Logger.Log("Loading custom map " + path + " failed!");
+                Logger.Log("Loading map " + path + " failed!");
                 return false;
             }
         }
@@ -579,7 +582,7 @@ namespace DTAClient.Domain.Multiplayer
             if (keys == null)
             {
                 if (Official)
-                    Logger.Log("Invalid ForcedOptions section \"" + forcedOptionsSection + "\" in map " + BaseFilePath);
+                    Logger.Log("Non-existent ForcedOptions section \"" + forcedOptionsSection + "\" in map " + BaseFilePath);
 
                 return;
             }
@@ -603,6 +606,17 @@ namespace DTAClient.Domain.Multiplayer
         private void ParseSpawnIniOptions(IniFile forcedOptionsIni, string spawnIniOptionsSection)
         {
             List<string> spawnIniKeys = forcedOptionsIni.GetSectionKeys(spawnIniOptionsSection);
+
+            if (spawnIniKeys == null)
+            {
+                if (Official)
+                {
+                    Logger.Log($"Non-existent ForcedSpawnIniOptions section {spawnIniOptionsSection} " +
+                        $"specified for map {BaseFilePath}");
+                }
+                    
+                return;
+            }
 
             foreach (string key in spawnIniKeys)
             {

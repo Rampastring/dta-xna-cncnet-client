@@ -829,11 +829,22 @@ namespace DTAClient.Domain.Multiplayer
             if (!string.IsNullOrWhiteSpace(ExtraININame))
                 section.SetStringValue("ExtraININame", ExtraININame);
             section.SetStringValue("GameModes", string.Join(",", GameModes));
-            section.SetIntValue("UnitCount", UnitCount);
-            section.SetIntValue("Credits", Credits);
-            section.SetIntValue("NeutralHouseColor", NeutralHouseColor);
-            section.SetIntValue("SpecialHouseColor", SpecialHouseColor);
-            section.SetIntValue("Bases", Bases);
+
+            if (UnitCount > -1)
+                section.SetIntValue("UnitCount", UnitCount);
+
+            if (Credits > -1)
+                section.SetIntValue("Credits", Credits);
+
+            if (NeutralHouseColor > -1)
+                section.SetIntValue("NeutralHouseColor", NeutralHouseColor);
+
+            if (SpecialHouseColor > -1)
+                section.SetIntValue("SpecialHouseColor", SpecialHouseColor);
+
+            if (Bases > -1)
+                section.SetIntValue("Bases", Bases);
+
             section.SetStringValue("LocalSize", string.Join(",", localSize));
             section.SetStringValue("Size", string.Join(",", actualSize));
             for (int i = 0; i < waypoints.Count; i++)

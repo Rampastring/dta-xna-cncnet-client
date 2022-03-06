@@ -15,6 +15,8 @@ namespace DTAClient.Domain.Multiplayer
         public const string MAP_FILE_EXTENSION = ".map";
         private const string CUSTOM_MAPS_DIRECTORY = "Maps/Custom";
 
+        private const int MAP_CACHE_VERSION = 2;
+
         /// <summary>
         /// List of game modes.
         /// </summary>
@@ -145,6 +147,11 @@ namespace DTAClient.Domain.Multiplayer
         private void ParseMapsWithCaching()
         {
             mapCacheIni = new IniFile(ProgramConstants.GamePath + ProgramConstants.MAP_CACHE);
+            if (mapCacheIni.GetIntValue("Meta", "MapCacheVersion", 0) != MAP_CACHE_VERSION)
+            {
+                File.Delete(ProgramConstants.GamePath + ProgramConstants.MAP_CACHE);
+                mapCacheIni.Reload();
+            }
 
             JsonConvert.DefaultSettings = () =>
             {
@@ -187,6 +194,7 @@ namespace DTAClient.Domain.Multiplayer
 
             // Re-write map cache
             mapCacheIni.Comment = "Map cache written by the Dawn of the Tiberium Age CnCNet Client\r\nDo not touch manually!";
+            mapCacheIni.SetIntValue("Meta", "MapCacheVersion", MAP_CACHE_VERSION);
             mapCacheIni.WriteIniFile();
         }
 

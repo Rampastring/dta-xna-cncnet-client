@@ -565,7 +565,7 @@ namespace DTAClient.DXGUI.Generic
                             globalVariableValues[i].SelectedIndex = 1;
                     }
 
-                    if (global.HideIfNotEnabledUnlocked)
+                    if (global.HideIfNotEnabledUnlocked && !global.IsEnabledUnlocked)
                     {
                         globalVariableValues[i].Items[0].Text = "-";
                         globalVariableValues[i].Items[1].Text = "-";

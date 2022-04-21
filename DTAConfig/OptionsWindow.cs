@@ -255,11 +255,6 @@ namespace DTAConfig
             tabControl.SelectedTab = 5;
         }
 
-        public void InstallCustomComponent(int id)
-        {
-            componentsPanel.InstallComponent(id);
-        }
-
         public void PostInit()
         {
             displayOptionsPanel.PostInit();

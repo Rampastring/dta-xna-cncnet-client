@@ -262,14 +262,34 @@ namespace ClientCore
             foreach (string save in mpSaveFiles)
             {
                 Logger.Log("Moving saved game " + Path.GetFileName(save) + " to MULTIPLAYER saves directory.");
-                File.Move(save, mpSaveDirPath + "/" + Path.GetFileName(save));
+                string destinationPath = mpSaveDirPath + "/" + Path.GetFileName(save);
+
+                if (!File.Exists(destinationPath))
+                {
+                    File.Move(save, destinationPath);
+                }
+                else
+                {
+                    Logger.Log("A saved game with the same filename already exists in the MULTIPLAYER saves directory. Deleting the save instead.");
+                    File.Delete(save);
+                }
             }
 
             string spawnSGIniPath = ProgramConstants.GamePath + SavedGamesDirectory + "/" + MultiplayerSaveGameManager.SPAWN_INI_NAME;
             if (File.Exists(spawnSGIniPath))
             {
                 Logger.Log($"Moving { MultiplayerSaveGameManager.SPAWN_INI_NAME } to MULTIPLAYER saves directory.");
-                File.Move(spawnSGIniPath, ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY + "/" + MultiplayerSaveGameManager.SPAWN_INI_NAME);
+                string destinationPath = ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY + "/" + MultiplayerSaveGameManager.SPAWN_INI_NAME;
+
+                if (!File.Exists(destinationPath))
+                {
+                    File.Move(spawnSGIniPath, destinationPath);
+                }
+                else
+                {
+                    Logger.Log($"{ MultiplayerSaveGameManager.SPAWN_INI_NAME } already exists in MULTIPLAYER saves directory (how??). Deleting it instead.");
+                    File.Delete(spawnSGIniPath);
+                }
             }
         }
 

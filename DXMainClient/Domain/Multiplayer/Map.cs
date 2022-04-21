@@ -321,7 +321,7 @@ namespace DTAClient.Domain.Multiplayer
                 EnforceMaxPlayers = section.GetBooleanValue("EnforceMaxPlayers", false);
                 Briefing = section.GetStringValue("Briefing", string.Empty).Replace("@", Environment.NewLine);
                 SHA1 = Utilities.CalculateSHA1ForFile(CompleteFilePath);
-                IsCoop = section.GetBooleanValue("IsCoopMission", false);
+                IsCoop = section.GetBooleanValue("IsCoop", false);
                 Credits = section.GetIntValue("Credits", -1);
                 UnitCount = section.GetIntValue("UnitCount", -1);
                 NeutralHouseColor = section.GetIntValue("NeutralColor", -1);
@@ -463,7 +463,7 @@ namespace DTAClient.Domain.Multiplayer
                 MaxPlayers = basicSection.GetIntValue("ClientMaxPlayer", MaxPlayers);
                 EnforceMaxPlayers = basicSection.GetBooleanValue("EnforceMaxPlayers", !Official);
                 Briefing = basicSection.GetStringValue("Briefing", string.Empty).Replace("@", Environment.NewLine);
-                IsCoop = basicSection.GetBooleanValue("IsCoopMission", IsCoop);
+                IsCoop = basicSection.GetBooleanValue("IsCoop", basicSection.GetBooleanValue("IsCoopMission", IsCoop));
                 Credits = basicSection.GetIntValue("Credits", -1);
                 UnitCount = basicSection.GetIntValue("UnitCount", -1);
                 NeutralHouseColor = basicSection.GetIntValue("NeutralColor", -1);

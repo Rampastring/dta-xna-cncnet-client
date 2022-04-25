@@ -174,12 +174,7 @@ namespace DTAClient.DXGUI.Generic
 
         private readonly string[] filesToCheck = new string[]
         {
-            "INI/AI.ini",
-            "INI/AIE.ini",
-            "INI/Art.ini",
             "INI/ArtE.ini",
-            "INI/Enhance.ini",
-            "INI/Rules.ini",
             "INI/Base/AI.ini",
             "INI/Base/AIE.ini",
             "INI/Base/Art.ini",
@@ -643,7 +638,10 @@ namespace DTAClient.DXGUI.Generic
             foreach (string filePath in filesToCheck)
             {
                 if (!CUpdater.IsFileNonexistantOrOriginal(filePath))
+                {
+                    Logger.Log("Modified file detected: " + filePath);
                     return true;
+                }
             }
 
             return false;

@@ -17,20 +17,16 @@ namespace DTAClient.Online
 
         string[] fileNamesToCheck = new string[]
         {
-            "spawner.xdp",
             "rules.ini",
             "ai.ini",
             "art.ini",
             "shroud.shp",
-            "INI/Rules.ini",
-            "INI/Enhance.ini",
-            "INI/Firestrm.ini",
-            "INI/Art.ini",
+            "INI/Base/Rules.ini",
+            "INI/Base/Enhance.ini",
+            "INI/Base/Art.ini",
             "INI/ArtE.ini",
-            "INI/ArtFS.ini",
-            "INI/AI.ini",
-            "INI/AIE.ini",
-            "INI/AIFS.ini",
+            "INI/Base/AI.ini",
+            "INI/Base/AIE.ini",
         };
 
         public FileHashCalculator() => ParseConfigFile();

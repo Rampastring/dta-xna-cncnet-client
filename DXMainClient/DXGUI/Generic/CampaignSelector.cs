@@ -526,6 +526,14 @@ namespace DTAClient.DXGUI.Generic
                 {
                     CampaignGlobalVariable global = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == mission.UsedGlobalVariables[i]);
 
+                    if (global == null)
+                    {
+                        Logger.Log(nameof(CampaignSelector) + ": Unable to find global: " + mission.UsedGlobalVariables[i]);
+                        XNAMessageBox.Show(WindowManager, "Campaign Configuration Error",
+                            "Unable to find global variable used by mission: " + mission.UsedGlobalVariables[i]);
+                        return;
+                    }
+
                     globalVariableNames[i].Text = global.UIName;
                     globalVariableNames[i].TextColor = UISettings.ActiveSettings.TextColor;
                     globalVariableNames[i].Enable();

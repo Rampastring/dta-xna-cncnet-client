@@ -183,6 +183,8 @@ namespace ClientCore
 
         public string MapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "MapEditorExePath", "FinalSun/FinalSun.exe");
 
+        public string NewMapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "NewMapEditorExePath", "ScenEditor/MapEditorLauncher.exe");
+
         public string UnixMapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "UnixMapEditorExePath", Instance.MapEditorExePath);
 
         public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "ModMode", false);

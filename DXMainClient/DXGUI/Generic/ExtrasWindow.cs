@@ -33,20 +33,27 @@ namespace DTAClient.DXGUI.Generic
             btnExMapEditor.Text = "Map Editor";
             btnExMapEditor.LeftClick += BtnExMapEditor_LeftClick;
 
+            var btnExMapEditorNew = new XNAClientButton(WindowManager);
+            btnExMapEditorNew.Name = "btnExMapEditorNew";
+            btnExMapEditorNew.ClientRectangle = new Rectangle(76, 101, 133, 23);
+            btnExMapEditorNew.Text = "Map Editor";
+            btnExMapEditorNew.LeftClick += BtnExMapEditorNew_LeftClick;
+
             var btnExCredits = new XNAClientButton(WindowManager);
             btnExCredits.Name = "btnExCredits";
-            btnExCredits.ClientRectangle = new Rectangle(76, 101, 133, 23);
+            btnExCredits.ClientRectangle = new Rectangle(76, 143, 133, 23);
             btnExCredits.Text = "Credits";
             btnExCredits.LeftClick += BtnExCredits_LeftClick;
 
             var btnExCancel = new XNAClientButton(WindowManager);
             btnExCancel.Name = "btnExCancel";
-            btnExCancel.ClientRectangle = new Rectangle(76, 160, 133, 23);
+            btnExCancel.ClientRectangle = new Rectangle(76, 185, 133, 23);
             btnExCancel.Text = "Cancel";
             btnExCancel.LeftClick += BtnExCancel_LeftClick;
 
             AddChild(btnExStatistics);
             AddChild(btnExMapEditor);
+            AddChild(btnExMapEditorNew);
             AddChild(btnExCredits);
             AddChild(btnExCancel);
 
@@ -64,6 +71,12 @@ namespace DTAClient.DXGUI.Generic
         private void BtnExMapEditor_LeftClick(object sender, EventArgs e)
         {
             Process.Start(ProgramConstants.GamePath + ClientConfiguration.Instance.MapEditorExePath);
+            Enabled = false;
+        }
+
+        private void BtnExMapEditorNew_LeftClick(object sender, EventArgs e)
+        {
+            Process.Start(ProgramConstants.GamePath + ClientConfiguration.Instance.NewMapEditorExePath);
             Enabled = false;
         }
 

@@ -462,6 +462,45 @@ namespace DTAClient.DXGUI.Generic
 
         private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox) => optionsWindow.Open();
 
+        private void CheckIfViniferaDependenciesPresent()
+        {
+            string[] requiredFiles = new string[] { "vcruntime140.dll", "msvcp140.dll" };
+
+            if (Environment.Is64BitProcess)
+            {
+                if (Array.TrueForAll(requiredFiles, filename => File.Exists("C:/Windows/SysWOW64/" + filename)))
+                    return;
+            }
+            else
+            {
+                if (Array.TrueForAll(requiredFiles, filename => File.Exists("C:/Windows/system32/" + filename)))
+                    return;
+            }
+
+            Logger.Log("VC++ Runtime 14.0 (VS2015) is missing! Copying the required files from the /Resources/Runtime/ directory.");
+            try
+            {
+                Array.ForEach(requiredFiles, filename => File.Copy(ProgramConstants.GetBaseResourcePath() + "Runtime/" + filename, ProgramConstants.GamePath + filename));
+            }
+            catch (Exception ex)
+            {
+                if (ex is FileNotFoundException || ex is IOException)
+                {
+                    Logger.Log("Exception when attempting to copy required files: " + ex.Message);
+                    Logger.Log("Falling back to informing the user about the missing runtime.");
+
+                    var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Required Visual C++ Runtime Missing",
+                        "Your system is missing a required C++ runtime for running the game." + Environment.NewLine +
+                        "Do you want to open the Microsoft page for downloading and installing the required runtime?");
+                    messageBox.YesClickedAction = (_) => Process.Start("https://www.microsoft.com/en-us/download/details.aspx?id=52685");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
         private void SharedUILogic_GameProcessStarted() => MusicOff();
 
         private void WindowManager_GameClosing(object sender, EventArgs e) => Clean();
@@ -532,6 +571,7 @@ namespace DTAClient.DXGUI.Generic
             CheckRequiredFiles();
             CheckForbiddenFiles();
             CheckIfFirstRun();
+            CheckIfViniferaDependenciesPresent();
         }
 
         #region Updating / versioning system

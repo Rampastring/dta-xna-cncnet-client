@@ -170,6 +170,16 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             // TODO Rampastring pls, review and merge that XNAIndicator PR already
         }
 
+        public override void Refresh(bool isHost)
+        {
+            if (isHost)
+                btnChangeTunnel.Enable();
+            else
+                btnChangeTunnel.Disable();
+
+            base.Refresh(isHost);
+        }
+
         /// <summary>
         /// Clears event subscriptions and leaves the channel.
         /// </summary>

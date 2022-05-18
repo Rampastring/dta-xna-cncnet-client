@@ -466,6 +466,9 @@ namespace DTAClient.DXGUI.Generic
         {
             string[] requiredFiles = new string[] { "vcruntime140.dll", "msvcp140.dll" };
 
+            if (Array.TrueForAll(requiredFiles, filename => File.Exists(ProgramConstants.GamePath + filename)))
+                return;
+
             if (Environment.Is64BitProcess)
             {
                 if (Array.TrueForAll(requiredFiles, filename => File.Exists("C:/Windows/SysWOW64/" + filename)))
@@ -478,6 +481,7 @@ namespace DTAClient.DXGUI.Generic
             }
 
             Logger.Log("VC++ Runtime 14.0 (VS2015) is missing! Copying the required files from the /Resources/Runtime/ directory.");
+
             try
             {
                 Array.ForEach(requiredFiles, filename => File.Copy(ProgramConstants.GetBaseResourcePath() + "Runtime/" + filename, ProgramConstants.GamePath + filename));

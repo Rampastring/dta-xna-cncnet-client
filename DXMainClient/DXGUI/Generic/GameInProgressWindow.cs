@@ -103,6 +103,8 @@ namespace DTAClient.DXGUI
 
         private void HandleGameProcessExited()
         {
+            Logger.Log("GameInProgressWindow.HandleGameProcessExited");
+
             Disable();
             if (nativeCursorUsed)
                 Game.IsMouseVisible = true;

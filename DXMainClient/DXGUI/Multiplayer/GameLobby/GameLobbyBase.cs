@@ -10,12 +10,31 @@ using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
+    [Flags]
+    public enum GameOptionFlags
+    {
+        None = 0,
+
+        /// <summary>
+        /// If set, the client will remove all starting waypoints from the map
+        /// before launching it.
+        /// </summary>
+        RandomizeStartingLocations = 1,
+
+        /// <summary>
+        /// If set, the NoRNG spawner flag will be set.
+        /// For debugging sync errors.
+        /// </summary>
+        NoRNG = 2
+    }
+
     /// <summary>
     /// A generic base for all game lobbies (Skirmish, LAN and CnCNet).
     /// Contains the common logic for parsing game options and handling player info.
@@ -149,12 +168,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private bool disableGameOptionUpdateBroadcast = false;
 
-        /// <summary>
-        /// If set, the client will remove all starting waypoints from the map
-        /// before launching it.
-        /// </summary>
-        protected bool RemoveStartingLocations { get; set; } = false;
+        protected GameOptionFlags GameOptionFlags { get; set; } = GameOptionFlags.None;
+
         protected IniFile GameOptionsIni { get; private set; }
+
+        public bool IsGameOptionFlagEnabled(GameOptionFlags flagToCheck, GameOptionFlags flagsContainer)
+        {
+            return (flagsContainer & flagToCheck) == flagToCheck;
+        }
 
         public override void Initialize()
         {
@@ -945,6 +966,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 settings.SetBooleanValue("CoachMode", true);
             if (GetGameType() == GameType.Coop)
                 settings.SetBooleanValue("AutoSurrender", false);
+            if (IsGameOptionFlagEnabled(GameOptionFlags.NoRNG, GameOptionFlags))
+                settings.SetBooleanValue("NoRNG", true);
             spawnIni.AddSection(settings);
             WriteSpawnIniAdditions(spawnIni);
 
@@ -1183,7 +1206,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void ManipulateStartingLocations(IniFile mapIni, PlayerHouseInfo[] houseInfos)
         {
-            if (RemoveStartingLocations)
+            if (IsGameOptionFlagEnabled(GameOptionFlags.RandomizeStartingLocations, GameOptionFlags))
             {
                 if (Map.EnforceMaxPlayers)
                     return;
@@ -1193,14 +1216,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (waypointSection == null)
                     return;
 
-                // TODO implement IniSection.RemoveKey in Rampastring.Tools, then
-                // remove implementation that depends on internal implementation
-                // of IniSection
                 for (int i = 0; i <= 7; i++)
                 {
-                    int index = waypointSection.Keys.FindIndex(k => !string.IsNullOrEmpty(k.Key) && k.Key == i.ToString());
-                    if (index > -1)
-                        waypointSection.Keys.RemoveAt(index);
+                    waypointSection.RemoveKey(i.ToString(CultureInfo.InvariantCulture));
                 }
             }
 

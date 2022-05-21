@@ -47,6 +47,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 new ChatBoxCommand("LOADMAP", "Load a custom map with given filename from /Maps/Custom/ folder.", true, LoadCustomMap),
                 new ChatBoxCommand("RANDOMSTARTS", "Enables completely random starting locations (Tiberian Sun based games only).", true,
                     s => SetStartingLocationClearance(s)),
+                new ChatBoxCommand("TOGGLENORNG", "Toggles the in-game random number generator on or off (Tiberian Sun based games only).", true,
+                    s => ToggleNoRNG(s)),
                 new ChatBoxCommand("ROLL", "Roll dice, for example /roll 3d6", false, RollDiceCommand),
                 new ChatBoxCommand("SAVEOPTIONS", "Save game option preset so it can be loaded later", false, HandleGameOptionPresetSaveCommand),
                 new ChatBoxCommand("LOADOPTIONS", "Load game option preset", true, HandleGameOptionPresetLoadCommand)
@@ -406,7 +408,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void SetStartingLocationClearance(string value)
         {
-            bool removeStartingLocations = Conversions.BooleanFromString(value, RemoveStartingLocations);
+            bool removeStartingLocations = Conversions.BooleanFromString(value, IsGameOptionFlagEnabled(GameOptionFlags.RandomizeStartingLocations, GameOptionFlags));
 
             SetRandomStartingLocations(removeStartingLocations);
 
@@ -421,14 +423,47 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <param name="newValue">The new value of completely random starting locations.</param>
         protected void SetRandomStartingLocations(bool newValue)
         {
-            if (newValue != RemoveStartingLocations)
+            if (newValue != IsGameOptionFlagEnabled(GameOptionFlags.RandomizeStartingLocations, GameOptionFlags))
             {
-                RemoveStartingLocations = newValue;
-                if (RemoveStartingLocations)
+                if (newValue)
+                {
+                    GameOptionFlags = GameOptionFlags | GameOptionFlags.RandomizeStartingLocations;
                     AddNotice("The game host has enabled completely random starting locations (only works for regular maps).");
+                }
                 else
+                {
+                    GameOptionFlags = GameOptionFlags & ~(GameOptionFlags.RandomizeStartingLocations);
                     AddNotice("The game host has disabled completely random starting locations.");
+                }
             }
+        }
+
+        private void ToggleNoRNG(string _)
+        {
+            bool noRNG = !IsGameOptionFlagEnabled(GameOptionFlags.NoRNG, GameOptionFlags);
+
+            SetNoRNG(noRNG);
+
+            OnGameOptionChanged();
+            ClearReadyStatuses();
+        }
+
+        protected void SetNoRNG(bool newValue)
+        {
+            if (newValue != IsGameOptionFlagEnabled(GameOptionFlags.NoRNG, GameOptionFlags))
+            {
+                if (newValue)
+                {
+                    GameOptionFlags = GameOptionFlags | GameOptionFlags.NoRNG;
+                    AddNotice("The game host has disabled the in-game random number generator (can help with sync issues, but affects gameplay).");
+                }
+                else
+                {
+                    GameOptionFlags = GameOptionFlags & ~(GameOptionFlags.NoRNG);
+                    AddNotice("The game host has enabled the in-game random number generator.");
+                }
+            }
+
         }
 
         /// <summary>

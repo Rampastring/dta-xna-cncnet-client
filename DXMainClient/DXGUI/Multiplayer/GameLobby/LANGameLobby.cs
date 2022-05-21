@@ -554,7 +554,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             sb.Append(Map.SHA1);
             sb.Append(GameMode.Name);
             sb.Append(FrameSendRate);
-            sb.Append(Convert.ToInt32(RemoveStartingLocations));
+            sb.Append((int)GameOptionFlags);
 
             BroadcastMessage(sb.ToString());
         }
@@ -989,9 +989,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 AddNotice("The game host has changed FrameSendRate (order lag) to " + frameSendRate);
             }
 
-            bool removeStartingLocations = Convert.ToBoolean(Conversions.IntFromString(
-                parts[parts.Length - (GAME_OPTION_SPECIAL_FLAG_COUNT - 4)], Convert.ToInt32(RemoveStartingLocations)));
-            SetRandomStartingLocations(removeStartingLocations);
+            GameOptionFlags gameOptionFlags = (GameOptionFlags)Conversions.IntFromString(parts[parts.Length - (GAME_OPTION_SPECIAL_FLAG_COUNT - 4)], (int)GameOptionFlags);
+            SetRandomStartingLocations(IsGameOptionFlagEnabled(GameOptionFlags.RandomizeStartingLocations, gameOptionFlags));
+            SetNoRNG(IsGameOptionFlagEnabled(GameOptionFlags.NoRNG, gameOptionFlags));
 
             for (int i = 0; i < CheckBoxes.Count; i++)
             {

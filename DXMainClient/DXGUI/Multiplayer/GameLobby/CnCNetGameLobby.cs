@@ -911,7 +911,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             sb.Append(MaxAhead);
             sb.Append(ProtocolVersion);
             sb.Append(RandomSeed);
-            sb.Append(Convert.ToInt32(RemoveStartingLocations));
+            sb.Append((int)GameOptionFlags);
 
             channel.SendCTCPMessage(sb.ToString(), QueuedMessageType.GAME_SETTINGS_MESSAGE, 11);
         }
@@ -1100,9 +1100,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     "The game host's game version might be different from yours.", Color.Red);
             }
 
-            bool removeStartingLocations = Convert.ToBoolean(Conversions.IntFromString(parts[partIndex + 7],
-                Convert.ToInt32(RemoveStartingLocations)));
-            SetRandomStartingLocations(removeStartingLocations);
+            GameOptionFlags gameOptionFlags = (GameOptionFlags)Conversions.IntFromString(parts[partIndex + 7],
+                (int)GameOptionFlags);
+
+            SetRandomStartingLocations(IsGameOptionFlagEnabled(GameOptionFlags.RandomizeStartingLocations, gameOptionFlags));
+            SetNoRNG(IsGameOptionFlagEnabled(GameOptionFlags.NoRNG, gameOptionFlags));
 
             RandomSeed = randomSeed;
         }

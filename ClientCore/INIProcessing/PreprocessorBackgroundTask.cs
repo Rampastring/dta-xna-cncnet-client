@@ -57,6 +57,11 @@ namespace ClientCore.INIProcessing
             }
         }
 
+        public void LogState()
+        {
+            Logger.Log($"INI Preprocessing Task Status: {task.Status}, IsFaulted: {task.IsFaulted}, IsCanceled: {task.IsCanceled}, IsCompleted: {task.IsCompleted}");
+        }
+
         private void CheckFiles()
         {
             Logger.Log("Starting background processing of INI files.");

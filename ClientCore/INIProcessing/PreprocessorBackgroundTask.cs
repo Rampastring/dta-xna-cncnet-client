@@ -33,7 +33,7 @@ namespace ClientCore.INIProcessing
 
         private Task task;
 
-        public bool IsRunning => !task.IsCompleted;
+        public bool IsRunning => !task.IsCompleted && !task.IsFaulted;
 
         public void Run()
         {
@@ -45,6 +45,15 @@ namespace ClientCore.INIProcessing
             if (task.IsFaulted)
             {
                 throw task.Exception.InnerException;
+            }
+        }
+
+        public void LogException()
+        {
+            if (task.IsFaulted)
+            {
+                Logger.Log("INI preprocessor encountered error while processing INI files. Exception message: " + 
+                    task.Exception.InnerException.Message + Environment.NewLine + "Stacktrace: " + task.Exception.InnerException.StackTrace);
             }
         }
 

@@ -49,9 +49,12 @@ namespace ClientGUI
                     MessageBox.Show("INI preprocessing not complete. Please try " + 
                         "launching the game again. If the problem persists, " +
                         "contact the game or mod authors for support.");
+                    PreprocessorBackgroundTask.Instance.LogException();
                     return;
                 }
             }
+
+            PreprocessorBackgroundTask.Instance.LogException();
 
             OSVersion osVersion = ClientConfiguration.Instance.GetOperatingSystemVersion();
 

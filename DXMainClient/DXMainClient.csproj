@@ -263,6 +263,13 @@
     <Compile Include="Domain\Singleplayer\CampaignHandler.cs" />
     <Compile Include="Domain\Singleplayer\MissionRankHandler.cs" />
     <Compile Include="Domain\StatisticsSender.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\ConversationDisplay.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\Cutscene.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\MissionCutscenes.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\Phase.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\PhaseState.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\StoryDisplay.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\StoryImage.cs" />
     <Compile Include="DXGUI\Generic\CheaterWindow.cs" />
     <Compile Include="Domain\Multiplayer\Map.cs" />
     <Compile Include="Domain\Multiplayer\MapLoader.cs" />

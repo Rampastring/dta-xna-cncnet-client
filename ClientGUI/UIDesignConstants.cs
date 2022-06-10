@@ -22,5 +22,8 @@ namespace ClientGUI
 
         public const int BUTTON_HEIGHT = 23;
         public const int BUTTON_WIDTH_92 = 92;
+
+        public const int CUTSCENE_DESIGN_RES_X = 1280;
+        public const int CUTSCENE_DESIGN_RES_Y = 720;
     }
 }

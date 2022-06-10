@@ -2,6 +2,7 @@
 using ClientGUI;
 using DTAClient.Domain;
 using DTAClient.Domain.Singleplayer;
+using DTAClient.DXGUI.Generic.Campaign;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.Tools;
@@ -10,7 +11,6 @@ using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using Updater;
 
 namespace DTAClient.DXGUI.Generic
@@ -187,6 +187,10 @@ namespace DTAClient.DXGUI.Generic
 
         private Mission missionToLaunch;
         private bool isCheater;
+        private Dictionary<int, bool> globalFlagInfo;
+        private string difficultyName;
+
+        private StoryDisplay storyDisplay;
 
         public override void Initialize()
         {
@@ -370,6 +374,10 @@ namespace DTAClient.DXGUI.Generic
 
             CampaignHandler.Instance.MissionRankUpdated += CampaignHandler_MissionRankUpdated;
             CampaignHandler.Instance.MissionCompleted += CampaignHandler_MissionCompleted;
+
+            storyDisplay = new StoryDisplay(WindowManager);
+            storyDisplay.Name = nameof(storyDisplay);
+            WindowManager.AddAndInitializeControl(storyDisplay);
         }
 
         private void CampaignHandler_MissionCompleted(object sender, MissionCompletionEventArgs e)
@@ -427,6 +435,8 @@ namespace DTAClient.DXGUI.Generic
             {
                 SelectMission(e.Mission);
             }
+
+            storyDisplay.Begin(Cutscene.CR01Victory);
         }
 
         private void SelectMission(Mission mission)
@@ -633,12 +643,12 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
-            LaunchMission(missionToLaunch);
+            LaunchMission();
         }
 
         private void PostDifficultyWarning(XNAMessageBox messageBox)
         {
-            LaunchMission(missionToLaunch);
+            LaunchMission();
         }
 
         private bool AreFilesModified()
@@ -669,18 +679,18 @@ namespace DTAClient.DXGUI.Generic
         /// </summary>
         /// <param name="scenario">The internal name of the scenario.</param>
         /// <param name="requiresAddon">True if the mission is for Firestorm / Enhanced Mode.</param>
-        private void LaunchMission(Mission mission)
+        private void LaunchMission()
         {
             bool copyMapsToSpawnmapINI = ClientConfiguration.Instance.CopyMissionsToSpawnmapINI;
 
             // Gather global flag information
-            var globalFlagInfo = new Dictionary<int, bool>();
+            globalFlagInfo = new Dictionary<int, bool>();
 
-            if (mission.UsedGlobalVariables.Length > 0)
+            if (missionToLaunch.UsedGlobalVariables.Length > 0)
             {
-                for (int i = 0; i < mission.UsedGlobalVariables.Length && i < MAX_GLOBAL_COUNT; i++)
+                for (int i = 0; i < missionToLaunch.UsedGlobalVariables.Length && i < MAX_GLOBAL_COUNT; i++)
                 {
-                    string globalFlagName = mission.UsedGlobalVariables[i];
+                    string globalFlagName = missionToLaunch.UsedGlobalVariables[i];
 
                     CampaignGlobalVariable globalVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == globalFlagName);
                     if (globalVariable != null)
@@ -696,27 +706,34 @@ namespace DTAClient.DXGUI.Generic
                 }
             }
 
-            CampaignHandler.Instance.WriteFilesForMission(mission, trbDifficultySelector.Value, globalFlagInfo);
-
-            string difficultyName = DifficultyNames[trbDifficultySelector.Value];
+            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, trbDifficultySelector.Value, globalFlagInfo);
+            difficultyName = DifficultyNames[trbDifficultySelector.Value];
 
             UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value;
             UserINISettings.Instance.SaveSettings();
 
             ((MainMenuDarkeningPanel)Parent).Hide();
 
-            discordHandler?.UpdatePresence(mission.GUIName, difficultyName, mission.IconPath, true);
+            storyDisplay.Finished += LaunchMission_PostStoryDisplay;
+            storyDisplay.Begin(Cutscene.CR01Victory);
+        }
+
+        private void LaunchMission_PostStoryDisplay(object sender, EventArgs e)
+        {
+            discordHandler?.UpdatePresence(missionToLaunch.GUIName, difficultyName, missionToLaunch.IconPath, true);
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
             GameProcessLogic.StartGameProcess(new GameSessionManager(
                 new GameSessionInfo(GameSessionType.SINGLEPLAYER,
                 DateTime.Now.Ticks,
-                mission.InternalName,
-                mission.Side,
+                missionToLaunch.InternalName,
+                missionToLaunch.Side,
                 (DifficultyRank)(trbDifficultySelector.Value + 1),
                 globalFlagInfo,
                 isCheater),
                 WindowManager.AddCallback));
+
+            storyDisplay.Finished -= LaunchMission_PostStoryDisplay;
         }
 
         private void GameProcessExited_Callback()

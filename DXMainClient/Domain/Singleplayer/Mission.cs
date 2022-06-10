@@ -1,4 +1,5 @@
 ﻿using ClientCore;
+using DTAClient.DXGUI.Generic.Campaign;
 using Rampastring.Tools;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,12 @@ namespace DTAClient.Domain.Singleplayer
             BuildOffAlly = iniSection.GetBooleanValue(nameof(BuildOffAlly), false);
             WarnOnHardWithoutMediumPlayed = iniSection.GetBooleanValue(nameof(WarnOnHardWithoutMediumPlayed), WarnOnHardWithoutMediumPlayed);
             PlayerAlwaysOnNormalDifficulty = iniSection.GetBooleanValue(nameof(PlayerAlwaysOnNormalDifficulty), false);
+
+            if (Enum.TryParse(iniSection.GetStringValue(nameof(StartCutscene), Cutscene.None.ToString()), out Cutscene startCutscene))
+                StartCutscene = startCutscene;
+
+            if (Enum.TryParse(iniSection.GetStringValue(nameof(EndCutscene), Cutscene.None.ToString()), out Cutscene endCutscene))
+                EndCutscene = endCutscene;
 
             if (iniSection.KeyExists("DifficultyLabels"))
             {
@@ -80,6 +87,16 @@ namespace DTAClient.Domain.Singleplayer
         public bool PlayerAlwaysOnNormalDifficulty { get; }
 
         public string[] DifficultyLabels { get; }
+
+        /// <summary>
+        /// Which cutscene should be played when this mission is started?
+        /// </summary>
+        public Cutscene StartCutscene { get; } = Cutscene.None;
+
+        /// <summary>
+        /// Which cutscene should be played when this mission is finished?
+        /// </summary>
+        public Cutscene EndCutscene { get; } = Cutscene.None;
 
         /// <summary>
         /// Should the player be given a warning when starting 

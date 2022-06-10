@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DTAClient.Domain.Singleplayer;
+using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,38 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private List<Phase> InitCR01Victory()
         {
             var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The destruction of the Soviet base has halted the Communist advance and allowed us to re-capture the area, while the radar station is now broadcasting our own message. Well done, Commander.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR01/victorybg.png", 1);
+                    country4.Play();
+                },
+                null,
+                storyDisplay =>
+                {
+                    storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
+                    country1.Play();
+                },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            var globalVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_CHURCH_ONE_DESTROYED");
+            if (globalVariable != null && globalVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(0,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The church in the nearby village was destroyed during the operation. The Government denies all responsibility, blaming the occurence on the Communist militia.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR01/churchbg.png", 2);
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+            }
+
             return phases;
         }
 

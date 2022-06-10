@@ -473,7 +473,7 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 
-            Logger.Log("Finding and unlocking global variable states related to " + mission.InternalName);
+            Logger.Log("Finding and unlocking global variable states UNLOCKED BY " + mission.InternalName);
             foreach (var globalVariableName in mission.UnlockGlobalVariables)
             {
                 var globalVariable = GlobalVariables.Find(gv => gv.InternalName == globalVariableName);
@@ -498,7 +498,7 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 
-            Logger.Log("Finding and setting default enabled states of global variables used in " + mission.InternalName);
+            Logger.Log("Finding and setting default enabled states of global variables USED IN " + mission.InternalName);
             foreach (var globalVariableName in mission.UsedGlobalVariables)
             {
                 var globalVariable = GlobalVariables.Find(gv => gv.InternalName == globalVariableName);

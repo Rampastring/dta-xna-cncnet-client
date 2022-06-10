@@ -367,9 +367,9 @@ namespace DTAClient.DXGUI.Generic
             EnabledChanged += CampaignSelector_EnabledChanged;
 
             missionCompletionNotification = new MissionCompletionNotification(WindowManager);
-            WindowManager.AddAndInitializeControl(missionCompletionNotification);
             missionCompletionNotification.DrawOrder = 9999;
             missionCompletionNotification.UpdateOrder = 9999;
+            WindowManager.AddAndInitializeControl(missionCompletionNotification);
             missionCompletionNotification.Disable();
 
             CampaignHandler.Instance.MissionRankUpdated += CampaignHandler_MissionRankUpdated;
@@ -377,6 +377,8 @@ namespace DTAClient.DXGUI.Generic
 
             storyDisplay = new StoryDisplay(WindowManager);
             storyDisplay.Name = nameof(storyDisplay);
+            storyDisplay.DrawOrder = missionCompletionNotification.DrawOrder - 1;
+            storyDisplay.UpdateOrder = missionCompletionNotification.UpdateOrder - 1;
             WindowManager.AddAndInitializeControl(storyDisplay);
         }
 
@@ -436,7 +438,7 @@ namespace DTAClient.DXGUI.Generic
                 SelectMission(e.Mission);
             }
 
-            storyDisplay.Begin(Cutscene.CR01Victory);
+            storyDisplay.Begin(e.Mission.EndCutscene, true);
         }
 
         private void SelectMission(Mission mission)
@@ -715,7 +717,7 @@ namespace DTAClient.DXGUI.Generic
             ((MainMenuDarkeningPanel)Parent).Hide();
 
             storyDisplay.Finished += LaunchMission_PostStoryDisplay;
-            storyDisplay.Begin(Cutscene.CR01Victory);
+            storyDisplay.Begin(missionToLaunch.StartCutscene, false);
         }
 
         private void LaunchMission_PostStoryDisplay(object sender, EventArgs e)

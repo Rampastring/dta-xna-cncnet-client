@@ -47,20 +47,29 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         private MissionCutscenes cutscenes;
 
+        private float alphaRate = 0.0f;
 
-        public void Begin(Cutscene cutscene)
+        private bool isDebriefing;
+
+        public void Begin(Cutscene cutscene, bool isDebriefing)
         {
+            this.isDebriefing = isDebriefing;
+
             if (cutscene == Cutscene.None)
             {
                 Finish();
                 return;
             }
 
+            alphaRate = 0.0f;
+            Alpha = 1.0f;
+
             if (cutscenes == null)
                 cutscenes = new MissionCutscenes();
 
             ConversationDisplay.TextColor = Color.White;
-            StoryImages.ForEach(sti => sti.Kill());
+            ClearStoryImages();
+            ConversationDisplay.ConversationText = string.Empty;
             Phases = cutscenes.GetPhases(cutscene, this, WindowManager);
             Phase = -1;
             NextPhase();
@@ -177,6 +186,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 NextPhase();
             }
 
+            Alpha += (float)(gameTime.ElapsedGameTime.TotalSeconds * alphaRate);
+
             base.Update(gameTime);
         }
 
@@ -221,6 +232,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
             else if (PhaseState == PhaseState.Ready)
             {
                 PhaseState = PhaseState.Disappearing;
+                if (isDebriefing && Phase == Phases.Count - 1)
+                    alphaRate = -1.0f;
+
                 CurrentPhase.Leave?.Invoke(this);
             }
             else if (PhaseState == PhaseState.Disappeared)

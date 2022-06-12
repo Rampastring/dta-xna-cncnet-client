@@ -245,14 +245,18 @@ namespace DTAConfig
             }
         }
 
-        public void SwitchToCustomComponentsPanel()
+        public void SwitchToAudioPanel() => SwitchToTab(1);
+
+        public void SwitchToCustomComponentsPanel() => SwitchToTab(5);
+
+        private void SwitchToTab(int index)
         {
             foreach (var panel in optionsPanels)
             {
                 panel.Disable();
             }
 
-            tabControl.SelectedTab = 5;
+            tabControl.SelectedTab = index;
         }
 
         public void PostInit()

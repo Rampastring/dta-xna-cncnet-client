@@ -18,13 +18,15 @@ namespace ClientGUI
         /// <param name="caption">The caption of the message box.</param>
         /// <param name="description">The actual message of the message box.</param>
         /// <param name="messageBoxButtons">Defines which buttons are available in the dialog.</param>
+        /// <param name="buttonWidths">Defines how wide the buttons in the message box are.</param>
         public XNAMessageBox(WindowManager windowManager,
-            string caption, string description, XNAMessageBoxButtons messageBoxButtons)
+            string caption, string description, XNAMessageBoxButtons messageBoxButtons, int buttonWidths = 92)
             : base(windowManager)
         {
             this.caption = caption;
             this.description = description;
             this.messageBoxButtons = messageBoxButtons;
+            this.buttonWidths = buttonWidths;
         }
 
         /// <summary>
@@ -50,10 +52,10 @@ namespace ClientGUI
         public XNAButton btnYes { get; private set; }
         public XNAButton btnNo { get; private set; }
 
-
         private string caption;
         private string description;
         private XNAMessageBoxButtons messageBoxButtons;
+        private int buttonWidths;
 
         public override void Initialize()
         {
@@ -102,7 +104,7 @@ namespace ClientGUI
         {
             XNAButton btnOK = new XNAButton(WindowManager);
             btnOK.FontIndex = 1;
-            btnOK.ClientRectangle = new Rectangle(0, 0, 75, 23);
+            btnOK.ClientRectangle = new Rectangle(0, 0, buttonWidths, 23);
             btnOK.IdleTexture = AssetLoader.LoadTexture("75pxbtn.png");
             btnOK.HoverTexture = AssetLoader.LoadTexture("75pxbtn_c.png");
             btnOK.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
@@ -122,7 +124,7 @@ namespace ClientGUI
         {
             XNAButton btnYes = new XNAClientButton(WindowManager);
             btnYes.FontIndex = 1;
-            btnYes.ClientRectangle = new Rectangle(0, 0, 92, 23);
+            btnYes.ClientRectangle = new Rectangle(0, 0, buttonWidths, 23);
             btnYes.Name = "btnYes";
             btnYes.Text = "Yes";
             btnYes.LeftClick += BtnYes_LeftClick;
@@ -136,7 +138,7 @@ namespace ClientGUI
 
             XNAButton btnNo = new XNAClientButton(WindowManager);
             btnNo.FontIndex = 1;
-            btnNo.ClientRectangle = new Rectangle(0, 0, 92, 23);
+            btnNo.ClientRectangle = new Rectangle(0, 0, buttonWidths, 23);
             btnNo.Name = "btnNo";
             btnNo.Text = "No";
             btnNo.LeftClick += BtnNo_LeftClick;
@@ -153,7 +155,7 @@ namespace ClientGUI
         {
             XNAButton btnOK = new XNAClientButton(WindowManager);
             btnOK.FontIndex = 1;
-            btnOK.ClientRectangle = new Rectangle(0, 0, 92, 23);
+            btnOK.ClientRectangle = new Rectangle(0, 0, buttonWidths, 23);
             btnOK.Name = "btnOK";
             btnOK.Text = "OK";
             btnOK.LeftClick += BtnYes_LeftClick;
@@ -166,7 +168,7 @@ namespace ClientGUI
 
             XNAButton btnCancel = new XNAClientButton(WindowManager);
             btnCancel.FontIndex = 1;
-            btnCancel.ClientRectangle = new Rectangle(0, 0, 92, 23);
+            btnCancel.ClientRectangle = new Rectangle(0, 0, buttonWidths, 23);
             btnCancel.Name = "btnCancel";
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnCancel_LeftClick;
@@ -232,7 +234,7 @@ namespace ClientGUI
             var msgBox = new XNAMessageBox(windowManager,
                 Renderer.GetSafeString(caption, 1), 
                 Renderer.GetSafeString(description, 0), 
-                XNAMessageBoxButtons.OK);
+                XNAMessageBoxButtons.OK, 75);
 
             panel.AddChild(msgBox);
             msgBox.OKClickedAction = MsgBox_OKClicked;
@@ -254,7 +256,7 @@ namespace ClientGUI
         /// <param name="caption">The caption of the message box.</param>
         /// <param name="description">The description in the message box.</param>
         /// <returns>The XNAMessageBox instance that is created.</returns>
-        public static XNAMessageBox ShowYesNoDialog(WindowManager windowManager, string caption, string description)
+        public static XNAMessageBox ShowYesNoDialog(WindowManager windowManager, string caption, string description, int buttonWidths = 92)
         {
             var panel = new DarkeningPanel(windowManager);
             windowManager.AddAndInitializeControl(panel);
@@ -262,7 +264,8 @@ namespace ClientGUI
             var msgBox = new XNAMessageBox(windowManager,
                 Renderer.GetSafeString(caption, 1),
                 Renderer.GetSafeString(description, 0),
-                XNAMessageBoxButtons.YesNo);
+                XNAMessageBoxButtons.YesNo,
+                buttonWidths);
 
             panel.AddChild(msgBox);
             msgBox.YesClickedAction = MsgBox_YesClicked;

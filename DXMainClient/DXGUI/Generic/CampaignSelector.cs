@@ -148,6 +148,8 @@ namespace DTAClient.DXGUI.Generic
             "INI/Map Code/Difficulty Hard.ini"
         };
 
+        public event EventHandler MusicOptions;
+
         public CampaignSelector(WindowManager windowManager, DiscordHandler discordHandler) : base(windowManager)
         {
             this.discordHandler = discordHandler;
@@ -613,6 +615,11 @@ namespace DTAClient.DXGUI.Generic
             isCheater = false;
             missionToLaunch = mission;
 
+            // Beginning of the "pre-mission-launch" prompt chain.
+            // 1. cheater prompt
+            // 2. difficulty warning
+            // 3. in-game music prompt
+
             if (!ClientConfiguration.Instance.ModMode && 
                 (!CUpdater.IsFileNonexistantOrOriginal(mission.Scenario) || AreFilesModified()))
             {
@@ -641,14 +648,38 @@ namespace DTAClient.DXGUI.Generic
                     "Are you still feeling suicidal enough to attempt it on the hardest difficulty level?");
                 messageBox.btnYes.Text = "Yes";
                 messageBox.btnNo.Text = "I'll reconsider";
-                messageBox.YesClickedAction = PostDifficultyWarning;
+                messageBox.YesClickedAction = _ => PostDifficultyWarning();
                 return;
             }
 
-            LaunchMission();
+            PostDifficultyWarning();
         }
 
-        private void PostDifficultyWarning(XNAMessageBox messageBox)
+        private void PostDifficultyWarning()
+        {
+            InGameMusicNotification();
+        }
+
+        private void InGameMusicNotification()
+        {
+            if (missionToLaunch.MusicRecommended && UserINISettings.Instance.ScoreVolume == 0.0)
+            {
+                var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                    "In-Game Music Recommended",
+                    "This mission has dynamic music that can be a significant part of the game experience." + Environment.NewLine +
+                    "You currently have in-game music turned off (volume 0 in the game settings)." + Environment.NewLine + Environment.NewLine +
+                    "Would you want to go to the Options menu to enable in-game music?", 121);
+                messageBox.btnYes.Text = "Yes";
+                messageBox.btnNo.Text = "I don't want music";
+                messageBox.YesClickedAction = _ => MusicOptions?.Invoke(this, EventArgs.Empty);
+                messageBox.NoClickedAction = _ => PostMusicNotification();
+                return;
+            }
+
+            PostMusicNotification();
+        }
+
+        private void PostMusicNotification()
         {
             LaunchMission();
         }

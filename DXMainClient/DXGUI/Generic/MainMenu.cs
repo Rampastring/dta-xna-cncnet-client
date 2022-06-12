@@ -265,6 +265,8 @@ namespace DTAClient.DXGUI.Generic
             innerPanel.UpdateWindow.UpdateCancelled += UpdateWindow_UpdateCancelled;
             innerPanel.UpdateWindow.UpdateFailed += UpdateWindow_UpdateFailed;
 
+            innerPanel.CampaignSelector.MusicOptions += (s, e) => { optionsWindow.Open(); optionsWindow.SwitchToAudioPanel(); };
+
             this.ClientRectangle = new Rectangle((WindowManager.RenderResolutionX - Width) / 2,
                 (WindowManager.RenderResolutionY - Height) / 2,
                 Width, Height);

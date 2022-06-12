@@ -5,6 +5,7 @@
         None,
         CR01,
         CR01Victory,
-
+        CR02,
+        CR03,
     }
 }

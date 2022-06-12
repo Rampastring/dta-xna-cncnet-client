@@ -32,6 +32,18 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public EnhancedSoundEffect ProgressionSound { get; set; }
 
+        private bool _isCentered;
+        public bool IsCentered 
+        {
+            get => _isCentered;
+            set
+            {
+                _isCentered = value;
+
+                RefreshTextXOffset();
+            }
+        }
+
         private string _originalConversationText;
         private string _conversationText;
         public string ConversationText
@@ -40,9 +52,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             set
             {
                 _originalConversationText = value;
-                _conversationText = Renderer.FixText(value, FontIndex, Width - (UIDesignConstants.EMPTY_SPACE_SIDES * 2)).Text;
+                _conversationText = Renderer.FixText(value, FontIndex, GetUsableWidth()).Text;
                 ProgressedText = string.Empty;
                 displayedText = string.Empty;
+
+                RefreshTextXOffset();
             }
         }
 
@@ -56,6 +70,27 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 displayedTextIsOutdated = true;
             }
         }
+
+        private int textXOffset;
+
+        private void RefreshTextXOffset()
+        {
+            if (!_isCentered)
+            {
+                textXOffset = 0;
+            }
+            else
+            {
+                int convWidth = (int)Renderer.GetTextDimensions(_conversationText, FontIndex).X;
+
+                textXOffset = (GetUsableWidth() - convWidth) / 2;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the part of the control's width that is usable for the text.
+        /// </summary>
+        private int GetUsableWidth() => Width - (UIDesignConstants.EMPTY_SPACE_SIDES * 2);
 
         public void Snap()
         {
@@ -118,7 +153,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             DrawPanel();
 
             DrawStringWithShadow(displayedText, FontIndex,
-                new Vector2(UIDesignConstants.EMPTY_SPACE_SIDES, UIDesignConstants.EMPTY_SPACE_TOP),
+                new Vector2(UIDesignConstants.EMPTY_SPACE_SIDES + textXOffset, UIDesignConstants.EMPTY_SPACE_TOP),
                 TextColor);
 
             DrawChildren(gameTime);

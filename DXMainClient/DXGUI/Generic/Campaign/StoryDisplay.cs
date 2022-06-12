@@ -10,7 +10,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
     {
         void AddStoryImage(StoryImage storyImage);
 
-        void AddSimpleStoryImage(string texturePath, int id, float alpha = 0.0f);
+        StoryImage AddSimpleStoryImage(string texturePath, int id, float alpha = 0.0f);
 
         void ClearStoryImages();
 
@@ -67,9 +67,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
             if (cutscenes == null)
                 cutscenes = new MissionCutscenes();
 
+            // Set default values of ConversationDisplay
             ConversationDisplay.TextColor = Color.White;
             ClearStoryImages();
             ConversationDisplay.ConversationText = string.Empty;
+            ConversationDisplay.IsCentered = false;
+
             Phases = cutscenes.GetPhases(cutscene, this, WindowManager);
             Phase = -1;
             NextPhase();
@@ -82,12 +85,13 @@ namespace DTAClient.DXGUI.Generic.Campaign
             AddChild(storyImage);
         }
 
-        public void AddSimpleStoryImage(string texturePath, int id, float alpha = 0.0f)
+        public StoryImage AddSimpleStoryImage(string texturePath, int id, float alpha = 0.0f)
         {
             var storyImage = new StoryImage(WindowManager, id);
             storyImage.Texture = AssetLoader.LoadTextureUncached(texturePath);
             storyImage.Alpha = alpha;
             AddStoryImage(storyImage);
+            return storyImage;
         }
 
         public void ClearStoryImages()

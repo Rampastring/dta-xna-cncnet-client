@@ -12,7 +12,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
     {
         public ConversationDisplay(WindowManager windowManager) : base(windowManager)
         {
-            ProgressionSound = new EnhancedSoundEffect("Story/BRIEFING.WAV");
+            ProgressionSound = new EnhancedSoundEffect("Story/Sounds/BRIEFING.WAV");
             ProgressionSound.RepeatPrevention = 0.08f;
             ProgressionSound.Volume = 0.10f;
             // ProgressionSound.Volume = 0.5f;

@@ -14,24 +14,36 @@ namespace DTAClient.DXGUI.Generic.Campaign
         public double Value { get; set; }
         public double TargetValue { get; set; }
 
+        /// <summary>
+        /// Determines how many distance units this parameter changes by each second.
+        /// </summary>
+        public double Rate { get; set; } = 100.0;
+
         public bool IsReady => Value == TargetValue;
 
-        public void Update(GameTime gameTime, double rate)
+        public void Update(GameTime gameTime)
         {
             if (Value != TargetValue)
             {
                 double diff = TargetValue - Value;
-                Value += rate * gameTime.ElapsedGameTime.TotalSeconds * (diff > 0 ? 1.0 : -1.0);
-                if (Math.Abs(Value - TargetValue) < SnapDifference)
-                {
+                Value += Rate * gameTime.ElapsedGameTime.TotalSeconds * (diff > 0 ? 1.0 : -1.0);
+
+                if (diff > 0 && Value >= TargetValue)
                     Value = TargetValue;
-                }
+                else if (diff < 0 && Value <= TargetValue)
+                    Value = TargetValue;
             }
         }
 
         public void Snap()
         {
             Value = TargetValue;
+        }
+
+        public void SnapToValue(double value)
+        {
+            Value = value;
+            TargetValue = value;
         }
     }
 
@@ -87,16 +99,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public float AlphaRate = 1.0f;
 
-        double movementRateInSecond = 100.0;
-
         public override void Update(GameTime gameTime)
         {
             if (!IsMovementReady())
             {
-                ImageX.Update(gameTime, movementRateInSecond);
-                ImageY.Update(gameTime, movementRateInSecond);
-                ImageWidth.Update(gameTime, movementRateInSecond);
-                ImageHeight.Update(gameTime, movementRateInSecond);
+                ImageX.Update(gameTime);
+                ImageY.Update(gameTime);
+                ImageWidth.Update(gameTime);
+                ImageHeight.Update(gameTime);
 
                 if (IsMovementReady())
                 {

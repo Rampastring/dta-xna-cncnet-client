@@ -14,12 +14,16 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public MissionCutscenes()
         {
-            country1 = new EnhancedSoundEffect("Story/COUNTRY1.WAV");
-            country4 = new EnhancedSoundEffect("Story/COUNTRY4.WAV");
-            toney4 = new EnhancedSoundEffect("Story/TONEY4.WAV");
-            toney7 = new EnhancedSoundEffect("Story/TONEY7.WAV");
-            mapwipe2 = new EnhancedSoundEffect("Story/MAPWIPE2.WAV");
-            mapwipe5 = new EnhancedSoundEffect("Story/MAPWIPE5.WAV");
+            bleep9 = new EnhancedSoundEffect("Story/Sounds/BLEEP9.WAV");
+            bleep11 = new EnhancedSoundEffect("Story/Sounds/BLEEP11.WAV");
+            bleep12 = new EnhancedSoundEffect("Story/Sounds/BLEEP12.WAV");
+            bleep17 = new EnhancedSoundEffect("Story/Sounds/BLEEP17.WAV");
+            country1 = new EnhancedSoundEffect("Story/Sounds/COUNTRY1.WAV");
+            country4 = new EnhancedSoundEffect("Story/Sounds/COUNTRY4.WAV");
+            toney4 = new EnhancedSoundEffect("Story/Sounds/TONEY4.WAV");
+            toney7 = new EnhancedSoundEffect("Story/Sounds/TONEY7.WAV");
+            mapwipe2 = new EnhancedSoundEffect("Story/Sounds/MAPWIPE2.WAV");
+            mapwipe5 = new EnhancedSoundEffect("Story/Sounds/MAPWIPE5.WAV");
 
             ramap = AssetLoader.LoadSong("Story/Music/ramap");
             raintro = AssetLoader.LoadSong("Story/Music/raintro");
@@ -27,6 +31,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
             secondhand = AssetLoader.LoadSong("Story/Music/2nd_hand");
         }
 
+        private readonly EnhancedSoundEffect bleep9;
+        private readonly EnhancedSoundEffect bleep11;
+        private readonly EnhancedSoundEffect bleep12;
+        private readonly EnhancedSoundEffect bleep17;
         private readonly EnhancedSoundEffect country1;
         private readonly EnhancedSoundEffect country4;
         private readonly EnhancedSoundEffect toney4;
@@ -39,8 +47,27 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly Song fac2226m;
         private readonly Song secondhand;
 
+        private const double crRAdisplayX = 4.0;
+        private const double crRAdisplayY = 20.0;
+        private const double crRAdisplayMiddle = 234.0;
+        private const double crRAdisplayImageX = crRAdisplayX + 30.0; // the RA border thingies are 30 pixels wide at left and right
+        private const double crRAdisplayImageRate = 300.0;
+        private const double crRAdisplayImageWidth = 400.0;
+        private const double crRAdisplayImageY = crRAdisplayY + 16.0; // the RA border thingies are 16 pixels high at the top
+        private const float crRAdisplayAlphaRate = 5.0f;
+
         private IStoryDisplay storyDisplay;
         private WindowManager windowManager;
+
+        private void TryPlaySong(Song song)
+        {
+            if (song == null)
+                return;
+
+            MediaPlayer.Play(song);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
+        }
 
         public List<Phase> GetPhases(Cutscene cutscene, IStoryDisplay storyDisplay, WindowManager windowManager)
         {
@@ -64,6 +91,248 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return null;
         }
 
+        private void AddRADisplay(IStoryDisplay storyDisplay, int id)
+        {
+            var rasides = storyDisplay.AddSimpleStoryImage("Story/rasides.png", id, 0);
+            rasides.AlphaRate = crRAdisplayAlphaRate;
+            rasides.ImageX.SnapToValue(crRAdisplayX);
+            rasides.ImageY.SnapToValue(crRAdisplayY);
+            bleep9.Play();
+        }
+
+        private void AddRADisplayImage(IStoryDisplay storyDisplay, string imagePath, int id)
+        {
+            var image = storyDisplay.AddSimpleStoryImage(imagePath, id, 1);
+            image.ImageX.Value = crRAdisplayMiddle;
+            image.ImageX.TargetValue = crRAdisplayImageX;
+            image.ImageX.Rate = crRAdisplayImageRate;
+            image.ImageWidth.Value = 1.0;
+            image.ImageWidth.TargetValue = crRAdisplayImageWidth;
+            image.ImageWidth.Rate = image.ImageX.Rate * 2.0;
+            image.ImageY.SnapToValue(crRAdisplayImageY);
+            bleep11.Play();
+        }
+
+        private List<Phase> CR04()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "CONFLICT NEWS AND EQUIPMENT ANALYSIS";
+                    toney7.Play();
+                    TryPlaySong(ramap);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "After the dissolution of the Soviet Union, the Government retained a significant inventory of Soviet-era military equipment.";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Allies partially disarmed them and forced the Government to downscale their military industry. As a result, the Government had to rely on buying or loaning equipment from the Allies when rebuilding their military.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Some of the Soviet equipment was still widely used, but was in the process of being phased out. That process was slowed down by military personnel used to the Soviet overwhelming raw power tactics.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Allies made sure that their own military was superior to that of the Soviet successor states.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The First Tiberium War only made this discrepancy more significant, as the Allied Nations needed their most advanced equipment for fighting the Brotherhood of Nod.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Due to this, the Government has had to rely on equipment that is outdated by modern standards.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "To answer modern challenges, a large upgrade program was started to modernize the old Allied equipment to match the latest GDI and Nod designs.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Rumors suggest this program also includes re-designs of earlier scrapped Allied vehicle plans. One of them could be the \"Enforcer\" battle fortress unit, although none have been seen in action yet.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "While the program continues, the Communist militia has also been upgrading their Soviet-era vehicles with modern capabilities.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It is unknown where and how they get the resources for upgrades.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Limited numbers of chemical weapon attacks by the resistance have also been seen, most notably a chemical bomb attack on a Government military train.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI has expressed worry about the escalating levels of violence that the modernized equipment will bring, and strongly comdemned the use of chemical weapons.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(secondhand);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "What the world doesn't yet know is that the Brotherhood of Nod has been helping the Reds modernize.";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The chemical attack on our MCV train and the chemical weapons found at the oil industry were a godsend. They actually got GDI to strengthen their support for us. Seems our enemy miscalculated when they teamed up with Nod.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We've managed to learn of a set of weapons that Nod is transferring to the Communist scum.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI is reluctant to send in direct forces yet, but at least they've suggested using their air power instead. They say they need a spotter on the ground to signal when their planes should strike.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We've assigned a Commando to the task. Send him to a good spot and he can signal the airstrike.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We also have an outpost in the area and our Enforcer prototype is also nearby. You won't be needing them during this operation, however.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With the force of the GDI behind us, we'll be victorious in no time.";
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; toney4.Play(); },
+                null));
+
+            phases.Add(new Phase(22,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
         private List<Phase> CR03()
         {
             var phases = new List<Phase>();
@@ -75,7 +344,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "NEWS AND OPINION";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg01.png", 1, 0f);
                     toney7.Play();
-                    MediaPlayer.Play(ramap);
+                    TryPlaySong(ramap);
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
                 },
@@ -151,7 +420,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The sudden shift in the situation was recently discussed by experts in live TV. While discussing Government military failures, the transmission was suddenly cut, with the broadcasting company pointing to technical issues as the reason.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The sudden shift in the situation was recently discussed by experts on live TV. While discussing Government military failures, the transmission was suddenly cut, with the broadcasting company pointing to technical issues as the reason.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg05.png", 5, 0f);
                 },
                 null,
@@ -199,9 +468,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "The Government instead stresses that should the nation fall to the neo-Soviets, the whole region of Eastern Europe would be threatened and the Allied nations might eventually face a new World War.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg06.png", 6, 0f);
                 },
-                null,
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CR03/bg07.png", 7, 0f),
                 storyDisplay =>
                 {
+                    storyDisplay.RemoveStoryImageById(6);
                     storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -2.5f);
                 },
                 storyDisplay => storyDisplay.ClearStoryImages()));
@@ -214,7 +484,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     country4.Play();
 
-                    MediaPlayer.Play(secondhand);
+                    TryPlaySong(secondhand);
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
                 },
                 null,
@@ -225,28 +495,20 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "As you already know from the news, the enemy has suddenly strengthened their forces and is in the process of conquering an industrial area.";
+                    storyDisplay.ConversationDisplay.ConversationText = "As you hopefully already know, the enemy has suddenly strengthened their forces and is in the process of conquering an industrial area.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
                     storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 2, 0f);
                     country1.Play();
                 },
-                null,
-                null,
-                null));
-
-            phases.Add(new Phase(14,
-                storyDisplay =>
-                {
-                    storyDisplay.ConversationDisplay.ConversationText = "They've already captured the area's oil refineries, but we still have a slight foothold with a base.";
-                },
-                null,
+                storyDisplay => AddRADisplay(storyDisplay, 3),
                 null,
                 null));
 
             phases.Add(new Phase(15,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "I want you to reinforce the base and take that industrial area back. We cannot let it fall.";
+                    AddRADisplayImage(storyDisplay, "Story/CR03/oilrefineries.png", 4);
+                    storyDisplay.ConversationDisplay.ConversationText = "They've captured the area's oil refineries, but we still have a slight foothold with a base. The Communist scum, however, are also attempting to siege the base and the situation is deteriorating rapidly.";
                 },
                 null,
                 null,
@@ -255,13 +517,23 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(16,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The GDI isn't taking this seriously enough. They haven't yet realized that we're fighting not only for ourselves, but also for them. I bet the Brotherhood of Nod would like to form an alliance with a renewed Soviet Union.";
+                    storyDisplay.ConversationDisplay.ConversationText = "I want you to reinforce the base and take that industrial area back. We cannot let it fall.";
+                    AddRADisplayImage(storyDisplay, "Story/CR03/base.png", 5);
                 },
-                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                storyDisplay => { storyDisplay.FindStoryImageById(5).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(5)));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The GDI isn't taking us seriously enough. They haven't yet realized that we're fighting not only for ourselves, but also for them. I bet the Brotherhood of Nod would like to form an alliance with a renewed Soviet Union.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new Phase(18,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Hopefully they'll change their minds soon enough. Until then, we have to do with our own forces and the limited support we get from them.";
@@ -270,7 +542,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(18,
+            phases.Add(new Phase(19,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You have proven to be a great asset so far. I hope you do not disappoint here either.";
@@ -279,7 +551,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; toney4.Play(); },
                 null));
 
-            phases.Add(new Phase(19,
+            phases.Add(new Phase(20,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
@@ -293,6 +565,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
+
         private List<Phase> CR02()
         {
             var phases = new List<Phase>();
@@ -305,7 +578,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     country4.Play();
 
-                    MediaPlayer.Play(secondhand);
+                    TryPlaySong(secondhand);
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
                 },
@@ -333,32 +606,48 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null));
 
             phases.Add(new Phase(4,
-                storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "The Global Defense Initiative has finally displayed some signs of usefulness and they've provided us with information.",
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "The Global Defense Initiative has finally displayed some signs of usefulness. They've provided us with information and suggested a plan.";
+                    AddRADisplay(storyDisplay, 3);
+                },
                 null,
                 null,
                 null));
 
             phases.Add(new Phase(5,
-                storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "They say they can use airplanes to bomb the insurgents' Construction Yard, if we first take out their anti-air defenses.",
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "They say they can use airplanes to bomb the enemy's Construction Yard, if we first take out their anti-air defenses.";
+                    AddRADisplayImage(storyDisplay, "Story/CR02/conyard.png", 4);
+                },
                 null,
                 null,
                 null));
 
             phases.Add(new Phase(6,
-                storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "They also provided us some Orca aircraft. You'll get our best Commando under your command. Use him and the Orcas to destroy the SAM sites, and the GDI best do the rest.",
-                null,
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI also provided us some Orca aircraft. You'll get our best Commando under your command. Use him and the Orcas to destroy the SAM sites, and the GDI best do the rest.";
+                    AddRADisplayImage(storyDisplay, "Story/CR02/orca.png", 5);
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(4),
                 null,
                 null));
 
             phases.Add(new Phase(7,
-                storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "We have an informant in the local church who might be able to provide knowledge of enemy movements to your Commando.",
-                null,
-                null,
-                null));
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "We have an informant in the local church who might be able to provide fresh knowledge of enemy positions to your Commando.";
+                    AddRADisplayImage(storyDisplay, "Story/CR02/church.png", 6);
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(5),
+                storyDisplay => { storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(6)));
 
             phases.Add(new Phase(8,
-                storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "We will win this fight. Wherever they settle, we'll find them and quench them like bugs.",
-                null,
+                storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "We will win this fight. Wherever they settle, we'll find them and crush them like ants.",
+                storyDisplay => { storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
                 null,
                 null));
 
@@ -427,7 +716,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(0,
                 storyDisplay =>
                 {
-                    MediaPlayer.Play(raintro);
+                    TryPlaySong(raintro);
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
 
@@ -578,7 +867,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(13,
                 storyDisplay =>
                 {
-                    MediaPlayer.Play(fac2226m);
+                    TryPlaySong(fac2226m);
 
                     storyDisplay.ConversationDisplay.ConversationText = "This is your first assignment.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Yellow;

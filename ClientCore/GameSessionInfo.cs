@@ -431,6 +431,11 @@ namespace ClientCore
 
         public void EndSession()
         {
+            callbackAction(new Action(DoEndSession), null);
+        }
+
+        private void DoEndSession()
+        {
             if (fileSystemWatcher != null)
             {
                 fileSystemWatcher.EnableRaisingEvents = false;
@@ -507,7 +512,7 @@ namespace ClientCore
             {
                 Logger.Log("FAILED to move saved game to sub-directory: " + ex.Message);
             }
-            
+
             // Create meta files for the saved games
             foreach (string file in saveFiles)
             {

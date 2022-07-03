@@ -137,6 +137,15 @@ namespace DTAClient.DXGUI
 
             CopyErrorLog(ProgramConstants.ClientUserFilesPath + "GameCrashLogs", "EXCEPT.TXT", dtn);
             CopySyncErrorLogs(ProgramConstants.ClientUserFilesPath + "SyncErrorLogs", dtn);
+
+            if (GameProcessLogic.INIPreprocessingFailed)
+            {
+                XNAMessageBox.Show(WindowManager, "INI preprocessing wasn't completed",
+                    "INI preprocessing failed before launching the previous game session." + Environment.NewLine + Environment.NewLine +
+                    "If everything worked properly, you can ignore this message. If you had" +
+                    "technical issues with the game (crashes, desyncs, etc.), this might be" +
+                    "the reason. Please contact DTA authors for support if the problem continues.");
+            }
         }
 
         /// <summary>

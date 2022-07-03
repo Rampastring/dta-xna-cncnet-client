@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ClientGUI;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
@@ -27,6 +29,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
     public class StoryDisplay : XNAControl, IStoryDisplay
     {
+        /// <summary>
+        /// Milliseconds that the user must hold ESC for before the cutscene is skipped.
+        /// </summary>
+        private const float SkipTime = 1500.0f;
+        private const float SkipGraphicAlphaRate = 5.0f;
+
         public StoryDisplay(WindowManager windowManager) : base(windowManager)
         {
             DrawMode = ControlDrawMode.UNIQUE_RENDER_TARGET;
@@ -50,6 +58,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private float alphaRate = 0.0f;
 
         private bool isDebriefing;
+
+        private float escPressMilliseconds;
+        private float skipGraphicAlpha = 0.0f;
 
         public void Begin(Cutscene cutscene, bool isDebriefing)
         {
@@ -190,6 +201,23 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 NextPhase();
             }
 
+            if (Keyboard.IsKeyHeldDown(Keys.Escape))
+            {
+                escPressMilliseconds += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                skipGraphicAlpha = (float)Math.Min(1.0f, skipGraphicAlpha + SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
+
+                if (escPressMilliseconds > SkipTime)
+                {
+                    Finish();
+                }
+            }
+            else
+            {
+                escPressMilliseconds = 0.0f;
+                skipGraphicAlpha = (float)Math.Max(0f, skipGraphicAlpha - SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
+            }
+
             Alpha += (float)(gameTime.ElapsedGameTime.TotalSeconds * alphaRate);
 
             base.Update(gameTime);
@@ -254,6 +282,25 @@ namespace DTAClient.DXGUI.Generic.Campaign
             GraphicsDevice.Clear(Color.Black);
 
             DrawChildren(gameTime);
+
+            if (skipGraphicAlpha > 0f)
+            {
+                string text = "<ESC> hold to skip";
+                var textWidth = Renderer.GetTextDimensions(text, 0).X;
+                var textLocation = new Vector2(Width - textWidth - 10.0f, 6.0f);
+                DrawString(text, 0, textLocation + new Vector2(1, 1), Color.Black * skipGraphicAlpha);
+                DrawString(text, 0, new Vector2(Width - textWidth - 10.0f, 6.0f), ConversationDisplay.TextColor * skipGraphicAlpha);
+
+                float escBarMaxWidth = 100.0f;
+                float escBarHeight = 20.0f;
+                float escBarX = Width - escBarMaxWidth - 10;
+                float escBarY = 30;
+
+                float escBarWidth = (escPressMilliseconds / SkipTime) * escBarMaxWidth;
+
+                FillRectangle(new Rectangle((int)escBarX, (int)escBarY, (int)escBarWidth, (int)escBarHeight), ConversationDisplay.TextColor * 0.5f * skipGraphicAlpha);
+                DrawRectangle(new Rectangle((int)escBarX, (int)escBarY, (int)escBarMaxWidth, (int)escBarHeight), Color.White * skipGraphicAlpha);
+            }
         }
     }
 }

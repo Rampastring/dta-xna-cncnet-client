@@ -86,6 +86,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CR02();
                 case Cutscene.CR03:
                     return CR03();
+                case Cutscene.CR04:
+                    return CR04();
             }
 
             return null;
@@ -113,6 +115,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
             bleep11.Play();
         }
 
+        private void HideAllStoryImagesWithSound(IStoryDisplay storyDisplay, EnhancedSoundEffect sound)
+        {
+            storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
+            country1.Play();
+        }
+
         private List<Phase> CR04()
         {
             var phases = new List<Phase>();
@@ -120,20 +128,22 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
+                    storyDisplay.AddSimpleStoryImage("Story/CR04/bg01.png", 1, 0f);
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.ConversationText = "CONFLICT NEWS AND EQUIPMENT ANALYSIS";
                     toney7.Play();
                     TryPlaySong(ramap);
                 },
                 null,
-                null,
-                null));
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "After the dissolution of the Soviet Union, the Government retained a significant inventory of Soviet-era military equipment.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.AddSimpleStoryImage("Story/CR04/bg02.png", 1, 0f);
                 },
                 null,
                 null,
@@ -151,7 +161,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Some of the Soviet equipment was still widely used, but was in the process of being phased out. That process was slowed down by military personnel used to the Soviet overwhelming raw power tactics.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Some of the Soviet equipment was still widely used, but was in the process of being phased out. That process was slowed down by military personnel used to the Soviet overwhelming raw power tactics, of whom many defected to the Resistance.";
                 },
                 null,
                 null,
@@ -163,13 +173,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "The Allies made sure that their own military was superior to that of the Soviet successor states.";
                 },
                 null,
-                null,
-                null));
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The First Tiberium War only made this discrepancy more significant, as the Allied Nations needed their most advanced equipment for fighting the Brotherhood of Nod.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The First Tiberium War only made this discrepancy more significant, as the Allied Nations needed their advanced equipment for fighting the Brotherhood of Nod.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR04/bg03.png", 1, 0f);
                 },
                 null,
                 null,
@@ -181,31 +192,34 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "Due to this, the Government has had to rely on equipment that is outdated by modern standards.";
                 },
                 null,
-                null,
-                null));
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "To answer modern challenges, a large upgrade program was started to modernize the old Allied equipment to match the latest GDI and Nod designs.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR04/bg04.png", 1, 0f);
                 },
                 null,
-                null,
-                null));
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Rumors suggest this program also includes re-designs of earlier scrapped Allied vehicle plans. One of them could be the \"Enforcer\" battle fortress unit, although none have been seen in action yet.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR04/bg05.png", 1, 0f);
                 },
                 null,
-                null,
-                null));
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "While the program continues, the Communist militia has also been upgrading their Soviet-era vehicles with modern capabilities.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR04/bg06.png", 1, 0f);
                 },
                 null,
                 null,
@@ -235,8 +249,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "GDI has expressed worry about the escalating levels of violence that the modernized equipment will bring, and strongly comdemned the use of chemical weapons.";
                 },
                 null,
-                null,
-                null));
+                storyDisplay =>
+                {
+                    storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -2.5f);
+                },
+                storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(14,
                 storyDisplay =>
@@ -304,7 +321,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(20,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We also have an outpost in the area and our Enforcer prototype is also nearby. You won't be needing them during this operation, however.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We have an outpost in the area and our Enforcer prototype is also nearby. You won't be needing them during this operation, however.";
                 },
                 null,
                 null,
@@ -345,8 +362,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg01.png", 1, 0f);
                     toney7.Play();
                     TryPlaySong(ramap);
-                    MediaPlayer.IsRepeating = true;
-                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
                 },
                 null,
                 storyDisplay =>

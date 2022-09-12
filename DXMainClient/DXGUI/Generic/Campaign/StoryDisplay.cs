@@ -56,11 +56,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private MissionCutscenes cutscenes;
 
         private float alphaRate = 0.0f;
+        private bool cutsceneStarted = false;
 
         private bool isDebriefing;
 
         private float escPressMilliseconds;
         private float skipGraphicAlpha = 0.0f;
+        
+
 
         public void Begin(Cutscene cutscene, bool isDebriefing)
         {
@@ -72,8 +75,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 return;
             }
 
-            alphaRate = 0.0f;
-            Alpha = 1.0f;
+            alphaRate = 2.0f;
+            Alpha = 0.0f;
 
             if (cutscenes == null)
                 cutscenes = new MissionCutscenes();
@@ -83,10 +86,13 @@ namespace DTAClient.DXGUI.Generic.Campaign
             ClearStoryImages();
             ConversationDisplay.ConversationText = string.Empty;
             ConversationDisplay.IsCentered = false;
+            cutsceneStarted = false;
+
+            skipGraphicAlpha = 0.0f;
+            escPressMilliseconds = 0f;
 
             Phases = cutscenes.GetPhases(cutscene, this, WindowManager);
             Phase = -1;
-            NextPhase();
             Enable();
         }
 
@@ -180,45 +186,55 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public override void Update(GameTime gameTime)
         {
-            if (PhaseState == PhaseState.Appearing)
+            if (cutsceneStarted)
             {
-                if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
+                if (PhaseState == PhaseState.Appearing)
                 {
-                    PhaseState = PhaseState.Ready;
-                    CurrentPhase.Ready?.Invoke(this);
+                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
+                    {
+                        PhaseState = PhaseState.Ready;
+                        CurrentPhase.Ready?.Invoke(this);
+                    }
                 }
-            }
-            else if (PhaseState == PhaseState.Disappearing)
-            {
-                if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
+                else if (PhaseState == PhaseState.Disappearing)
                 {
-                    PhaseState = PhaseState.Disappeared;
-                    CurrentPhase.Left?.Invoke(this);
+                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
+                    {
+                        PhaseState = PhaseState.Disappeared;
+                        CurrentPhase.Left?.Invoke(this);
+                    }
                 }
-            }
-            else if (PhaseState == PhaseState.Disappeared)
-            {
-                NextPhase();
-            }
-
-            if (Keyboard.IsKeyHeldDown(Keys.Escape))
-            {
-                escPressMilliseconds += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-                skipGraphicAlpha = (float)Math.Min(1.0f, skipGraphicAlpha + SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
-
-                if (escPressMilliseconds > SkipTime)
+                else if (PhaseState == PhaseState.Disappeared)
                 {
-                    Finish();
+                    NextPhase();
                 }
-            }
-            else
-            {
-                escPressMilliseconds = 0.0f;
-                skipGraphicAlpha = (float)Math.Max(0f, skipGraphicAlpha - SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
+
+                if (Keyboard.IsKeyHeldDown(Keys.Escape))
+                {
+                    escPressMilliseconds += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                    skipGraphicAlpha = (float)Math.Min(1.0f, skipGraphicAlpha + SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
+
+                    if (escPressMilliseconds > SkipTime)
+                    {
+                        Finish();
+                    }
+                }
+                else
+                {
+                    escPressMilliseconds = 0.0f;
+                    skipGraphicAlpha = (float)Math.Max(0f, skipGraphicAlpha - SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
+                }
             }
 
             Alpha += (float)(gameTime.ElapsedGameTime.TotalSeconds * alphaRate);
+
+            // Wait for us to be fully visible before starting the first phase
+            if (!cutsceneStarted && Alpha >= 1.0f)
+            {
+                cutsceneStarted = true;
+                NextPhase();
+            }
 
             base.Update(gameTime);
         }

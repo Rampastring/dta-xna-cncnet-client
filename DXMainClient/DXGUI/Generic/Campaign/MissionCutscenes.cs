@@ -231,13 +231,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "It is unknown where and how they get the resources for upgrades.";
                 },
                 null,
-                null,
-                null));
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Limited numbers of chemical weapon attacks by the resistance have also been seen, most notably a chemical bomb attack on a Government military train.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR04/bg07.png", 1, 0f);
                 },
                 null,
                 null,

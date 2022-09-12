@@ -122,7 +122,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 {
                     currentTime = 0.0;
                     ProgressedText += ConversationText[ProgressedText.Length];
-                    if (ProgressionSound != null)
+                    if (ProgressionSound != null && !string.IsNullOrWhiteSpace(ConversationText))
                         ProgressionSound.Play();
                     SkipSpace();
                 }

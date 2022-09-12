@@ -88,6 +88,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CR03();
                 case Cutscene.CR04:
                     return CR04();
+                case Cutscene.CR05:
+                    return CR05();
             }
 
             return null;
@@ -119,6 +121,134 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
             country1.Play();
+        }
+
+        private List<Phase> CR05()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(secondhand);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Despite your victory, it looks like allocating our forces to the supply route was a big mistake.";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 2, 0f);
+                },
+                null,
+                storyDisplay => AddRADisplay(storyDisplay, 3),
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "There is a tiberium-infested river basin where GDI had a Tiberium research and containment facility, which they were transforming into a base to counter Nod.";
+                },
+                null,
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CR05/tibriver.png", 4),
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "At the height their incompetence, GDI didn't pay enough attention that Nod noticed their efforts and was preparing a strike.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CR05/nodbase.png", 5);
+                    storyDisplay.ConversationDisplay.ConversationText = "With our primary force elsewhere, Nod captured the GDI base and, together with the Soviet scum, they are now consolidating their control over the area.";
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It's a real meat grinder there, with us and GDI as well as the enemies constantly throwing in reinforcements. We still have an outpost there, but it's only a matter of time before it is gone.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Our other commanders are saying that the situation is desperate and we should just fall back, but I'm not giving up so easily.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We're already getting ridiculed in pro-Soviet posters and messages in the networks, giving up here would make it far worse.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Thinking of the sudden progress of our enemy, I bet some civilians in the area were cooperating with Nod on intel regarding the GDI base. We should give them a fitting punishment once the operation is over...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CR05/bridge.png", 6);
+                    storyDisplay.ConversationDisplay.ConversationText = "Anyway, for the mission itself, take a force and use them to reclaim control over a critical bridge. If you succeed, our HQ will send you an MCV and more reinforcements.";
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(5),
+                storyDisplay => { storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f; bleep12.Play(); },
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If only our other commanders were even half as competent as you, this war would already be over.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; toney4.Play(); },
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CR04()
@@ -861,7 +991,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "After various smaller conflicts with mixed results, the latest move of the Communist radicals was to take control of abandoned Soviet bases and recommission them, using them to produce military equipment.";
+                    storyDisplay.ConversationDisplay.ConversationText = "After various smaller conflicts with mixed results, some of the republic's military generals defected to the Communist side and recommissioned abandoned Soviet bases, using them to produce military equipment.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg09.png", 9);
                 },
                 null,
@@ -889,7 +1019,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 null,
                 null,
-                storyDisplay => { storyDisplay.ClearStoryImages(); storyDisplay.AddSimpleStoryImage("Story/CR01/bg10.png", 10, 1.0f); }
+                storyDisplay => { storyDisplay.AddSimpleStoryImage("Story/CR01/bg10.png", 10, 1.0f); }
                 ));
 
             phases.Add(new Phase(14,

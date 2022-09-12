@@ -1,4 +1,5 @@
 ﻿using ClientCore;
+using ClientGUI;
 using DTAClient.Domain.Singleplayer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
@@ -90,6 +91,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CR04();
                 case Cutscene.CR05:
                     return CR05();
+                case Cutscene.CR05Victory:
+                    return CR05Victory();
+                case Cutscene.CR06:
+                    return CR06();
             }
 
             return null;
@@ -121,6 +126,329 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
             country1.Play();
+        }
+
+        private List<Phase> CR06()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "CONFLICT NEWS AND OPINION";
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(ramap);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            const int factionLogoMargin = 30;
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "With the earlier chemical attack on the Government forces, a tactical bait and subsequent destruction of a Global Defense Initiative base, Nod entered the civil war with a strong show.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/bg02.png", 2, 0f);
+                },
+                null,
+                storyDisplay =>
+                {
+                    var nodLogoImage = new StoryImage(windowManager, 3);
+                    nodLogoImage.Alpha = 0.0f;
+                    nodLogoImage.Texture = AssetLoader.LoadTextureUncached("Story/CR06/nod.png");
+                    nodLogoImage.ImageX.SnapToValue(UIDesignConstants.CUTSCENE_DESIGN_RES_X - nodLogoImage.Texture.Width - factionLogoMargin);
+                    nodLogoImage.ImageY.SnapToValue(UIDesignConstants.CUTSCENE_DESIGN_RES_Y - nodLogoImage.Texture.Height - factionLogoMargin);
+                    storyDisplay.AddStoryImage(nodLogoImage);
+                    bleep11.Play();
+                },
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "As a response, GDI has massively increased support for the Government and is bringing significantly more forces to the theater.";
+                },
+                null,
+                storyDisplay =>
+                {
+                    var gdiLogoImage = new StoryImage(windowManager, 4);
+                    gdiLogoImage.Alpha = 0.0f;
+                    gdiLogoImage.Texture = AssetLoader.LoadTextureUncached("Story/CR06/gdi.png");
+                    gdiLogoImage.ImageX.SnapToValue(factionLogoMargin);
+                    gdiLogoImage.ImageY.SnapToValue(factionLogoMargin);
+                    storyDisplay.AddStoryImage(gdiLogoImage);
+                    bleep11.Play();
+                },
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With these steps, the war is seen to have evolved from a civil war to another theater of the full-blown war between GDI and Nod, which was thought to be nearing its end.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Numerically, most forces in the area are still from the local factions, but GDI and Nod are far more resourceful.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The local population has expressed fear of the escalation and the destruction it will bring.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/bg03.png", 5, 0f);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Government has taken full benefit of Nod involvement in their propaganda, portraying the Communist side as foreign Nod forces who are fighting to give control of the country to a foreign power.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/soviet.png", 6, 0f);
+                },
+                storyDisplay => 
+                {
+                    storyDisplay.FindStoryImageById(6).AlphaRate = -1.0f;
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/nod.png", 7, 0f);
+                    mapwipe5.Play();
+                },
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Likewise, the Communist side is claiming that the Government is surrendering the country's independence to the Western powers who are the biggest backers of GDI.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/logo.png", 8, 0f);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.FindStoryImageById(8).AlphaRate = -1.0f;
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/gdi.png", 9, 0f);
+                    mapwipe5.Play();
+                },
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Currently there is no end in sight to the war, and the sides appear to be relatively well matched. Both suffered heavy casualties in the battles for the GDI base area.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/bg04.png", 10, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Theoretically the Nod and Communist side should be weaker, but practically they have proven to be much better resourced than expected. GDI and Government officials are reportedly confused how this is possible.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/bg04.png", 10, 0f);
+                },
+                null,
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(6);
+                    storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -2.5f);
+                },
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(secondhand);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "We were discussing the appearance of enemy naval forces with GDI, and found out that our enemy has expanded into some of our islands.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR06/officebg01.png", 2, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We'd love to go after them, but as-is it'd be too risky. We need to liberate more of the shoreline first.";
+                },
+                null,
+                storyDisplay => AddRADisplay(storyDisplay, 3),
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CR06/base.png", 4);
+                    storyDisplay.ConversationDisplay.ConversationText = "We have a base in the region, but we are unable to reach it. We suspect that it is under enemy assault and their communications are damaged, but the base has not completely fallen yet.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CR06/route.png", 5);
+                    storyDisplay.ConversationDisplay.ConversationText = "Our scouts are also reporting that we still have one safe supply route to the base.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Reinforce the base through the safe route, bring the base communications back online and destroy enemy forces to the east of our base. Only with the enemy gone from the shore, can we prepare a landing force against the islands.";
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                storyDisplay => { storyDisplay.FindStoryImageById(5).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(5)));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Unlike in the previous operation, we don't have many resources to spare this time. GDI has lost muscle too, as has the enemy.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The area itself also has limited resources to harvest. I suggest you attack the enemy aggressively and take them out quickly, before you run out of ore and tiberium to collect. But you surely know this too.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I'll be awaiting news of your victory.";
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; toney4.Play(); },
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
+        private List<Phase> CR05Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Prior to the latest operation, there was widespread ridicule directed at the Government military and GDI.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR05/victorybg01.png", 1);
+                    country4.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Poster and other activity by Communist partisans had greatly increased, mocking the sudden loss of the GDI and Government shoreline bases.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR05/victorybg02.png", 1);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, now it has all quieted down due to the unexpectedly successful Government counterattack, supported by the full fury of the Eagle. The new Government Commander is also gaining widespread popularity among their troops.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR05/victorybg01.png", 1);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Only a rumor exists that Nod had captured major GDI technology during the operation. GDI has refused to comment on this rumor, citing operation security as the reason for the silence.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            var globalVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ALL_CHURCHES_DESTROYED");
+            if (globalVariable != null && globalVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "There is also another claim that the Government forces have heavily attacked civilians, including destroying churches and other village buildings and organizing punishmental killings while dealing with Nod collaborators.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR05/victorybg03.png", 1);
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The Government has denied these claims, stating that they only deal with collaborators and even those are tried in court. No regular civilian needs to be afraid of their forces.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()
+                    ));
+            }
+
+            return phases;
         }
 
         private List<Phase> CR05()
@@ -338,7 +666,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Rumors suggest this program also includes re-designs of earlier scrapped Allied vehicle plans. One of them could be the \"Enforcer\" battle fortress unit, although none have been seen in action yet.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Rumors suggest this program also includes re-designs of the most powerful Allied vehicles. One of them could be the \"Enforcer\" battle fortress unit, although none have been seen in action yet.";
                     storyDisplay.AddSimpleStoryImage("Story/CR04/bg05.png", 1, 0f);
                 },
                 null,
@@ -520,7 +848,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards the Government was making quick progress. It seemed that the resistance was on its last legs and would fall within weeks.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards the Government was making quick progress. It seemed that the neo-Soviets were on their last legs and would fall within weeks.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg03.png", 3, 0f);
                 },
                 null,
@@ -710,7 +1038,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             return phases;
         }
-
 
         private List<Phase> CR02()
         {

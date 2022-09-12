@@ -9,5 +9,7 @@
         CR03,
         CR04,
         CR05,
+        CR05Victory,
+        CR06
     }
 }

@@ -293,7 +293,17 @@ namespace DTAClient.DXGUI.Generic
 
             CUpdater.Restart += CUpdater_Restart;
 
+            innerPanel.CampaignSelector.RefreshMusicState += CampaignSelector_RefreshMusicState;
+
             SetButtonHotkeys(true);
+        }
+
+        private void CampaignSelector_RefreshMusicState(object sender, EventArgs e)
+        {
+            if (UserINISettings.Instance.PlayMainMenuMusic)
+                PlayMusic();
+            else
+                MusicOff();
         }
 
         private void SetButtonHotkeys(bool enableHotkeys)
@@ -896,7 +906,9 @@ namespace DTAClient.DXGUI.Generic
             float step = SoundPlayer.Volume * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (MediaPlayer.Volume > step)
+            {
                 MediaPlayer.Volume -= step;
+            }
             else
             {
                 MediaPlayer.Stop();

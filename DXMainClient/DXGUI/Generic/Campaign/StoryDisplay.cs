@@ -69,14 +69,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             this.isDebriefing = isDebriefing;
 
+            alphaRate = 2.0f;
+            Alpha = 0.0f;
+
             if (cutscene == Cutscene.None)
             {
                 Finish();
                 return;
             }
-
-            alphaRate = 2.0f;
-            Alpha = 0.0f;
 
             if (cutscenes == null)
                 cutscenes = new MissionCutscenes();
@@ -158,6 +158,24 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public void Finish()
         {
+            cutsceneStarted = false;
+            alphaRate = -2.0f;
+
+            if (!isDebriefing)
+            {
+                DoFinish();
+            }
+            else
+            {
+                if (Alpha <= 0f)
+                {
+                    DoFinish();
+                }
+            }
+        }
+
+        private void DoFinish()
+        {
             Disable();
             Finished?.Invoke(this, EventArgs.Empty);
         }
@@ -234,6 +252,15 @@ namespace DTAClient.DXGUI.Generic.Campaign
             {
                 cutsceneStarted = true;
                 NextPhase();
+            }
+
+            // Fade back to menu after debriefing
+            if (alphaRate < 0f)
+            {
+                if (Alpha <= 0f)
+                {
+                    DoFinish();
+                }
             }
 
             base.Update(gameTime);

@@ -149,6 +149,7 @@ namespace DTAClient.DXGUI.Generic
         };
 
         public event EventHandler MusicOptions;
+        public event EventHandler RefreshMusicState;
 
         public CampaignSelector(WindowManager windowManager, DiscordHandler discordHandler) : base(windowManager)
         {
@@ -440,7 +441,17 @@ namespace DTAClient.DXGUI.Generic
                 SelectMission(e.Mission);
             }
 
-            storyDisplay.Begin(e.Mission.EndCutscene, true);
+            if (e.Mission.EndCutscene != Cutscene.None)
+            {
+                storyDisplay.Finished += PostDebriefing_RefreshMusicState;
+                storyDisplay.Begin(e.Mission.EndCutscene, true);
+            }
+        }
+
+        private void PostDebriefing_RefreshMusicState(object sender, EventArgs e)
+        {
+            storyDisplay.Finished -= PostDebriefing_RefreshMusicState;
+            RefreshMusicState?.Invoke(this, EventArgs.Empty);
         }
 
         private void SelectMission(Mission mission)

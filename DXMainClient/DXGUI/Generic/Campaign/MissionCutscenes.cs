@@ -136,6 +136,147 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             var phases = new List<Phase>();
 
+            var genocideVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ALL_CHURCHES_DESTROYED");
+            if (genocideVariable != null && genocideVariable.EnabledThroughPreviousScenario)
+            {
+                // TODO
+            }
+            else
+            {
+                phases.Add(new Phase(0,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The Communist forces were caught by surprise. They were unprepared for a quick attack on the archipelago and lost it to a relatively small Government and GDI force.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg01.png", 1);
+                        country4.Play();
+                        TryPlaySong(raintro);
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The archipelago had worked as a troop and equipment transportation route, and when frozen, would've allowed tanks to drive through the area and attack the Government shoreline.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()
+                    ));
+
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The information gathered from the command center revealed that industry under Communist and Nod controlled territory is producing surprisingly large numbers of military equipment.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "For that, the industry must have access to more raw materials than has earlier been possible.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()
+                    ));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "An anonymous source from GDI intelligence has suspected that Nod is providing them with cheap Tiberium-extracted minerals.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg03.png", 1);
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "To achieve a lower price for the minerals, a deal with Nod is suspected where Nod gives the tiberium-extracted minerals at a discount to enterprises that build military equipment for them or the Communists.";
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "It is necessary for the Government and GDI to strike the manufacturing sites or cut the source of Tiberium minerals if they want to reduce the number of enemy tanks.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()
+                    ));
+
+                var civiliansEvacuatedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_CIVILIANS_EVACUATED");
+                if (civiliansEvacuatedVariable != null && civiliansEvacuatedVariable.EnabledThroughPreviousScenario)
+                {
+                    phases.Add(new Phase(6,
+                        storyDisplay =>
+                        {
+                            TryPlaySong(secondhand);
+                            storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg04.png", 1);
+                            storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                            storyDisplay.ConversationDisplay.ConversationText = "A sergeant under your command has brought you a message from the civilians that you evacuated.";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(7,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "They claim that Government forces under other commanders' command have committed attacks on civilian villages, killing and torturing entire villages if they've suspected collaboration with the enemy.";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(8,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "According to them, this has also eroded public support for the Government and GDI, and increased support for the Communists and Nod. Many people who were loyal to the Government have defected due to this.";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(9,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "One of the affected villages is supposedly located near a vehicle manufacturing plant that the Government forces and GDI have recently launched an assault on.";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(10,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "If your forces participate in combat there in the future, it could give you a chance to check whether these claims hold truth.";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+                }
+            }
+
             return phases;
         }
 

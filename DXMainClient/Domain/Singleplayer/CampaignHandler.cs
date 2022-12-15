@@ -138,6 +138,7 @@ namespace DTAClient.Domain.Singleplayer
 
         private void ReadCampaigns(IniFile campaignsIni)
         {
+#if false
             const string CampaignsSectionName = "Campaigns";
             IniSection campaignsSection = campaignsIni.GetSection(CampaignsSectionName);
             if (campaignsSection == null)
@@ -176,12 +177,13 @@ namespace DTAClient.Domain.Singleplayer
                         break;
                     }
 
-                    var mission = new Mission(missionSection, true);
+                    var mission = new Mission(missionSection, true, 0);
                     campaign.Missions.Add(mission);
 
                     i++;
                 }
             }
+#endif
         }
 
         /// <summary>
@@ -255,8 +257,10 @@ namespace DTAClient.Domain.Singleplayer
             if (battleKeys == null)
                 return; // File exists but [Battles] doesn't
 
-            foreach (string battleEntry in battleKeys)
+            for (int i = 0; i < battleKeys.Count; i++)
             {
+                string battleEntry = battleKeys[i];
+
                 string battleSection = battleIni.GetStringValue("Battles", battleEntry, "NOT FOUND");
 
                 if (!battleIni.SectionExists(battleSection))
@@ -264,7 +268,7 @@ namespace DTAClient.Domain.Singleplayer
 
                 IniSection section = battleIni.GetSection(battleSection);
 
-                var mission = new Mission(section, false);
+                var mission = new Mission(section, false, i);
 
                 BattleList.Add(mission);
 
@@ -306,6 +310,7 @@ namespace DTAClient.Domain.Singleplayer
                 if (UserINISettings.Instance.GameSpeed == 0)
                     UserINISettings.Instance.GameSpeed.Value = 1;
 
+                swriter.WriteLine("CampaignID=" + mission.Index);
                 swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
                 swriter.WriteLine("Firestorm=" + mission.RequiredAddon);
                 swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.Side));

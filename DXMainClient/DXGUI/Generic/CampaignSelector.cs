@@ -802,12 +802,24 @@ namespace DTAClient.DXGUI.Generic
                 XNAListBoxItem item = new XNAListBoxItem();
                 item.Tag = mission;
                 item.Text = mission.GUIName;
+
                 if (!mission.Enabled)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
                 }
                 else if (string.IsNullOrEmpty(mission.Scenario) && string.IsNullOrWhiteSpace(mission.CampaignInternalName))
                 {
+                    if (!string.IsNullOrEmpty(mission.HeaderFor))
+                    {
+                        Mission referencedMission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == mission.HeaderFor);
+
+                        if (referencedMission != null && referencedMission.RequiresUnlocking && !referencedMission.IsUnlocked)
+                        {
+                            // Don't add this to the campaign list
+                            return;
+                        }
+                    }
+
                     item.TextColor = AssetLoader.GetColorFromString(
                         ClientConfiguration.Instance.ListBoxHeaderColor);
                     item.IsHeader = true;

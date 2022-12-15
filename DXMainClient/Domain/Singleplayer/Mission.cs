@@ -3,7 +3,6 @@ using DTAClient.DXGUI.Generic.Campaign;
 using Rampastring.Tools;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DTAClient.Domain.Singleplayer
 {
@@ -14,8 +13,9 @@ namespace DTAClient.Domain.Singleplayer
     {
         private const int DifficultyLabelCount = 3;
 
-        public Mission(IniSection iniSection, bool isCampaignMission)
+        public Mission(IniSection iniSection, bool isCampaignMission, int index)
         {
+            Index = index;
             InternalName = iniSection.SectionName;
             Side = iniSection.GetIntValue(nameof(Side), 0);
             Scenario = iniSection.GetStringValue(nameof(Scenario), string.Empty);
@@ -25,6 +25,7 @@ namespace DTAClient.Domain.Singleplayer
 
             IconPath = iniSection.GetStringValue(nameof(IconPath), string.Empty);
             GUIDescription = iniSection.GetStringValue("LongDescription", string.Empty);
+            HeaderFor = iniSection.GetStringValue(nameof(HeaderFor), string.Empty);
             PreviewImagePath = iniSection.GetStringValue(nameof(PreviewImagePath), string.Empty);
             RequiredAddon = iniSection.GetBooleanValue(nameof(RequiredAddon), false);
             Enabled = iniSection.GetBooleanValue(nameof(Enabled), true);
@@ -45,7 +46,7 @@ namespace DTAClient.Domain.Singleplayer
 
                 if (DifficultyLabels.Length != DifficultyLabelCount)
                 {
-                    throw new NotSupportedException($"Invalid number of DifficultyLabels= specified for mission { InternalName }: " +
+                    throw new NotSupportedException($"Invalid number of DifficultyLabels= specified for mission {InternalName}: " +
                         $"{DifficultyLabels.Length}, expected {DifficultyLabelCount}");
                 }
             }
@@ -72,8 +73,10 @@ namespace DTAClient.Domain.Singleplayer
             }
 
             GUIDescription = GUIDescription.Replace("@", Environment.NewLine);
+            Index = index;
         }
 
+        public int Index { get; }
         public string InternalName { get; }
         public int Side { get; }
         public string Scenario { get; }
@@ -90,6 +93,8 @@ namespace DTAClient.Domain.Singleplayer
         public bool MusicRecommended { get; }
 
         public string[] DifficultyLabels { get; }
+
+        public string HeaderFor { get; }
 
         /// <summary>
         /// Which cutscene should be played when this mission is started?

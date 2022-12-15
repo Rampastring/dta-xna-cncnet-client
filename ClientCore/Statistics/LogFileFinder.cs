@@ -13,7 +13,7 @@ namespace ClientCore.Statistics
         public static string GetLogFilePath()
         {
             string logFileName = ClientConfiguration.Instance.StatisticsLogFileName;
-            if (File.Exists(ProgramConstants.GamePath + "LaunchVinifera.exe"))
+            if (File.Exists(ProgramConstants.GamePath + "LaunchVinifera.exe") || File.Exists(ProgramConstants.GamePath + "LaunchVinifera.dat"))
             {
                 if (Directory.Exists(ProgramConstants.GamePath + "Debug"))
                 {

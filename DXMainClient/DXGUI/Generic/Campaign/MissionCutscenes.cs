@@ -30,6 +30,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             raintro = AssetLoader.LoadSong("Story/Music/raintro");
             fac2226m = AssetLoader.LoadSong("Story/Music/fac2226m");
             secondhand = AssetLoader.LoadSong("Story/Music/2nd_hand");
+            terminat = AssetLoader.LoadSong("Story/Music/terminat");
         }
 
         private readonly EnhancedSoundEffect bleep9;
@@ -47,6 +48,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly Song raintro;
         private readonly Song fac2226m;
         private readonly Song secondhand;
+        private readonly Song terminat;
 
         private const double crRAdisplayX = 4.0;
         private const double crRAdisplayY = 20.0;
@@ -99,6 +101,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CR07();
                 case Cutscene.CR07Victory:
                     return CR07Victory();
+                case Cutscene.CR08:
+                    return CR08();
+                case Cutscene.CR08Victory:
+                    return CR08Victory();
             }
 
             return null;
@@ -129,7 +135,393 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private void HideAllStoryImagesWithSound(IStoryDisplay storyDisplay, EnhancedSoundEffect sound)
         {
             storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
-            country1.Play();
+
+            if (sound != null)
+                sound.Play();
+        }
+
+        private List<Phase> CR08Victory()
+        {
+            var phases = new List<Phase>();
+
+            var genocideVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ALL_CHURCHES_DESTROYED");
+            if (genocideVariable != null && genocideVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(0,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The Government forces stand victorious, with the victory again enabled by their new star of a commander.";
+                        TryPlaySong(raintro);
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Meanwhile, the Global Defense Initiative has made progress in its research into the allegations of genocide performed by the Government.";
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "GDI has determined there to be some truth to the claims. As a result, they have decided to lessen their military support for the Government until the Government takes serious steps to fix the situation.";
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+            }
+            else
+            {
+                phases.Add(new Phase(0,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The recent addition to the Government's military leadership has once again brought victory for the Government.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg01.png", 1);
+                        country4.Play();
+                        TryPlaySong(raintro);
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The neo-Communists and the Brotherhood have been driven away from the damaged factory, and it shall never again strengthen the enemy's ranks.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "This victory sets the stage for further weakening of the enemy and the eventual final victory over them.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                var massGravesFoundVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_MASS_GRAVES_FOUND");
+                if (massGravesFoundVariable != null && massGravesFoundVariable.EnabledThroughPreviousScenario)
+                {
+                    phases.Add(new Phase(3,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.IsCentered = false;
+                            TryPlaySong(secondhand);
+                            storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg02.png", 2);
+                            storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                            storyDisplay.ConversationDisplay.ConversationText = "The mass graves that your units discovered match with the accusations that the saved civilians earlier made towards the Government.";
+                        },
+                        null,
+                        null,
+                        null));
+
+                    phases.Add(new Phase(4,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "It is unknown whether the Supreme Leader himself had ordered these attacks, or whether it was someone down on the chain of command.";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(5,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "You could ask Ivanov about it, but there's a chance that'd go rather wrong...";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(6,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                            storyDisplay.AddSimpleStoryImage("Story/CR08/bg04.png", 3);
+                            storyDisplay.ConversationDisplay.ConversationText = "... mass graves, huh?";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(7,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "What's wrong with that? They collaborated with the enemy, worked on the factory controlled by the Communist scum.";
+                        },
+                        null,
+                        null,
+                        null
+                        ));
+
+                    phases.Add(new Phase(8,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "Have you grown a sweet spot for the enemy, Commander?";
+                        },
+                        null,
+                        storyDisplay => storyDisplay.FindStoryImageById(3).AlphaRate = -1.0f,
+                        storyDisplay => storyDisplay.RemoveStoryImageById(3)
+                        ));
+
+                    phases.Add(new Phase(9,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                            storyDisplay.ConversationDisplay.ConversationText = "...";
+                        },
+                        null,
+                        null, 
+                        null));
+
+                    phases.Add(new Phase(10,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "If you want to pursue this, it might be better to do some investigation on your own first.";
+                        },
+                        null,
+                        storyDisplay => HideAllStoryImagesWithSound(storyDisplay, toney4),
+                        storyDisplay => storyDisplay.ClearStoryImages()));
+
+                    phases.Add(new Phase(11,
+                        storyDisplay =>
+                        {
+                            storyDisplay.AddSimpleStoryImage("Story/CR08/crtitle.png", 3);
+                            storyDisplay.ConversationDisplay.TextColor = Color.White;
+                            storyDisplay.ConversationDisplay.IsCentered = true;
+                            storyDisplay.ConversationDisplay.ConversationText = "[ Proceed to CR Route A to continue fighting loyally on the Government side. ]" + Environment.NewLine +
+                                "[ Alternatively, proceed to CR Route B to investigate the murders of the civilians. ]";
+                        },
+                        null,
+                        storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null),
+                        storyDisplay => storyDisplay.ClearStoryImages()));
+                }
+            }
+
+            return phases;
+        }
+
+        private List<Phase> CR08()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "POST-SOVIET HISTORY";
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(ramap);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "When the Soviet Union ceased to exist, many countries and territories previously dominated by it and its predecessor, the Russian Empire, gained independence.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/bg02.png", 2);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Allies wanted the country to be weak enough that Russia could never launch a full-scale invasion of Europe again.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The death of Stalin, liquidation of Soviet war criminals and the emergence of various smaller states required new, previously mostly unknown people to step up and take lead of the countries.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/bg03.png", 3);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov, born in 1963, achieved this through posing as a modern post-Soviet leader aspiring liberating the society and healthy relations with the West and the newly-independent Eastern European countries.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/bg04.png", 4);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, over time, his economic policy has shown to lack substance, the corruption of the Soviet system has not gone away, and his popularity has waned.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "But any serious opposition showing up has quickly got tangled in corruption scandals. Certain international observers have speculated some of the charges to be forged, but there has been little pressure for Ivanov to change course.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI has been happy with him keeping a hard line on neo-Communism and Russian influence, and due to him having no serious competition, he has been able to - at least officially - win all elections so far.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/bg05.png", 4);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 6, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(terminat);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Hey!";
+                    storyDisplay.ConversationDisplay.TextColor = Color.LightBlue;
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/bg06.png", 7, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Supreme Commander himself was too busy, so he told me to convey this assignment to you.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We've been storming this giant vehicle production factory with GDI for almost a month here now.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It was a painful loss earlier in the war, and the Noddies have fortified it so that not even GDI air power has managed to blow the place up.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They are pumping out absolutely crazy amounts of Mammoths at us! Casualties are heavy on both sides, but at this rate, we're going to lose it.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We need you to grab control of the Enforcer, and since the local waterways are now frozen, use the cover of the night to bring the Enforcer over the ice onto a bridgehead that the enemy needs for supplying the factory.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Deploy the Enforcer there and prevent the commies from getting supplies across to stop the crushing flow of heavy tanks.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards, you'll get an MCV so you can build a base, gather forces, destroy the Commies and Noddy scum and save the day.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Sounds like just the perfect job for you, isn't that right?";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "See you at victory celebration at the HQ!" + Environment.NewLine + Environment.NewLine + "Looking forward to drinking with you once this is all over.";
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(7).AlphaRate = -2.0f; toney4.Play(); },
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CR07Victory()
@@ -258,7 +650,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     phases.Add(new Phase(9,
                         storyDisplay =>
                         {
-                            storyDisplay.ConversationDisplay.ConversationText = "One of the affected villages is supposedly located near a vehicle manufacturing plant that the Government forces and GDI have recently launched an assault on.";
+                            storyDisplay.ConversationDisplay.ConversationText = "One of the affected villages is supposedly located near a vehicle manufacturing plant that the Government forces and GDI have been assaulting recently.";
                         },
                         null,
                         null,

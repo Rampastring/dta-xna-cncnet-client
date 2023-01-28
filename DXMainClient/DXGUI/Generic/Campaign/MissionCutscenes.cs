@@ -31,6 +31,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             fac2226m = AssetLoader.LoadSong("Story/Music/fac2226m");
             secondhand = AssetLoader.LoadSong("Story/Music/2nd_hand");
             terminat = AssetLoader.LoadSong("Story/Music/terminat");
+            chrg226m = AssetLoader.LoadSong("Story/Music/chrg226m");
         }
 
         private readonly EnhancedSoundEffect bleep9;
@@ -49,6 +50,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly Song fac2226m;
         private readonly Song secondhand;
         private readonly Song terminat;
+        private readonly Song chrg226m;
 
         private const double crRAdisplayX = 4.0;
         private const double crRAdisplayY = 20.0;
@@ -105,6 +107,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CR08();
                 case Cutscene.CR08Victory:
                     return CR08Victory();
+                case Cutscene.CRA09:
+                    return CRA09();
+                case Cutscene.CRA09Victory:
+                    return CRA09Victory();
             }
 
             return null;
@@ -138,6 +144,256 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (sound != null)
                 sound.Play();
+        }
+
+        private List<Phase> CRA09Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Thanks to your work, the sensor arrays escaped the area and are now usable in future operations.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/victorybg01.png", 1);
+                    country4.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, with the earlier capture of a GDI base and now a Government base, Nod could acquire significant technology from them.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It remains to be seen how this will affect the rest of the war.";
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
+        private List<Phase> CRA09()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "DAILY SUN TIMES - CONFLICT NEWS";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(chrg226m);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "The combined Government and GDI forces had great success at the battle for the vehicle factory a few weeks ago.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/bg02.png", 2);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, while it was expected to be a strategic success, the impact has remained mostly tactical and final victory for the Allies still seems uncertain.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The main reason appears to be Nod's \"Ezekiel's Wheel\" tanks - stealth tanks that perform surgical strikes on bases, harvesters and vulnerable supplies, and then disappear before Government military can catch them.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/bg03.png", 3);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This leaves Allied frontline units starved for supplies and reinforcements, making defending against them easy and greatly increasing casualties for the Government and GDI.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/bg04.png", 4);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "In the meanwhile, Nod and the Communist rebels appear to be working on ramping up production on their remaining territory.";
+                },
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRA09/bg05.png", 5),
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Satellite comparison images taken from the area have revealed a rapid increase of Tiberium growth ever since the start of the war. This development has been noted before, but the reason for it has not been known.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/bg06.png", 6);
+                    mapwipe5.Play();
+                },
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRA09/bg07.png", 7),
+                storyDisplay => { storyDisplay.RemoveStoryImageById(5); storyDisplay.RemoveStoryImageById(6); },
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1)));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, lately fully-grown areas seem to have been harvested for resources.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/bg08.png", 8);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Hence, the Government forces might be pressured against time to make advances before Nod manages to fully rebuild the supply line with Tiberium-based resources.";
+                },
+                null,
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1)));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Anonymous GDI officers have also told the press that the neo-Soviets seem to have surprisingly high amounts of manpower.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/bg09.png", 8);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With their low population base in the country, it was expected that they'd have a shortage of soldiers by now.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However there is none of that in sight. It is suspected that the neo-Communists are being aided by significant numbers of mercenaries from other ex-Soviet countries.";
+                },
+                null,
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1)));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This trifecta of Stealth tanks, increased Tiberium harvesting and foreign reinforcements threats turning the tide of the war.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 10, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(secondhand);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "As you've surely heard from the news, these Kane's wheels are humiliating our forces.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 11, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                storyDisplay => AddRADisplay(storyDisplay, 12)));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Thankfully GDI has given us a solution. Their Mobile Sensor Arrays can be escorted with other forces and deployed anywhere on the battlefield, and they can sense the Stealth tanks from afar.";
+                    AddRADisplayImage(storyDisplay, "Story/CRA09/sensorarrays.png", 13);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They've so far gifted an initial batch of three of these vehicles to us, and we're transferring them to the frontline. If we can demonstrate effective use of them, we might get more of them in the future.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We need your forces to escort these three vehicles.";
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(13).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(13)));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Make sure they get to our base safely.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(12).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                storyDisplay => { storyDisplay.FindStoryImageById(11).AlphaRate = -2.0f; toney4.Play(); },
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CR08Victory()
@@ -420,7 +676,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "Hey!";
+                    storyDisplay.ConversationDisplay.ConversationText = "Greetings!";
                     storyDisplay.ConversationDisplay.TextColor = Color.LightBlue;
                     storyDisplay.AddSimpleStoryImage("Story/CR08/bg06.png", 7, 0f);
                     country1.Play();
@@ -432,7 +688,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Supreme Commander himself was too busy, so he told me to convey this assignment to you.";
+                    storyDisplay.ConversationDisplay.ConversationText = "My name is Toikka." + Environment.NewLine + Environment.NewLine + "Commander Toikka.";
                 },
                 null,
                 null,
@@ -441,7 +697,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We've been storming this giant vehicle production factory with GDI for almost a month here now.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Supreme Commander himself was too busy, so he told me to convey this assignment to you.";
                 },
                 null,
                 null,
@@ -450,7 +706,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "It was a painful loss earlier in the war, and the Noddies have fortified it so that not even GDI air power has managed to blow the place up.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We've been storming this giant vehicle production factory with GDI for almost a month here now.";
                 },
                 null,
                 null,
@@ -459,7 +715,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(13,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "They are pumping out absolutely crazy amounts of Mammoths at us! Casualties are heavy on both sides, but at this rate, we're going to lose it.";
+                    storyDisplay.ConversationDisplay.ConversationText = "It was a painful loss earlier in the war, and the Noddies have fortified it so that not even GDI air power has managed to blow the place up.";
                 },
                 null,
                 null,
@@ -468,7 +724,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(14,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We need you to grab control of the Enforcer, and since the local waterways are now frozen, use the cover of the night to bring the Enforcer over the ice onto a bridgehead that the enemy needs for supplying the factory.";
+                    storyDisplay.ConversationDisplay.ConversationText = "They are pumping out absolutely crazy amounts of Mammoths at us! Casualties are heavy on both sides, but at this rate, we're going to lose it.";
                 },
                 null,
                 null,
@@ -477,7 +733,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(15,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Deploy the Enforcer there and prevent the commies from getting supplies across to stop the crushing flow of heavy tanks.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We need you to grab control of the Enforcer, and since the local waterways are now frozen, use the cover of the night to bring the Enforcer over the ice onto a bridgehead that the enemy needs for supplying the factory.";
                 },
                 null,
                 null,
@@ -486,7 +742,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(16,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards, you'll get an MCV so you can build a base, gather forces, destroy the Commies and Noddy scum and save the day.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Deploy the Enforcer there and prevent the commies from getting supplies across to stop the crushing flow of heavy tanks.";
                 },
                 null,
                 null,
@@ -495,7 +751,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(17,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Sounds like just the perfect job for you, isn't that right?";
+                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards, you'll get an MCV so you can build a base, gather forces, destroy the Commies and Noddy scum and save the day.";
                 },
                 null,
                 null,
@@ -504,13 +760,22 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(18,
                 storyDisplay =>
                 {
+                    storyDisplay.ConversationDisplay.ConversationText = "Sounds like just the perfect job for you, isn't that right?";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
                     storyDisplay.ConversationDisplay.ConversationText = "See you at victory celebration at the HQ!" + Environment.NewLine + Environment.NewLine + "Looking forward to drinking with you once this is all over.";
                 },
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(7).AlphaRate = -2.0f; toney4.Play(); },
                 null));
 
-            phases.Add(new Phase(19,
+            phases.Add(new Phase(20,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.TextColor = Color.White;

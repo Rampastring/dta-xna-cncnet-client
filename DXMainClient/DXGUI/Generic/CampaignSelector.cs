@@ -393,14 +393,15 @@ namespace DTAClient.DXGUI.Generic
 
             ListBattles();
 
+            Mission nextMission = null;
+
             // If another mission follows the completed mission, select the following mission.
             // Otherwise select the mission itself.
 
             // If we unlocked a specific mission, select it.
             if (e.PrimaryUnlockedMission != null)
             {
-                SelectMission(e.PrimaryUnlockedMission);
-                return;
+                nextMission = e.PrimaryUnlockedMission;
             }
 
             // Otherwise, build a list of all missions that follow the completed mission
@@ -410,36 +411,33 @@ namespace DTAClient.DXGUI.Generic
             Array.ForEach(e.Mission.UnlockMissions, unlockedMissionName => followList.Add(unlockedMissionName));
             e.Mission.ConditionalMissionUnlocks.ForEach(c => followList.Add(c.UnlockMissionName));
 
-            if (followList.Count == 0)
+            if (nextMission == null)
             {
-                // No mission follows, select the entry that matches our current mission
-
-                SelectMission(e.Mission);
-                return;
-            }
-
-            foreach (string missionName in followList)
-            {
-                // At least one mission follows, iterate through possibly unlocked missions until we find one
-
-                int index = lbCampaignList.Items.FindIndex(item => 
+                foreach (string missionName in followList)
                 {
-                    var mission = (Mission)item.Tag;
-                    return mission.InternalName == missionName && mission.IsAvailableToPlay;
-                });
+                    // At least one mission follows, iterate through possibly unlocked missions until we find one
 
-                if (index > -1)
-                {
-                    lbCampaignList.SelectedIndex = index;
-                    break;
+                    int index = lbCampaignList.Items.FindIndex(item =>
+                    {
+                        var mission = (Mission)item.Tag;
+                        return mission.InternalName == missionName && mission.IsAvailableToPlay;
+                    });
+
+                    if (index > -1)
+                    {
+                        nextMission = (Mission)lbCampaignList.Items[index].Tag;
+                        break;
+                    }
                 }
             }
 
             // If no following mission was unlocked, then select the entry that matches our current mission
-            if (lbCampaignList.SelectedItem == null)
+            if (nextMission == null)
             {
-                SelectMission(e.Mission);
+                nextMission = e.Mission;
             }
+
+            SelectMission(e.Mission);
 
             if (e.Mission.EndCutscene != Cutscene.None)
             {

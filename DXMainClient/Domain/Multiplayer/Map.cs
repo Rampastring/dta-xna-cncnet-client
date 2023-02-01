@@ -216,6 +216,8 @@ namespace DTAClient.Domain.Multiplayer
 
         private int Bases = -1;
 
+        private bool UseMPAIBaseNodes = false;
+
         private string[] localSize;
 
         private string[] actualSize;
@@ -326,6 +328,7 @@ namespace DTAClient.Domain.Multiplayer
                 UnitCount = section.GetIntValue("UnitCount", -1);
                 NeutralHouseColor = section.GetIntValue("NeutralColor", -1);
                 SpecialHouseColor = section.GetIntValue("SpecialColor", -1);
+                UseMPAIBaseNodes = section.GetBooleanValue("UseMPAIBaseNodes", false);
                 MultiplayerOnly = section.GetBooleanValue("MultiplayerOnly", false);
                 HumanPlayersOnly = section.GetBooleanValue("HumanPlayersOnly", false);
                 ForceRandomStartLocations = section.GetBooleanValue("ForceRandomStartLocations", false);
@@ -468,6 +471,7 @@ namespace DTAClient.Domain.Multiplayer
                 UnitCount = basicSection.GetIntValue("UnitCount", -1);
                 NeutralHouseColor = basicSection.GetIntValue("NeutralColor", -1);
                 SpecialHouseColor = basicSection.GetIntValue("SpecialColor", -1);
+                UseMPAIBaseNodes = basicSection.GetBooleanValue("UseMPAIBaseNodes", false);
                 HumanPlayersOnly = basicSection.GetBooleanValue("HumanPlayersOnly", false);
                 ForceRandomStartLocations = basicSection.GetBooleanValue("ForceRandomStartLocations", false);
                 ForceNoTeams = basicSection.GetBooleanValue("ForceNoTeams", false);
@@ -760,6 +764,9 @@ namespace DTAClient.Domain.Multiplayer
             if (SpecialHouseColor > -1)
                 spawnIni.SetIntValue("HouseColors", "Multi" + specialHouseIndex, SpecialHouseColor);
 
+            if (UseMPAIBaseNodes)
+                spawnIni.SetBooleanValue("Settings", "UseMPAIBaseNodes", UseMPAIBaseNodes);
+
             if (Bases > -1)
                 spawnIni.SetBooleanValue("Settings", "Bases", Convert.ToBoolean(Bases));
         }
@@ -858,6 +865,9 @@ namespace DTAClient.Domain.Multiplayer
 
             if (Bases > -1)
                 section.SetIntValue("Bases", Bases);
+
+            if (UseMPAIBaseNodes)
+                section.SetBooleanValue("UseMPAIBaseNodes", UseMPAIBaseNodes);
 
             section.SetStringValue("LocalSize", string.Join(",", localSize));
             section.SetStringValue("Size", string.Join(",", actualSize));

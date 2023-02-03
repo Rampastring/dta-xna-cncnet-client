@@ -481,7 +481,7 @@ namespace DTAClient.DXGUI.Generic
             if (Array.TrueForAll(requiredFiles, filename => File.Exists(ProgramConstants.GamePath + filename)))
                 return;
 
-            if (Environment.Is64BitProcess)
+            if (Environment.Is64BitOperatingSystem)
             {
                 if (Array.TrueForAll(requiredFiles, filename => File.Exists("C:/Windows/SysWOW64/" + filename)))
                     return;

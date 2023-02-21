@@ -99,7 +99,7 @@ namespace ClientCore
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             ScrollDelay = new IntSetting(iniFile, OPTIONS, "ScrollDelay", 4);
             GameSpeed = new IntSetting(iniFile, OPTIONS, "GameSpeed", 1);
-            EnableSPAutoSave = new BoolSetting(iniFile, OPTIONS, nameof(EnableSPAutoSave), false);
+            EnableSPAutoSave = new BoolSetting(iniFile, OPTIONS, nameof(EnableSPAutoSave), true);
             PreloadMapPreviews = new BoolSetting(iniFile, VIDEO, "PreloadMapPreviews", false);
             ForceLowestDetailLevel = new BoolSetting(iniFile, VIDEO, "ForceLowestDetailLevel", false);
             MinimizeWindowsOnGameStart = new BoolSetting(iniFile, OPTIONS, "MinimizeWindowsOnGameStart", true);

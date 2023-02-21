@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-
+using Updater;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -1986,6 +1986,49 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             disableGameOptionUpdateBroadcast = false;
             OnGameOptionChanged();
+            return true;
+        }
+
+        protected string GetFMVsHash()
+        {
+            if (ClientConfiguration.Instance.ModMode)
+                return string.Empty;
+
+            var fmvsCustomComponent = CUpdater.CustomComponents.ToList().Find(cc => cc.ININame == "FMVs");
+            if (fmvsCustomComponent == null)
+                return string.Empty;
+
+            if (!File.Exists(ProgramConstants.GamePath + fmvsCustomComponent.LocalPath))
+                return string.Empty;
+
+            const int MaxLength = 8;
+
+            string value = fmvsCustomComponent.LocalIdentifier;
+            if (value.Length < MaxLength)
+                return value;
+
+            return value.Substring(0, MaxLength);
+        }
+
+        /// <summary>
+        /// Checks whether there is an in-game videos game option in the game lobby.
+        /// If there is, checks that it is allowed to be enabled (all players
+        /// have the same FMV custom component hash).
+        /// </summary>
+        protected bool IsFMVGameOptionStateOK()
+        {
+            var checkBox = CheckBoxes.Find(chk => chk.DependsOnCustomComponent == "FMVs");
+            if (checkBox == null || !checkBox.Checked)
+                return true;
+
+            // The check box is checked, make sure that all players have the same FMV hash
+            string hostHash = Players[0].FMVHash;
+            if (string.IsNullOrWhiteSpace(hostHash))
+                return false;
+
+            if (Players.Exists(p => p.FMVHash != hostHash))
+                return false;
+
             return true;
         }
 

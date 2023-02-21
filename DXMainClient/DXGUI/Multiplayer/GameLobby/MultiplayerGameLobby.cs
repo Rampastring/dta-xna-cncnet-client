@@ -843,6 +843,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
+            if (!IsFMVGameOptionStateOK())
+            {
+                FMVHashMismatchNotification();
+                return;
+            }
+
             HostLaunchGame();
         }
 
@@ -890,6 +896,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             if (Map != null)
                 AddNotice("Unable to launch game: this map cannot be played with more than " + Map.MaxPlayers + " players.");
+        }
+
+        protected virtual void FMVHashMismatchNotification()
+        {
+            AddNotice("You are unable to play with ingame videos enabled because one or more players do not have the latest version of the \"Ingame videos\" custom component installed.", Color.Yellow);
+            AddNotice("To play, please disable the game option for in-game videos.", Color.Yellow);
         }
 
         public virtual void Clear()

@@ -38,6 +38,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const string LAUNCH_GAME_COMMAND = "LAUNCH";
         private const string FILE_HASH_COMMAND = "FHASH";
         private const string DICE_ROLL_COMMAND = "DR";
+        private const string FMV_HASH_COMMAND = "CCHSH";
 
         public LANGameLobby(WindowManager windowManager, string iniName, 
             TopBar topBar, List<GameMode> GameModes, LANColor[] chatColors, MapLoader mapLoader, DiscordHandler discordHandler) : 
@@ -53,6 +54,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 new NoParamCommandHandler(PLAYER_QUIT_COMMAND, HandlePlayerQuit),
                 new StringCommandHandler(PLAYER_READY_REQUEST, GameHost_HandleReadyRequest),
                 new StringCommandHandler(FILE_HASH_COMMAND, HandleFileHashCommand),
+                new StringCommandHandler(FMV_HASH_COMMAND, HandleFMVHashCommand),
                 new StringCommandHandler(DICE_ROLL_COMMAND, Host_HandleDiceRoll),
             };
 
@@ -77,16 +79,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             if (client != null && client.Connected)
                 Clear();
-        }
-
-        private void HandleFileHashCommand(string sender, string fileHash)
-        {
-            if (fileHash != localFileHash)
-                AddNotice(sender + " has modified game files! They could be cheating!");
-
-            PlayerInfo pInfo = Players.Find(p => p.Name == sender);
-
-            pInfo.Verified = true;
         }
 
         public event EventHandler<LobbyNotificationEventArgs> LobbyNotification;
@@ -167,6 +159,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             var fhc = new FileHashCalculator();
             fhc.CalculateHashes(GameModes);
             SendMessageToHost(FILE_HASH_COMMAND + " " + fhc.GetCompleteHash());
+            SendMessageToHost(FMV_HASH_COMMAND + " " + GetFMVsHash());
             ResetAutoReadyCheckbox();
         }
 
@@ -1069,6 +1062,22 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private void Host_HandleDiceRoll(string sender, string result)
         {
             BroadcastMessage($"{DICE_ROLL_COMMAND} {sender}{ProgramConstants.LAN_DATA_SEPARATOR}{result}");
+        }
+
+        private void HandleFileHashCommand(string sender, string fileHash)
+        {
+            if (fileHash != localFileHash)
+                AddNotice(sender + " has modified game files! They could be cheating!");
+
+            PlayerInfo pInfo = Players.Find(p => p.Name == sender);
+
+            pInfo.Verified = true;
+        }
+
+        private void HandleFMVHashCommand(string sender, string fmvHash)
+        {
+            PlayerInfo pInfo = Players.Find(p => p.Name == sender);
+            pInfo.FMVHash = fmvHash;
         }
 
         private void Client_HandleDiceRoll(string data)

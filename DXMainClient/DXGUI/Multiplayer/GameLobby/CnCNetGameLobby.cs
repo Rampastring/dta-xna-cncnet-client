@@ -38,6 +38,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const string CHEAT_DETECTED_MESSAGE = "CD";
         private const string DICE_ROLL_MESSAGE = "DR";
         private const string CHANGE_TUNNEL_SERVER_MESSAGE = "CHTNL";
+        private const string FMVS_HASH_MESSAGE = "CCHSH";
+        private const string FMV_HASH_MISMATCH_NOTIFICATION = "CCHSHMM";
 
         public CnCNetGameLobby(WindowManager windowManager, string iniName,
             TopBar topBar, List<GameMode> GameModes, CnCNetManager connectionManager,
@@ -61,6 +63,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 new NotificationHandler("GETREADY", HandleNotification, GetReadyNotification),
                 new NotificationHandler("INSFSPLRS", HandleNotification, InsufficientPlayersNotification),
                 new NotificationHandler("TMPLRS", HandleNotification, TooManyPlayersNotification),
+                new NotificationHandler(FMV_HASH_MISMATCH_NOTIFICATION, HandleNotification, FMVHashMismatchNotification),
                 new NotificationHandler("CLRS", HandleNotification, SharedColorsNotification),
                 new NotificationHandler("SLOC", HandleNotification, SharedStartingLocationNotification),
                 new NotificationHandler("LCKGME", HandleNotification, LockGameNotification),
@@ -72,6 +75,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 new NoParamCommandHandler(MAP_SHARING_DISABLED_MESSAGE, HandleMapSharingBlockedMessage),
                 new NoParamCommandHandler("RETURN", ReturnNotification),
                 new IntCommandHandler("TNLPNG", HandleTunnelPing),
+                new StringCommandHandler(FMVS_HASH_MESSAGE, HandleFMVHashMessage),
                 new StringCommandHandler("FHSH", FileHashNotification),
                 new StringCommandHandler("MM", CheaterNotification),
                 new StringCommandHandler(DICE_ROLL_MESSAGE, HandleDiceRollResult),
@@ -246,6 +250,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             WindowManager.SelectedControl = tbChatInput;
             ResetAutoReadyCheckbox();
             UpdatePing();
+            UpdateFMVsHash();
             UpdateDiscordPresence(true);
         }
 
@@ -261,6 +266,18 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 pInfo.Ping = tunnelHandler.CurrentTunnel.PingInMs;
                 UpdatePlayerPingIndicator(pInfo);
+            }
+        }
+
+        private void UpdateFMVsHash()
+        {
+            channel.SendCTCPMessage(FMVS_HASH_MESSAGE + " " + GetFMVsHash(), QueuedMessageType.SYSTEM_MESSAGE, 10);
+            string fmvHash = GetFMVsHash();
+
+            PlayerInfo pInfo = Players.Find(p => p.Name.Equals(ProgramConstants.PLAYERNAME));
+            if (pInfo != null)
+            {
+                pInfo.FMVHash = fmvHash;
             }
         }
 
@@ -487,6 +504,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
             else
             {
+                Players[0].FMVHash = GetFMVsHash();
                 Players[0].Ready = true;
                 CopyPlayerDataToUI();
             }
@@ -1306,6 +1324,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 channel.SendCTCPMessage("TMPLRS", QueuedMessageType.GAME_NOTIFICATION_MESSAGE, 0);
         }
 
+        protected override void FMVHashMismatchNotification()
+        {
+            base.FMVHashMismatchNotification();
+
+            if (IsHost)
+                channel.SendCTCPMessage(FMV_HASH_MISMATCH_NOTIFICATION, QueuedMessageType.GAME_NOTIFICATION_MESSAGE, 0);
+        }
+
         protected override void SharedColorsNotification()
         {
             base.SharedColorsNotification();
@@ -1365,6 +1391,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 pInfo.Ping = ping;
                 UpdatePlayerPingIndicator(pInfo);
+            }
+        }
+
+        private void HandleFMVHashMessage(string sender, string fmvHash)
+        {
+            PlayerInfo pInfo = Players.Find(p => p.Name.Equals(sender));
+            if (pInfo != null)
+            {
+                pInfo.FMVHash = fmvHash;
             }
         }
 

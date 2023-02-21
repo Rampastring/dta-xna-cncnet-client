@@ -80,16 +80,13 @@ namespace DTAConfig.OptionPanels
             base.Load();
 
             int componentIndex = 0;
-            bool buttonEnabled = false;
-
             if (CUpdater.CustomComponents == null)
                 return;
 
             foreach (CustomComponent c in CUpdater.CustomComponents)
             {
                 string buttonText = "Not Available";
-                buttonEnabled = false;
-
+                bool buttonEnabled = false;
                 if (File.Exists(ProgramConstants.GamePath + c.LocalPath))
                 {
                     buttonText = "Uninstall";

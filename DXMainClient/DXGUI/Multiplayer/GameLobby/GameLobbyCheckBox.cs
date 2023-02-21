@@ -1,9 +1,7 @@
 ﻿using System;
 using Rampastring.Tools;
 using Rampastring.XNAUI;
-using ClientCore;
 using ClientGUI;
-using System.Collections.Generic;
 using DTAClient.Domain.Multiplayer;
 using Rampastring.XNAUI.XNAControls;
 
@@ -57,6 +55,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         public int DisallowedSideIndex { get; set; } = -1;
 
         public bool AllowChanges { get; set; } = true;
+
+        public string DependsOnCustomComponent { get; set; }
 
         public CheckBoxMapScoringMode MapScoringMode { get; private set; } = CheckBoxMapScoringMode.Irrelevant;
 
@@ -128,6 +128,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     return;
                 case "MapScoringMode":
                     MapScoringMode = (CheckBoxMapScoringMode)Enum.Parse(typeof(CheckBoxMapScoringMode), value);
+                    return;
+                case "DependsOnCustomComponent":
+                    DependsOnCustomComponent = value;
                     return;
             }
 

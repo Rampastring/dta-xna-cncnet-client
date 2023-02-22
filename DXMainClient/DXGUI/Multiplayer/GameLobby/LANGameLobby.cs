@@ -269,7 +269,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Players.Add(lpInfo);
 
             if (IsHost && Players.Count == 1)
+            {
                 Players[0].Ready = true;
+                Players[0].FMVHash = GetFMVsHash();
+            }
 
             lpInfo.MessageReceived += LpInfo_MessageReceived;
             lpInfo.ConnectionLost += LpInfo_ConnectionLost;

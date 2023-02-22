@@ -146,6 +146,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 this.client = client;
             }
 
+            CustomComponentHandler.Instance.CustomComponentModified += CustomComponentHandler_CustomComponentModified;
+
             new Thread(HandleServerCommunication).Start();
 
             if (IsHost)
@@ -154,13 +156,29 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             WindowManager.SelectedControl = tbChatInput;
         }
 
+        private void CustomComponentHandler_CustomComponentModified(object sender, CustomComponentModifiedEventArgs e)
+        {
+            if (e.CustomComponentName == "FMVs")
+            {
+                if (IsHost)
+                    Players[0].FMVHash = GetFMVsHash();
+                else
+                    SendFMVHash();
+            }
+        }
+
         public void PostJoin()
         {
             var fhc = new FileHashCalculator();
             fhc.CalculateHashes(GameModes);
             SendMessageToHost(FILE_HASH_COMMAND + " " + fhc.GetCompleteHash());
-            SendMessageToHost(FMV_HASH_COMMAND + " " + GetFMVsHash());
+            SendFMVHash();
             ResetAutoReadyCheckbox();
+        }
+
+        private void SendFMVHash()
+        {
+            SendMessageToHost(FMV_HASH_COMMAND + " " + GetFMVsHash());
         }
 
         #region Server code
@@ -438,6 +456,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         public override void Clear()
         {
             base.Clear();
+
+            CustomComponentHandler.Instance.CustomComponentModified -= CustomComponentHandler_CustomComponentModified;
 
             if (IsHost)
             {

@@ -189,6 +189,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             channel.UserNameChanged += Channel_UserNameChanged;
             channel.UserListReceived += Channel_UserListReceived;
 
+            CustomComponentHandler.Instance.CustomComponentModified += CustomComponentHandler_CustomComponentModified;
+
             this.hostName = hostName;
             this.playerLimit = playerLimit;
             this.isCustomPassword = isCustomPassword;
@@ -213,6 +215,17 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             connectionManager.Disconnected += ConnectionManager_Disconnected;
 
             Refresh(isHost);
+        }
+
+        private void CustomComponentHandler_CustomComponentModified(object sender, CustomComponentModifiedEventArgs e)
+        {
+            if (e.CustomComponentName == "FMVs")
+            {
+                if (IsHost)
+                    Players[0].FMVHash = GetFMVsHash();
+                else
+                    UpdateFMVsHash();
+            }
         }
 
         private void TunnelHandler_CurrentTunnelPinged(object sender, EventArgs e) => UpdatePing();
@@ -335,6 +348,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 connectionManager.RemoveChannel(channel);
             }
+
+            CustomComponentHandler.Instance.CustomComponentModified -= CustomComponentHandler_CustomComponentModified;
 
             Disable();
             connectionManager.ConnectionLost -= ConnectionManager_ConnectionLost;

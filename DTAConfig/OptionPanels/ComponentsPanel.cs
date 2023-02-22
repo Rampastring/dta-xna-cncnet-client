@@ -19,9 +19,9 @@ namespace DTAConfig.OptionPanels
         {
         }
 
-        List<XNAClientButton> installationButtons = new List<XNAClientButton>();
+        private List<XNAClientButton> installationButtons = new List<XNAClientButton>();
 
-        bool downloadCancelled = false;
+        private bool downloadCancelled = false;
 
         public override void Initialize()
         {
@@ -133,6 +133,9 @@ namespace DTAConfig.OptionPanels
                 {
                     File.Delete(ProgramConstants.GamePath + cc.LocalPath);
                     btn.Text = "Install";
+
+                    CustomComponentHandler.Instance.BroadcastCustomComponentModifiedEvent(cc.ININame);
+
                     return;
                 }
 
@@ -242,6 +245,9 @@ namespace DTAConfig.OptionPanels
             {
                 XNAMessageBox.Show(WindowManager, "Download Completed",
                     string.Format("Download of optional component {0} completed succesfully.", cc.GUIName));
+
+                CustomComponentHandler.Instance.BroadcastCustomComponentModifiedEvent(cc.ININame);
+
                 btn.Text = "Uninstall";
             }
         }

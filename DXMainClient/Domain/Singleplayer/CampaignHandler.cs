@@ -310,7 +310,7 @@ namespace DTAClient.Domain.Singleplayer
                 if (UserINISettings.Instance.GameSpeed == 0)
                     UserINISettings.Instance.GameSpeed.Value = 1;
 
-                swriter.WriteLine("CampaignID=" + mission.Index);
+                swriter.WriteLine("CampaignID=" + (-1) /*mission.Index, meh, we handle our own campaign progression so the game doesn't need to know*/);
                 swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
                 swriter.WriteLine("Firestorm=" + mission.RequiredAddon);
                 swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.Side));

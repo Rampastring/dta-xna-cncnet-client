@@ -44,6 +44,7 @@ namespace ClientCore.Statistics.GameParsers
 
                 bool sawCompletion = false;
                 int numPlayersFound = 0;
+                int averageFPS = 0;
 
                 while ((line = reader.ReadLine()) != null)
                 {
@@ -102,11 +103,13 @@ namespace ClientCore.Statistics.GameParsers
                     {
                         // Game loop finished. Average FPS = <integer>
                         string fpsString = line.Substring(34);
-                        Statistics.AverageFPS = Int32.Parse(fpsString);
+                        averageFPS = int.Parse(fpsString);
                     }
 
                     if (currentPlayer == null || line.Length < 1)
                         continue;
+
+                    Logger.Log("Parsing stats for player " + currentPlayer.Name);
 
                     line = line.Substring(1);
 
@@ -146,7 +149,12 @@ namespace ClientCore.Statistics.GameParsers
                     }
                 }
 
-                Statistics.SawCompletion = sawCompletion;
+                if (sawCompletion || !Statistics.SawCompletion)
+                {
+                    Logger.Log("Applying completion statistics and average FPS.");
+                    Statistics.AverageFPS = averageFPS;
+                    Statistics.SawCompletion = sawCompletion;
+                }
             }
             catch (Exception ex)
             {

@@ -586,7 +586,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
         private void SendMessageToHost(string message)
         {
-            if (!client.Connected)
+            if (client == null || !client.Connected)
                 return;
 
             byte[] buffer = encoding.GetBytes(

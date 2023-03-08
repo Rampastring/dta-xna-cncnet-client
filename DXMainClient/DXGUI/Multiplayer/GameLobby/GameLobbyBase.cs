@@ -2004,6 +2004,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             const int MaxLength = 8;
 
             string value = fmvsCustomComponent.LocalIdentifier;
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
             if (value.Length < MaxLength)
                 return value;
 

@@ -296,7 +296,9 @@ namespace DTAClient.DXGUI.Multiplayer
             Logger.Log("Cleaning up LAN player " + lpInfo.Name);
             Players.Remove(lpInfo);
             lpInfo.MessageReceived -= LpInfo_MessageReceived;
-            lpInfo.TcpClient.Close();
+
+            if (lpInfo.TcpClient != null && lpInfo.TcpClient.Connected)
+                lpInfo.TcpClient.Close();
         }
 
         #endregion
@@ -392,7 +394,8 @@ namespace DTAClient.DXGUI.Multiplayer
             if (IsHost)
             {
                 BroadcastMessage(PLAYER_QUIT_COMMAND);
-                Players.ForEach(p => CleanUpPlayer((LANPlayerInfo)p));
+                var playersCopy = new List<PlayerInfo>(Players);
+                playersCopy.ForEach(p => CleanUpPlayer((LANPlayerInfo)p));
                 Players.Clear();
                 listener.Stop();
             }
@@ -401,7 +404,7 @@ namespace DTAClient.DXGUI.Multiplayer
                 SendMessageToHost(PLAYER_QUIT_COMMAND);
             }
 
-            if (client.Connected)
+            if (client != null && client.Connected)
             {
                 client.Close();
             }

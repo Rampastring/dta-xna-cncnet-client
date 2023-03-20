@@ -83,6 +83,7 @@ namespace DTAClient.Domain.Singleplayer
             UIDisabledOption = iniSection.GetStringValue(nameof(UIDisabledOption), UIDisabledOption);
             DisableOptionFreeUnlock = iniSection.GetBooleanValue(nameof(DisableOptionFreeUnlock), DisableOptionFreeUnlock);
             HideIfNotEnabledUnlocked = iniSection.GetBooleanValue(nameof(HideIfNotEnabledUnlocked), HideIfNotEnabledUnlocked);
+            ToolTip = iniSection.GetStringValue(nameof(ToolTip), ToolTip);
         }
     }
 }

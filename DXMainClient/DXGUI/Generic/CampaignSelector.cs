@@ -169,6 +169,7 @@ namespace DTAClient.DXGUI.Generic
 
         private XNALabel lblPreconditionsHeader;
         private XNALabel[] globalVariableNames = new XNALabel[MAX_GLOBAL_COUNT];
+        private ToolTip[] globalVariableToolTips = new ToolTip[MAX_GLOBAL_COUNT];
         private XNADropDown[] globalVariableValues = new XNADropDown[MAX_GLOBAL_COUNT];
 
         private CheaterWindow cheaterWindow;
@@ -286,6 +287,8 @@ namespace DTAClient.DXGUI.Generic
                 globalVariableNames[i].AnchorPoint = new Vector2(globalVariableValues[i].X, globalVariableValues[i].Y - globalVariableNames[i].Height);
                 AddChild(globalVariableNames[i]);
                 globalVariableNames[i].Disable();
+
+                globalVariableToolTips[i] = new ToolTip(WindowManager, globalVariableNames[i]);
 
                 y = globalVariableNames[i].Y;
             }
@@ -560,6 +563,7 @@ namespace DTAClient.DXGUI.Generic
                     globalVariableNames[i].Text = global.UIName;
                     globalVariableNames[i].TextColor = UISettings.ActiveSettings.TextColor;
                     globalVariableNames[i].Enable();
+                    globalVariableToolTips[i].Text = global.ToolTip;
 
                     bool disabledSelectable = global.IsDisabledUnlocked || global.DisableOptionFreeUnlock;
                     bool enabledSelectable = global.IsEnabledUnlocked;
@@ -597,6 +601,7 @@ namespace DTAClient.DXGUI.Generic
                         globalVariableValues[i].Items[1].Text = "-";
                         globalVariableNames[i].Text = "Unknown Condition (not yet unlocked)";
                         globalVariableNames[i].TextColor = UISettings.ActiveSettings.DisabledItemColor;
+                        globalVariableToolTips[i].Text = string.Empty;
                     }
 
                     globalVariableValues[i].Enable();

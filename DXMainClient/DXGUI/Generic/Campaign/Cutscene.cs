@@ -16,6 +16,7 @@
         CR08,
         CR08Victory,
         CRA09,
-        CRA09Victory
+        CRA09Victory,
+        CRA10
     }
 }

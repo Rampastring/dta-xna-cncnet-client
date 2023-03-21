@@ -32,6 +32,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             secondhand = AssetLoader.LoadSong("Story/Music/2nd_hand");
             terminat = AssetLoader.LoadSong("Story/Music/terminat");
             chrg226m = AssetLoader.LoadSong("Story/Music/chrg226m");
+            vector1a = AssetLoader.LoadSong("Story/Music/vector1a");
         }
 
         private readonly EnhancedSoundEffect bleep9;
@@ -51,6 +52,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly Song secondhand;
         private readonly Song terminat;
         private readonly Song chrg226m;
+        private readonly Song vector1a;
 
         private const double crRAdisplayX = 4.0;
         private const double crRAdisplayY = 20.0;
@@ -111,6 +113,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRA09();
                 case Cutscene.CRA09Victory:
                     return CRA09Victory();
+                case Cutscene.CRA10:
+                    return CRA10();
             }
 
             return null;
@@ -144,6 +148,133 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (sound != null)
                 sound.Play();
+        }
+
+        private List<Phase> CRA10()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 0, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(vector1a);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Toikka has been making progress on the frontline again with the help of the Sensor Arrays that have prevented Nod flanks.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 1, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Now we just need to push the enemy, destroy them and finish the job.";
+                },
+                null,
+                null,
+                storyDisplay => AddRADisplay(storyDisplay, 2)));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CRA10/map.png", 3);
+                    storyDisplay.ConversationDisplay.ConversationText = "A small city, Karhumäki, has become the primary support hub of the Communist scum. Aside from that, they mostly control some surrounding countryside.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CRA10/arrows.png", 4);
+                    storyDisplay.ConversationDisplay.ConversationText = "They are still also receiving major support from Russian neo-communists who have taken inspiration and are crossing our border, joining the enemy as mercenaries.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI is shifting resources to counter them to make sure there won't be a larger Communist uprising in Russia, so we might have to rely mostly on our own resources in these final fights.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Considering your latest mission, the Communist scum has allowed Nod to poison the countryside - the very land they say they are \"liberating\" - with Tiberium to fund their war effort.";
+                    AddRADisplayImage(storyDisplay, "Story/CRA10/tiberium.png", 5);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "To speed up our victory, I need you to set up a new base on a flank behind the frontline to disturb the enemy's Tiberium harvesting operations.";
+                    AddRADisplayImage(storyDisplay, "Story/CRA10/shore.png", 6);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(3);
+                    storyDisplay.RemoveStoryImageById(4);
+                    storyDisplay.RemoveStoryImageById(5);
+                },
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Build defenses and hold the position against the enemy's counterattack. That is all that is required - it will open up another front and give us a great position to launch further operations from in the future.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(6),
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I'll soon be off at negotiations with GDI for some days. I'll be waiting news of your victory.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(1).AlphaRate = -2.0f; toney4.Play(); }));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRA09Victory()
@@ -325,7 +456,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     country4.Play();
 
-                    TryPlaySong(secondhand);
+                    TryPlaySong(vector1a);
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
                 },
                 null,

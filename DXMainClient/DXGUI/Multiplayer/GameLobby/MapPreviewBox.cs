@@ -375,7 +375,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             List<Point> startingLocations = Map.GetStartingLocationPreviewCoords(new Point(previewTexture.Width, previewTexture.Height));
 
-            for (int i = 0; i < startingLocations.Count && i < Map.MaxPlayers; i++)
+            for (int i = 0; i < startingLocations.Count && i < MAX_STARTING_LOCATIONS; i++)
             {
                 PlayerLocationIndicator indicator = startingLocationIndicators[i];
 
@@ -392,7 +392,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 startingLocationIndicators[i].Disable();
             }
-
 
             foreach (var mapExtraTexture in Map.GetExtraMapPreviewTextures())
             {

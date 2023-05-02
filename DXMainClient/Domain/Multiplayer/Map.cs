@@ -110,6 +110,13 @@ namespace DTAClient.Domain.Multiplayer
         public int MaxPlayers { get; private set; }
 
         /// <summary>
+        /// The number of starting locations on the map.
+        /// Usually equal to MaxPlayers, but this property offers a
+        /// possibility to override it.
+        /// </summary>
+        public int StartingLocationCount { get; private set; } = -1;
+
+        /// <summary>
         /// The minimum amount of players supported by the map.
         /// </summary>
         public int MinPlayers { get; private set; }
@@ -320,6 +327,7 @@ namespace DTAClient.Domain.Multiplayer
 
                 MinPlayers = section.GetIntValue("MinPlayers", 0);
                 MaxPlayers = section.GetIntValue("MaxPlayers", 0);
+                StartingLocationCount = section.GetIntValue(nameof(StartingLocationCount), MaxPlayers);
                 EnforceMaxPlayers = section.GetBooleanValue("EnforceMaxPlayers", false);
                 Briefing = section.GetStringValue("Briefing", string.Empty).Replace("@", Environment.NewLine);
                 SHA1 = Utilities.CalculateSHA1ForFile(CompleteFilePath);
@@ -501,9 +509,9 @@ namespace DTAClient.Domain.Multiplayer
                 localSize = iniFile.GetStringValue("Map", "LocalSize", "0,0,0,0").Split(',');
                 actualSize = iniFile.GetStringValue("Map", "Size", "0,0,0,0").Split(',');
 
-                int startingWaypointCount = basicSection.GetIntValue("StartingWaypointCount", MaxPlayers);
+                StartingLocationCount = basicSection.GetIntValue(nameof(StartingLocationCount), MaxPlayers);
 
-                for (int i = 0; i < MAX_PLAYERS && i < startingWaypointCount; i++)
+                for (int i = 0; i < MAX_PLAYERS && i < StartingLocationCount; i++)
                 {
                     string waypoint = mapIni.GetStringValue("Waypoints", i.ToString(), string.Empty);
 
@@ -840,6 +848,7 @@ namespace DTAClient.Domain.Multiplayer
             section.SetStringValue("Description", Name);
             section.SetIntValue("MaxPlayers", MaxPlayers);
             section.SetIntValue("MinPlayers", MinPlayers);
+            section.SetIntValue("StartingLocationCount", StartingLocationCount);
             section.SetBooleanValue("EnforceMaxPlayers", EnforceMaxPlayers);
             section.SetStringValue("Author", Author);
             section.SetStringValue("PreviewPath", PreviewPath);

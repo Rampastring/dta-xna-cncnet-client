@@ -832,7 +832,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     return;
             }
 
-            if (start < 0 || start > Map.MaxPlayers)
+            if (start < 0 || start > Map.StartingLocationCount)
                 return;
 
             if (team < 0 || team > 4)

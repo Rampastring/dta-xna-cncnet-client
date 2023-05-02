@@ -14,7 +14,7 @@ namespace DTAClient.Domain.Multiplayer
         public const string MAP_FILE_EXTENSION = ".map";
         private const string CUSTOM_MAPS_DIRECTORY = "Maps/Custom";
 
-        private const int MAP_CACHE_VERSION = 6;
+        private const int MAP_CACHE_VERSION = 7;
 
         /// <summary>
         /// List of game modes.
@@ -289,11 +289,6 @@ namespace DTAClient.Domain.Multiplayer
                         Logger.Log("AddMapToGameModes: Added map " + map.Name + " to game mode " + gm.Name);
                 }
             }
-        }
-
-        public void WriteCustomMapCache()
-        {
-
         }
     }
 }

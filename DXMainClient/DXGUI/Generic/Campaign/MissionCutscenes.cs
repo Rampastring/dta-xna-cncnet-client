@@ -119,6 +119,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRA11();
                 case Cutscene.CRA11Victory:
                     return CRA11Victory();
+                case Cutscene.CRA12:
+                    return CRA12();
+                case Cutscene.CRA12Victory:
+                    return CRA12Victory();
+                case Cutscene.CRA13:
+                    return CRA13();
+                case Cutscene.CRA13Victory:
+                    return CRA13Victory();
             }
 
             return null;
@@ -152,6 +160,466 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (sound != null)
                 sound.Play();
+        }
+
+        private List<Phase> CRA13Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With the border back in Government control, the situation is now clear.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA13/victorybg01.png", 1);
+                    country4.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Only one area with enemy forces remains. It is the main base that Nod has set up on the territory of the Government.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Our next operation, a direct assault there, will end this conflict once and for all.";
+                },
+                null,
+                null,
+                null));
+
+            var coCommandersForcesSavedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_A_CO_COMMANDER_FORCES_SAVED");
+            if (coCommandersForcesSavedVariable != null && coCommandersForcesSavedVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.IsCentered = false;
+                        TryPlaySong(secondhand);
+                        storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                        storyDisplay.AddSimpleStoryImage("Story/CRA13/victorybg02.png", 2);
+                        storyDisplay.ConversationDisplay.ConversationText = "Toikka has been avoiding you after your victory.";
+                    },
+                    null,
+                    null,
+                    storyDisplay => storyDisplay.RemoveStoryImageById(1)));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Usually he has congratulated some time after your successes, but this time, you haven't received a word from him.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "While saving his troops was clearly the right choice tactically and morally, he seems unhappy with his spreading reputation of being less competent than you.";
+                    },
+                    null,
+                    null,
+                    null));
+            }
+
+            return phases;
+        }
+
+        private List<Phase> CRA13()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "CONFLICT NEWS";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA13/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(chrg226m);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "The joint Government-GDI covert operation on Karhumäki took the Communists by surprise.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA13/bg02.png", 2);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With their main support hub fallen, their frontlines quickly collapsed.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Many soldiers routed and hastily abandoned their positions, even leaving behind their equipment. Others surrendered upon hearing the news.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA13/bg03.png", 3);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Communist and Nod forces together only have two bases left in the Government's territory.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA13/bg04.png", 4);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The end of the war is in sight.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 5, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(terminat);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Well, that went perfectly according to plan.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 6, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Now we just need to push the Commies out from the border, and then deal with the last Nod base.";
+                },
+                null,
+                null,
+                storyDisplay => AddRADisplay(storyDisplay, 7)));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The enemy is receiving mercenaries, Russian Communists sympathetic with our enemy, through the border area.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CRA13/borderriver.png", 8);
+                    storyDisplay.ConversationDisplay.ConversationText = "They have been training and giving weapons to this scum and then throwing them against us.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Take a force, attack the border sector, and destroy the bridges and barracks on the border river.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Toikka's forces are also there, although they've stumbled into resistance.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(8).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(8),
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Let's see if you will do any better.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(7).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f; toney4.Play(); }));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
+        private List<Phase> CRA12Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With the victory at Karhumäki, the neo-Soviets' frontline collapsed.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA12/victorybg01.png", 1);
+                    country4.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "A military parade was held at the city by the Government. Officially, the local populace was said to be excited about the liberation, but there were also many thinly veiled signs of disapproval.";
+                },
+                null,
+                null,
+                null));
+
+            var nodCityBaseDestroyedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_A_NOD_CITY_BASE_DESTROYED");
+            if (nodCityBaseDestroyedVariable != null && !nodCityBaseDestroyedVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Mixed GDI and Government forces spent some time pushing Nod out of the city. Reportedly, Nod forces only offered light resistance, and soon retreated to the countryside.";
+                    },
+                    null,
+                    null,
+                    null));
+            }
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The only area of the republic that remains under Communist control is the border region, from where companies of Russian mercenaries are still arriving to support the Communist side.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "There is also a significant Nod base to the north of the city.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov, head of the republic, assures that the fighting will continue until the whole country has been liberated.";
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
+        private List<Phase> CRA12()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 0, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(vector1a);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "What an amazing victory you've brought to us. The Commies are really stretching themselves at the frontline after losing so much equipment.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 1, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They have left their main city underdefended. This has given us a golden opportunity to strike and capture it, without needing to level it in heavy urban combat.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Even though that could also be a sight to see, especially if anyone else has intentions to challenge us in the future...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Anyway.\r\n\r\nWe have carefully devised a plan for a multi-stage operation for taking the town. It is complex, but realistic.";
+                },
+                null,
+                null,
+                storyDisplay => AddRADisplay(storyDisplay, 2)));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CRA12/shoreline.png", 3);
+                    storyDisplay.ConversationDisplay.ConversationText = "Take control of a group of special forces that we will bring in at night by helicopter.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "There is a civilian bus driver who is loyal to us. He is waiting for your forces and he has offered his services to us. Board his bus and he will take the troops near a civilian radar in the center of the city.";
+                },
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRA12/radar.png", 4),
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(3)));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Capture the radar, allowing us to push our own propaganda on the civilians and confuse the enemy's communications.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Once done, we will send in another batch of special forces. There is a railway that we want access into, but it is defended by the enemy.";
+                },
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRA12/railway.png", 5),
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(4)));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Assault the railway defenses with your new batch of special forces and destroy the SAM sites. GDI will follow with A-10s to take out their Tesla Coils.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "That will allow us to deliver a batch of vehicles to the city center by train.";
+                },
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRA12/trains.png", 6),
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(5)));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Proceed to take control of the town. Destroy the enemy's command centers and capture the City Council building.";
+                },
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRA12/citycouncil.png", 7),
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(6)));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I will be preparing the parade for our victory.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(7).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(7),
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I trust you to make sure my work does not go to waste.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(1).AlphaRate = -2.0f; toney4.Play(); }));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRA11Victory()
@@ -489,13 +957,22 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
+                    storyDisplay.ConversationDisplay.ConversationText = "The enemy is not expecting this move, which should give you some time for setting up your base before they detect your presence. Use the time to establish a good foothold on the shore.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
                     storyDisplay.ConversationDisplay.ConversationText = "I'll soon be off at negotiations with GDI for some days. I'll be waiting news of your victory.";
                 },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(1).AlphaRate = -2.0f; toney4.Play(); }));
 
-            phases.Add(new Phase(10,
+            phases.Add(new Phase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.TextColor = Color.White;

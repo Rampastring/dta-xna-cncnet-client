@@ -20,5 +20,9 @@
         CRA10,
         CRA11,
         CRA11Victory,
+        CRA12,
+        CRA12Victory,
+        CRA13,
+        CRA13Victory
     }
 }

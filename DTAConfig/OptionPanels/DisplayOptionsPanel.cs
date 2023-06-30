@@ -31,6 +31,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkWindowedMode;
         private XNAClientCheckBox chkBorderlessWindowedMode;
         private XNAClientCheckBox chkBackBufferInVRAM;
+        private XNAClientCheckBox chkStretchMovies;
         private XNAClientPreferredItemDropDown ddClientResolution;
         private XNAClientCheckBox chkBorderlessClient;
         private XNAClientDropDown ddClientTheme;
@@ -60,7 +61,7 @@ namespace DTAConfig.OptionPanels
             var lblIngameResolution = new XNALabel(WindowManager);
             lblIngameResolution.Name = "lblIngameResolution";
             lblIngameResolution.ClientRectangle = new Rectangle(12, 14, 0, 0);
-            lblIngameResolution.Text = "In-game Resolution:";
+            lblIngameResolution.Text = "In-Game Resolution:";
 
             ddIngameResolution = new XNAClientDropDown(WindowManager);
             ddIngameResolution.Name = "ddIngameResolution";
@@ -156,6 +157,13 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.Bottom + 28, 0, 0);
             chkBackBufferInVRAM.Text = "Back Buffer in Video Memory" + Environment.NewLine +
                 "(lower performance, but is" + Environment.NewLine + "necessary on some systems)";
+
+            chkStretchMovies = new XNAClientCheckBox(WindowManager);
+            chkStretchMovies.Name = "chkStretchMovies";
+            chkStretchMovies.ClientRectangle = new Rectangle(
+                lblDetailLevel.X,
+                chkBackBufferInVRAM.Bottom + 28, 0, 0);
+            chkStretchMovies.Text = "Stretch Movies";
 
             var lblClientResolution = new XNALabel(WindowManager);
             lblClientResolution.Name = "lblClientResolution";
@@ -289,6 +297,7 @@ namespace DTAConfig.OptionPanels
             AddChild(chkWindowedMode);
             AddChild(chkBorderlessWindowedMode);
             AddChild(chkBackBufferInVRAM);
+            AddChild(chkStretchMovies);
             AddChild(chkBorderlessClient);
             AddChild(lblClientTheme);
             AddChild(ddClientTheme);
@@ -646,6 +655,7 @@ namespace DTAConfig.OptionPanels
             ddClientTheme.SelectedIndex = selectedThemeIndex > -1 ? selectedThemeIndex : 0;
 
             chkBackBufferInVRAM.Checked = !UserINISettings.Instance.BackBufferInVRAM;
+            chkStretchMovies.Checked = UserINISettings.Instance.StretchMovies;
 
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Tiberian Sun Client");
 
@@ -735,6 +745,7 @@ namespace DTAConfig.OptionPanels
             IniSettings.ClientTheme.Value = ddClientTheme.SelectedItem.Text;
 
             IniSettings.BackBufferInVRAM.Value = !chkBackBufferInVRAM.Checked;
+            IniSettings.StretchMovies.Value = chkStretchMovies.Checked;
 
             if (selectedRenderer != originalRenderer || 
                 !File.Exists(ProgramConstants.GamePath + selectedRenderer.ConfigFileName))

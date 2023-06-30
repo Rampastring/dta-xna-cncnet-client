@@ -42,14 +42,15 @@ namespace ClientCore
             const string WINDOWED_MODE_KEY = "Video.Windowed";
             BackBufferInVRAM = new BoolSetting(iniFile, VIDEO, "UseGraphicsPatch", true);
 
-            IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", 1024);
-            IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", 768);
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
             Renderer = new StringSetting(iniFile, "Compatibility", "Renderer", string.Empty);
+
+            IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", 1024);
+            IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", 768);
+            StretchMovies = new BoolSetting(iniFile, VIDEO, "StretchMovies", false);
             WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
             BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);
-
             ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", Screen.PrimaryScreen.Bounds.Width);
             ClientResolutionY = new IntSetting(iniFile, VIDEO, "ClientResolutionY", Screen.PrimaryScreen.Bounds.Height);
             BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", true);
@@ -68,6 +69,7 @@ namespace ClientCore
             TargetLines = new BoolSetting(iniFile, OPTIONS, "UnitActionLines", true);
             ScrollCoasting = new IntSetting(iniFile, OPTIONS, "ScrollMethod", 0);
             Tooltips = new BoolSetting(iniFile, OPTIONS, "ToolTips", true);
+            FilterBandBoxSelection = new BoolSetting(iniFile, OPTIONS, "FilterBandBoxSelection", true);
             ShowHiddenObjects = new BoolSetting(iniFile, OPTIONS, "ShowHidden", true);
             MoveToUndeploy = new BoolSetting(iniFile, OPTIONS, "MoveToUndeploy", true);
             TextBackgroundColor = new IntSetting(iniFile, OPTIONS, "TextBackgroundColor", 0);
@@ -116,6 +118,7 @@ namespace ClientCore
 
         public IntSetting IngameScreenWidth { get; private set; }
         public IntSetting IngameScreenHeight { get; private set; }
+        public BoolSetting StretchMovies { get; private set; }
         public StringSetting ClientTheme { get; private set; }
         public IntSetting DetailLevel { get; private set; }
         public StringSetting Renderer { get; private set; }
@@ -148,6 +151,7 @@ namespace ClientCore
         public BoolSetting TargetLines { get; private set; }
         public IntSetting ScrollCoasting { get; private set; }
         public BoolSetting Tooltips { get; private set; }
+        public BoolSetting FilterBandBoxSelection { get; private set; }
         public BoolSetting ShowHiddenObjects { get; private set; }
         public BoolSetting MoveToUndeploy { get; private set; }
         public IntSetting TextBackgroundColor { get; private set; }

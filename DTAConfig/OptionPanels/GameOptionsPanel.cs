@@ -26,6 +26,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkTargetLines;
         private XNAClientCheckBox chkScrollCoasting;
         private XNAClientCheckBox chkTooltips;
+        private XNAClientCheckBox chkFilterBandBoxSelection;
 
         private XNAClientCheckBox chkAltToUndeploy;
         private XNAClientCheckBox chkBlackChatBackground;
@@ -41,6 +42,7 @@ namespace DTAConfig.OptionPanels
             base.Initialize();
 
             Name = "GameOptionsPanel";
+            const int CheckBoxSpacing = 13;
 
             var lblScrollRate = new XNALabel(WindowManager);
             lblScrollRate.Name = "lblScrollRate";
@@ -74,47 +76,54 @@ namespace DTAConfig.OptionPanels
                 lblScrollRate.X,
                 trbScrollRate.Bottom + 20, 0, 0);
             chkScrollCoasting.Text = "Scroll Coasting";
+            AddChild(chkScrollCoasting);
 
             chkTargetLines = new XNAClientCheckBox(WindowManager);
             chkTargetLines.Name = "chkTargetLines";
             chkTargetLines.ClientRectangle = new Rectangle(
                 lblScrollRate.X,
-                chkScrollCoasting.Bottom + 24, 0, 0);
+                chkScrollCoasting.Bottom + CheckBoxSpacing, 0, 0);
             chkTargetLines.Text = "Target Lines";
+            AddChild(chkTargetLines);
 
             chkTooltips = new XNAClientCheckBox(WindowManager);
             chkTooltips.Name = "chkTooltips";
             chkTooltips.Text = "Tooltips";
-
-            var lblPlayerName = new XNALabel(WindowManager);
-            lblPlayerName.Name = "lblPlayerName";
-            lblPlayerName.Text = "Player Name*:";
-
             chkTooltips.ClientRectangle = new Rectangle(
                 lblScrollRate.X,
-                chkTargetLines.Bottom + 24, 0, 0);
+                chkTargetLines.Bottom + CheckBoxSpacing, 0, 0);
+            AddChild(chkTooltips);
 
-            chkBlackChatBackground = new XNAClientCheckBox(WindowManager);
-            chkBlackChatBackground.Name = "chkBlackChatBackground";
-            chkBlackChatBackground.ClientRectangle = new Rectangle(
-                chkScrollCoasting.X,
-                chkTooltips.Bottom + 24, 0, 0);
-            chkBlackChatBackground.Text = "Use black background for in-game chat messages";
-
-            AddChild(chkBlackChatBackground);
+            chkFilterBandBoxSelection = new XNAClientCheckBox(WindowManager);
+            chkFilterBandBoxSelection.Name = "chkFilterBandBoxSelection";
+            chkFilterBandBoxSelection.Text = "Filter Band-Box Selection";
+            chkFilterBandBoxSelection.ClientRectangle = new Rectangle(
+                lblScrollRate.X,
+                chkTooltips.Bottom + CheckBoxSpacing, 0, 0);
+            AddChild(chkFilterBandBoxSelection);
 
             chkAltToUndeploy = new XNAClientCheckBox(WindowManager);
             chkAltToUndeploy.Name = "chkAltToUndeploy";
             chkAltToUndeploy.ClientRectangle = new Rectangle(
                 chkScrollCoasting.X,
-                chkBlackChatBackground.Bottom + 24, 0, 0);
+                chkFilterBandBoxSelection.Bottom + CheckBoxSpacing, 0, 0);
             chkAltToUndeploy.Text = "Undeploy units by holding Alt key instead of a regular move command";
-
             AddChild(chkAltToUndeploy);
 
+            chkBlackChatBackground = new XNAClientCheckBox(WindowManager);
+            chkBlackChatBackground.Name = "chkBlackChatBackground";
+            chkBlackChatBackground.ClientRectangle = new Rectangle(
+                chkScrollCoasting.X,
+                chkAltToUndeploy.Bottom + CheckBoxSpacing, 0, 0);
+            chkBlackChatBackground.Text = "Use black background for in-game chat messages";
+            AddChild(chkBlackChatBackground);
+
+            var lblPlayerName = new XNALabel(WindowManager);
+            lblPlayerName.Name = "lblPlayerName";
+            lblPlayerName.Text = "Player Name*:";
             lblPlayerName.ClientRectangle = new Rectangle(
                 lblScrollRate.X,
-                chkAltToUndeploy.Bottom + 30, 0, 0);
+                chkBlackChatBackground.Bottom + 20, 0, 0);
 
             tbPlayerName = new XNATextBox(WindowManager);
             tbPlayerName.Name = "tbPlayerName";
@@ -126,7 +135,7 @@ namespace DTAConfig.OptionPanels
             var lblNotice = new XNALabel(WindowManager);
             lblNotice.Name = "lblNotice";
             lblNotice.ClientRectangle = new Rectangle(lblPlayerName.X,
-                lblPlayerName.Bottom + 30, 0, 0);
+                lblPlayerName.Bottom + 20, 0, 0);
             lblNotice.Text = "* If you are currently connected to CnCNet, you need to log out and reconnect" +
                 Environment.NewLine + "for your new name to be applied.";
 
@@ -136,16 +145,13 @@ namespace DTAConfig.OptionPanels
 
             var btnConfigureHotkeys = new XNAClientButton(WindowManager);
             btnConfigureHotkeys.Name = "btnConfigureHotkeys";
-            btnConfigureHotkeys.ClientRectangle = new Rectangle(lblPlayerName.X, lblNotice.Bottom + 36, 160, 23);
+            btnConfigureHotkeys.ClientRectangle = new Rectangle(lblPlayerName.X, lblNotice.Bottom + 20, 160, 23);
             btnConfigureHotkeys.Text = "Configure Hotkeys";
             btnConfigureHotkeys.LeftClick += BtnConfigureHotkeys_LeftClick;
 
             AddChild(lblScrollRate);
             AddChild(lblScrollRateValue);
             AddChild(trbScrollRate);
-            AddChild(chkScrollCoasting);
-            AddChild(chkTargetLines);
-            AddChild(chkTooltips);
             AddChild(lblPlayerName);
             AddChild(tbPlayerName);
             AddChild(lblNotice);
@@ -189,7 +195,7 @@ namespace DTAConfig.OptionPanels
             chkScrollCoasting.Checked = !Convert.ToBoolean(IniSettings.ScrollCoasting);
             chkTargetLines.Checked = IniSettings.TargetLines;
             chkTooltips.Checked = IniSettings.Tooltips;
-
+            chkFilterBandBoxSelection.Checked = IniSettings.FilterBandBoxSelection;
             chkAltToUndeploy.Checked = !IniSettings.MoveToUndeploy;
             chkBlackChatBackground.Checked = IniSettings.TextBackgroundColor == TEXT_BACKGROUND_COLOR_BLACK;
             tbPlayerName.Text = UserINISettings.Instance.PlayerName;
@@ -204,6 +210,7 @@ namespace DTAConfig.OptionPanels
             IniSettings.ScrollCoasting.Value = Convert.ToInt32(!chkScrollCoasting.Checked);
             IniSettings.TargetLines.Value = chkTargetLines.Checked;
             IniSettings.Tooltips.Value = chkTooltips.Checked;
+            IniSettings.FilterBandBoxSelection.Value = chkFilterBandBoxSelection.Checked;
 
             IniSettings.MoveToUndeploy.Value = !chkAltToUndeploy.Checked;
             if (chkBlackChatBackground.Checked)

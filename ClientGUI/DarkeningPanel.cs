@@ -100,11 +100,12 @@ namespace ClientGUI
             }
         }
 
-        public static void AddAndInitializeWithControl(WindowManager wm, XNAControl control)
+        public static DarkeningPanel AddAndInitializeWithControl(WindowManager wm, XNAControl control)
         {
             var dp = new DarkeningPanel(wm);
             wm.AddAndInitializeControl(dp);
             dp.AddChild(control);
+            return dp;
         }
     }
 }

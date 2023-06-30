@@ -227,6 +227,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Singleplayer\Difficulty.cs" />
     <Compile Include="Domain\Singleplayer\GlobalVariableCondition.cs" />
     <Compile Include="Domain\Singleplayer\ConditionalMissionUnlock.cs" />
     <Compile Include="Domain\Multiplayer\AllianceHolder.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="Domain\Singleplayer\CampaignGlobalVariable.cs" />
     <Compile Include="Domain\Singleplayer\CampaignHandler.cs" />
     <Compile Include="Domain\Singleplayer\MissionRankHandler.cs" />
+    <Compile Include="Domain\Singleplayer\Bonus.cs" />
     <Compile Include="Domain\StatisticsSender.cs" />
     <Compile Include="DXGUI\Generic\Campaign\ConversationDisplay.cs" />
     <Compile Include="DXGUI\Generic\Campaign\Cutscene.cs" />
@@ -270,6 +272,8 @@
     <Compile Include="DXGUI\Generic\Campaign\PhaseState.cs" />
     <Compile Include="DXGUI\Generic\Campaign\StoryDisplay.cs" />
     <Compile Include="DXGUI\Generic\Campaign\StoryImage.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\BonusInfoPanel.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\BonusSelectionWindow.cs" />
     <Compile Include="DXGUI\Generic\CheaterWindow.cs" />
     <Compile Include="Domain\Multiplayer\Map.cs" />
     <Compile Include="Domain\Multiplayer\MapLoader.cs" />

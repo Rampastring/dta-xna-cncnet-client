@@ -281,7 +281,15 @@ namespace DTAClient.DXGUI.Generic
                 }
                 else
                 {
-                    CampaignHandler.Instance.WriteFilesForMission(mission, (int)sg.SessionInfo.Difficulty - 1, sg.SessionInfo.GlobalFlagValues);
+                    Difficulty bonusDifficulty = null;
+                    if (!string.IsNullOrWhiteSpace(gameSessionInfo.SessionInfo.BonusName))
+                    {
+                        var bonus = CampaignHandler.Instance.Bonuses.Find(t => t.ININame == gameSessionInfo.SessionInfo.BonusName);
+                        if (bonus != null)
+                            bonusDifficulty = bonus.Difficulty;
+                    }
+
+                    CampaignHandler.Instance.WriteFilesForMission(mission, (int)sg.SessionInfo.Difficulty - 1, sg.SessionInfo.GlobalFlagValues, bonusDifficulty);
                     writeNewSpawnIni = false;
                 }
             }

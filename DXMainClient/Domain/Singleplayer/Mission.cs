@@ -33,6 +33,7 @@ namespace DTAClient.Domain.Singleplayer
             WarnOnHardWithoutMediumPlayed = iniSection.GetBooleanValue(nameof(WarnOnHardWithoutMediumPlayed), WarnOnHardWithoutMediumPlayed);
             PlayerAlwaysOnNormalDifficulty = iniSection.GetBooleanValue(nameof(PlayerAlwaysOnNormalDifficulty), false);
             MusicRecommended = iniSection.GetBooleanValue(nameof(MusicRecommended), MusicRecommended);
+            AllowBonuses = iniSection.GetBooleanValue(nameof(AllowBonuses), AllowBonuses);
 
             if (Enum.TryParse(iniSection.GetStringValue(nameof(StartCutscene), Cutscene.None.ToString()), out Cutscene startCutscene))
                 StartCutscene = startCutscene;
@@ -91,6 +92,8 @@ namespace DTAClient.Domain.Singleplayer
         public bool PlayerAlwaysOnNormalDifficulty { get; }
 
         public bool MusicRecommended { get; }
+
+        public bool AllowBonuses { get; }
 
         public string[] DifficultyLabels { get; }
 

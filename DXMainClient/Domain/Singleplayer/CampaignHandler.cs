@@ -50,13 +50,26 @@ namespace DTAClient.Domain.Singleplayer
             ReadBattleIni("INI/Battle.ini");
             ReadBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
 
-            MissionRankHandler.LoadData(Missions, GlobalVariables);
+            MissionRankHandler.LoadData(Missions, GlobalVariables, Bonuses);
         }
 
         public event EventHandler<MissionCompletionEventArgs> MissionRankUpdated;
         public event EventHandler<MissionCompletionEventArgs> MissionCompleted;
 
         private static CampaignHandler _instance;
+
+        public List<Bonus> Bonuses { get; } = new List<Bonus>()
+        {
+            new Bonus("Armor", "Armor", "M_CR2", "All objects have 10% more HP", "Some extra armor would've been helpful when trying to survive against those Gatling tanks.", new Difficulty() { Armor = 1.1 } ),
+            new Bonus("Speed", "Speed", "M_CR3", "All units move 12% faster", "More speed would've allowed us to reinforce that base quicker.", new Difficulty() { Groundspeed = 1.12, Airspeed = 1.12 }),
+            new Bonus("Cost", "Cost", "M_CR4", "All objects cost 8% less", "A more efficient unit production process would've helped with limited resources.", new Difficulty() { Cost = 0.92 }),
+            new Bonus("Build Time", "BuildTime", "M_CR5", "All objects build 6% faster", "Every second counts when setting up a defensive line or preparing to quickly rush your opponent.", new Difficulty() { BuildTime = 0.94 }),
+            new Bonus("Rate of Fire", "RoF", "M_CR6", "All objects reload 10% faster after firing", "Shooting faster is universally useful.", new Difficulty() { ROF = .819 }),
+            new Bonus("Firepower", "Firepower", "M_CR7", "All objects deal 10% more damage", "Some extra firepower would've helped clear those islands a bit faster, giving our enemy less reaction time.", new Difficulty() { Firepower = 1.1 } ),
+            new Bonus("Turtle", "Turtle", "M_CRA10", "All objects have 10% more HP and build 6% faster. Rate of fire is 10% slower.", "For most effective defending, you want to build defenses faster AND have them last longer! Rate of fire is not as important.", new Difficulty() { Armor = 1.10, BuildTime = 0.94, ROF = 1.001 }),
+            new Bonus("Generalist", "Generalist", "M_CRA14", "All objects have 2% more HP, move 2% faster, cost 2% less, build 2% faster, reload 2% faster, and deal 2% more damage", "You were just following orders. Boring and unimaginative, but still a learning experience.", 
+                new Difficulty() { Armor = 1.02, Groundspeed = 1.02, Airspeed = 1.02, Cost = 0.98, BuildTime = 0.98, ROF = 0.8918, Firepower = 1.02 }),
+        };
 
         public List<CampaignGlobalVariable> GlobalVariables { get; } = new List<CampaignGlobalVariable>();
         public List<Campaign> Campaigns { get; } = new List<Campaign>();
@@ -291,7 +304,7 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         /// <param name="mission">The mission.</param>
         /// <param name="selectedDifficultyLevel">The difficulty level of the mission.</param>
-        public void WriteFilesForMission(Mission mission, int selectedDifficultyLevel, Dictionary<int, bool> globalFlagInfo)
+        public void WriteFilesForMission(Mission mission, int selectedDifficultyLevel, Dictionary<int, bool> globalFlagInfo, Difficulty bonusDifficultySetting)
         {
             bool copyMapsToSpawnmapINI = ClientConfiguration.Instance.CopyMissionsToSpawnmapINI;
 
@@ -352,6 +365,8 @@ namespace DTAClient.Domain.Singleplayer
             {
                 IniFile mapIni = new IniFile(ProgramConstants.GamePath + mission.Scenario);
                 IniFile.ConsolidateIniFiles(mapIni, difficultyIni);
+
+                bonusDifficultySetting?.WriteToFile(mapIni);
 
                 // Force values of EndOfGame and SkipScore as our progression tracking currently relies on them
                 mapIni.SetBooleanValue("Basic", "EndOfGame", true);
@@ -526,6 +541,14 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 
+            Logger.Log("Finding and unlocking bonuses related to " + mission.InternalName);
+            var bonusesToUnlock = Bonuses.FindAll(b => b.UnlockFromMission == mission.InternalName);
+            foreach (var bonus in bonusesToUnlock)
+            {
+                Logger.Log("Unlocking bonus " + bonus.ININame);
+                bonus.Unlocked = true;
+            }
+
             Mission primaryUnlockedMission = unlockedMissions.Count > 0 ? unlockedMissions[0] : null;
 
             if (sessionInfo.IsCheatSession)
@@ -539,7 +562,7 @@ namespace DTAClient.Domain.Singleplayer
                 MissionRankUpdated?.Invoke(this, new MissionCompletionEventArgs(mission, primaryUnlockedMission));
             }
 
-            MissionRankHandler.WriteData(Missions, GlobalVariables);
+            MissionRankHandler.WriteData(Missions, GlobalVariables, Bonuses);
             MissionCompleted?.Invoke(this, new MissionCompletionEventArgs(mission, primaryUnlockedMission));
         }
     }

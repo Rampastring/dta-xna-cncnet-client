@@ -17,6 +17,7 @@ namespace DTAClient.Domain.Singleplayer
         private const string SP_SCORE_FILE_BACKUP = "Client/spscore_backup.dat";
         private const string MISSIONS_SECTION = "Missions";
         private const string GLOBAL_VARIABLES_SECTION = "GlobalVariables";
+        private const string Bonuses_SECTION = "Bonuses";
         private const int RANK_MIN = 1;
         private const int RANK_MAX = 3;
         private const int EXPECTED_GLOBAL_VARIBLE_FIELD_COUNT = 3;
@@ -32,7 +33,7 @@ namespace DTAClient.Domain.Singleplayer
         // to prevent players with no programming experience from messing with it.
         // We can't prevent actual programmers from unlocking missions with this method.
 
-        public static void LoadData(List<Mission> missions, List<CampaignGlobalVariable> globalVariables)
+        public static void LoadData(List<Mission> missions, List<CampaignGlobalVariable> globalVariables, List<Bonus> Bonuses)
         {
             Logger.Log("Loading single-player mission rank data.");
 
@@ -64,7 +65,6 @@ namespace DTAClient.Domain.Singleplayer
                     {
                         iniFile = new IniFile(memoryStream, Encoding.UTF8);
                     }
-
                 }
             }
             catch (FormatException ex)
@@ -128,9 +128,22 @@ namespace DTAClient.Domain.Singleplayer
                     }
                 }
             }
+
+            var BonusesSection = iniFile.GetSection(Bonuses_SECTION);
+            if (BonusesSection != null)
+            {
+                foreach (var kvp in BonusesSection.Keys)
+                {
+                    string BonusName = kvp.Key;
+
+                    var Bonus = Bonuses.Find(t => t.ININame == BonusName);
+                    if (Bonus != null)
+                        Bonus.Unlocked = true;
+                }
+            }
         }
 
-        public static void WriteData(List<Mission> missions, List<CampaignGlobalVariable> globalVariables)
+        public static void WriteData(List<Mission> missions, List<CampaignGlobalVariable> globalVariables, List<Bonus> Bonuses)
         {
             Logger.Log("Writing single-player mission rank data.");
 
@@ -173,6 +186,14 @@ namespace DTAClient.Domain.Singleplayer
                         GLOBAL_VARIABLES_SECTION,
                         globalVariable.InternalName,
                         $"{ (globalVariable.IsDisabledUnlocked ? "1" : "0" ) },{ (globalVariable.IsEnabledUnlocked ? "1" : "0") },{ (globalVariable.EnabledThroughPreviousScenario ? "1" : "0") }");
+                }
+            }
+
+            foreach (var Bonus in Bonuses)
+            {
+                if (Bonus.Unlocked)
+                {
+                    spScoreIni.SetStringValue(Bonuses_SECTION, Bonus.ININame, "1");
                 }
             }
 

@@ -162,6 +162,7 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnLaunch;
         private MissionDescriptionBox tbMissionDescription;
         private XNATrackbar trbDifficultySelector;
+        private XNAClientButton btnBonus;
 
         private XNALabel lblEasy;
         private XNALabel lblNormal;
@@ -173,6 +174,7 @@ namespace DTAClient.DXGUI.Generic
         private XNADropDown[] globalVariableValues = new XNADropDown[MAX_GLOBAL_COUNT];
 
         private CheaterWindow cheaterWindow;
+        private BonuseselectionWindow BonuseselectionWindow;
 
         private MissionCompletionNotification missionCompletionNotification;
 
@@ -341,6 +343,14 @@ namespace DTAClient.DXGUI.Generic
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnCancel_LeftClick;
 
+            btnBonus = new XNAClientButton(WindowManager);
+            btnBonus.Name = nameof(btnBonus);
+            btnBonus.ClientRectangle = new Rectangle(lblEasy.X, btnCancel.Y, 133, UIDesignConstants.BUTTON_HEIGHT);
+            btnBonus.Text = "Bonus";
+            AddChild(btnBonus);
+            btnBonus.Disable();
+            btnBonus.LeftClick += BtnBonus_LeftClick;
+
             AddChild(lblSelectCampaign);
             AddChild(lblMissionDescriptionHeader);
             AddChild(lbCampaignList);
@@ -386,6 +396,21 @@ namespace DTAClient.DXGUI.Generic
             storyDisplay.DrawOrder = missionCompletionNotification.DrawOrder - 1;
             storyDisplay.UpdateOrder = missionCompletionNotification.UpdateOrder - 1;
             WindowManager.AddAndInitializeControl(storyDisplay);
+
+            BonuseselectionWindow = new BonuseselectionWindow(WindowManager);
+            dp = new DarkeningPanel(WindowManager);
+            dp.AddChild(BonuseselectionWindow);
+            AddChild(dp);
+            dp.CenterOnParent();
+            BonuseselectionWindow.CenterOnParent();
+            BonuseselectionWindow.Disable();
+            RefreshBonusButtonText();
+            BonuseselectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
+        }
+
+        private void BtnBonus_LeftClick(object sender, EventArgs e)
+        {
+            BonuseselectionWindow.Open();
         }
 
         private void CampaignHandler_MissionCompleted(object sender, MissionCompletionEventArgs e)
@@ -502,6 +527,15 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
+            if (mission.AllowBonuses)
+            {
+                btnBonus.Enable();
+            }
+            else
+            {
+                btnBonus.Disable();
+            }
+
             tbMissionDescription.LoadMissionBackgroundTexture(mission.PreviewImagePath);
 
             PreconditionUIConfig(mission);
@@ -515,6 +549,17 @@ namespace DTAClient.DXGUI.Generic
             }
 
             btnLaunch.AllowClick = true;
+        }
+
+        private void RefreshBonusButtonText()
+        {
+            if (BonuseselectionWindow.SelectedBonus == null)
+            {
+                btnBonus.Text = "No Bonus Selected";
+                return;
+            }
+
+            btnBonus.Text = "Bonus: " + BonuseselectionWindow.SelectedBonus.UIName;
         }
 
         /// <summary>
@@ -753,7 +798,11 @@ namespace DTAClient.DXGUI.Generic
                 }
             }
 
-            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, trbDifficultySelector.Value, globalFlagInfo);
+            Difficulty bonusDifficulty = null;
+            if (missionToLaunch.AllowBonuses && BonuseselectionWindow.SelectedBonus != null)
+                bonusDifficulty = BonuseselectionWindow.SelectedBonus.Difficulty;
+
+            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, trbDifficultySelector.Value, globalFlagInfo, bonusDifficulty);
             difficultyName = DifficultyNames[trbDifficultySelector.Value];
 
             UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value;

@@ -35,7 +35,8 @@ namespace ClientCore
             int sideIndex = -1,
             DifficultyRank difficulty = DifficultyRank.NONE,
             Dictionary<int, bool> globalFlagValues = null,
-            bool isCheatSession = false)
+            bool isCheatSession = false,
+            string bonusName = null)
         {
             SessionType = sessionType;
             UniqueId = uniqueId;
@@ -44,6 +45,7 @@ namespace ClientCore
             Difficulty = difficulty;
             GlobalFlagValues = globalFlagValues;
             IsCheatSession = isCheatSession;
+            BonusName = bonusName;
         }
 
         public GameSessionType SessionType { get; }
@@ -53,6 +55,7 @@ namespace ClientCore
         public DifficultyRank Difficulty { get; }
         public Dictionary<int, bool> GlobalFlagValues { get; }
         public bool IsCheatSession { get; }
+        public string BonusName { get; }
 
         public bool SessionMatches(GameSessionInfo other)
         {
@@ -75,7 +78,8 @@ namespace ClientCore
                 $"{ SideIndex.ToString(CultureInfo.InvariantCulture) }," +
                 $"{ ((int)Difficulty).ToString(CultureInfo.InvariantCulture) }," + 
                 globalFlagValues + "," +
-                (IsCheatSession ? "1" : "0");
+                (IsCheatSession ? "1" : "0") + "," +
+                $"{BonusName}";
 
 
             byte[] bytes = Encoding.UTF8.GetBytes(meta);
@@ -157,8 +161,14 @@ namespace ClientCore
                 {
                     isCheatSession = parts[7] == "1";
                 }
-                
-                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty, globalFlagsDictionary, isCheatSession);
+
+                string talentName = string.Empty;
+                if (parts.Length >= 9)
+                {
+                    talentName = parts[8];
+                }
+
+                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty, globalFlagsDictionary, isCheatSession, talentName);
             }
 
             return null;

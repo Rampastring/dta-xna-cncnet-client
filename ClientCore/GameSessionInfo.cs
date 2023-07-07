@@ -24,9 +24,9 @@ namespace ClientCore
     public class GameSessionInfo
     {
         private const int MIN_EXPECTED_FIELD_COUNT = 6;
-        private const int EXPECTED_FIELD_COUNT = 8;
+        private const int EXPECTED_FIELD_COUNT = 9;
 
-        private const string GLOBAL_FLAGS_NONE = "none";
+        private const string NO_VALUE = "none";
 
         public GameSessionInfo(
             GameSessionType sessionType,
@@ -64,7 +64,7 @@ namespace ClientCore
 
         public void WriteToFile(string path, string associateFileName)
         {
-            string globalFlagValues = GLOBAL_FLAGS_NONE;
+            string globalFlagValues = NO_VALUE;
             if (GlobalFlagValues != null && GlobalFlagValues.Count > 0)
             {
                 globalFlagValues = string.Join("|", GlobalFlagValues.Select(gflag => $"{gflag.Key.ToString(CultureInfo.InvariantCulture)}:{(gflag.Value ? "1" : "0")}"));
@@ -74,12 +74,12 @@ namespace ClientCore
                 $"{ ((int)SessionType).ToString(CultureInfo.InvariantCulture) }," +
                 $"{ UniqueId.ToString(CultureInfo.InvariantCulture) }," +
                 $"{ associateFileName }," +
-                $"{ MissionInternalName }," +
+                $"{ (string.IsNullOrWhiteSpace(MissionInternalName) ? NO_VALUE : MissionInternalName) }," +
                 $"{ SideIndex.ToString(CultureInfo.InvariantCulture) }," +
                 $"{ ((int)Difficulty).ToString(CultureInfo.InvariantCulture) }," + 
                 globalFlagValues + "," +
                 (IsCheatSession ? "1" : "0") + "," +
-                $"{BonusName}";
+                $"{(string.IsNullOrWhiteSpace(BonusName) ? NO_VALUE : BonusName)}";
 
 
             byte[] bytes = Encoding.UTF8.GetBytes(meta);
@@ -110,7 +110,7 @@ namespace ClientCore
                 }
 
                 string dataAsString = Encoding.UTF8.GetString(data);
-                string[] parts = dataAsString.Split(',');
+                string[] parts = dataAsString.Split(new[] { ',' }, StringSplitOptions.None);
                 if (parts.Length < MIN_EXPECTED_FIELD_COUNT || parts.Length > EXPECTED_FIELD_COUNT)
                 {
                     Logger.Log("Unexpected saved game meta file format in file " + path + ": " + dataAsString);
@@ -135,7 +135,7 @@ namespace ClientCore
                 DifficultyRank difficulty = (difficultyInt < 0 || difficultyInt > (int)DifficultyRank.HARD) ? DifficultyRank.NONE : (DifficultyRank)difficultyInt;
 
                 Dictionary<int, bool> globalFlagsDictionary = null;
-                if (parts.Length >= 7 && parts[6] != GLOBAL_FLAGS_NONE)
+                if (parts.Length >= 7 && parts[6] != NO_VALUE)
                 {
                     string[] globalFlagParts = parts[6].Split('|');
                     globalFlagsDictionary = new Dictionary<int, bool>();
@@ -162,13 +162,13 @@ namespace ClientCore
                     isCheatSession = parts[7] == "1";
                 }
 
-                string talentName = string.Empty;
+                string bonusName = string.Empty;
                 if (parts.Length >= 9)
                 {
-                    talentName = parts[8];
+                    bonusName = parts[8];
                 }
 
-                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty, globalFlagsDictionary, isCheatSession, talentName);
+                return new GameSessionInfo(sessionType, uniqueId, missionInternalName, sideIndex, difficulty, globalFlagsDictionary, isCheatSession, bonusName);
             }
 
             return null;

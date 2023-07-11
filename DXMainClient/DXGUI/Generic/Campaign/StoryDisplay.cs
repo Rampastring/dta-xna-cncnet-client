@@ -1,5 +1,4 @@
-﻿using ClientGUI;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
@@ -93,7 +92,19 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             Phases = cutscenes.GetPhases(cutscene, this, WindowManager);
             Phase = -1;
+
+            Keyboard.OnKeyPressed += Keyboard_OnKeyPressed;
+
             Enable();
+        }
+
+        private void Keyboard_OnKeyPressed(object sender, Rampastring.XNAUI.Input.KeyPressEventArgs e)
+        {
+            if (e.PressedKey == Keys.Space || e.PressedKey == Keys.Enter || e.PressedKey == Keys.Z)
+            {
+                UserInput_ProgressCutscene();
+                e.Handled = true;
+            }
         }
 
         public void AddStoryImage(StoryImage storyImage)
@@ -177,6 +188,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private void DoFinish()
         {
             Disable();
+            Keyboard.OnKeyPressed -= Keyboard_OnKeyPressed;
             Finished?.Invoke(this, EventArgs.Empty);
         }
 
@@ -268,6 +280,13 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public override void OnLeftClick()
         {
+            UserInput_ProgressCutscene();
+
+            base.OnLeftClick();
+        }
+
+        private void UserInput_ProgressCutscene()
+        {
             if (PhaseState == PhaseState.Appearing)
             {
                 if (!ConversationDisplay.IsReady())
@@ -316,8 +335,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
             {
                 NextPhase();
             }
-
-            base.OnLeftClick();
         }
 
         public override void Draw(GameTime gameTime)

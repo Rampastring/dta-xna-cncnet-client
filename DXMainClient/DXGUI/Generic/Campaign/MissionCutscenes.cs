@@ -127,6 +127,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRA13();
                 case Cutscene.CRA13Victory:
                     return CRA13Victory();
+                case Cutscene.CRA14:
+                    return CRA14();
             }
 
             return null;
@@ -160,6 +162,311 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (sound != null)
                 sound.Play();
+        }
+
+        private List<Phase> CRA14()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "ON GOVERNMENT MILITARY LEADERSHIP";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA14/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(chrg226m);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "After independence from the USSR, the country had practically no military.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA14/bg02.png", 2);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The old military had been destroyed by the Allies, its power structure was no longer deemed relevant, and new defense forces had to be built from scratch.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The process was chaotic in many ways. Partially the force was seen as purposeless and harmful due to the recent Allied victory. The Allies didn't want the parts of the ex-USSR to have a strong military.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA14/bg03.png", 3);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "These parts were often clashing with each other, and the military was crippled by corruption.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov's rise to power did not solve this issue. Eventually, he appointed Toikka as Commander of the defense forces.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Toikka was not seen as particularly skilled, being a fairly generic officer in the military's ranks.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "He had mostly stayed neutral in the doctrinal clash between the eastern and western styles of waging war, which means he was widely accepted - considered \"good enough\", but not optimal, by both sides.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "His greatest benefit was his absolute loyalty. Ivanov gave him his own, personally beneficial position, which Toikka was happy with. He did not aspire to challenge Ivanov for leadership of the country.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Instead, he used brutal methods to crush any opposition, keeping his superior pleased with him.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "When the civil war broke out, Toikka's leadership proved too inefficient to squish it. He couldn't divide his attention among multiple fronts.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "As threat of actual revolution and change of power seemed significant, Ivanov decided to assign another Commander to handle roughly half of the battles.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The new Commander quickly started performing better than Toikka, creating a competitive environment between the Commanders within the Government's military.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It remains to be seen whether this \"rising star\" will replace Toikka, or whether they will even survive in this system built around not stepping on anyone's toes.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 5, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(terminat);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Our final victory is at hand.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 6, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Only a single Nod base remains on our territory.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "According to our intelligence data, the leaders of the Communist scum are also situated there.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The cowards had supposedly tried to escape farther away to Nod-controlled or gray territory outside of our country.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, high-ranking Nod officers are disappointed with their performance and are forcing the Commies to fight to their bitter end.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "And that bitter end is something we'll be glad to give them.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "And that bitter end is something we'll be glad to give them.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Go in there and destroy the Nod base. As for the so-called leadership of the Soviets... a quick, dirty, secret field tribunal will do.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(22,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Oh, how I'd love to hang or maybe just have those bastards shot publicly... but GDI would disapprove.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(23,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Speaking of GDI, they have warned us about Nod potentially having new toys, developed from the technology they have taken from us, the GDI, and the Soviets.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(24,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I trust you can deal with whatever they throw at you.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(25,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "See you at the victory parade, Commander!";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(26,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Wait... one more thing...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(27,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We still haven't found those Construction Yards that Nod stole from us and the GDI.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(28,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If you happen spot any Nod buildings of special interest, be sure to capture them. Maybe their archives will contain some information.";
+                },
+                null,
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f; toney4.Play(); }));
+
+            phases.Add(new Phase(29,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRA13Victory()
@@ -539,7 +846,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "There is a civilian bus driver who is loyal to us. He is waiting for your forces and he has offered his services to us. Board his bus and he will take the troops near a civilian radar in the center of the city.";
+                    storyDisplay.ConversationDisplay.ConversationText = "There is a contact, a bus driver who is loyal to us. He is waiting for your forces and he has offered his services to us. Board his bus and he will take the troops near a civilian radar in the center of the city.";
                 },
                 storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRA12/radar.png", 4),
                 null,
@@ -548,7 +855,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Capture the radar, allowing us to push our own propaganda on the civilians and confuse the enemy's communications.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Capture the radar, which will allow us to push our own propaganda on the civilians and confuse the enemy's communications.";
                 },
                 null,
                 null,
@@ -2262,7 +2569,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "There is a tiberium-infested river basin where GDI had a Tiberium research and containment facility, which they were transforming into a base to counter Nod.";
+                    storyDisplay.ConversationDisplay.ConversationText = "There is a Tiberium-infested river basin where GDI had a Tiberium research and containment facility, which they were transforming into a base to counter Nod.";
                 },
                 null,
                 storyDisplay => AddRADisplayImage(storyDisplay, "Story/CR05/tibriver.png", 4),
@@ -3021,7 +3328,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Allied Nations, which became the newly-formed GDI, kept an eye, but did not micromanage the countries. The ex-Soviet republics were mostly self-governing, with support from GDI.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Allied Nations, which became the newly-formed GDI, kept an eye on, but did not micromanage the countries. The ex-Soviet republics were mostly self-governing, with support from GDI.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg02.png", 1);
                 },
                 null,

@@ -2,6 +2,7 @@
 using DTAClient.Domain.Singleplayer;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
+using System;
 
 namespace DTAClient.DXGUI.Generic.Campaign
 {
@@ -84,7 +85,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 unlockMissionName = mission.GUIName;
             }
             
-            lblUnlockedFrom.Text = "Unlocked from: " + unlockMissionName;
+            lblUnlockedFrom.Text = "Unlocked from:" + Environment.NewLine + Renderer.FixText(unlockMissionName, lblUnlockedFrom.FontIndex, maxTextWidth).Text;
             Height = lblUnlockedFrom.Bottom + UIDesignConstants.EMPTY_SPACE_BOTTOM;
         }
     }

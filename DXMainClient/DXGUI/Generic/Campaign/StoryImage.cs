@@ -79,6 +79,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
         }
 
+        public Color Color { get; set; } = Color.White;
+
         public bool DrawBorders { get; set; }
 
         public Color BorderColor { get; set; } = Color.LimeGreen;
@@ -140,7 +142,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             if (Texture != null)
             {
                 Vector2 scale = new Vector2((float)(ImageWidth.Value / Texture.Width), (float)(ImageHeight.Value / Texture.Height));
-                DrawTexture(Texture, new Vector2((float)ImageX.Value, (float)ImageY.Value), 0f, Vector2.Zero, scale, Color.White * Alpha);
+                DrawTexture(Texture, new Vector2((float)ImageX.Value, (float)ImageY.Value), 0f, Vector2.Zero, scale, Color * Alpha);
             }
 
             DrawChildren(gameTime);

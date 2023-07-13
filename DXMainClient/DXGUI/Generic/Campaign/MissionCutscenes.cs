@@ -12,6 +12,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
     public class MissionCutscenes
     {
         private const float CONVERSATION_MUSIC_VOLUME_MODIFIER = 0.3f;
+        private const float ENDING_ALPHA_RATE = -0.25f;
 
         public MissionCutscenes()
         {
@@ -129,6 +130,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRA13Victory();
                 case Cutscene.CRA14:
                     return CRA14();
+                case Cutscene.CRENDA:
+                    return CRA14Victory();
             }
 
             return null;
@@ -162,6 +165,309 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (sound != null)
                 sound.Play();
+        }
+
+        private void AddCreditPhases(List<Phase> phases, Color color)
+        {
+            int lastPhaseID = phases[phases.Count - 1].ID;
+
+            phases.Add(new Phase(lastPhaseID + 1,
+                storyDisplay =>
+                {
+                    // TryPlaySong(...
+                    storyDisplay.ConversationDisplay.ConversationText = "";
+                    var creditsStoryImage = new StoryImage(windowManager, 1);
+                    creditsStoryImage.Texture = AssetLoader.LoadTextureUncached("Story/credits.png");
+                    creditsStoryImage.ImageHeight.SnapToValue(creditsStoryImage.Texture.Height);
+                    creditsStoryImage.ImageY.Value = windowManager.RenderResolutionY;
+                    creditsStoryImage.ImageY.TargetValue = windowManager.RenderResolutionY - creditsStoryImage.Texture.Height;
+                    storyDisplay.AddStoryImage(creditsStoryImage);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+        }
+
+        private void AddPostRouteAHintPhases(List<Phase> phases)
+        {
+            int lastPhaseID = phases[phases.Count - 1].ID;
+
+            bool bRouteUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRB9" && m.IsUnlocked);
+            bool bRouteBeat = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRB10" && m.IsUnlocked);
+            bool cRouteUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRC9" && m.IsUnlocked);
+            bool extraUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CREXT" && m.IsUnlocked);
+
+            if (!bRouteUnlocked)
+            {
+                phases.Add(new Phase(lastPhaseID + 1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The Government didn't really treat its enemies or its own civilians in the most humane way possible.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(lastPhaseID + 2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Can you find out how to challenge them for this? To unlock the B route?";
+                    },
+                    null,
+                    null,
+                    null));
+
+                return;
+            }
+
+            if (!bRouteBeat)
+            {
+                phases.Add(new Phase(lastPhaseID + 1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Route A complete! Next you can challenge route B!";
+                    },
+                    null,
+                    null,
+                    null));
+
+                return;
+            }
+
+            if (!cRouteUnlocked)
+            {
+                phases.Add(new Phase(lastPhaseID + 1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "You've completed both Route A and Route B.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(lastPhaseID + 2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "There is also a third route.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(lastPhaseID + 3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Can you figure out how to reach it? Is the curiosity great enough...?";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(lastPhaseID + 4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Or, you can also just be happy with your current accomplishments.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                return;
+            }
+
+            phases.Add(new Phase(lastPhaseID + 1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Congratulations on beating route A!";
+                },
+                null,
+                null,
+                null));
+        }
+
+        private List<Phase> CRA14Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "After a heavy battle with lots of casualties on both sides, the Government forces finally destroyed the Nod base, pushing Nod out from the country.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA14/victorybg01.png", 1);
+                    country4.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Government, supported by GDI, achieved their final victory over the neo-Soviets and the Brotherhood of Nod.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Communist leadership was nowhere to be seen.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRA14/victorybg02.png", 2);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "A source claiming to be within the Government, however, leaked information that they were executed on the spot after the battle.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            var coCommandersForcesSavedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_A_CO_COMMANDER_FORCES_SAVED");
+            if (coCommandersForcesSavedVariable != null && coCommandersForcesSavedVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "There was a victory parade held in the capital of the country.";
+                        storyDisplay.AddSimpleStoryImage("Story/CRA14/ending1.png", 3);
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Despite that Government had two Commanders in the war, only one was present in the ceremony.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Toikka was watching his soldiers march, while the other Commander had been dismissed for \"fatal tactical mistakes\" soon after the victory.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The reason is not clear, but some international observers suspect that Ivanov saw the other Commander's great popularity within the soldiers as a risk for his leadership.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Many lower-level officers report being shocked at the decision, but most likely, it will pass.";
+                        storyDisplay.AddSimpleStoryImage("Story/CRA14/ending2.png", 4);
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(9,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "After a heavy civil war, the people would not support any officers who attempted to start another one.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(10,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "In this system of corruption, no good deed goes unpunished.";
+                    },
+                    null,
+                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(11,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.IsCentered = true;
+                        storyDisplay.ConversationDisplay.TextColor = Color.White;
+                        storyDisplay.AddSimpleStoryImage("Story/CRA14/endingtitle.png", 5);
+                        storyDisplay.ConversationDisplay.ConversationText = "ENDING II" + Environment.NewLine + "Dismissed";
+                    },
+                    null,
+                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+            }
+            else
+            {
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.IsCentered = false;
+                        // TryPlaySong(secondhand);
+                        storyDisplay.AddSimpleStoryImage("Story/CRA14/ending1.png", 3);
+                        storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                        storyDisplay.ConversationDisplay.ConversationText = "You stood at the victory parade next to Toikka. Both of you Commanders were awarded for your service in liberating the country.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Thousands of people were marching to tone to celebrate your success...";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "To celebrate the deaths of thousands of enemies...";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "It's a great feeling, isn't it?";
+                    },
+                    null,
+                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.IsCentered = true;
+                        storyDisplay.ConversationDisplay.TextColor = Color.White;
+                        storyDisplay.AddSimpleStoryImage("Story/CRA14/endingtitle.png", 4);
+                        storyDisplay.ConversationDisplay.ConversationText = "ENDING I" + Environment.NewLine + "Commander of the Government";
+                    },
+                    null,
+                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+            }
+
+            AddCreditPhases(phases, new Color(20, 255, 157));
+            AddPostRouteAHintPhases(phases);
+
+            return phases;
         }
 
         private List<Phase> CRA14()

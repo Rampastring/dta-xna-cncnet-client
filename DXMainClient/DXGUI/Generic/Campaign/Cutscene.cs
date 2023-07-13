@@ -24,6 +24,7 @@
         CRA12Victory,
         CRA13,
         CRA13Victory,
-        CRA14
+        CRA14,
+        CRENDA
     }
 }

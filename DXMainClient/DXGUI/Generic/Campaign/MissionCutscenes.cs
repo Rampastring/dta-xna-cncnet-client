@@ -178,6 +178,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "";
                     var creditsStoryImage = new StoryImage(windowManager, 1);
                     creditsStoryImage.Texture = AssetLoader.LoadTextureUncached("Story/credits.png");
+                    creditsStoryImage.Color = color;
                     creditsStoryImage.ImageHeight.SnapToValue(creditsStoryImage.Texture.Height);
                     creditsStoryImage.ImageY.Value = windowManager.RenderResolutionY;
                     creditsStoryImage.ImageY.TargetValue = windowManager.RenderResolutionY - creditsStoryImage.Texture.Height;
@@ -394,7 +395,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.ConversationText = "In this system of corruption, no good deed goes unpunished.";
                     },
                     null,
-                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "";
+                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE);
+                    },
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
                 phases.Add(new Phase(11,
@@ -403,10 +408,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = true;
                         storyDisplay.ConversationDisplay.TextColor = Color.White;
                         storyDisplay.AddSimpleStoryImage("Story/CRA14/endingtitle.png", 5);
-                        storyDisplay.ConversationDisplay.ConversationText = "ENDING II" + Environment.NewLine + "Dismissed";
+                        storyDisplay.ConversationDisplay.ConversationText = "  ENDING II" + Environment.NewLine + "Dismissed";
                     },
                     null,
-                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "";
+                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE);
+                    },
                     storyDisplay => storyDisplay.ClearStoryImages()));
             }
             else
@@ -448,7 +457,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.ConversationText = "It's a great feeling, isn't it?";
                     },
                     null,
-                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "";
+                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE);
+                    },
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
                 phases.Add(new Phase(8,
@@ -457,10 +470,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = true;
                         storyDisplay.ConversationDisplay.TextColor = Color.White;
                         storyDisplay.AddSimpleStoryImage("Story/CRA14/endingtitle.png", 4);
-                        storyDisplay.ConversationDisplay.ConversationText = "ENDING I" + Environment.NewLine + "Commander of the Government";
+                        storyDisplay.ConversationDisplay.ConversationText = "           ENDING I" + Environment.NewLine + "Commander of the Government";
                     },
                     null,
-                    storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE),
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "";
+                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE);
+                    },
                     storyDisplay => storyDisplay.ClearStoryImages()));
             }
 
@@ -697,7 +714,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(22,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "And that bitter end is something we'll be glad to give them.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Go in there and destroy the Nod base. As for the so-called leadership of the Soviets... a quick, dirty, secret field tribunal will do.";
                 },
                 null,
                 null,
@@ -706,7 +723,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(23,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Go in there and destroy the Nod base. As for the so-called leadership of the Soviets... a quick, dirty, secret field tribunal will do.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Oh, how I'd love to hang or maybe just have those bastards shot publicly... but GDI would disapprove.";
                 },
                 null,
                 null,
@@ -715,7 +732,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(24,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Oh, how I'd love to hang or maybe just have those bastards shot publicly... but GDI would disapprove.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Speaking of GDI, they have warned us about Nod potentially having new toys, developed from the technology they have taken from us, the GDI, and the Soviets.";
                 },
                 null,
                 null,
@@ -724,7 +741,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(25,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Speaking of GDI, they have warned us about Nod potentially having new toys, developed from the technology they have taken from us, the GDI, and the Soviets.";
+                    storyDisplay.ConversationDisplay.ConversationText = "I trust you can deal with whatever they throw at you.";
                 },
                 null,
                 null,
@@ -733,7 +750,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(26,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "I trust you can deal with whatever they throw at you.";
+                    storyDisplay.ConversationDisplay.ConversationText = "See you at the victory parade, Commander!";
                 },
                 null,
                 null,
@@ -742,7 +759,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(27,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "See you at the victory parade, Commander!";
+                    storyDisplay.ConversationDisplay.ConversationText = "Wait... one more thing...";
                 },
                 null,
                 null,
@@ -751,7 +768,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(28,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Wait... one more thing...";
+                    storyDisplay.ConversationDisplay.ConversationText = "We still haven't found those Construction Yards that Nod stole from us and the GDI.";
                 },
                 null,
                 null,
@@ -760,22 +777,13 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(29,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We still haven't found those Construction Yards that Nod stole from us and the GDI.";
-                },
-                null,
-                null,
-                null));
-
-            phases.Add(new Phase(30,
-                storyDisplay =>
-                {
                     storyDisplay.ConversationDisplay.ConversationText = "If you happen spot any Nod buildings of special interest, be sure to capture them. Maybe their archives will contain some information.";
                 },
                 null,
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(10).AlphaRate = -2.0f; toney4.Play(); }));
 
-            phases.Add(new Phase(31,
+            phases.Add(new Phase(30,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.TextColor = Color.White;

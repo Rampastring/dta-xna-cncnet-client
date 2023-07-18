@@ -346,7 +346,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(5,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Despite that Government had two Commanders in the war, only one was present in the ceremony.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Despite that the Government had two Commanders in the war, only one was present in the ceremony.";
                     },
                     null,
                     null,
@@ -1508,7 +1508,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "Toikka has been making progress on the frontline again with the help of the Sensor Arrays that have prevented Nod flanks.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Toikka has been making progress on the frontline again with the help of the Sensor Arrays that have prevented Nod flanking attacks.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 1, 0f);
                     country1.Play();
@@ -1558,7 +1558,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Considering your latest mission, the Communist scum has allowed Nod to poison the countryside - the very land they say they are \"liberating\" - with Tiberium to fund their war effort.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Considering your latest mission, the Communist scum have allowed Nod to poison the countryside - the very land they say they are \"liberating\" - with Tiberium to fund their war effort.";
                     AddRADisplayImage(storyDisplay, "Story/CRA10/tiberium.png", 5);
                 },
                 null,
@@ -1699,7 +1699,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The main reason appears to be Nod's \"Ezekiel's Wheel\" tanks - stealth tanks that perform surgical strikes on bases, harvesters and vulnerable supplies, and then disappear before Government military can catch them.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The main reason appears to be Nod's \"Ezekiel's Wheel\" tanks - stealth tanks that perform surgical strikes on bases, harvesters and vulnerable supplies, and then disappear before the Government military can catch them.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/bg03.png", 3);
                 },
                 null,
@@ -1786,7 +1786,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "This trifecta of Stealth tanks, increased Tiberium harvesting and foreign reinforcements threats turning the tide of the war.";
+                    storyDisplay.ConversationDisplay.ConversationText = "This trifecta of Stealth tanks, increased Tiberium harvesting and foreign reinforcements threatens to turn the tide of the war.";
                 },
                 null,
                 null,

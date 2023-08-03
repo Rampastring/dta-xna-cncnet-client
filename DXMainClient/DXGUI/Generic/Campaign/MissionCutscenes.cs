@@ -1059,10 +1059,28 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The star of the show was the Government's new Commander, who had achieved yet another great victory.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Among the ranks of Government military officers, they are widely seen as the most competent Commander in the Government's ranks.";
+                },
+                null,
+                null,
+                null));
+
             var nodCityBaseDestroyedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_A_NOD_CITY_BASE_DESTROYED");
             if (nodCityBaseDestroyedVariable != null && !nodCityBaseDestroyedVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(2,
+                phases.Add(new Phase(4,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Mixed GDI and Government forces spent some time pushing Nod out of the city. Reportedly, Nod forces only offered light resistance, and soon retreated to the countryside.";
@@ -1072,7 +1090,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null));
             }
 
-            phases.Add(new Phase(3,
+            phases.Add(new Phase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The only area of the republic that remains under Communist control is the border region, from where companies of Russian mercenaries are still arriving to support the Communist side.";
@@ -1081,7 +1099,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new Phase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "There is also a significant Nod base to the north of the city.";
@@ -1090,7 +1108,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new Phase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Ivanov, head of the republic, assures that the fighting will continue until the whole country has been liberated.";
@@ -2934,7 +2952,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Our other commanders are saying that the situation is desperate and we should just fall back, but I'm not giving up so easily.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The primary commander of our Armed Forces, Toikka, is saying that the situation is desperate and we should just fall back, but I'm not giving up so easily.";
                 },
                 null,
                 null,

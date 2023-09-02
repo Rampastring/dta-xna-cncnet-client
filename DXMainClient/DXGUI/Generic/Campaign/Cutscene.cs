@@ -15,6 +15,7 @@
         CR07Victory,
         CR08,
         CR08Victory,
+
         CRA09,
         CRA09Victory,
         CRA10,
@@ -25,6 +26,11 @@
         CRA13,
         CRA13Victory,
         CRA14,
-        CRENDA
+        CRENDA,
+
+        CRB09,
+        CRB09Victory,
+        CRB10,
+        CRB10Victory,
     }
 }

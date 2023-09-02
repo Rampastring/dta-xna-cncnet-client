@@ -61,15 +61,16 @@ namespace DTAClient.Domain.Singleplayer
         public List<Bonus> Bonuses { get; } = new List<Bonus>()
         {
             new Bonus("Armor", "Armor", "M_CR2", "Your units and buildings have 10% more HP.", "Some extra armor would've been helpful when trying to survive against those Gatling tanks.", new Difficulty() { Armor = 1.1 } ),
-            new Bonus("Speed", "Speed", "M_CR3", "Your units move 12% faster.", "More speed would've allowed us to reinforce that base quicker.", new Difficulty() { Groundspeed = 1.12, Airspeed = 1.12 }),
+            new Bonus("Speed", "Speed", "M_CR3", "Your units move 12% faster.", "More speed would've allowed us to reinforce that base quicker.", new Difficulty() { Groundspeed = 1.008, Airspeed = 1.12 }),
             new Bonus("Cost", "Cost", "M_CR4", "Your units and buildings cost 8% less.", "A more efficient unit production process would've helped with limited resources.", new Difficulty() { Cost = 0.92 }),
             new Bonus("Build Time", "BuildTime", "M_CR5", "Your units and buildings build 10% faster.", "Every second counts when setting up a defensive line or preparing to quickly rush your opponent.", new Difficulty() { BuildTime = 0.91 }),
             new Bonus("Rate of Fire", "RoF", "M_CR6", "Your units and buildings reload 10% faster after firing.", "Shooting faster is universally useful.", new Difficulty() { ROF = .819 }),
             new Bonus("Firepower", "Firepower", "M_CR7", "Your units and buildings deal 10% more damage.", "Some extra firepower would've helped clear those islands a bit faster, giving our enemy less reaction time.", new Difficulty() { Firepower = 1.1 } ),
-            new Bonus("Turtle", "Turtle", "M_CRA10", "Your units and buildings have 10% more HP and build 6% faster. Rate of fire is 10% slower.", "For most effective defending, you want to build defenses faster AND have them last longer! Rate of fire is not as important.", new Difficulty() { Armor = 1.10, BuildTime = 0.94, ROF = 1.001 }),
+            new Bonus("Turtle", "Turtle", "M_CRA10", "Your units and buildings have 10% more HP and build 10% faster. Rate of fire is 10% slower.", "For most effective defending, you want to build defenses faster AND have them last longer! Rate of fire is not as important.", new Difficulty() { Armor = 1.10, BuildTime = 0.91, ROF = 1.001 }),
             new Bonus("Infiltrator", "Infiltrator", "M_CRA12", "Your units and buildings have 10% more HP and deal 10% more damage. Everything costs 12% more.", "Training skilled infiltrators is expensive, but worth it for critical missions.", new Difficulty() { Armor = 1.10, Firepower = 1.10, Cost = 1.12 }),
             new Bonus("Generalist", "Generalist", "M_CRA14", "All objects have 2% more HP, move 2% faster, cost 2% less, build 2% faster, reload 2% faster, and deal 2% more damage", "You were just following orders. Unimaginative, but still a learning experience.", 
                 new Difficulty() { Armor = 1.02, Groundspeed = 1.02, Airspeed = 1.02, Cost = 0.98, BuildTime = 0.98, ROF = 0.8918, Firepower = 1.02 }),
+            new Bonus("Hit and Run", "HitAndRun", "M_CRB10", "Your units move 12% faster and your units and buildings deal 10% more damage. Rate of fire is 12% slower.", "More speed and more damage with a hit would've allowed some intense kiting with those Tank Destroyers.", new Difficulty() { Groundspeed = 1.008, Airspeed = 1.12, Firepower = 1.1, ROF = 1.0192 } ),
         };
 
         public List<CampaignGlobalVariable> GlobalVariables { get; } = new List<CampaignGlobalVariable>();

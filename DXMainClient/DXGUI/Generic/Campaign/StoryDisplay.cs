@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace DTAClient.DXGUI.Generic.Campaign
 {
@@ -61,7 +63,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         private float escPressMilliseconds;
         private float skipGraphicAlpha = 0.0f;
-        
+
+        private bool isFadingOutMusic;
 
 
         public void Begin(Cutscene cutscene, bool isDebriefing)
@@ -78,7 +81,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
 
             if (cutscenes == null)
+            {
                 cutscenes = new MissionCutscenes();
+                cutscenes.OnPlaySong += Cutscenes_OnPlaySong;
+                cutscenes.OnStopMusic += Cutscenes_OnStopMusic;
+            }
 
             // Set default values of ConversationDisplay
             ConversationDisplay.TextColor = Color.White;
@@ -96,6 +103,16 @@ namespace DTAClient.DXGUI.Generic.Campaign
             Keyboard.OnKeyPressed += Keyboard_OnKeyPressed;
 
             Enable();
+        }
+
+        private void Cutscenes_OnPlaySong(object sender, EventArgs e)
+        {
+            isFadingOutMusic = false;
+        }
+
+        private void Cutscenes_OnStopMusic(object sender, EventArgs e)
+        {
+            isFadingOutMusic = true;
         }
 
         private void Keyboard_OnKeyPressed(object sender, Rampastring.XNAUI.Input.KeyPressEventArgs e)
@@ -187,6 +204,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         private void DoFinish()
         {
+            ClearStoryImages();
             Disable();
             Keyboard.OnKeyPressed -= Keyboard_OnKeyPressed;
             Finished?.Invoke(this, EventArgs.Empty);
@@ -273,6 +291,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 {
                     DoFinish();
                 }
+            }
+
+            if (isFadingOutMusic)
+            {
+                const float musicFadeRate = 1.0f;
+                MediaPlayer.Volume -= (float)(musicFadeRate * gameTime.ElapsedGameTime.TotalSeconds);
+                if (MediaPlayer.Volume == 0f)
+                    MediaPlayer.Stop();
             }
 
             base.Update(gameTime);

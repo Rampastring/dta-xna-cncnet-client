@@ -35,7 +35,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             chrg226m = AssetLoader.LoadSong("Story/Music/chrg226m");
             vector1a = AssetLoader.LoadSong("Story/Music/vector1a");
             hellmarch = AssetLoader.LoadSong("Story/Music/hellmarch");
-            creditsSong = AssetLoader.LoadSong("Story/Music/credits");
+            tdmaptheme = AssetLoader.LoadSong("Story/Music/credits");
         }
 
         private readonly EnhancedSoundEffect bleep9;
@@ -57,7 +57,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly Song chrg226m;
         private readonly Song vector1a;
         private readonly Song hellmarch;
-        private readonly Song creditsSong;
+        private readonly Song tdmaptheme;
 
         private const double crRAdisplayX = 4.0;
         private const double crRAdisplayY = 20.0;
@@ -153,6 +153,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRB10();
                 case Cutscene.CRB10Victory:
                     return CRB10Victory();
+                case Cutscene.CRB11:
+                    return CRB11();
+                case Cutscene.CRB11Victory:
+                    return CRB11Victory();
             }
 
             return null;
@@ -195,7 +199,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(lastPhaseID + 1,
                 storyDisplay =>
                 {
-                    TryPlaySong(creditsSong);
+                    TryPlaySong(tdmaptheme);
                     storyDisplay.ConversationDisplay.ConversationText = "";
                     var creditsStoryImage = new StoryImage(windowManager, 1);
                     creditsStoryImage.Texture = AssetLoader.LoadTextureUncached("Story/credits.png");
@@ -306,6 +310,236 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRB11Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "While you had been busy commanding forces on the battlefield, GDI lead Sheppard had authorized the use of force against the Government.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/victorybg01.png", 1);
+                    toney7.Play();
+                    TryPlaySong(tdmaptheme);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Soon afterwards, he held a session with the press where he justified his decision.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov's Government had been repressing its own civilians and was guilty of war crimes in the conflict. GDI couldn't back his actions anymore.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI also reached out to you for cooperation.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg03.png", 1);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "After some initial talks, you began planning your next joint operation for toppling the Government.";
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
+        private List<Phase> CRB11()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                    storyDisplay.ConversationDisplay.ConversationText = "After escaping the immediate combat zone, you managed to gather a significant force.";
+                    toney7.Play();
+                    TryPlaySong(chrg226m);
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg01.png", 0);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The lines between your forces and the Government's forces are getting clear.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Unfortunately, most industrial facilities fell under Government control.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg02.png", 1);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI is yet to take a clear stance on your uprising.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg03.png", 2);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They seem to take their time with evaluating their options.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Not supporting either side would lead into Communist, practically Nod, control of the country, which is a no-go for them.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg04.png", 3);
+                },
+                null,
+                storyDisplay => storyDisplay.FindStoryImageById(3).AlphaRate = -1.5f,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(3);
+                    storyDisplay.ConversationDisplay.ConversationText = "Supporting Ivanov would force GDI to commit more forces into the area, and with Ivanov's public reputation down the drain, it would be messy from the standpoint of GDI's reputation.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg05.png", 4);
+                },
+                null,
+                storyDisplay => storyDisplay.FindStoryImageById(4).AlphaRate = -1.5f,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(4);
+                    storyDisplay.ConversationDisplay.ConversationText = "Supporting you, on the other hand, would force GDI to commit even more forces, but without the reputation issue.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Whatever happens, you have no time to wait for GDI's decision.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The current control of industry allows Ivanov and Toikka to produce equipment much faster than you. If this conflict goes on for longer, you are set up to lose unless this changes.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg02.png", 5);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The easiest way to fix the situation is to pay a revisit to and re-conquer a nearby industrial area.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This is further made easier by the leadership of a nearby Government outpost declaring loyalty to you.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg06.png", 5);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Rendezvous your forces with the outpost and take control of it. The outpost has no vehicle production capacity, but it allows you to train and arm infantry.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards, assault a nearby Government base that contains a War Factory. Capture it and use it to build an MCV, which will finally allow you to set up a proper base.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg07.png", 6);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Proceed to build a strong force and eliminate all Government bases.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Make sure to also capture Oil Refineries in the area for stable income. The area has otherwise limited resources to harvest.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB11/bg08.png", 7);
+                },
+                null,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "------------------";
+                    HideAllStoryImagesWithSound(storyDisplay, toney4);
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/crtitle.png", 11);
+                },
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRB10Victory()
@@ -845,7 +1079,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.ConversationText = "----------------";
                     toney7.Play();
-                    TryPlaySong(creditsSong);
+                    TryPlaySong(tdmaptheme);
                 },
                 null,
                 null,

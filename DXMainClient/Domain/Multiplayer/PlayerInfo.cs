@@ -53,13 +53,15 @@ namespace DTAClient.Domain.Multiplayer
 
         /// <summary>
         /// Returns the level of the AI for the [HouseHandicaps] section in spawn.ini.
-        /// 3 = Very Hard, 2 = Easy, 1 = Medium, 0 = Hard.
+        /// 4 = Ultimate, 3 = Brutal, 2 = Easy, 1 = Medium, 0 = Hard.
+        /// Yes, it's weird due to TS engine limitations.
         /// </summary>
-        /// <returns></returns>
         public int GetHouseHandicapAILevel()
         {
             switch (AILevel)
             {
+                case 4:
+                    return 4;
                 case 3:
                     return 3;
                 case 2:

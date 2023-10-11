@@ -22,7 +22,7 @@ namespace ClientCore
 
         public const string QRES_EXECUTABLE = "qres.dat";
 
-        public const int AI_LEVEL_COUNT = 4;
+        public const int AI_LEVEL_COUNT = 5;
         public const int EASY_AI_INDEX = 0;
 
         public const string CNCNET_PROTOCOL_REVISION = "R8";
@@ -83,6 +83,8 @@ namespace ClientCore
         {
             switch (aiLevel)
             {
+                case 4:
+                    return "Ultimate AI";
                 case 3:
                     return "Brutal AI";
                 case 2:

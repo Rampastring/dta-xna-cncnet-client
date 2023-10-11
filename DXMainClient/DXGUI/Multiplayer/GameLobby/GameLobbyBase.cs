@@ -193,6 +193,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 AssetLoader.LoadTexture("rankEasy.png"),
                 AssetLoader.LoadTexture("rankNormal.png"),
                 AssetLoader.LoadTexture("rankHard.png"),
+                AssetLoader.LoadTexture("rankBrutal.png"),
                 AssetLoader.LoadTexture("rankBrutal.png")
             };
 
@@ -516,11 +517,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerName.ClientRectangle = new Rectangle(locationX,
                     locationY + (DROP_DOWN_HEIGHT + playerOptionVecticalMargin) * i,
                     playerNameWidth, DROP_DOWN_HEIGHT);
-                ddPlayerName.AddItem(String.Empty);
+                ddPlayerName.AddItem(string.Empty);
                 ddPlayerName.AddItem(AILevelToName(0));
                 ddPlayerName.AddItem(AILevelToName(1));
                 ddPlayerName.AddItem(AILevelToName(2));
                 ddPlayerName.AddItem(AILevelToName(3));
+                ddPlayerName.AddItem(AILevelToName(4));
                 ddPlayerName.AllowDropDown = true;
                 ddPlayerName.SelectedIndexChanged += CopyPlayerDataFromUI;
                 ddPlayerName.Tag = true;

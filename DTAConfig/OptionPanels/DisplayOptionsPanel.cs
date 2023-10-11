@@ -604,7 +604,7 @@ namespace DTAConfig.OptionPanels
 
             int index = ddIngameResolution.Items.FindIndex(i => i.Text == currentRes);
 
-            ddIngameResolution.SelectedIndex = index > -1 ? index : 0;
+            ddIngameResolution.SelectedIndex = index;
 
             // Wonder what this "Win8CompatMode" actually does..
             // Disabling it used to be TS-DDRAW only, but it was never enabled after 
@@ -703,16 +703,28 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.DetailLevel.Value = ddDetailLevel.SelectedIndex;
 
-            string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
+            if (ddIngameResolution.SelectedItem != null)
+            {
+                string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
 
-            int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
+                int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
 
-            IniSettings.IngameScreenWidth.Value = ingameRes[0];
-            IniSettings.IngameScreenHeight.Value = ingameRes[1];
+                IniSettings.IngameScreenWidth.Value = ingameRes[0];
+                IniSettings.IngameScreenHeight.Value = ingameRes[1];
 
-            // Calculate drag selection distance, scale it with resolution width
-            int dragDistance = ingameRes[0] / ORIGINAL_RESOLUTION_WIDTH * DRAG_DISTANCE_DEFAULT;
-            IniSettings.DragDistance.Value = dragDistance;
+                // Calculate drag selection distance, scale it with resolution width
+                int dragDistance = ingameRes[0] / ORIGINAL_RESOLUTION_WIDTH * DRAG_DISTANCE_DEFAULT;
+                IniSettings.DragDistance.Value = dragDistance;
+
+                File.Delete(ProgramConstants.GamePath + "Language.dll");
+
+                if (ingameRes[0] >= 1024 && ingameRes[1] >= 720)
+                    File.Copy(ProgramConstants.GamePath + "Resources/language_1024x720.dll", ProgramConstants.GamePath + "Language.dll");
+                else if (ingameRes[0] >= 800 && ingameRes[1] >= 600)
+                    File.Copy(ProgramConstants.GamePath + "Resources/language_800x600.dll", ProgramConstants.GamePath + "Language.dll");
+                else
+                    File.Copy(ProgramConstants.GamePath + "Resources/language_640x480.dll", ProgramConstants.GamePath + "Language.dll");
+            }
 
             DirectDrawWrapper originalRenderer = selectedRenderer;
             selectedRenderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
@@ -784,15 +796,6 @@ namespace DTAConfig.OptionPanels
             }
 
             IniSettings.Renderer.Value = selectedRenderer.InternalName;
-
-            File.Delete(ProgramConstants.GamePath + "Language.dll");
-
-            if (ingameRes[0] >= 1024 && ingameRes[1] >= 720)
-                File.Copy(ProgramConstants.GamePath + "Resources/language_1024x720.dll", ProgramConstants.GamePath + "Language.dll");
-            else if (ingameRes[0] >= 800 && ingameRes[1] >= 600)
-                File.Copy(ProgramConstants.GamePath + "Resources/language_800x600.dll", ProgramConstants.GamePath + "Language.dll");
-            else
-                File.Copy(ProgramConstants.GamePath + "Resources/language_640x480.dll", ProgramConstants.GamePath + "Language.dll");
 
             return restartRequired;
         }

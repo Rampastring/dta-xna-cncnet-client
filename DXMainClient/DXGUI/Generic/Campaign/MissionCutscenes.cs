@@ -13,9 +13,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
     {
         private const float CONVERSATION_MUSIC_VOLUME_MODIFIER = 0.3f;
         private const float ENDING_ALPHA_RATE = -0.25f;
+        private const float FACE_ANIM_ALPHA_RATE = 2.5f;
 
         public MissionCutscenes()
         {
+            beepy2 = new EnhancedSoundEffect("Story/Sounds/BEEPY2.WAV");
+            beepy3 = new EnhancedSoundEffect("Story/Sounds/BEEPY3.WAV");
             bleep9 = new EnhancedSoundEffect("Story/Sounds/BLEEP9.WAV");
             bleep11 = new EnhancedSoundEffect("Story/Sounds/BLEEP11.WAV");
             bleep12 = new EnhancedSoundEffect("Story/Sounds/BLEEP12.WAV");
@@ -26,6 +29,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
             toney7 = new EnhancedSoundEffect("Story/Sounds/TONEY7.WAV");
             mapwipe2 = new EnhancedSoundEffect("Story/Sounds/MAPWIPE2.WAV");
             mapwipe5 = new EnhancedSoundEffect("Story/Sounds/MAPWIPE5.WAV");
+            newtarg1 = new EnhancedSoundEffect("Story/Sounds/NEWTARG1.WAV");
+            world2 = new EnhancedSoundEffect("Story/Sounds/WORLD2.WAV");
 
             ramap = AssetLoader.LoadSong("Story/Music/ramap");
             raintro = AssetLoader.LoadSong("Story/Music/raintro");
@@ -38,6 +43,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
             tdmaptheme = AssetLoader.LoadSong("Story/Music/credits");
         }
 
+        private readonly EnhancedSoundEffect beepy2;
+        private readonly EnhancedSoundEffect beepy3;
         private readonly EnhancedSoundEffect bleep9;
         private readonly EnhancedSoundEffect bleep11;
         private readonly EnhancedSoundEffect bleep12;
@@ -48,6 +55,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly EnhancedSoundEffect toney7;
         private readonly EnhancedSoundEffect mapwipe2;
         private readonly EnhancedSoundEffect mapwipe5;
+        private readonly EnhancedSoundEffect newtarg1;
+        private readonly EnhancedSoundEffect world2;
 
         private readonly Song ramap;
         private readonly Song raintro;
@@ -66,7 +75,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private const double crRAdisplayImageRate = 300.0;
         private const double crRAdisplayImageWidth = 400.0;
         private const double crRAdisplayImageY = crRAdisplayY + 16.0; // the RA border thingies are 16 pixels high at the top
+        private const double crTDdisplayImageY = crRAdisplayY + 19.0; // the TD bordier thingies are 19 pixels high at the top
         private const float crRAdisplayAlphaRate = 5.0f;
+        private const float crTDdisplayImageDisappearAlphaRate = -2.5f;
 
         private IStoryDisplay storyDisplay;
         private WindowManager windowManager;
@@ -123,6 +134,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CR08();
                 case Cutscene.CR08Victory:
                     return CR08Victory();
+
                 case Cutscene.CRA09:
                     return CRA09();
                 case Cutscene.CRA09Victory:
@@ -145,6 +157,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRA14();
                 case Cutscene.CRENDA:
                     return CRA14Victory();
+
                 case Cutscene.CRB09:
                     return CRB09();
                 case Cutscene.CRB09Victory:
@@ -157,6 +170,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRB11();
                 case Cutscene.CRB11Victory:
                     return CRB11Victory();
+                case Cutscene.CRB12:
+                    return CRB12();
             }
 
             return null;
@@ -182,6 +197,24 @@ namespace DTAClient.DXGUI.Generic.Campaign
             image.ImageWidth.Rate = image.ImageX.Rate * 2.0;
             image.ImageY.SnapToValue(crRAdisplayImageY);
             bleep11.Play();
+        }
+
+        private void AddTDDisplay(IStoryDisplay storyDisplay, int id)
+        {
+            var tdsides = storyDisplay.AddSimpleStoryImage("Story/tdsides.png", id, 0);
+            tdsides.AlphaRate = crRAdisplayAlphaRate;
+            tdsides.ImageX.SnapToValue(crRAdisplayX);
+            tdsides.ImageY.SnapToValue(crRAdisplayY);
+            world2.Play();
+        }
+
+        private void AddTDDisplayImage(IStoryDisplay storyDisplay, string imagePath, int id)
+        {
+            var image = storyDisplay.AddSimpleStoryImage(imagePath, id, 0);
+            image.ImageY.SnapToValue(crTDdisplayImageY);
+            image.ImageX.SnapToValue(crRAdisplayImageX);
+            image.AlphaRate = 5.0f;
+            beepy2.Play();
         }
 
         private void HideAllStoryImagesWithSound(IStoryDisplay storyDisplay, EnhancedSoundEffect sound)
@@ -310,6 +343,233 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRB12()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/gdilogo.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    newtarg1.Play();
+
+                    MediaPlayer.IsRepeating = true;
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                storyDisplay => { HideAllStoryImagesWithSound(storyDisplay, beepy3); TryPlaySong(chrg226m); },
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Are you picking this up?";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "...Good.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg02.png", 2, 0f);
+                    beepy3.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "Welcome to the ranks of the GDI.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg03.png", 3, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                storyDisplay => storyDisplay.FindStoryImageById(1).AlphaRate = 1.0f, // make GDI logo visible behind Sheppard again
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(2)));
+
+            phases.Add(new Phase(5,
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "We are still dealing with the aftermath of the First Tiberium War in the Balkans and Africa, and didn't really need another front at this time.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg04.png", 4, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(3)));
+
+            phases.Add(new Phase(6,
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "But we cannot allow your country to fall under control of Nod loyalists.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg05.png", 5, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(4)));
+
+            phases.Add(new Phase(7,
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "We will provide you the tools to beat all of your adversaries, whether it's that slimy bastard Ivanov, or Nod, or the Communists.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg06.png", 6, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE; 
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(5)));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "But first, you need to resolve the chaotic situation on the ground.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg02.png", 7, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(6)));
+
+            phases.Add(new Phase(9,
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "We currently have no safe route to supply your forces, or even our own forces in the area.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg03.png", 8, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(7)));
+
+            phases.Add(new Phase(10,
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "The best option for creating such a route is conquering a beachhead held by the Government.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg04.png", 9, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                    AddTDDisplay(storyDisplay, 50);
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(8)));
+
+            phases.Add(new Phase(11,
+                storyDisplay => 
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "According to intel, Ivanov has constructed heavy defenses on the shore.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg05.png", 10, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                    AddTDDisplayImage(storyDisplay, "Story/CRB12/defenses.png", 51);
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(9)));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If you can figure out a way to knock out the power from their anti-air guns, our air support can open up a route.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg06.png", 11, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                    AddTDDisplayImage(storyDisplay, "Story/CRB12/power.png", 52);
+                },
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(51),
+                storyDisplay => storyDisplay.RemoveStoryImageById(10)));
+
+            phases.Add(new Phase(13,
+                storyDisplay => 
+                { 
+                    storyDisplay.ConversationDisplay.ConversationText = "If you succeed, we'll provide you some ships and a limited landing force.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg03.png", 12, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE; 
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(52).AlphaRate = crTDdisplayImageDisappearAlphaRate; beepy2.Play(); },
+                storyDisplay => { storyDisplay.RemoveStoryImageById(11); storyDisplay.RemoveStoryImageById(52); }));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Use them to build up a base and clear out all remaining resistance.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg06.png", 13, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(50).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                storyDisplay => { storyDisplay.RemoveStoryImageById(12); storyDisplay.RemoveStoryImageById(50); }));
+
+            phases.Add(new Phase(15,
+                storyDisplay => 
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Good luck, Commander.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg07.png", 14, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE; 
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(13),
+                storyDisplay => { storyDisplay.FindStoryImageById(14).AlphaRate = -2.0f; toney4.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(14)));
+
+            phases.Add(new Phase(16,
+                storyDisplay => 
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, beepy3),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(17,
+                storyDisplay => { storyDisplay.ConversationDisplay.ConversationText = "----------------"; TryPlaySong(tdmaptheme); },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay => 
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Planning this operation, you figured that the best chance of success would come with a surprise attack.";
+                },
+                null,
+                storyDisplay => beepy3.Play(),
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Send in a Commando. There is an agent in the Government ranks who can supply him with weapons stashed in a pre-arranged location.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg08.png", 20, 0f);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, beepy3),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Fetch the weapons, figure out a way to reach the Government power facility that powers the AA guns, and C4 it to dust.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg09.png", 21, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "Afterwards, the GDI reinforcements will have to be enough for whatever the illegitimate Government throws at you.",
+                null,
+                storyDisplay =>
+                {
+                    HideAllStoryImagesWithSound(storyDisplay, toney4);
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "------------------";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/crtitle_yellow.png", 11, 1f);
+                },
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRB11Victory()

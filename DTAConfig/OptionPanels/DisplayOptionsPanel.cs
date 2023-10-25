@@ -32,6 +32,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkBorderlessWindowedMode;
         private XNAClientCheckBox chkBackBufferInVRAM;
         private XNAClientCheckBox chkStretchMovies;
+        private XNAClientCheckBox chkClassicMessageListPosition;
         private XNAClientPreferredItemDropDown ddClientResolution;
         private XNAClientCheckBox chkBorderlessClient;
         private XNAClientDropDown ddClientTheme;
@@ -80,7 +81,7 @@ namespace DTAConfig.OptionPanels
             foreach (var res in resolutions)
                 ddIngameResolution.AddItem(res.ToString());
 
-            var  lblDetailLevel = new XNALabel(WindowManager);
+            var lblDetailLevel = new XNALabel(WindowManager);
             lblDetailLevel.Name = "lblDetailLevel";
             lblDetailLevel.ClientRectangle = new Rectangle(lblIngameResolution.X,
                 ddIngameResolution.Bottom + 16, 0, 0);
@@ -164,6 +165,13 @@ namespace DTAConfig.OptionPanels
                 lblDetailLevel.X,
                 chkBackBufferInVRAM.Bottom + 28, 0, 0);
             chkStretchMovies.Text = "Stretch Movies";
+
+            chkClassicMessageListPosition = new XNAClientCheckBox(WindowManager);
+            chkClassicMessageListPosition.Name = "chkClassicMessageListPosition";
+            chkClassicMessageListPosition.ClientRectangle = new Rectangle(
+                lblDetailLevel.X,
+                chkStretchMovies.Bottom + 28, 0, 0);
+            chkClassicMessageListPosition.Text = "Classic Message List Position";
 
             var lblClientResolution = new XNALabel(WindowManager);
             lblClientResolution.Name = "lblClientResolution";
@@ -298,6 +306,7 @@ namespace DTAConfig.OptionPanels
             AddChild(chkBorderlessWindowedMode);
             AddChild(chkBackBufferInVRAM);
             AddChild(chkStretchMovies);
+            AddChild(chkClassicMessageListPosition);
             AddChild(chkBorderlessClient);
             AddChild(lblClientTheme);
             AddChild(ddClientTheme);
@@ -597,10 +606,10 @@ namespace DTAConfig.OptionPanels
             base.Load();
 
             LoadRenderer();
-            ddDetailLevel.SelectedIndex = UserINISettings.Instance.DetailLevel;
+            ddDetailLevel.SelectedIndex = IniSettings.DetailLevel;
 
-            string currentRes = UserINISettings.Instance.IngameScreenWidth.Value +
-                "x" + UserINISettings.Instance.IngameScreenHeight.Value;
+            string currentRes = IniSettings.IngameScreenWidth.Value +
+                "x" + IniSettings.IngameScreenHeight.Value;
 
             int index = ddIngameResolution.Items.FindIndex(i => i.Text == currentRes);
 
@@ -633,13 +642,13 @@ namespace DTAConfig.OptionPanels
                 }
                 else
                 {
-                    chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+                    chkBorderlessWindowedMode.Checked = IniSettings.BorderlessWindowedMode;
                 }
             }
             else
             {
-                chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
-                chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+                chkWindowedMode.Checked = IniSettings.WindowedMode;
+                chkBorderlessWindowedMode.Checked = IniSettings.BorderlessWindowedMode;
             }
 
             string currentClientRes = IniSettings.ClientResolutionX.Value + "x" + IniSettings.ClientResolutionY.Value;
@@ -648,14 +657,15 @@ namespace DTAConfig.OptionPanels
 
             ddClientResolution.SelectedIndex = clientResIndex > -1 ? clientResIndex : 0;
 
-            chkBorderlessClient.Checked = UserINISettings.Instance.BorderlessWindowedClient;
+            chkBorderlessClient.Checked = IniSettings.BorderlessWindowedClient;
 
             int selectedThemeIndex = ddClientTheme.Items.FindIndex(
-                ddi => ddi.Text == UserINISettings.Instance.ClientTheme);
+                ddi => ddi.Text == IniSettings.ClientTheme);
             ddClientTheme.SelectedIndex = selectedThemeIndex > -1 ? selectedThemeIndex : 0;
 
-            chkBackBufferInVRAM.Checked = !UserINISettings.Instance.BackBufferInVRAM;
-            chkStretchMovies.Checked = UserINISettings.Instance.StretchMovies;
+            chkBackBufferInVRAM.Checked = !IniSettings.BackBufferInVRAM;
+            chkStretchMovies.Checked = IniSettings.StretchMovies;
+            chkClassicMessageListPosition.Checked = IniSettings.ClassicMessageListPosition;
 
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Tiberian Sun Client");
 
@@ -758,6 +768,7 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.BackBufferInVRAM.Value = !chkBackBufferInVRAM.Checked;
             IniSettings.StretchMovies.Value = chkStretchMovies.Checked;
+            IniSettings.ClassicMessageListPosition.Value = chkClassicMessageListPosition.Checked;
 
             if (selectedRenderer != originalRenderer || 
                 !File.Exists(ProgramConstants.GamePath + selectedRenderer.ConfigFileName))

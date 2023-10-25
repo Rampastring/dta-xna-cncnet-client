@@ -126,6 +126,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public void AddStoryImage(StoryImage storyImage)
         {
+            storyImage.DrawOrder = storyImage.ID;
             StoryImages.Add(storyImage);
             AddChild(storyImage);
         }
@@ -224,8 +225,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
             ConversationDisplay.Width = Width / ConversationDisplay.Scaling;
             ConversationDisplay.Height = 65;
             ConversationDisplay.Y = Height - ConversationDisplay.ScaledHeight;
-            ConversationDisplay.DrawOrder = 1;
-            ConversationDisplay.UpdateOrder = 1;
+            ConversationDisplay.DrawOrder = 99999;
+            ConversationDisplay.UpdateOrder = 99999;
             AddChild(ConversationDisplay);
 
             base.Initialize();

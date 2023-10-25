@@ -48,7 +48,7 @@ namespace ClientCore
 
             IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", 1024);
             IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", 768);
-            StretchMovies = new BoolSetting(iniFile, VIDEO, "StretchMovies", false);
+            StretchMovies = new BoolSetting(iniFile, VIDEO, "StretchMovies", true);
             WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
             BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);
             ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", Screen.PrimaryScreen.Bounds.Width);
@@ -75,6 +75,7 @@ namespace ClientCore
             TextBackgroundColor = new IntSetting(iniFile, OPTIONS, "TextBackgroundColor", 0);
             DragDistance = new IntSetting(iniFile, OPTIONS, "DragDistance", 4);
             DoubleTapInterval = new IntSetting(iniFile, OPTIONS, "DoubleTapInterval", 30);
+            ClassicMessageListPosition = new BoolSetting(iniFile, OPTIONS, "ClassicMessageListPosition", false);
             Win8CompatMode = new StringSetting(iniFile, OPTIONS, "Win8Compat", "No");
 
             PlayerName = new StringSetting(iniFile, MULTIPLAYER, "Handle", string.Empty);
@@ -143,9 +144,9 @@ namespace ClientCore
         public BoolSetting StopMusicOnMenu { get; private set; }
         public BoolSetting MessageSound { get; private set; }
 
-        /********/
-        /* GAME */
-        /********/
+        /***********/
+        /* OPTIONS */
+        /***********/
 
         public IntSetting ScrollRate { get; private set; }
         public BoolSetting TargetLines { get; private set; }
@@ -157,6 +158,7 @@ namespace ClientCore
         public IntSetting TextBackgroundColor { get; private set; }
         public IntSetting DragDistance { get; private set; }
         public IntSetting DoubleTapInterval { get; private set; }
+        public BoolSetting ClassicMessageListPosition { get; private set; }
         public StringSetting Win8CompatMode { get; private set; }
 
         /************************/

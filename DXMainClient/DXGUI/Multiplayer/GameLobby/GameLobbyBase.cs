@@ -306,6 +306,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ChangeMap(GameMode, Map);
         }
 
+        private int GetRankIndexForCoopDifficultyLevel(int coopDifficultyLevel) => Math.Abs(2 - coopDifficultyLevel) + 1;
+
         private void ListMaps()
         {
             lbMapList.SelectedIndexChanged -= LbMapList_SelectedIndexChanged;
@@ -333,7 +335,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (GameMode.Maps[i].IsCoop)
                 {
                     if (StatisticsManager.Instance.HasBeatCoOpMap(GameMode.Maps[i].Name, GameMode.UIName))
-                        rankItem.Texture = RankTextures[Math.Abs(2 - GameMode.CoopDifficultyLevel) + 1];
+                        rankItem.Texture = RankTextures[GetRankIndexForCoopDifficultyLevel(GameMode.CoopDifficultyLevel)];
                     else
                         rankItem.Texture = RankTextures[0];
                 }
@@ -1149,8 +1151,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if ((checkBox.MapScoringMode == CheckBoxMapScoringMode.DenyWhenChecked && checkBox.Checked) ||
                     (checkBox.MapScoringMode == CheckBoxMapScoringMode.DenyWhenUnchecked && !checkBox.Checked))
                 {
-                    isValidForStar = false;
-                    break;
+                    // Don't prevent scoring due to forced options
+                    if (!Map.ForcedCheckBoxValues.Exists(f => f.Key == checkBox.Name))
+                    {
+                        isValidForStar = false;
+                        break;
+                    }
                 }
             }
 
@@ -1786,7 +1792,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if ((checkBox.MapScoringMode == CheckBoxMapScoringMode.DenyWhenChecked && checkBox.Checked) ||
                     (checkBox.MapScoringMode == CheckBoxMapScoringMode.DenyWhenUnchecked && !checkBox.Checked))
                 {
-                    return RANK_NONE;
+                    // Don't prevent scoring due to forced options
+                    if (!Map.ForcedCheckBoxValues.Exists(f => f.Key == checkBox.Name))
+                        return RANK_NONE;
                 }
             }
 
@@ -1797,6 +1805,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             if (IsPlayerSpectator(localPlayer))
                 return RANK_NONE;
+
+            if (Map.IsCoop)
+                return GetRankIndexForCoopDifficultyLevel(GameMode.CoopDifficultyLevel);
 
             // These variables are used by both the skirmish and multiplayer code paths
             int[] teamMemberCounts = new int[5];

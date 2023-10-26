@@ -129,8 +129,7 @@ namespace DTAClient.Domain.Multiplayer
         public bool EnforceMaxPlayers { get; private set; }
 
         /// <summary>
-        /// Controls if the map is meant for a co-operation game mode
-        /// (enables briefing logic and forcing options, among others).
+        /// Controls if the map is meant for a co-operation game mode.
         /// </summary>
         public bool IsCoop { get; private set; }
 

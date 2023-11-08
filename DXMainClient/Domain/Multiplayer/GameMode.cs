@@ -29,6 +29,8 @@ namespace DTAClient.Domain.Multiplayer
         /// </summary>
         public string UIName { get; private set; }
 
+        public string Description { get; private set; }
+
         public bool MultiplayerOnly { get; private set; }
 
         public bool HumanPlayersOnly { get; private set; }
@@ -54,27 +56,28 @@ namespace DTAClient.Domain.Multiplayer
 
         public void Initialize()
         {
-            IniFile forcedOptionsIni = new IniFile(ProgramConstants.GamePath + ClientConfiguration.Instance.MPMapsIniPath);
+            IniFile mpMapsIni = new IniFile(ProgramConstants.GamePath + ClientConfiguration.Instance.MPMapsIniPath);
 
-            CoopDifficultyLevel = forcedOptionsIni.GetIntValue(Name, "CoopDifficultyLevel", 0);
-            UIName = forcedOptionsIni.GetStringValue(Name, "UIName", Name);
-            MultiplayerOnly = forcedOptionsIni.GetBooleanValue(Name, "MultiplayerOnly", false);
-            HumanPlayersOnly = forcedOptionsIni.GetBooleanValue(Name, "HumanPlayersOnly", false);
-            ForceRandomStartLocations = forcedOptionsIni.GetBooleanValue(Name, "ForceRandomStartLocations", false);
-            ForceNoTeams = forcedOptionsIni.GetBooleanValue(Name, "ForceNoTeams", false);
-            forcedOptionsSection = forcedOptionsIni.GetStringValue(Name, "ForcedOptions", string.Empty);
-            mapCodeININame = forcedOptionsIni.GetStringValue(Name, "MapCodeININame", Name + ".ini");
+            CoopDifficultyLevel = mpMapsIni.GetIntValue(Name, "CoopDifficultyLevel", 0);
+            UIName = mpMapsIni.GetStringValue(Name, "UIName", Name);
+            Description = mpMapsIni.GetStringValue(Name, "Description", string.Empty);
+            MultiplayerOnly = mpMapsIni.GetBooleanValue(Name, "MultiplayerOnly", false);
+            HumanPlayersOnly = mpMapsIni.GetBooleanValue(Name, "HumanPlayersOnly", false);
+            ForceRandomStartLocations = mpMapsIni.GetBooleanValue(Name, "ForceRandomStartLocations", false);
+            ForceNoTeams = mpMapsIni.GetBooleanValue(Name, "ForceNoTeams", false);
+            forcedOptionsSection = mpMapsIni.GetStringValue(Name, "ForcedOptions", string.Empty);
+            mapCodeININame = mpMapsIni.GetStringValue(Name, "MapCodeININame", Name + ".ini");
 
-            string[] disallowedSides = forcedOptionsIni
+            string[] disallowedSides = mpMapsIni
                 .GetStringValue(Name, "DisallowedPlayerSides", string.Empty)
                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string sideIndex in disallowedSides)
                 DisallowedPlayerSides.Add(int.Parse(sideIndex));
 
-            ParseForcedOptions(forcedOptionsIni);
+            ParseForcedOptions(mpMapsIni);
 
-            ParseSpawnIniOptions(forcedOptionsIni);
+            ParseSpawnIniOptions(mpMapsIni);
         }
 
         private void ParseForcedOptions(IniFile forcedOptionsIni)

@@ -172,6 +172,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected IniFile GameOptionsIni { get; private set; }
 
+        private GameModeDescriptionPanel gameModeDescriptionPanel;
+        private ToolTip gameModeLabelTooltip;
+
         public bool IsGameOptionFlagEnabled(GameOptionFlags flagToCheck, GameOptionFlags flagsContainer)
         {
             return (flagsContainer & flagToCheck) == flagToCheck;
@@ -244,7 +247,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             ddGameMode = FindChild<XNAClientDropDown>(nameof(ddGameMode));
             ddGameMode.SelectedIndexChanged += DdGameMode_SelectedIndexChanged;
-
+            
             foreach (GameMode gm in GameModes)
                 ddGameMode.AddItem(gm.UIName);
 
@@ -258,6 +261,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             CheckBoxes.ForEach(chk => chk.CheckedChanged += ChkBox_CheckedChanged);
             DropDowns.ForEach(dd => dd.SelectedIndexChanged += Dropdown_SelectedIndexChanged);
+
+            gameModeDescriptionPanel = new GameModeDescriptionPanel(WindowManager);
+            gameModeDescriptionPanel.Name = nameof(gameModeDescriptionPanel);
+            AddChild(gameModeDescriptionPanel);
+            gameModeDescriptionPanel.X = ddGameMode.Right;
+            gameModeDescriptionPanel.Y = ddGameMode.Y;
+            gameModeDescriptionPanel.Disable();
+
+            gameModeLabelTooltip = new ToolTip(WindowManager, lblGameMode);
         }
 
         private void BtnPickRandomMap_LeftClick(object sender, EventArgs e) => PickRandomMap();
@@ -1595,12 +1607,17 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 lblGameMode.Text = "Game mode: Unknown";
                 lblMapSize.Text = "Unknown Size";
 
+                gameModeLabelTooltip.Blocked = true;
+
                 lblMapAuthor.X = MapPreviewBox.Right - lblMapAuthor.Width;
 
                 MapPreviewBox.Map = null;
 
                 return;
             }
+
+            gameModeLabelTooltip.Blocked = false;
+            gameModeLabelTooltip.Text = gameMode.Description;
 
             lblMapName.Text = "Map: " + Renderer.GetSafeString(map.Name, lblMapName.FontIndex);
             lblMapAuthor.Text = "By " + Renderer.GetSafeString(map.Author, lblMapAuthor.FontIndex);
@@ -2046,6 +2063,36 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 return false;
 
             return true;
+        }
+
+        private void UpdateGameModeDescriptionPanel()
+        {
+            if (ddGameMode.IsActive && ddGameMode.HoveredIndex > -1 && ddGameMode.DropDownState != DropDownState.CLOSED)
+            {
+                GameMode hoveredGameMode = GameModes[ddGameMode.HoveredIndex];
+                gameModeDescriptionPanel.GameMode = hoveredGameMode;
+
+                if (!string.IsNullOrEmpty(hoveredGameMode.Description))
+                {
+                    gameModeDescriptionPanel.Enable();
+                }
+                else
+                {
+                    gameModeDescriptionPanel.Disable();
+                }
+            }
+            else
+            {
+                if (gameModeDescriptionPanel.Enabled)
+                    gameModeDescriptionPanel.Disable();
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            UpdateGameModeDescriptionPanel();
         }
 
         protected abstract bool AllowPlayerOptionsChange();

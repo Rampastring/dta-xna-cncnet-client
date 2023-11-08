@@ -214,7 +214,7 @@ namespace ClientCore
         public static void CheckForSavesInMainSaveDirectory()
         {
             if (!Directory.Exists(ProgramConstants.GamePath + SavedGamesDirectory))
-                return;
+                Directory.CreateDirectory(ProgramConstants.GamePath + SavedGamesDirectory);
 
             string[] saveFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*.SAV");
 
@@ -307,6 +307,9 @@ namespace ClientCore
         {
             Logger.Log("Starting game session.");
 
+            if (!Directory.Exists(ProgramConstants.GamePath + SavedGamesDirectory))
+                Directory.CreateDirectory(ProgramConstants.GamePath + SavedGamesDirectory);
+
             gameSaved = false;
 
             // Move possible saved games of this session to the main saved games directory
@@ -398,7 +401,7 @@ namespace ClientCore
 
                 string filter = SessionType == GameSessionType.MULTIPLAYER ? "*.NET" : "*.SAV";
 
-                fileSystemWatcher = new FileSystemWatcher(ProgramConstants.GamePath + "Saved Games", filter);
+                fileSystemWatcher = new FileSystemWatcher(ProgramConstants.GamePath + SavedGamesDirectory, filter);
                 fileSystemWatcher.Created += FileSystemWatcher_Event;
                 fileSystemWatcher.Changed += FileSystemWatcher_Event;
                 fileSystemWatcher.EnableRaisingEvents = true;

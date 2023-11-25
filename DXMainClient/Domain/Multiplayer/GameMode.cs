@@ -38,6 +38,8 @@ namespace DTAClient.Domain.Multiplayer
         public bool ForceRandomStartLocations { get; private set; }
 
         public bool ForceNoTeams { get; private set; }
+        public bool DifficultyBasedAINames { get; private set; }
+
 
         public List<int> DisallowedPlayerSides = new List<int>();
 
@@ -65,6 +67,7 @@ namespace DTAClient.Domain.Multiplayer
             HumanPlayersOnly = mpMapsIni.GetBooleanValue(Name, "HumanPlayersOnly", false);
             ForceRandomStartLocations = mpMapsIni.GetBooleanValue(Name, "ForceRandomStartLocations", false);
             ForceNoTeams = mpMapsIni.GetBooleanValue(Name, "ForceNoTeams", false);
+            DifficultyBasedAINames = mpMapsIni.GetBooleanValue(Name, "DifficultyBasedAINames", false);
             forcedOptionsSection = mpMapsIni.GetStringValue(Name, "ForcedOptions", string.Empty);
             mapCodeININame = mpMapsIni.GetStringValue(Name, "MapCodeININame", Name + ".ini");
 
@@ -124,6 +127,9 @@ namespace DTAClient.Domain.Multiplayer
 
         public void ApplySpawnIniCode(IniFile spawnIni)
         {
+            if (DifficultyBasedAINames)
+                spawnIni.SetBooleanValue("Settings", "DifficultyBasedAINames", DifficultyBasedAINames);
+
             foreach (KeyValuePair<string, string> key in ForcedSpawnIniOptions)
                 spawnIni.SetStringValue("Settings", key.Key, key.Value);
         }

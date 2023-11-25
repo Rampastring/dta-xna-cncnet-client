@@ -1186,7 +1186,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 var pHouseInfo = houseInfos[Players.Count + aiId];
                 PlayerInfo aiInfo = AIPlayers[aiId];
-                matchStatistics.AddPlayer("Computer", false, true, false,
+
+                string aiName = GameMode.DifficultyBasedAINames ? aiInfo.Name : "Computer";
+
+                matchStatistics.AddPlayer(aiName, false, true, false,
                     pHouseInfo.SideIndex + 1, aiInfo.TeamId,
                     MPColors.FindIndex(c => c.GameColorIndex == pHouseInfo.ColorIndex),
                     aiInfo.AILevel);

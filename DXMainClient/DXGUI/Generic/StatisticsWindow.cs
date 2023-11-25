@@ -9,6 +9,7 @@ using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace DTAClient.DXGUI.Generic
@@ -953,7 +954,13 @@ namespace DTAClient.DXGUI.Generic
             else
                 lblKillLossRatioValue.Text = "-";
 
-            lblTotalTimePlayedValue.Text = timePlayed.ToString();
+            string totalTimePlayedString = "";
+            if (timePlayed.Days > 0)
+                totalTimePlayedString += timePlayed.Days.ToString(CultureInfo.InvariantCulture) + " d ";
+
+            totalTimePlayedString += timePlayed.Hours.ToString(CultureInfo.InvariantCulture) + " h " + timePlayed.Minutes.ToString("D2", CultureInfo.InvariantCulture) + " m";
+
+            lblTotalTimePlayedValue.Text = totalTimePlayedString;
             lblTotalKillsValue.Text = totalKills.ToString();
             lblTotalLossesValue.Text = totalLosses.ToString();
             lblTotalScoreValue.Text = totalScore.ToString();

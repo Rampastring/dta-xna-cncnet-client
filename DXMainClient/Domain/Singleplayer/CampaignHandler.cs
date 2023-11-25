@@ -72,6 +72,7 @@ namespace DTAClient.Domain.Singleplayer
                 new Difficulty() { Armor = 1.02, Groundspeed = 1.02, Airspeed = 1.02, Cost = 0.98, BuildTime = 0.98, ROF = 0.8918, Firepower = 1.02 }),
             new Bonus("Hit and Run", "HitAndRun", "M_CRB10", "Your units move 12% faster and your units and buildings deal 10% more damage. Rate of fire is 12% slower.", "More speed and more damage with a hit would've allowed some intense kiting with those Tank Destroyers.", new Difficulty() { Groundspeed = 1.008, Airspeed = 1.12, Firepower = 1.1, ROF = 1.0192 } ),
             new Bonus("Entrencher", "Entrencher", "M_CRB12", "Your units and buildings have 10% more HP and cost 8% less. Your units move 12% slower.", "Once you establish yourself on a shoreline, you don't allow yourself to get pushed back into the water.", new Difficulty() { Armor = 1.10, Cost = 0.92, Groundspeed = .792 } ),
+            new Bonus("Nimble", "Nimble", "M_CRB13", "Your units are 24% faster. Your units and buildings have 10% less HP.", "More mobility would have helped with catching those quick Nod units. And due to their lightness, we can beat them even with less armor.", new Difficulty() { Armor = 0.9, Groundspeed = 1.116 } )
         };
 
         public List<CampaignGlobalVariable> GlobalVariables { get; } = new List<CampaignGlobalVariable>();

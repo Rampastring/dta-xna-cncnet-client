@@ -35,5 +35,7 @@
         CRB11,
         CRB11Victory,
         CRB12,
+        CRB13,
+        CRB13Victory
     }
 }

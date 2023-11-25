@@ -172,6 +172,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRB11Victory();
                 case Cutscene.CRB12:
                     return CRB12();
+                case Cutscene.CRB13:
+                    return CRB13();
+                case Cutscene.CRB13Victory:
+                    return CRB13Victory();
             }
 
             return null;
@@ -343,6 +347,181 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRB13Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Your operation successfully halted the offensive of the Nod-Communist alliance.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB13/victorybg01.png", 1);
+                    toney7.Play();
+                    TryPlaySong(tdmaptheme);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, the current state of affairs is not good enough.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The enemy is able to gather more forces and launch a renewed offensive in the future.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB13/victorybg02.png", 2);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "To prevent that, it has come time to launch a counterattack.";
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
+        private List<Phase> CRB13()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/gdilogo.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    newtarg1.Play();
+                    TryPlaySong(chrg226m);
+
+                    MediaPlayer.IsRepeating = true;
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Good job on establishing the beachhead.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg04.png", 2, 0f);
+                    beepy3.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "But there is something else to urgently resolve.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg02.png", 3, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(2)));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Nod has taken advantage of the collapse of the Government military and is pushing forward with full force.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg06.png", 4, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(3)));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Some remnants of the Government military are still fighting back, but others have surrendered and even joined the enemy.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg03.png", 5, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(4)));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If we don't stop them quickly, it will be much harder to drive them back once they get to settle down with fortifications.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg05.png", 6, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(5)));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Take a force and push back the Nod offense.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg02.png", 7, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(6)));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If you proceed fast enough, you might reach elements of the Government military that are still fighting against Nod.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg03.png", 8, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(7)));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They can still have meaningful equipment and production capabilities that could help us.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg06.png", 9, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(8)));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Good luck.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/bg07.png", 10, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(9),
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(10).AlphaRate = -2.0f; toney4.Play(); }));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRB12()
@@ -1351,7 +1530,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.AddSimpleStoryImage("Story/CRB09/bg00.png", 0);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
-                    storyDisplay.ConversationDisplay.ConversationText = "Investigation into the happened atrocities was not going to be very straightforward.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Investigation into the committed atrocities was not going to be very straightforward.";
                 },
                 null,
                 null,
@@ -1380,7 +1559,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/CRB09/bg02.png", 2);
-                    storyDisplay.ConversationDisplay.ConversationText = "While you have been brainstorming this, the battles have kept raging on.";
+                    storyDisplay.ConversationDisplay.ConversationText = "While you have been pondering this, the battles have kept raging on.";
                 },
                 null,
                 null,

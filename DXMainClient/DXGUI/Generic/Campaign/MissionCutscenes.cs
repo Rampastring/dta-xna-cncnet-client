@@ -30,6 +30,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             mapwipe2 = new EnhancedSoundEffect("Story/Sounds/MAPWIPE2.WAV");
             mapwipe5 = new EnhancedSoundEffect("Story/Sounds/MAPWIPE5.WAV");
             newtarg1 = new EnhancedSoundEffect("Story/Sounds/NEWTARG1.WAV");
+            powrdn1 = new EnhancedSoundEffect("Story/Sounds/POWRDN1.WAV");
             world2 = new EnhancedSoundEffect("Story/Sounds/WORLD2.WAV");
 
             ramap = AssetLoader.LoadSong("Story/Music/ramap");
@@ -56,6 +57,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly EnhancedSoundEffect mapwipe2;
         private readonly EnhancedSoundEffect mapwipe5;
         private readonly EnhancedSoundEffect newtarg1;
+        private readonly EnhancedSoundEffect powrdn1;
         private readonly EnhancedSoundEffect world2;
 
         private readonly Song ramap;
@@ -176,6 +178,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRB13();
                 case Cutscene.CRB13Victory:
                     return CRB13Victory();
+                case Cutscene.CRB14:
+                    return CRB14();
+                case Cutscene.CRB14Victory:
+                    return CRB14Victory();
             }
 
             return null;
@@ -347,6 +353,406 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRB14Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The GDI has gained another victory.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/victorybg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(tdmaptheme);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Their forces broke through the heavily fortified frontlines and arrived near Karhumäki, putting the only remaining Communist-controlled major settlement at risk.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Reportedly there is significant demotivation, confusion and even panic in the neo-Soviet leadership over this development.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/victorybg02.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It is possible that their command will implode even without GDI military action on the city.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Brotherhood of Nod has reacted to this by strengthening their own forces and reducing support for the fledgling Communists.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/victorybg03.png", 3, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Supposedly some senior officers in the Brotherhood are seeing further military help to the Communists as a waste of resources, considering their recent poor results.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            var sovietCommandoFoundVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_B_SOVIET_COMMANDO_FOUND");
+            if (sovietCommandoFoundVariable != null && sovietCommandoFoundVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        TryPlaySong(chrg226m);
+                        storyDisplay.ConversationDisplay.TextColor = Color.Gold;
+                        storyDisplay.AddSimpleStoryImage("Story/CRB14/victorybg04.png", 4);
+                        storyDisplay.ConversationDisplay.ConversationText = "The neo-Soviet Commando that switched to your side, Yarvelja, appears to be popular among the Communist forces.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "He says his main motivation for fighting in the civil war was to topple Ivanov's corrupt government.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(9,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "As you share this goal, he has figured he - and many other Communists - have no reason to keep fighting against you.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(10,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "He has proposed he could use his influence to negotiate a ceasefire between the GDI and the neo-Soviets.";
+                        storyDisplay.AddSimpleStoryImage("Story/CRB14/victorybg05.png", 5);
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(11,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "After the war is over, this ceasefire could develop into negotiations of governance with the United Nations.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(12,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "He only asks that should you accept this offer, you will protect the Communists from potential retribution by Nod.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(13,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Whether you accept the offer or dismiss it is up to you.";
+                    },
+                    null,
+                    null,
+                    null));
+            }
+
+            return phases;
+        }
+
+        private List<Phase> CRB14()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "CONFLICT NEWS";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(chrg226m);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI accepting the rebellious Commander into their ranks has majorly shifted the battlefield.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/bg02.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "At first, it brought GDI into a tricky crossfire situation, with them having to fight both the Government as well as the combined Nod-Soviet forces.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, the GDI appears to be successful in their attempts to stabilize the situation.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "According to an anonymous Nod official, they are now considering providing ammunition and intel to the Government forces.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/bg03.png", 3, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They want to stay loyal to their neo-Soviet allies and would make sure the Government keeps losing any engagement with the Soviets.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "But they could potentially cause GDI further casualties by selectively strengthening the Government when they are facing GDI forces.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Nod is also generally increasing their commitment to the battle since they are now fighting directly against GDI, seen as the highest priority in the Brotherhood.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/bg04.png", 4, 0f);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It is suspected that the GDI will next try to assault Karhumäki, bringing pressure on the neo-Soviet---";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/bg05.png", 5, 0f);
+                },
+                storyDisplay =>
+                {
+                    StopMusic();
+                    powrdn1.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * TRANSMISSION INTERRUPTED * * *";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/bg06.png", 6, 1f);
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.RemoveStoryImageById(5);
+                },
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    world2.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "---------";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    world2.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "---------";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 7, 0f).AlphaRate = 2.5f;
+                    newtarg1.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * TRANSMISSION FOUND * * *";
+                    TryPlaySong(secondhand);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Commander.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 8, 0f);
+                    country1.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "How easily we could have achieved our shared victory... destroyed the remnants of the neo-Soviets, kicked Nod out of the country... we would have peace already.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "You could have lived peacefully as our top military official, I could even have given you a big retirement bonus, a nice house on the shore of Lake Ladoga...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "But instead, you decided to turn our glorious country into a giant field of graves for thousands of GDI soldiers.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I am worried we will run out of space for burying them all.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I know our forces can't reach you directly at the GDI HQ.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Maybe the leadership of the Brotherhood will accept some more bribes in exchange for sending some of their best assassins after you.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Anyway, Commander.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Know that you are now my biggest enemy.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(22,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I do not care about the neo-Soviets. They are filth, but you are far worse.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(23,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We have prepared some new weapons.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(24,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CRB14/bg07.png", 9, 0f).AlphaRate = 10.0f;
+                    storyDisplay.ConversationDisplay.ConversationText = "I will personally make sure your career in the GDI will end prematurely with the blood of countless Western boys.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Red;
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/crtitle_yellow.png", 11, 1f).DrawOrder = 7;
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(8),
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(9).AlphaRate = -2.0f; toney4.Play(); }));
+
+            phases.Add(new Phase(25,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRB13Victory()

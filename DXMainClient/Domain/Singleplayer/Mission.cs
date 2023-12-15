@@ -12,6 +12,7 @@ namespace DTAClient.Domain.Singleplayer
     public class Mission
     {
         private const int DifficultyLabelCount = 3;
+        private const int ExtendedDifficultyLabelCount = 4;
 
         public Mission(IniSection iniSection, bool isCampaignMission, int index)
         {
@@ -34,6 +35,7 @@ namespace DTAClient.Domain.Singleplayer
             PlayerAlwaysOnNormalDifficulty = iniSection.GetBooleanValue(nameof(PlayerAlwaysOnNormalDifficulty), false);
             MusicRecommended = iniSection.GetBooleanValue(nameof(MusicRecommended), MusicRecommended);
             AllowBonuses = iniSection.GetBooleanValue(nameof(AllowBonuses), AllowBonuses);
+            HasExtendedDifficulty = iniSection.GetBooleanValue(nameof(HasExtendedDifficulty), HasExtendedDifficulty);
 
             if (Enum.TryParse(iniSection.GetStringValue(nameof(StartCutscene), Cutscene.None.ToString()), out Cutscene startCutscene))
                 StartCutscene = startCutscene;
@@ -45,7 +47,13 @@ namespace DTAClient.Domain.Singleplayer
             {
                 DifficultyLabels = iniSection.GetListValue("DifficultyLabels", ',', s => s).ToArray();
 
-                if (DifficultyLabels.Length != DifficultyLabelCount)
+                if (HasExtendedDifficulty && DifficultyLabels.Length != ExtendedDifficultyLabelCount)
+                {
+                    throw new NotSupportedException($"Invalid number of DifficultyLabels= specified for mission {InternalName}: " +
+                        $"{DifficultyLabels.Length}, expected {ExtendedDifficultyLabelCount}");
+                }
+
+                if (!HasExtendedDifficulty && DifficultyLabels.Length != DifficultyLabelCount)
                 {
                     throw new NotSupportedException($"Invalid number of DifficultyLabels= specified for mission {InternalName}: " +
                         $"{DifficultyLabels.Length}, expected {DifficultyLabelCount}");
@@ -94,6 +102,8 @@ namespace DTAClient.Domain.Singleplayer
         public bool MusicRecommended { get; }
 
         public bool AllowBonuses { get; }
+
+        public bool HasExtendedDifficulty { get; }
 
         public string[] DifficultyLabels { get; }
 
@@ -155,5 +165,87 @@ namespace DTAClient.Domain.Singleplayer
         /// The global variables that winning this mission unlocks.
         /// </summary>
         public string[] UnlockGlobalVariables { get; private set; }
+
+        private int DifficultyRankToIndex(DifficultyRank rank)
+        {
+            if (HasExtendedDifficulty)
+            {
+                switch (rank)
+                {
+                    case DifficultyRank.BRUTAL:
+                        return 3;
+                    case DifficultyRank.HARD:
+                        return 2;
+                    case DifficultyRank.NORMAL:
+                        return 1;
+                    case DifficultyRank.EASY:
+                        return 0;
+                }
+            }
+            else
+            {
+                switch (rank)
+                {
+                    case DifficultyRank.BRUTAL:
+                        return 2;
+                    case DifficultyRank.HARD:
+                        return 1;
+                    case DifficultyRank.NORMAL:
+                        return 1;
+                    case DifficultyRank.EASY:
+                        return 0;
+                }
+            }
+
+            return 0;
+        }
+
+        public string GetNameForDifficultyRank(DifficultyRank rank)
+        {
+            if (DifficultyLabels != null)
+            {
+                return DifficultyLabels[DifficultyRankToIndex(rank)];
+            }
+
+            if (HasExtendedDifficulty)
+            {
+                switch (rank)
+                {
+                    case DifficultyRank.BRUTAL:
+                        return "Brutal";
+                    case DifficultyRank.HARD:
+                        return "Hard";
+                    case DifficultyRank.NORMAL:
+                        return "Normal";
+                    case DifficultyRank.EASY:
+                        return "Easy";
+                }
+            }
+            else
+            {
+                switch (rank)
+                {
+                    case DifficultyRank.BRUTAL:
+                        return "Hard";
+                    case DifficultyRank.HARD:
+                        return "Normal";
+                    case DifficultyRank.NORMAL:
+                        return "Normal";
+                    case DifficultyRank.EASY:
+                        return "Easy";
+                }
+            }
+
+            return "Unknown";
+        }
+
+        public string GetNameForDifficultyRankStylized(DifficultyRank rank)
+        {
+            string difficultyName = GetNameForDifficultyRank(rank);
+            if (difficultyName.Length > 1)
+                difficultyName = difficultyName.Substring(0, 1).ToUpperInvariant() + difficultyName.Substring(1).ToLowerInvariant();
+
+            return difficultyName;
+        }
     }
 }

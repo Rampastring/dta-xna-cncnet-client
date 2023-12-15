@@ -100,6 +100,7 @@ namespace ClientCore
             IsFirstRun = new BoolSetting(iniFile, OPTIONS, "IsFirstRun", true);
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
+            ClientDifficulty = new IntSetting(iniFile, OPTIONS, "ClientDifficulty", 1);
             ScrollDelay = new IntSetting(iniFile, OPTIONS, "ScrollDelay", 4);
             GameSpeed = new IntSetting(iniFile, OPTIONS, "GameSpeed", 1);
             EnableSPAutoSave = new BoolSetting(iniFile, OPTIONS, nameof(EnableSPAutoSave), true);
@@ -196,6 +197,7 @@ namespace ClientCore
         public BoolSetting CustomComponentsDenied { get; private set; }
 
         public IntSetting Difficulty { get; private set; }
+        public IntSetting ClientDifficulty { get; private set; }
 
         public IntSetting GameSpeed { get; private set; }
 

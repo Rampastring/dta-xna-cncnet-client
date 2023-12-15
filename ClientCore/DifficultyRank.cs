@@ -3,8 +3,9 @@
     public enum DifficultyRank
     {
         NONE = 0,
-        EASY = 1,
-        NORMAL = 2,
-        HARD = 3
+        EASY = 10,
+        NORMAL = 20,
+        HARD = 30,
+        BRUTAL = 40
     }
 }

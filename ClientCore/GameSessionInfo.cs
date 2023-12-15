@@ -132,7 +132,16 @@ namespace ClientCore
                 string missionInternalName = parts[3];
                 int sideIndex = Conversions.IntFromString(parts[4], -1);
                 int difficultyInt = Conversions.IntFromString(parts[5], 0);
-                DifficultyRank difficulty = (difficultyInt < 0 || difficultyInt > (int)DifficultyRank.HARD) ? DifficultyRank.NONE : (DifficultyRank)difficultyInt;
+
+                // For backwards compatibility
+                if (difficultyInt == 1)
+                    difficultyInt = (int)DifficultyRank.EASY;
+                else if (difficultyInt == 2)
+                    difficultyInt = (int)DifficultyRank.HARD;
+                else if (difficultyInt == 3)
+                    difficultyInt = (int)DifficultyRank.BRUTAL;
+
+                DifficultyRank difficulty = (difficultyInt < 0 || difficultyInt > (int)DifficultyRank.BRUTAL) ? DifficultyRank.NONE : (DifficultyRank)difficultyInt;
 
                 Dictionary<int, bool> globalFlagsDictionary = null;
                 if (parts.Length >= 7 && parts[6] != NO_VALUE)

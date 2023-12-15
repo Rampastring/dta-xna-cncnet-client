@@ -37,7 +37,8 @@ namespace DTAClient.DXGUI.Generic
             {
                 AssetLoader.LoadTexture("rankEasy.png"),
                 AssetLoader.LoadTexture("rankNormal.png"),
-                AssetLoader.LoadTexture("rankHard.png")
+                AssetLoader.LoadTexture("rankHard.png"),
+                AssetLoader.LoadTexture("rankBrutal.png"),
             };
 
             EnableScrollbar = true;
@@ -45,10 +46,20 @@ namespace DTAClient.DXGUI.Generic
 
         private Texture2D DifficultyRankToTexture(DifficultyRank rank)
         {
-            if (rank == DifficultyRank.NONE)
-                return null;
-
-            return rankTextures[(int)rank - 1];
+            switch (rank)
+            {
+                case DifficultyRank.BRUTAL:
+                    return rankTextures[3];
+                case DifficultyRank.HARD:
+                    return rankTextures[2];
+                case DifficultyRank.NORMAL:
+                    return rankTextures[1];
+                case DifficultyRank.EASY:
+                    return rankTextures[0];
+                case DifficultyRank.NONE:
+                default:
+                    return null;
+            }
         }
 
         protected override void DrawListBoxItem(int index, int y)
@@ -118,8 +129,6 @@ namespace DTAClient.DXGUI.Generic
 
             if (!string.IsNullOrEmpty(Text))
             {
-                var windowRectangle = RenderRectangle();
-
                 DrawStringWithShadow(Text, FontIndex,
                     new Vector2(TextXMargin, TextYPosition), TextColor);
             }
@@ -139,14 +148,7 @@ namespace DTAClient.DXGUI.Generic
         private const int DEFAULT_HEIGHT = 600;
 
         private static readonly string[] DifficultyNames = new string[] { "Easy", "Medium", "Hard" };
-        private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD" };
-
-        private static readonly string[] DifficultyIniPaths = new string[]
-        {
-            "INI/Map Code/Difficulty Easy.ini",
-            "INI/Map Code/Difficulty Medium.ini",
-            "INI/Map Code/Difficulty Hard.ini"
-        };
+        private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
         public event EventHandler MusicOptions;
         public event EventHandler RefreshMusicState;
@@ -167,6 +169,7 @@ namespace DTAClient.DXGUI.Generic
         private XNALabel lblEasy;
         private XNALabel lblNormal;
         private XNALabel lblHard;
+        private XNALabel lblBrutal;
 
         private XNALabel lblPreconditionsHeader;
         private XNALabel[] globalVariableNames = new XNALabel[MAX_GLOBAL_COUNT];
@@ -174,7 +177,7 @@ namespace DTAClient.DXGUI.Generic
         private XNADropDown[] globalVariableValues = new XNADropDown[MAX_GLOBAL_COUNT];
 
         private CheaterWindow cheaterWindow;
-        private BonuseselectionWindow BonuseselectionWindow;
+        private BonuseselectionWindow BonuseSelectionWindow;
 
         private MissionCompletionNotification missionCompletionNotification;
 
@@ -195,6 +198,8 @@ namespace DTAClient.DXGUI.Generic
         private bool isCheater;
         private Dictionary<int, bool> globalFlagInfo;
         private string difficultyName;
+
+        private bool hasMissionBeenSelected = false;
 
         private StoryDisplay storyDisplay;
 
@@ -308,29 +313,37 @@ namespace DTAClient.DXGUI.Generic
             PreconditionUIConfig(null);
 
             lblEasy = new XNALabel(WindowManager);
-            lblEasy.Name = "lblEasy";
+            lblEasy.Name = nameof(lblEasy);
             lblEasy.TextAnchor = LabelTextAnchorInfo.RIGHT;
             lblEasy.AnchorPoint = new Vector2(trbDifficultySelector.X,
                 trbDifficultySelector.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN);
-            lblEasy.FontIndex = 1;
+            lblEasy.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
             lblEasy.Text = DifficultyNamesUIDefault[0];
 
             lblNormal = new XNALabel(WindowManager);
-            lblNormal.Name = "lblNormal";
+            lblNormal.Name = nameof(lblNormal);
             lblNormal.TextAnchor = LabelTextAnchorInfo.HORIZONTAL_CENTER;
             lblNormal.AnchorPoint = new Vector2(trbDifficultySelector.ClientRectangle.Center.X, lblEasy.AnchorPoint.Y);
-            lblNormal.FontIndex = 1;
+            lblNormal.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
             lblNormal.Text = DifficultyNamesUIDefault[1];
 
             lblHard = new XNALabel(WindowManager);
-            lblHard.Name = "lblHard";
+            lblHard.Name = nameof(lblHard);
             lblHard.TextAnchor = LabelTextAnchorInfo.LEFT;
             lblHard.AnchorPoint = new Vector2(trbDifficultySelector.Right, lblEasy.AnchorPoint.Y);
-            lblHard.FontIndex = 1;
+            lblHard.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
             lblHard.Text = DifficultyNamesUIDefault[2];
 
+            lblBrutal = new XNALabel(WindowManager);
+            lblBrutal.Name = nameof(lblBrutal);
+            lblBrutal.TextAnchor = lblHard.TextAnchor;
+            lblBrutal.AnchorPoint = lblHard.AnchorPoint;
+            lblBrutal.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblBrutal.Text = DifficultyNamesUIDefault[3];
+            lblBrutal.Disable();
+
             btnLaunch = new XNAClientButton(WindowManager);
-            btnLaunch.Name = "btnLaunch";
+            btnLaunch.Name = nameof(btnLaunch);
             btnLaunch.ClientRectangle = new Rectangle(12, Height - 35, 133, 23);
             btnLaunch.Text = "Launch";
             btnLaunch.AllowClick = false;
@@ -362,6 +375,7 @@ namespace DTAClient.DXGUI.Generic
             AddChild(lblEasy);
             AddChild(lblNormal);
             AddChild(lblHard);
+            AddChild(lblBrutal);
 
             // Set control attributes from INI file
             base.Initialize();
@@ -369,7 +383,7 @@ namespace DTAClient.DXGUI.Generic
             // Center on screen
             CenterOnParent();
 
-            trbDifficultySelector.Value = UserINISettings.Instance.Difficulty;
+            trbDifficultySelector.Value = Math.Min(trbDifficultySelector.MaxValue, UserINISettings.Instance.ClientDifficulty);
 
             cheaterWindow = new CheaterWindow(WindowManager);
             DarkeningPanel dp = new DarkeningPanel(WindowManager);
@@ -397,20 +411,20 @@ namespace DTAClient.DXGUI.Generic
             storyDisplay.UpdateOrder = missionCompletionNotification.UpdateOrder - 1;
             WindowManager.AddAndInitializeControl(storyDisplay);
 
-            BonuseselectionWindow = new BonuseselectionWindow(WindowManager);
+            BonuseSelectionWindow = new BonuseselectionWindow(WindowManager);
             dp = new DarkeningPanel(WindowManager);
-            dp.AddChild(BonuseselectionWindow);
+            dp.AddChild(BonuseSelectionWindow);
             AddChild(dp);
             dp.CenterOnParent();
-            BonuseselectionWindow.CenterOnParent();
-            BonuseselectionWindow.Disable();
+            BonuseSelectionWindow.CenterOnParent();
+            BonuseSelectionWindow.Disable();
             RefreshBonusButtonText();
-            BonuseselectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
+            BonuseSelectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
         }
 
         private void BtnBonus_LeftClick(object sender, EventArgs e)
         {
-            BonuseselectionWindow.Open();
+            BonuseSelectionWindow.Open();
         }
 
         private void CampaignHandler_MissionCompleted(object sender, MissionCompletionEventArgs e)
@@ -496,17 +510,55 @@ namespace DTAClient.DXGUI.Generic
                 ListBattles();
         }
 
-        private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
+        private void ConfigureDifficultySelectorForMission(Mission mission)
         {
-            var mission = lbCampaignList.SelectedItem != null ? lbCampaignList.SelectedItem.Tag as Mission : null;
-
             string[] difficultyLabels = DifficultyNamesUIDefault;
+
             if (mission != null && mission.DifficultyLabels != null && (!mission.RequiresUnlocking || mission.IsUnlocked))
                 difficultyLabels = mission.DifficultyLabels;
 
             lblEasy.Text = difficultyLabels[0].ToUpperInvariant();
             lblNormal.Text = difficultyLabels[1].ToUpperInvariant();
             lblHard.Text = difficultyLabels[2].ToUpperInvariant();
+
+            bool hasExtendedDifficulty = mission != null && mission.HasExtendedDifficulty && (!mission.RequiresUnlocking || mission.IsUnlocked);
+
+            if (hasExtendedDifficulty)
+            {
+                lblBrutal.Text = difficultyLabels[3].ToUpperInvariant();
+                lblBrutal.Enable();
+                trbDifficultySelector.MaxValue = 3;
+
+                int difficultyStepWidth = ((trbDifficultySelector.Width - trbDifficultySelector.ButtonTexture.Width) / 3)
+                    + (trbDifficultySelector.ButtonTexture.Width / 2);
+
+                lblHard.TextAnchor = lblNormal.TextAnchor;
+                lblHard.AnchorPoint = new Vector2(trbDifficultySelector.Right - difficultyStepWidth, lblHard.AnchorPoint.Y);
+
+                lblNormal.AnchorPoint = new Vector2(trbDifficultySelector.X + difficultyStepWidth, lblNormal.AnchorPoint.Y);
+            }
+            else
+            {
+                lblBrutal.Disable();
+                lblHard.TextAnchor = lblBrutal.TextAnchor;
+                lblHard.AnchorPoint = lblBrutal.AnchorPoint;
+                lblNormal.AnchorPoint = new Vector2(trbDifficultySelector.X + (trbDifficultySelector.Width / 2), lblNormal.AnchorPoint.Y);
+                trbDifficultySelector.MaxValue = 2;
+            }
+
+            if (!hasMissionBeenSelected)
+            {
+                trbDifficultySelector.Value = UserINISettings.Instance.ClientDifficulty.Value;
+            }
+
+            trbDifficultySelector.Value = Math.Min(trbDifficultySelector.MaxValue, trbDifficultySelector.Value);
+        }
+
+        private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var mission = lbCampaignList.SelectedItem != null ? lbCampaignList.SelectedItem.Tag as Mission : null;
+
+            ConfigureDifficultySelectorForMission(mission);
 
             if (mission == null)
             {
@@ -526,6 +578,8 @@ namespace DTAClient.DXGUI.Generic
                 tbMissionDescription.Text = "You have not yet unlocked this mission.";
                 return;
             }
+
+            hasMissionBeenSelected = true;
 
             if (mission.AllowBonuses)
             {
@@ -553,13 +607,13 @@ namespace DTAClient.DXGUI.Generic
 
         private void RefreshBonusButtonText()
         {
-            if (BonuseselectionWindow.SelectedBonus == null)
+            if (BonuseSelectionWindow.SelectedBonus == null)
             {
                 btnBonus.Text = "No Bonus Selected";
                 return;
             }
 
-            btnBonus.Text = "Bonus: " + BonuseselectionWindow.SelectedBonus.UIName;
+            btnBonus.Text = "Bonus: " + BonuseSelectionWindow.SelectedBonus.UIName;
         }
 
         /// <summary>
@@ -799,19 +853,51 @@ namespace DTAClient.DXGUI.Generic
             }
 
             Difficulty bonusDifficulty = null;
-            if (missionToLaunch.AllowBonuses && BonuseselectionWindow.SelectedBonus != null)
-                bonusDifficulty = BonuseselectionWindow.SelectedBonus.Difficulty;
+            if (missionToLaunch.AllowBonuses && BonuseSelectionWindow.SelectedBonus != null)
+                bonusDifficulty = BonuseSelectionWindow.SelectedBonus.Difficulty;
 
-            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, trbDifficultySelector.Value, globalFlagInfo, bonusDifficulty);
-            difficultyName = DifficultyNames[trbDifficultySelector.Value];
+            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, TrackbarValueToDiffRank(), globalFlagInfo, bonusDifficulty);
+            difficultyName = missionToLaunch.GetNameForDifficultyRankStylized(TrackbarValueToDiffRank());
 
-            UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value;
+            UserINISettings.Instance.ClientDifficulty.Value = trbDifficultySelector.Value;
             UserINISettings.Instance.SaveSettings();
 
             ((MainMenuDarkeningPanel)Parent).Hide();
 
             storyDisplay.Finished += LaunchMission_PostStoryDisplay;
             storyDisplay.Begin(missionToLaunch.StartCutscene, false);
+        }
+
+        private DifficultyRank TrackbarValueToDiffRank()
+        {
+            if (missionToLaunch == null || !missionToLaunch.HasExtendedDifficulty)
+            {
+                switch (trbDifficultySelector.Value)
+                {
+                    case 0:
+                        return DifficultyRank.EASY;
+                    case 1:
+                        return DifficultyRank.HARD;
+                    case 2:
+                        return DifficultyRank.BRUTAL;
+                    default:
+                        throw new NotImplementedException("Invalid difficulty trackbar value!");
+                }
+            }
+
+            switch (trbDifficultySelector.Value) 
+            {
+                case 0:
+                    return DifficultyRank.EASY;
+                case 1:
+                    return DifficultyRank.NORMAL;
+                case 2:
+                    return DifficultyRank.HARD;
+                case 3:
+                    return DifficultyRank.BRUTAL;
+                default:
+                    throw new NotImplementedException("Invalid difficulty trackbar value!");
+            }
         }
 
         private void LaunchMission_PostStoryDisplay(object sender, EventArgs e)
@@ -824,7 +910,7 @@ namespace DTAClient.DXGUI.Generic
                 DateTime.Now.Ticks,
                 missionToLaunch.InternalName,
                 missionToLaunch.Side,
-                (DifficultyRank)(trbDifficultySelector.Value + 1),
+                TrackbarValueToDiffRank(),
                 globalFlagInfo,
                 isCheater),
                 WindowManager.AddCallback));

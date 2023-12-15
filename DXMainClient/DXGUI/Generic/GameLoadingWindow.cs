@@ -200,12 +200,7 @@ namespace DTAClient.DXGUI.Generic
                     }
                     else
                     {
-                        string difficultyName = ProgramConstants.DifficultyRankToName(sg.SessionInfo.Difficulty);
-                        if (mission.DifficultyLabels != null)
-                            difficultyName = mission.DifficultyLabels[(int)sg.SessionInfo.Difficulty - 1];
-
-                        if (difficultyName.Length > 1)
-                            difficultyName = difficultyName[0].ToString() + difficultyName.ToLower().Substring(1);
+                        string difficultyName = mission.GetNameForDifficultyRankStylized(sg.SessionInfo.Difficulty);
 
                         string globalFlagInfo;
 
@@ -289,7 +284,7 @@ namespace DTAClient.DXGUI.Generic
                             bonusDifficulty = bonus.Difficulty;
                     }
 
-                    CampaignHandler.Instance.WriteFilesForMission(mission, (int)sg.SessionInfo.Difficulty - 1, sg.SessionInfo.GlobalFlagValues, bonusDifficulty);
+                    CampaignHandler.Instance.WriteFilesForMission(mission, sg.SessionInfo.Difficulty, sg.SessionInfo.GlobalFlagValues, bonusDifficulty);
                     writeNewSpawnIni = false;
                 }
             }

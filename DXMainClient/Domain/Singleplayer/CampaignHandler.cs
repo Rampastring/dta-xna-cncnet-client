@@ -304,14 +304,34 @@ namespace DTAClient.Domain.Singleplayer
             "INI/Map Code/Difficulty Hard.ini"
         };
 
+        private int DifficultyRankToInGameDifficultyLevel(DifficultyRank difficultyRank)
+        {
+            switch (difficultyRank)
+            {
+                case DifficultyRank.BRUTAL:
+                    return 2;
+                case DifficultyRank.HARD:
+                case DifficultyRank.NORMAL:
+                    return 1;
+                case DifficultyRank.EASY:
+                    return 0;
+            }
+
+            return 0;
+        } 
+
         /// <summary>
         /// Writes the spawner settings file and map file for a specific mission.
         /// </summary>
         /// <param name="mission">The mission.</param>
         /// <param name="selectedDifficultyLevel">The difficulty level of the mission.</param>
-        public void WriteFilesForMission(Mission mission, int selectedDifficultyLevel, Dictionary<int, bool> globalFlagInfo, Difficulty bonusDifficultySetting)
+        public void WriteFilesForMission(Mission mission, DifficultyRank selectedDifficultyLevel, Dictionary<int, bool> globalFlagInfo, Difficulty bonusDifficultySetting)
         {
             bool copyMapsToSpawnmapINI = ClientConfiguration.Instance.CopyMissionsToSpawnmapINI;
+
+            int ingameDifficultyLevel = DifficultyRankToInGameDifficultyLevel(selectedDifficultyLevel);
+
+            string difficultyName = mission.GetNameForDifficultyRankStylized(selectedDifficultyLevel);
 
             Logger.Log("Writing spawner settings and map file for a singleplayer session.");
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
@@ -336,13 +356,14 @@ namespace DTAClient.Domain.Singleplayer
                 swriter.WriteLine("SidebarHack=" + ClientConfiguration.Instance.SidebarHack);
                 swriter.WriteLine("Side=" + mission.Side);
                 swriter.WriteLine("BuildOffAlly=" + mission.BuildOffAlly);
+                swriter.WriteLine("DifficultyName=" + difficultyName);
                 if (UserINISettings.Instance.EnableSPAutoSave)
                     swriter.WriteLine("AutoSaveGame=" + ClientConfiguration.Instance.SinglePlayerAutoSaveInterval);
 
-                UserINISettings.Instance.Difficulty.Value = selectedDifficultyLevel;
+                UserINISettings.Instance.Difficulty.Value = ingameDifficultyLevel;
 
-                swriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : selectedDifficultyLevel.ToString()));
-                swriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty(selectedDifficultyLevel));
+                swriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : ingameDifficultyLevel.ToString(CultureInfo.InvariantCulture)));
+                swriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty(ingameDifficultyLevel));
 
                 swriter.WriteLine();
                 swriter.WriteLine();
@@ -364,12 +385,28 @@ namespace DTAClient.Domain.Singleplayer
                 spawnIni.WriteIniFile();
             }
 
-            IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + DifficultyIniPaths[selectedDifficultyLevel]);
+            IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + DifficultyIniPaths[ingameDifficultyLevel]);
 
             if (copyMapsToSpawnmapINI)
             {
                 IniFile mapIni = new IniFile(ProgramConstants.GamePath + mission.Scenario);
                 IniFile.ConsolidateIniFiles(mapIni, difficultyIni);
+
+                if (selectedDifficultyLevel == DifficultyRank.NORMAL)
+                {
+                    string difficultyModifierIniPath = Path.Combine(Path.GetDirectoryName(mapIni.FileName), "NormalDifficultyModifiers", Path.GetFileNameWithoutExtension(mapIni.FileName) + ".ini");
+
+                    if (File.Exists(difficultyModifierIniPath))
+                    {
+                        Logger.Log("Applying Normal-difficulty modifiers from " + difficultyModifierIniPath);
+                        IniFile difficultyModifierIni = new IniFile(difficultyModifierIniPath);
+                        IniFile.ConsolidateIniFiles(mapIni, difficultyModifierIni);
+                    }
+                    else
+                    {
+                        Logger.Log("Normal-difficulty modifier files not found! Looked at: " + difficultyModifierIniPath);
+                    }
+                }
 
                 bonusDifficultySetting?.WriteToFile(mapIni);
 

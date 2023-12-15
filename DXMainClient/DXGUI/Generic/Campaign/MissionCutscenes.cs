@@ -263,8 +263,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
             int lastPhaseID = phases[phases.Count - 1].ID;
 
             bool bRouteUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRB9" && m.IsUnlocked);
-            bool bRouteBeat = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRB15" && m.Rank > DifficultyRank.NONE);
+            bool bRouteBeat = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRB17" && m.Rank > DifficultyRank.NONE);
             bool cRouteUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRC9" && m.IsUnlocked);
+            bool cRouteBeat = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRC16" && m.Rank > DifficultyRank.NONE);
             bool extraUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CREXT" && m.IsUnlocked);
 
             if (!bRouteUnlocked)
@@ -337,6 +338,30 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Or, you can also just be happy with your current accomplishments.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                return;
+            }
+
+            if (!cRouteBeat)
+            {
+                phases.Add(new Phase(lastPhaseID + 1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Routes A and B complete! Next you can challenge route C...";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(lastPhaseID + 2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.TextColor = Color.Red;
+                        storyDisplay.ConversationDisplay.ConversationText = "...if you can handle the pain.";
                     },
                     null,
                     null,

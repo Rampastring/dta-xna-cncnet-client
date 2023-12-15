@@ -18,8 +18,6 @@ namespace DTAClient.Domain.Singleplayer
         private const string MISSIONS_SECTION = "Missions";
         private const string GLOBAL_VARIABLES_SECTION = "GlobalVariables";
         private const string Bonuses_SECTION = "Bonuses";
-        private const int RANK_MIN = 1;
-        private const int RANK_MAX = 3;
         private const int EXPECTED_GLOBAL_VARIBLE_FIELD_COUNT = 3;
 
         // Data format:
@@ -89,13 +87,27 @@ namespace DTAClient.Domain.Singleplayer
                     bool isUnlocked = unlockAndRank[0] == "1";
                     int rank = Conversions.IntFromString(unlockAndRank[1], 0);
 
+                    // For backwards compatibility with previous values
+                    if (rank == 1)
+                    {
+                        rank = (int)DifficultyRank.EASY;
+                    }
+                    else if (rank == 2)
+                    {
+                        rank = (int)DifficultyRank.HARD;
+                    }
+                    else if (rank == 3)
+                    {
+                        rank = (int)DifficultyRank.BRUTAL;
+                    }
+
                     Mission mission = missions.Find(m => m.InternalName == missionName);
                     if (mission != null)
                     {
                         if (mission.RequiresUnlocking)
                             mission.IsUnlocked = isUnlocked;
 
-                        if (rank >= RANK_MIN && rank <= RANK_MAX)
+                        if (rank >= (int)DifficultyRank.EASY && rank <= (int)DifficultyRank.BRUTAL)
                             mission.Rank = (DifficultyRank)rank;
                     }
                 }

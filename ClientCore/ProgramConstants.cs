@@ -98,18 +98,39 @@ namespace ClientCore
             }
         }
 
-        public static string DifficultyRankToName(DifficultyRank difficultyRank)
+        public static string DifficultyRankToName(DifficultyRank difficultyRank, bool useExtendedDifficulty)
         {
-            switch (difficultyRank)
+            if (!useExtendedDifficulty)
             {
-                case DifficultyRank.EASY:
-                    return "Easy";
-                case DifficultyRank.NORMAL:
-                    return "Normal";
-                case DifficultyRank.HARD:
-                    return "Hard";
-                default:
-                    return "Unknown Difficulty";
+                switch (difficultyRank)
+                {
+                    case DifficultyRank.EASY:
+                        return "Easy";
+                    case DifficultyRank.NORMAL:
+                        return "Normal";
+                    case DifficultyRank.HARD:
+                        return "Normal";
+                    case DifficultyRank.BRUTAL:
+                        return "Hard";
+                    default:
+                        return "Unknown Difficulty";
+                }
+            }
+            else
+            {
+                switch (difficultyRank)
+                {
+                    case DifficultyRank.EASY:
+                        return "Easy";
+                    case DifficultyRank.NORMAL:
+                        return "Normal";
+                    case DifficultyRank.HARD:
+                        return "Hard";
+                    case DifficultyRank.BRUTAL:
+                        return "Brutal";
+                    default:
+                        return "Unknown Difficulty";
+                }
             }
         }
     }

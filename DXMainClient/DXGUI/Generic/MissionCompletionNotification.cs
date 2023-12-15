@@ -37,9 +37,9 @@ namespace DTAClient.DXGUI.Generic
             rankTextures = new Texture2D[]
             {
                 AssetLoader.LoadTexture("rankEasy.png"),
-                AssetLoader.LoadTexture("rankEasy.png"),
                 AssetLoader.LoadTexture("rankNormal.png"),
-                AssetLoader.LoadTexture("rankHard.png")
+                AssetLoader.LoadTexture("rankHard.png"),
+                AssetLoader.LoadTexture("rankBrutal.png"),
             };
 
             Width = 300;
@@ -77,22 +77,66 @@ namespace DTAClient.DXGUI.Generic
             base.Initialize();
         }
 
+        private Texture2D GetDifficultyRankTexture(Mission mission)
+        {
+            switch (mission.Rank)
+            {
+                case DifficultyRank.BRUTAL:
+                    return rankTextures[3];
+                case DifficultyRank.HARD:
+                    return rankTextures[2];
+                case DifficultyRank.NORMAL:
+                    return rankTextures[1];
+                case DifficultyRank.EASY:
+                    return rankTextures[0];
+                case DifficultyRank.NONE:
+                default:
+                    return null;
+            }
+        }
+
+        private int GetDifficultyLabelIndex(Mission mission)
+        {
+            if (mission.HasExtendedDifficulty)
+            {
+                switch (mission.Rank)
+                {
+                    case DifficultyRank.BRUTAL:
+                        return 3;
+                    case DifficultyRank.HARD:
+                        return 2;
+                    case DifficultyRank.NORMAL:
+                        return 1;
+                    case DifficultyRank.EASY:
+                        return 0;
+                }
+            }
+            else
+            {
+                switch (mission.Rank)
+                {
+                    case DifficultyRank.BRUTAL:
+                        return 2;
+                    case DifficultyRank.HARD:
+                        return 1;
+                    case DifficultyRank.NORMAL:
+                    case DifficultyRank.EASY:
+                        return 0;
+                }
+            }
+
+            return 0;
+        }
+
         public void Show(Mission mission)
         {
             lblMissionName.Text = mission.GUIName.ToUpper();
 
-            string difficultyName = ProgramConstants.DifficultyRankToName(mission.Rank);
-            if (mission.DifficultyLabels != null)
-            {
-                difficultyName = mission.DifficultyLabels[(int)mission.Rank - 1];
-            }
-
-            if (difficultyName.Length > 1)
-                difficultyName = difficultyName[0].ToString() + difficultyName.ToLower().Substring(1);
+            string difficultyName = mission.GetNameForDifficultyRankStylized(mission.Rank);
 
             lblDescription.Text = "Completed on " + difficultyName;
 
-            starIconPanel.BackgroundTexture = rankTextures[(int)mission.Rank];
+            starIconPanel.BackgroundTexture = GetDifficultyRankTexture(mission);
 
             X = WindowManager.RenderResolutionX;
             xPos = WindowManager.RenderResolutionX;

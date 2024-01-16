@@ -841,12 +841,17 @@ namespace DTAClient.DXGUI.Generic
                     CampaignGlobalVariable globalVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == globalFlagName);
                     if (globalVariable != null)
                     {
-                        // Global flag values default to disabled/false by default,
-                        // so we only need to care about enabled flags
                         if (globalVariableValues[i].SelectedIndex > 0)
                         {
+                            // Global flag values default to disabled/false by default,
+                            // so we only need to add enabled flags to the dictionary
                             string flagIndex = globalVariable.Index.ToString(CultureInfo.InvariantCulture);
                             globalFlagInfo.Add(globalVariable.Index, true);
+                            globalVariable.EnabledThroughPreviousScenario = true;
+                        }
+                        else
+                        {
+                            globalVariable.EnabledThroughPreviousScenario = false;
                         }
                     }
                 }

@@ -182,6 +182,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRB14();
                 case Cutscene.CRB14Victory:
                     return CRB14Victory();
+                case Cutscene.CRB15:
+                    return CRB15();
+
             }
 
             return null;
@@ -378,6 +381,163 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRB15()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "W3N - CONFLICT NEWS";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB15/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(chrg226m);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Journalist Greg Burdette, of WWN, recently visited the Karelian warzone.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB15/bg02.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "He spread word of GDI war crimes in their assault on the shoreline, with GDI supposedly having intentionally destroyed civilian buildings in the attack.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "W3N also visited the area. Despite damages from the battle, the civilian buildings had been left relatively unscathed.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB15/bg03.png", 3, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Interviewed locals also told W3N that they do not remember seeing WWN or Greg Burdette in the area.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This, along with the legacy of the fabricated Bialystok scandal, make it doubtful whether Greg Burdette ever actually visited the conflict zone.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB15/bg04.png", 4, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Regardless, his reports have went viral on several smaller-scale news outlets, making a number of people worldwide believe this anti-GDI conspiracy theory.";
+                },
+                null,
+                storyDisplay => { HideAllStoryImagesWithSound(storyDisplay, country1); StopMusic(); },
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    world2.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "---------";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * FETCHING BRIEFING ITEM * * *";
+                    TryPlaySong(tdmaptheme);
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    country4.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "";
+                    storyDisplay.AddSimpleStoryImage("Story/CRB15/bg05.png", 5, 0f).AlphaRate = 2.0f;
+                },
+                null,
+                storyDisplay => bleep11.Play(),
+                null));
+
+            const float briefingTextAlphaRate = 1.0f;
+
+            phases.Add(new Phase(11,
+                null,
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRB15/bg06.png", 6, 0f).AlphaRate = briefingTextAlphaRate,
+                storyDisplay => 
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CRB12/crtitle_yellow.png", 9, 1f).DrawOrder = 4;
+                    storyDisplay.FindStoryImageById(6).AlphaRate = -briefingTextAlphaRate;
+                    bleep11.Play();
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(6)));
+
+            var sovietCommandoFoundVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_B_SOVIET_COMMANDO_FOUND");
+            if (sovietCommandoFoundVariable != null && sovietCommandoFoundVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(12,
+                    storyDisplay =>
+                    {
+                        storyDisplay.AddSimpleStoryImage("Story/CRB15/bg08.png", 8, 0f).AlphaRate = briefingTextAlphaRate;
+                    },
+                    null,
+                    storyDisplay => 
+                    {
+                        storyDisplay.FindStoryImageById(8).AlphaRate = -briefingTextAlphaRate;
+                        storyDisplay.FindStoryImageById(5).AlphaRate = -0.8f;
+                        toney4.Play();
+                    },
+                    null));
+            }
+            else
+            {
+                phases.Add(new Phase(12,
+                    storyDisplay =>
+                    {
+                        storyDisplay.AddSimpleStoryImage("Story/CRB15/bg07.png", 7, 0f).AlphaRate = briefingTextAlphaRate;
+                    },
+                    null,
+                    storyDisplay => 
+                    { 
+                        storyDisplay.FindStoryImageById(7).AlphaRate = -briefingTextAlphaRate;
+                        storyDisplay.FindStoryImageById(5).AlphaRate = -0.8f;
+                        toney4.Play(); 
+                    },
+                    null));
+            }
+
+            return phases;
         }
 
         private List<Phase> CRB14Victory()

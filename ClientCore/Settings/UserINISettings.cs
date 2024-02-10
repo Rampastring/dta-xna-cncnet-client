@@ -46,8 +46,8 @@ namespace ClientCore
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
             Renderer = new StringSetting(iniFile, "Compatibility", "Renderer", string.Empty);
 
-            IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", 1024);
-            IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", 768);
+            IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", -1);
+            IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", -1);
             StretchMovies = new BoolSetting(iniFile, VIDEO, "StretchMovies", true);
             WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
             BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);

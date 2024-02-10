@@ -601,6 +601,23 @@ namespace DTAConfig.OptionPanels
             ddRenderer.SelectedIndex = index;
         }
 
+        private static Dictionary<Point, Point> defaultResolutions = new Dictionary<Point, Point>() 
+        {
+            { new Point(640, 480), new Point(640, 480) },
+            { new Point(800, 600), new Point(800, 600) },
+            { new Point(1024, 768), new Point(800, 600) },
+            { new Point(1280, 720), new Point(720, 480) },
+            { new Point(1280, 1024), new Point(1024, 768) },
+            { new Point(1366, 768), new Point(1366, 768) },
+            { new Point(1440, 900), new Point(1280, 720) },
+            { new Point(1600, 900), new Point(1280, 720) },
+            { new Point(1650, 1080), new Point(1280, 720) },
+            { new Point(1920, 1080), new Point(1280, 720) },
+            { new Point(2560, 1080), new Point(1280, 720) },
+            { new Point(2560, 1440), new Point(1280, 720) },
+            { new Point(3840, 2160), new Point(1280, 720) }
+        };
+
         public override void Load()
         {
             base.Load();
@@ -608,8 +625,27 @@ namespace DTAConfig.OptionPanels
             LoadRenderer();
             ddDetailLevel.SelectedIndex = IniSettings.DetailLevel;
 
-            string currentRes = IniSettings.IngameScreenWidth.Value +
-                "x" + IniSettings.IngameScreenHeight.Value;
+            int width = IniSettings.IngameScreenWidth.Value;
+            int height = IniSettings.IngameScreenHeight.Value;
+
+            if (width < 0 || height < 0)
+            {
+                Point desktopSize = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+
+                if (defaultResolutions.TryGetValue(desktopSize, out Point defaultResolution))
+                {
+                    width = defaultResolution.X;
+                    height = defaultResolution.Y;
+                }
+                else
+                {
+                    // Fallback
+                    width = 1024;
+                    height = 768;
+                }
+            }
+
+            string currentRes = width + "x" + height;
 
             int index = ddIngameResolution.Items.FindIndex(i => i.Text == currentRes);
 

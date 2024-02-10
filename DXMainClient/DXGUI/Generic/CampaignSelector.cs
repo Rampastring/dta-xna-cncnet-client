@@ -536,13 +536,23 @@ namespace DTAClient.DXGUI.Generic
                 lblHard.AnchorPoint = new Vector2(trbDifficultySelector.Right - difficultyStepWidth, lblHard.AnchorPoint.Y);
 
                 lblNormal.AnchorPoint = new Vector2(trbDifficultySelector.X + difficultyStepWidth, lblNormal.AnchorPoint.Y);
+
+                lblEasy.TextAnchor = lblNormal.TextAnchor;
+                lblEasy.AnchorPoint = new Vector2(trbDifficultySelector.X + trbDifficultySelector.ButtonTexture.Width / 2, lblEasy.AnchorPoint.Y);
+                lblBrutal.TextAnchor = lblNormal.TextAnchor;
+                lblBrutal.AnchorPoint = new Vector2(trbDifficultySelector.Right - (trbDifficultySelector.ButtonTexture.Width / 2), lblBrutal.AnchorPoint.Y);
             }
             else
             {
                 lblBrutal.Disable();
-                lblHard.TextAnchor = lblBrutal.TextAnchor;
-                lblHard.AnchorPoint = lblBrutal.AnchorPoint;
+                lblHard.TextAnchor = LabelTextAnchorInfo.LEFT;
+                lblHard.AnchorPoint = new Vector2(trbDifficultySelector.Right, lblHard.AnchorPoint.Y);
+
                 lblNormal.AnchorPoint = new Vector2(trbDifficultySelector.X + (trbDifficultySelector.Width / 2), lblNormal.AnchorPoint.Y);
+
+                lblEasy.TextAnchor = LabelTextAnchorInfo.RIGHT;
+                lblEasy.AnchorPoint = new Vector2(trbDifficultySelector.X, lblEasy.AnchorPoint.Y);
+
                 trbDifficultySelector.MaxValue = 2;
             }
 

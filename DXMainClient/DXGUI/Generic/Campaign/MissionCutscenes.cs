@@ -190,6 +190,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRB16();
                 case Cutscene.CRB16Victory:
                     return CRB16Victory();
+
+                case Cutscene.PTTP1:
+                    return PTTP1();
             }
 
             return null;
@@ -6309,6 +6312,301 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.ClearStoryImages()
                 ));
+
+            return phases;
+        }
+
+        private List<Phase> PTTP1()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0,
+               storyDisplay =>
+               {
+                   TryPlaySong(secondhand);
+                   MediaPlayer.IsRepeating = true;
+                   MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
+
+                   storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
+                   storyDisplay.ConversationDisplay.IsCentered = true;
+                   storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide1.png", 1);
+                   country4.Play();
+               },
+               null,
+               null,
+               null
+               ));
+
+            phases.Add(new Phase(2,
+               storyDisplay =>
+               {
+                   storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide2.png", 2);
+                   storyDisplay.ConversationDisplay.ConversationText = "In today's news: what some are labeling as a \"Tiberium War\" continues to engulf the African continent.";
+                   mapwipe5.Play();
+               },
+               storyDisplay => storyDisplay.RemoveStoryImageById(1),
+               storyDisplay =>
+               {
+                   storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
+                   country1.Play();
+               },
+                storyDisplay => storyDisplay.ClearStoryImages()
+               ));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The latest victim: the Republic of Serunda, which has seen Nod forces cross the border only just last month.";
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide3.png", 3);
+                },
+                null,null,null
+                ));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Serundan government is in a state of complete disarray, with the majority of decision-makers having fled the country.";
+                },
+                null,
+                storyDisplay =>
+                {
+                    storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
+                    storyDisplay.ConversationDisplay.ConversationText = string.Empty;
+                    country1.Play();
+                },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Global Defense Initiative peacekeepers have stationed themselves at key positions across the nation and taken over the functions of the former Serundan government.";
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide4.png", 3);
+                },
+                null,
+                storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI General Mark Jamison Sheppard has stated publicly that the decision was made \"to prevent civil disorder.\"";
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide5.png", 4);
+                },
+                null,
+                storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Serunda, of course, is no stranger to conflict.";
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide6.png", 5);
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                },
+                null,
+                storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The quasi-anarchist Serundan Liberation Front, or SLF, fought a guerilla war against the government for decades.";
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide7.png", 6);
+                },
+                null,
+                storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Their charismatic leader, Mthunzi Gumede, led SLF resistance right up until his passing just two years ago, with his daughter, Ulwazi, succeeding him as head of the group.";
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide8.png", 7);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "There are whispers among those in the Serundan countryside that she's a kinder, gentler leader, and that liberation may yet come.";
+                },
+                null,
+                storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "But it's safe to say that in the face of this massive military and ideological conflict between GDI and Nod, whatever relevance the SLF may once have had in Serunda has long since deteriorated to insignificance.";
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide9.png", 9);
+                },
+                null,
+                storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide1.png", 1);
+                    toney7.Play();
+                },
+                null,
+                null,
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    TryPlaySong(raintro); //any use of raintro in pttp should be replace with gloom once converted
+
+                    storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide11.png", 1);
+                    country4.Play();
+
+                },
+                null,
+                null,
+                null
+                ));
+
+             phases.Add(new Phase(14,
+               storyDisplay =>
+               {
+                   storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide10.png", 2);
+                   storyDisplay.ConversationDisplay.IsCentered = false;
+                   storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
+                   storyDisplay.ConversationDisplay.ConversationText = "Are you receiving this message? ...Good. Our equipment barely works sometimes.";
+                   country1.Play();
+                   
+               },
+               storyDisplay => storyDisplay.RemoveStoryImageById(1),
+               null,
+               null
+               ));
+
+             phases.Add(new Phase(15,
+                  storyDisplay =>
+                  {
+                      storyDisplay.ConversationDisplay.ConversationText = "I understand you're new here - I am Ulwazi Gumede. Welcome to the Serundan Liberation Front.";
+
+                  },
+                  null,
+                  null,
+                  null
+                  ));
+
+            phases.Add(new Phase(16,
+                 storyDisplay =>
+                 {
+                     storyDisplay.ConversationDisplay.ConversationText = "Let me be frank. Our cause is just, but we have little support among the people.";
+
+                 },
+                 null,
+                 null,
+                 storyDisplay => AddRADisplay(storyDisplay, 3)
+                 ));
+
+            phases.Add(new Phase(17,
+                 storyDisplay =>
+                 {
+                     AddRADisplayImage(storyDisplay, "Story/PTTP1/small1.png", 4);
+                     storyDisplay.ConversationDisplay.ConversationText = "To make matters worse, this \"Brotherhood of Nod\" has entered our country and co-opted our message of resistance to Western imperialism.";
+
+                 },
+                 null,
+                 null,
+                 null
+                 ));
+
+            phases.Add(new Phase(18,
+             storyDisplay =>
+             {
+                 storyDisplay.ConversationDisplay.ConversationText = "Those who are not swayed by the messaging of these charlatans are intimidated by the political violence they inflict on those brave enough to oppose them.";
+
+             },
+             null,
+             null,
+             null
+             ));
+
+            phases.Add(new Phase(19,
+             storyDisplay =>
+             {
+                 AddRADisplayImage(storyDisplay, "Story/PTTP1/small2.png", 5);
+                 storyDisplay.ConversationDisplay.ConversationText = "There is a man that I know the Brotherhood is already planning to assassinate - Mayardit.";
+
+             },
+             null,
+             null,
+             storyDisplay => storyDisplay.RemoveStoryImageById(4)
+             ));
+
+            phases.Add(new Phase(20,
+             storyDisplay =>
+             {
+                 storyDisplay.ConversationDisplay.ConversationText = "A brave leader of his people, he has already spoken out against the occupiers, and put a target on his back.";
+
+             },
+             null,
+             null,
+             null
+
+            ));
+
+            phases.Add(new Phase(21,
+             storyDisplay =>
+             {
+                 storyDisplay.ConversationDisplay.ConversationText = "This is our chance to send a message to the average Serundan.  I need you to step in with the few troops we have and protect Mayardit from Nod's assassins.";
+
+             },
+             null,
+             null,
+             storyDisplay => { storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate; storyDisplay.FindStoryImageById(5).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); }
+            ));
+
+            phases.Add(new Phase(22,
+             storyDisplay =>
+             {
+                 storyDisplay.ConversationDisplay.ConversationText = "Go quickly.";
+
+             },
+             null,
+             null,
+             storyDisplay => storyDisplay.ClearStoryImages()
+            ));
+
+            phases.Add(new Phase(23,
+             storyDisplay =>
+             {
+                 storyDisplay.ConversationDisplay.IsCentered = true;
+                 storyDisplay.ConversationDisplay.TextColor = Color.White;
+                 storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
+                 storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide11.png", 1);
+                 toney7.Play();
+
+             },
+             null,
+                storyDisplay =>
+                {
+                    storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
+                    storyDisplay.ConversationDisplay.ConversationText = string.Empty;
+                },
+                storyDisplay => storyDisplay.ClearStoryImages()
+            ));
 
             return phases;
         }

@@ -42,5 +42,7 @@
         CRB15,
         CRB16,
         CRB16Victory,
+        CRB17,
+        CRENDB,
     }
 }

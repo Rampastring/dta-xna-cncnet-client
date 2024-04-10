@@ -761,8 +761,10 @@ namespace DTAClient.DXGUI.Generic
         /// </summary>
         private void PostCheaterWindow()
         {
+            int hardestDifficultyLevel = missionToLaunch.HasExtendedDifficulty ? 3 : 2;
+
             // Is this mission probably too hard for the user? If so, display a warning dialog.
-            if (trbDifficultySelector.Value == 2 && missionToLaunch.WarnOnHardWithoutMediumPlayed && (int)missionToLaunch.Rank < (int)DifficultyRank.NORMAL)
+            if (trbDifficultySelector.Value == hardestDifficultyLevel && missionToLaunch.WarnOnHardWithoutMediumPlayed && (int)missionToLaunch.Rank < (int)DifficultyRank.NORMAL)
             {
                 var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
                     "Difficulty warning",

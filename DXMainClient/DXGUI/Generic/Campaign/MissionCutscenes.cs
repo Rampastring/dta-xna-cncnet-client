@@ -5478,73 +5478,92 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             var phases = new List<Phase>();
 
-            var genocideVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ALL_CHURCHES_DESTROYED");
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The fresh star of the Government's military leadership has once again brought victory.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg01.png", 1);
+                    country4.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The neo-Communists and the Brotherhood have been driven away from the damaged factory, and it shall never again strengthen the enemy's ranks.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This victory sets the stage for further weakening of the enemy and the eventual final victory over them.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            var genocideVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_VILLAGE_DESTROYED");
             if (genocideVariable != null && genocideVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(0,
+                phases.Add(new Phase(3,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "The Government forces stand victorious, with the victory again enabled by their new star of a commander.";
-                        TryPlaySong(raintro);
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-
-                phases.Add(new Phase(1,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "Meanwhile, the Global Defense Initiative has made progress in its research into the allegations of genocide performed by the Government.";
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-
-                phases.Add(new Phase(2,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "GDI has determined there to be some truth to the claims. As a result, they have decided to lessen their military support for the Government until the Government takes serious steps to fix the situation.";
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-            }
-            else
-            {
-                phases.Add(new Phase(0,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "The recent addition to the Government's military leadership has once again brought victory for the Government.";
-                        storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg01.png", 1);
-                        country4.Play();
-                        TryPlaySong(raintro);
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-
-                phases.Add(new Phase(1,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "The neo-Communists and the Brotherhood have been driven away from the damaged factory, and it shall never again strengthen the enemy's ranks.";
-                    },
-                    null,
-                    null,
-                    null));
-
-                phases.Add(new Phase(2,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "This victory sets the stage for further weakening of the enemy and the eventual final victory over them.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Meanwhile, the Global Defense Initiative has made progress in its research into the allegations of war crimes performed by the Government.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg03.png", 2);
                     },
                     null,
                     storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "GDI has determined there to be truth to the claims. As a result, they have decided to halt their military support for the Government until the Government takes serious steps to reverse their course.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg04.png", 3);
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, toney4),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.AddSimpleStoryImage("Story/CR08/crtitle.png", 3);
+                        storyDisplay.ConversationDisplay.TextColor = Color.White;
+                        storyDisplay.ConversationDisplay.IsCentered = true;
+                        storyDisplay.ConversationDisplay.ConversationText = "You have unlocked CR Route C.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Be warned that the lack of GDI support is going make your life very difficult.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Unless you are up for a serious challenge, you might want to reconsider some of your previous choices.";
+                    },
+                    null,
+                    null,
+                    null));
+            }
+            else
+            {
                 var massGravesFoundVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_MASS_GRAVES_FOUND");
                 if (massGravesFoundVariable != null && massGravesFoundVariable.EnabledThroughPreviousScenario)
                 {
@@ -5640,6 +5659,20 @@ namespace DTAClient.DXGUI.Generic.Campaign
                             storyDisplay.ConversationDisplay.IsCentered = true;
                             storyDisplay.ConversationDisplay.ConversationText = "[ Proceed to CR Route A to continue fighting loyally on the Government side. ]" + Environment.NewLine +
                                 "[ Alternatively, proceed to CR Route B to investigate the murders of the civilians. ]";
+                        },
+                        null,
+                        storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null),
+                        storyDisplay => storyDisplay.ClearStoryImages()));
+                }
+                else
+                {
+                    phases.Add(new Phase(3,
+                        storyDisplay =>
+                        {
+                            storyDisplay.AddSimpleStoryImage("Story/CR08/crtitle.png", 3);
+                            storyDisplay.ConversationDisplay.TextColor = Color.White;
+                            storyDisplay.ConversationDisplay.IsCentered = true;
+                            storyDisplay.ConversationDisplay.ConversationText = "You have unlocked CR Route A!";
                         },
                         null,
                         storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null),
@@ -5871,89 +5904,119 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             var phases = new List<Phase>();
 
+            phases.Add(new Phase(0,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The Communist forces were caught by surprise. They were unprepared for a quick attack on the archipelago and lost it to a relatively small Government and GDI force.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg01.png", 1);
+                    country4.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The archipelago had worked as a troop and equipment transportation route, and when frozen, would've allowed tanks to drive through the area and attack the Government shoreline.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The information gathered from the command center revealed that industry under Communist and Nod controlled territory is producing surprisingly large numbers of military equipment.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "For that, the industry must have access to more raw materials than has earlier been possible.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "An anonymous source from GDI intelligence has suspected that Nod is providing them with cheap Tiberium-extracted minerals.";
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg03.png", 1);
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "To achieve a lower price for the minerals, a deal with Nod is suspected where Nod gives the tiberium-extracted minerals at a discount to enterprises that build military equipment for them or the Communists.";
+                },
+                null,
+                null,
+                null
+                ));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It is necessary for the Government and GDI to strike the manufacturing sites or cut the source of Tiberium minerals if they want to reduce the number of enemy vehicles.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()
+                ));
+
             var genocideVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ALL_CHURCHES_DESTROYED");
             if (genocideVariable != null && genocideVariable.EnabledThroughPreviousScenario)
             {
-                // TODO
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        TryPlaySong(chrg226m);
+                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg05.png", 1);
+                        storyDisplay.ConversationDisplay.ConversationText = "Separately from military matters, there are reports that Government forces have brutally destroyed civilian villages loyal to the Communists.";
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Ivanov has denied the claims, saying that only military forces are targeted. Civilians, especially collaborators near Communist military assets, might suffer from limited collateral damage, however.";
+                    },
+                    null,
+                    null,
+                    null
+                    ));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "According to an anonymous source, GDI has launched an internal investigation into the matter.";
+                    },
+                    null,
+                    null,
+                    null
+                    ));
             }
             else
             {
-                phases.Add(new Phase(0,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "The Communist forces were caught by surprise. They were unprepared for a quick attack on the archipelago and lost it to a relatively small Government and GDI force.";
-                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg01.png", 1);
-                        country4.Play();
-                        TryPlaySong(raintro);
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-
-                phases.Add(new Phase(1,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "The archipelago had worked as a troop and equipment transportation route, and when frozen, would've allowed tanks to drive through the area and attack the Government shoreline.";
-                    },
-                    null,
-                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
-                    storyDisplay => storyDisplay.ClearStoryImages()
-                    ));
-
-                phases.Add(new Phase(2,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "The information gathered from the command center revealed that industry under Communist and Nod controlled territory is producing surprisingly large numbers of military equipment.";
-                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-
-                phases.Add(new Phase(3,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "For that, the industry must have access to more raw materials than has earlier been possible.";
-                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
-                    },
-                    null,
-                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
-                    storyDisplay => storyDisplay.ClearStoryImages()
-                    ));
-
-                phases.Add(new Phase(4,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "An anonymous source from GDI intelligence has suspected that Nod is providing them with cheap Tiberium-extracted minerals.";
-                        storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg03.png", 1);
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-
-                phases.Add(new Phase(4,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "To achieve a lower price for the minerals, a deal with Nod is suspected where Nod gives the tiberium-extracted minerals at a discount to enterprises that build military equipment for them or the Communists.";
-                    },
-                    null,
-                    null,
-                    null
-                    ));
-
-                phases.Add(new Phase(5,
-                    storyDisplay =>
-                    {
-                        storyDisplay.ConversationDisplay.ConversationText = "It is necessary for the Government and GDI to strike the manufacturing sites or cut the source of Tiberium minerals if they want to reduce the number of enemy tanks.";
-                    },
-                    null,
-                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
-                    storyDisplay => storyDisplay.ClearStoryImages()
-                    ));
-
                 var civiliansEvacuatedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_CIVILIANS_EVACUATED");
                 if (civiliansEvacuatedVariable != null && civiliansEvacuatedVariable.EnabledThroughPreviousScenario)
                 {

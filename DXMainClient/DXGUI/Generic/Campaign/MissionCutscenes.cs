@@ -194,6 +194,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRB17();
                 case Cutscene.CRENDB:
                     return CRB17Victory();
+
+                case Cutscene.CRC09:
+                    return CRC09();
             }
 
             return null;
@@ -552,6 +555,252 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRC09()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(fac2226m);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "So, as you certainly already know, the Global Defense Initiative halted their support for us.";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This will make our survival difficult.";
+                    storyDisplay.RemoveStoryImageById(1);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Very difficult.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "While... let's say I unofficially approve of the way you have punished traitors to our state, you seem to have overdone it.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "You got GDI too interested in the events.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "In other words, *you* brought us into this mess.";
+                },
+                storyDisplay => AddRADisplay(storyDisplay, 3),
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If we look at prepared forces, it is suspected that our strength is slightly below the combined force of Nod and the Communists.";
+                },
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRC09/chart1.png", 4),
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We are at a disadvantage. Especially since we are currently the side trying to attack.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, if we look at manufacturing capacity... we far outweigh the Communists, but with Nod support, and no GDI support for us, it is expected that they are significantly outproducing us.";
+                },
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRC09/chart2.png", 5),
+                storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Nod appears to have an active program for spreading Tiberium on territory controlled by them. Once they get to harvest it, this disparity will only grow in the future.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "In other words, we are at a disadvantage right now. And the more time passes, the bigger our disadvantage will be.";
+                    storyDisplay.FindStoryImageById(5).AlphaRate = -2.0f;
+                    bleep12.Play();
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(5),
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We have no diplomatic options.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If we surrender to the Communists, they will simply kill us. They especially have no need for negotiations when they have the advantage.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I know that GDI does not want us to fall. However, they want us to step down. If we surrender to them, they will come, force a change of government, perform investigation, throw both of us into jail, and kick Nod out.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We are not going to let either happen. At least not without trying a solution of our own first.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "That means we only have one option: to go fully on the offense with what we have.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We will charge at Karhumäki, where the Communist leadership is hiding. Try to reach the city, assault it, and decapitate the Communist leadership.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "By classic military theory, to succeed, an attacking force needs to be three times larger than the defending force.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We do not have anywhere near such a ratio. You will have to do with less.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Capturing enemy equipment can help improve our chances.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(22,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Thus, you will begin our offensive with an attack that aims to capture a Communist base. If successful, we get to use the enemy's own equipment against them, sparing our resources.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC09/base.png", 6);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(23,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This could be seen as a somewhat desperate move, but you have achieved victory from poor initial conditions before. Hopefully you'll do so again.";
+                    storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f;
+                    bleep12.Play();
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(24,
+                storyDisplay =>
+                {
+                    storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "You'd be best to perform, considering it was you whose actions brought us into this situation.";
+                },
+                null,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    HideAllStoryImagesWithSound(storyDisplay, toney4);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 7);
+                },
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRB17Victory()
@@ -1513,7 +1762,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Various rumors are spreading around, a popular one within locals being that he secretly escaped to Siberia to hide prosecution. GDI investigation into his fate will continue.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Various rumors are spreading around. A popular one within locals is that he secretly escaped to Siberia to evade prosecution. GDI investigation into his fate will continue.";
                 },
                 null,
                 null,

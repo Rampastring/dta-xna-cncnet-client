@@ -46,5 +46,18 @@
         CRENDB,
 
         CRC09,
+
+
+        PTTP1,
+        PTTP2,
+        PTTP3,
+        PTTP4,
+        PTTP5,
+        PTTP6,
+        PTTP7,
+        PTTP8,
+        PTTP8Victory,
+        PTTP9,
+        PTTPEnd
     }
 }

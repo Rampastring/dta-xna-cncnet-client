@@ -978,6 +978,7 @@ namespace DTAClient.DXGUI.Generic
                 if (isMediaPlayerAvailable &&
                     MediaPlayer.State == MediaState.Playing)
                 {
+                    Logger.Log("Assigning music to fade off.");
                     isMusicFading = true;
                 }
             }

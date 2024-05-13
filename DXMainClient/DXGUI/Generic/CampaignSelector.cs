@@ -177,7 +177,7 @@ namespace DTAClient.DXGUI.Generic
         private XNADropDown[] globalVariableValues = new XNADropDown[MAX_GLOBAL_COUNT];
 
         private CheaterWindow cheaterWindow;
-        private BonuseselectionWindow BonuseSelectionWindow;
+        private BonusSelectionWindow BonuseSelectionWindow;
 
         private MissionCompletionNotification missionCompletionNotification;
 
@@ -411,7 +411,7 @@ namespace DTAClient.DXGUI.Generic
             storyDisplay.UpdateOrder = missionCompletionNotification.UpdateOrder - 1;
             WindowManager.AddAndInitializeControl(storyDisplay);
 
-            BonuseSelectionWindow = new BonuseselectionWindow(WindowManager);
+            BonuseSelectionWindow = new BonusSelectionWindow(WindowManager);
             dp = new DarkeningPanel(WindowManager);
             dp.AddChild(BonuseSelectionWindow);
             AddChild(dp);

@@ -153,6 +153,8 @@ namespace DTAClient.Domain.Singleplayer
                         Bonus.Unlocked = true;
                 }
             }
+
+            Logger.Log("Finished loading single-player mission rank data.");
         }
 
         public static void WriteData(List<Mission> missions, List<CampaignGlobalVariable> globalVariables, List<Bonus> Bonuses)

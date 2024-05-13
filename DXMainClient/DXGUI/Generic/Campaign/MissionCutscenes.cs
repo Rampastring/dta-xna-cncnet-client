@@ -199,7 +199,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                 case Cutscene.CRC09:
                     return CRC09();
-
+                case Cutscene.CRC10:
+                    return CRC10();
 
                 /* PTTP */
                 case Cutscene.PTTP1:
@@ -269,9 +270,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
             beepy2.Play();
         }
 
-        private void HideAllStoryImagesWithSound(IStoryDisplay storyDisplay, EnhancedSoundEffect sound)
+        private void HideAllStoryImagesWithSound(IStoryDisplay storyDisplay, EnhancedSoundEffect sound, float alphaRate = -1.0f)
         {
-            storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
+            storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = alphaRate);
 
             if (sound != null)
                 sound.Play();
@@ -584,6 +585,313 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null));
         }
 
+        private List<Phase> CRC10()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "CONFLICT NEWS";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC10/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(ramap);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "After the Global Defense Initiative withdrew their support from Ivanov's Government due to war crimes, most expected a quick Nod-Communist steamroll through the country.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC10/bg02.png", 2, 0f);
+                },
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRC10/bg03.png", 3, 0f),
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With enough military pressure, the Government would then be forced to perform changes to allow GDI to reinstate support for them.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It was widely seen that the Government had little chance for victory when fighting alone.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, contrary to expectations that Ivanov would set up strong defensive lines and hope to wait out the situation, his commanders have went fully on the offense.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC10/bg04.png", 4, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This move caught his enemies unprepared.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Government forces have punched a hole to the Nod-Communist frontline, leaving companies of soldiers to a chaotic retreat.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Making matters worse for the Nod-Communist alliance is the fact that this hole was punched largely with captured neo-Soviet equipment, meaning Government vehicle losses were small.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC10/bg05.png", 5, 0f);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It would, however, be very premature to talk of Ivanov's victory in the strategic sense.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC10/bg06.png", 6, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "While a significant turn of events, the tactical success has not yet developed into a major breakthrough.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Communist sources have said that they are preparing new defensive lines that will stop Government forces before they reach Karhumäki, the de facto capital city of the Communist movement.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC10/bg07.png", 7, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Even if Government forces reached the city, conquering and holding the city itself would be a major challenge, especially with its mostly hostile civilian population.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null, -2.5f),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 8, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(fac2226m);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "The enemy's long-term defensive strategy relies on a river between our forces and the city of Karhumäki.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 9, 0f);
+                    country1.Play();
+                },
+                storyDisplay => AddRADisplay(storyDisplay, 10),
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRC10/river.png", 11),
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If they manage to blow up the bridge and fortify the riverside, it will be impossible for us to pass this obstacle.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Luckily, the scum is now in disarray. We need to exploit this opportunity before they can get their act together.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They are preparing defensive lines, but currently these \"lines\" consist mainly of idle Mammoth tanks and infantry.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC10/defenses.png", 12);
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(11),
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "With the swamps still partially frozen, our lighter vehicles have no problem moving past these clumsy formations.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Take a force of Light Tanks and Rangers. Avoiding these defenses, flank the enemy bases southwest of the river and destroy them.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC10/bases.png", 13);
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(12),
+                null,
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Once you are successful - and I trust you will be - we will be setting up an MCV for you on the northeastern side of the river.";
+                },
+                storyDisplay => { storyDisplay.FindStoryImageById(13).AlphaRate = -2.0f; bleep12.Play(); },
+                storyDisplay => storyDisplay.RemoveStoryImageById(13),
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Build a base there, and wipe out all Nod and neo-Soviet resistance.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(22,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If you succeed, our forces will be at the outskirts of Karhumäki, making it possible for us to capture it and humiliate the Communist leadership currently residing there.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(23,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Our current thrust into the enemy lines is deep, but not very wide.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC10/thrust.png", 14);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(24,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "There is a risk of flank attacks, especially by rapidly moving Nod forces.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC10/flank.png", 15);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(25,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I will be assigning Toikka to cover your flanks, so you won't need to worry about them and can focus purely on pushing forward.";
+                },
+                null,
+                storyDisplay => 
+                { 
+                    storyDisplay.FindStoryImageById(14).AlphaRate = -2.0f;
+                    storyDisplay.FindStoryImageById(15).AlphaRate = -2.0f;
+
+                    bleep12.Play(); 
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(14);
+                    storyDisplay.RemoveStoryImageById(15);
+                }));
+
+            phases.Add(new Phase(26,
+                storyDisplay =>
+                {
+                    storyDisplay.FindStoryImageById(10).AlphaRate = -crRAdisplayAlphaRate;
+                    bleep17.Play();
+
+                    storyDisplay.ConversationDisplay.ConversationText = "I could wish you good luck, but this situation won't be resolved by luck.";
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(10),
+                null,
+                null));
+
+            phases.Add(new Phase(27,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It will be resolved through skill, through mastery in the art of warfare.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(28,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I hope you will again prove more skillful than our enemies.";
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(9).AlphaRate = -2.0f; toney4.Play(); },
+                null));
+
+            phases.Add(new Phase(29,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
         private List<Phase> CRC09()
         {
             var phases = new List<Phase>();
@@ -655,7 +963,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "In other words, *you* brought us into this mess.";
+                    storyDisplay.ConversationDisplay.ConversationText = "In other words, _you_ brought us into this mess.";
                 },
                 storyDisplay => AddRADisplay(storyDisplay, 3),
                 null,
@@ -970,7 +1278,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(13,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "As one event of particular significance, the chemical explosion of a train in the early phases of the conflict had been a false-flag operation by Ivanov to gain further GDI support.";
+                    storyDisplay.ConversationDisplay.ConversationText = "As one event of particular significance, the chemical explosion of a train in the early phases of the conflict had been a false-flag operation by Ivanov to strengthen GDI support.";
                     storyDisplay.AddSimpleStoryImage("Story/CRB17/victorybg09.png", 9);
                 },
                 null,
@@ -989,7 +1297,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(15,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Following a brief time of military administration led by you, the United Nations ordered free elections were to be held.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Following a brief time of military administration led by you, the United Nations ordered free elections to be held.";
                     storyDisplay.AddSimpleStoryImage("Story/CRB17/victorybg10.png", 10);
                 },
                 null,
@@ -1308,7 +1616,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     phases.Add(new Phase(34,
                         storyDisplay =>
                         {
-                            storyDisplay.ConversationDisplay.ConversationText = "But at least the country should stay more stable and peaceful it was during Ivanov's rule.";
+                            storyDisplay.ConversationDisplay.ConversationText = "But at least the country should stay more stable and peaceful than it was during Ivanov's rule.";
                         },
                         null,
                         storyDisplay =>
@@ -1625,7 +1933,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "But Nod still has a foothold on Karelian territory, and it doesn't look like they would be leaving voluntarily.";
+                    storyDisplay.ConversationDisplay.ConversationText = "But Nod still has a foothold on Karelian territory, and it doesn't look like they will be leaving voluntarily.";
                     storyDisplay.AddSimpleStoryImage("Story/CRB12/bg02.png", 4, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
                 },
                 null,
@@ -1702,7 +2010,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Beware of Nod's new weapons, created by combining effective technologies from different sources, some of them stolen from us.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Beware of Nod's new weaponry, created by combining technology from different sources - including technology stolen from us.";
                     storyDisplay.AddSimpleStoryImage("Story/CRB12/bg03.png", 10, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
                 },
                 null,
@@ -2057,7 +2365,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov's forces are fixing a significant number of GDI units, preventing them from being used in the fight against Nod.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov's forces are keeping a significant number of GDI units occupied, preventing them from being used in the fight against Nod.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -8928,7 +9236,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     bleep11.Play();
                     storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide12.png", 8);
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
-                    storyDisplay.ConversationDisplay.ConversationText = "And of course, it is not just the scorpion, but also the eagle who besiges us!  Were your plans not supposed to prevent this very outcome?";
+                    storyDisplay.ConversationDisplay.ConversationText = "And of course, it is not just the scorpion, but also the eagle who besieges us!  Were your plans not supposed to prevent this very outcome?";
                 },
                 null,
                 null,

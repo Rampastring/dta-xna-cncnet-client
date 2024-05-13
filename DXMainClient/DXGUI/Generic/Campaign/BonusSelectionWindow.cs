@@ -6,9 +6,9 @@ using System;
 
 namespace DTAClient.DXGUI.Generic.Campaign
 {
-    public class BonuseselectionWindow : XNAWindow
+    public class BonusSelectionWindow : XNAWindow
     {
-        public BonuseselectionWindow(WindowManager windowManager) : base(windowManager)
+        public BonusSelectionWindow(WindowManager windowManager) : base(windowManager)
         {
         }
 
@@ -21,7 +21,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public override void Initialize()
         {
-            Name = nameof(BonuseselectionWindow);
+            Name = nameof(BonusSelectionWindow);
             Width = 300;
 
             BackgroundTexture = AssetLoader.LoadTexture("cncnetlobbybg.png");

@@ -201,6 +201,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRC09();
                 case Cutscene.CRC10:
                     return CRC10();
+                case Cutscene.CRC11:
+                    return CRC11();
 
                 /* PTTP */
                 case Cutscene.PTTP1:
@@ -583,6 +585,161 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRC11()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(fac2226m);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "You have done some astonishing work.";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We have reached the gates of Karhumäki.";
+                    storyDisplay.RemoveStoryImageById(1);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, they have heavily fortified the city.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We need to resort to some unusual equipment to break it.";
+                },
+                storyDisplay => AddRADisplay(storyDisplay, 3),
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We have kept our Battle Rig project hidden so far, but it has come time to reveal it. It is a supermassive tank designed for exactly this situation.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC11/brig.png", 4);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "But it is too slow to move to the frontline by itself. We will need to carry it close to the city by train.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The only suitable location for preparing it near the city is controlled by the enemy.";
+                },
+                storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRC11/railway.png", 5),
+                storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Attacking their outpost directly would be too risky.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We need to trick them into receiving our train.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Send a Spy into their command center. He will deliver a broadcast making them believe the approaching train to be friendly.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, the train will actually contain our squad of elite soldiers. Use them to capture the base.";
+                    storyDisplay.FindStoryImageById(5).AlphaRate = -2.0f;
+                    bleep12.Play();
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(5),
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate;
+                    bleep17.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards, prepare to defend against any potential counterattacks until the Battle Rig has been prepared.";
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(3),
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I will be waiting for news of your success. Until then, I will spend my time planning our assault on the city.";
+                },
+                null,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    HideAllStoryImagesWithSound(storyDisplay, toney4);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 7);
+                },
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRC10()

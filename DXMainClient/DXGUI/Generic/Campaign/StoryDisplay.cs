@@ -35,6 +35,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
         /// </summary>
         private const float SkipTime = 1500.0f;
         private const float SkipGraphicAlphaRate = 5.0f;
+        private const float InitialSkipTextVisibilitySeconds = 5.0f;
+        private const float InitialSkipGraphicAlpha = SkipGraphicAlphaRate * InitialSkipTextVisibilitySeconds;
 
         public StoryDisplay(WindowManager windowManager) : base(windowManager)
         {
@@ -63,6 +65,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         private float escPressMilliseconds;
         private float skipGraphicAlpha = 0.0f;
+        private float skipGraphicTrailingTime = 0.0f;
 
         private bool isFadingOutMusic;
 
@@ -94,8 +97,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
             ConversationDisplay.IsCentered = false;
             cutsceneStarted = false;
 
-            skipGraphicAlpha = 0.0f;
+            skipGraphicAlpha = InitialSkipGraphicAlpha;
             escPressMilliseconds = 0f;
+            skipGraphicTrailingTime = 0.0f;
 
             Phases = cutscenes.GetPhases(cutscene, this, WindowManager);
             Phase = -1;
@@ -235,46 +239,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         public override void Update(GameTime gameTime)
         {
-            if (cutsceneStarted)
-            {
-                if (PhaseState == PhaseState.Appearing)
-                {
-                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
-                    {
-                        PhaseState = PhaseState.Ready;
-                        CurrentPhase.Ready?.Invoke(this);
-                    }
-                }
-                else if (PhaseState == PhaseState.Disappearing)
-                {
-                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
-                    {
-                        PhaseState = PhaseState.Disappeared;
-                        CurrentPhase.Left?.Invoke(this);
-                    }
-                }
-                else if (PhaseState == PhaseState.Disappeared)
-                {
-                    NextPhase();
-                }
-
-                if (Keyboard.IsKeyHeldDown(Keys.Escape))
-                {
-                    escPressMilliseconds += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-                    skipGraphicAlpha = (float)Math.Min(1.0f, skipGraphicAlpha + SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
-
-                    if (escPressMilliseconds > SkipTime)
-                    {
-                        Finish();
-                    }
-                }
-                else
-                {
-                    escPressMilliseconds = 0.0f;
-                    skipGraphicAlpha = (float)Math.Max(0f, skipGraphicAlpha - SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
-                }
-            }
+            CutsceneSystemUpdate(gameTime);
 
             Alpha += (float)(gameTime.ElapsedGameTime.TotalSeconds * alphaRate);
 
@@ -303,6 +268,70 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
 
             base.Update(gameTime);
+        }
+
+        private void CutsceneSystemUpdate(GameTime gameTime)
+        {
+            if (cutsceneStarted)
+            {
+                // Handle phase transition logic
+                if (PhaseState == PhaseState.Appearing)
+                {
+                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
+                    {
+                        PhaseState = PhaseState.Ready;
+                        CurrentPhase.Ready?.Invoke(this);
+                    }
+                }
+                else if (PhaseState == PhaseState.Disappearing)
+                {
+                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
+                    {
+                        PhaseState = PhaseState.Disappeared;
+                        CurrentPhase.Left?.Invoke(this);
+                    }
+                }
+                else if (PhaseState == PhaseState.Disappeared)
+                {
+                    NextPhase();
+                }
+
+                bool escapeDown = Keyboard.IsKeyHeldDown(Keys.Escape);
+
+                // Update skip graphic state. If the user is currently pressing ESC or has pressed it within the last few seconds,
+                // we should display the skip hint graphic.
+                // Otherwise, fade the skip hint graphic away.
+                if (skipGraphicTrailingTime > 0 || escapeDown)
+                {
+                    skipGraphicAlpha = (float)Math.Min(1.0f, skipGraphicAlpha + SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
+                }
+                else
+                {
+                    skipGraphicAlpha = (float)Math.Max(0f, skipGraphicAlpha - SkipGraphicAlphaRate * gameTime.ElapsedGameTime.TotalSeconds);
+                }
+
+                // Check if ESC has been held for long enough for the cutscene to be skipped.
+                if (escapeDown)
+                {
+                    escPressMilliseconds += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                    skipGraphicTrailingTime = InitialSkipTextVisibilitySeconds;
+
+                    if (escPressMilliseconds > SkipTime)
+                    {
+                        Finish();
+                    }
+                }
+                else
+                {
+                    if (skipGraphicTrailingTime > 0f)
+                    {
+                        skipGraphicTrailingTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+
+                    escPressMilliseconds = 0.0f;
+                }
+            }
         }
 
         public override void OnLeftClick()
@@ -373,20 +402,24 @@ namespace DTAClient.DXGUI.Generic.Campaign
             if (skipGraphicAlpha > 0f)
             {
                 string text = "<ESC> hold to skip";
-                var textWidth = Renderer.GetTextDimensions(text, 0).X;
+                const int fontIndex = 1;
+                var textWidth = Renderer.GetTextDimensions(text, fontIndex).X;
                 var textLocation = new Vector2(Width - textWidth - 10.0f, 6.0f);
-                DrawString(text, 0, textLocation + new Vector2(1, 1), Color.Black * skipGraphicAlpha);
-                DrawString(text, 0, new Vector2(Width - textWidth - 10.0f, 6.0f), ConversationDisplay.TextColor * skipGraphicAlpha);
+                DrawString(text, fontIndex, textLocation + new Vector2(1, 1), Color.Black * skipGraphicAlpha);
+                DrawString(text, fontIndex, new Vector2(Width - textWidth - 10.0f, 6.0f), ConversationDisplay.TextColor * skipGraphicAlpha);
 
-                float escBarMaxWidth = 100.0f;
+                float escBarMaxWidth = textWidth;
                 float escBarHeight = 20.0f;
                 float escBarX = Width - escBarMaxWidth - 10;
                 float escBarY = 30;
 
                 float escBarWidth = (escPressMilliseconds / SkipTime) * escBarMaxWidth;
 
-                FillRectangle(new Rectangle((int)escBarX, (int)escBarY, (int)escBarWidth, (int)escBarHeight), ConversationDisplay.TextColor * 0.5f * skipGraphicAlpha);
-                DrawRectangle(new Rectangle((int)escBarX, (int)escBarY, (int)escBarMaxWidth, (int)escBarHeight), Color.White * skipGraphicAlpha);
+                if (escBarWidth > 0f)
+                {
+                    FillRectangle(new Rectangle((int)escBarX, (int)escBarY, (int)escBarWidth, (int)escBarHeight), ConversationDisplay.TextColor * 0.5f * skipGraphicAlpha);
+                    DrawRectangle(new Rectangle((int)escBarX, (int)escBarY, (int)escBarMaxWidth, (int)escBarHeight), Color.White * skipGraphicAlpha);
+                }
             }
         }
     }

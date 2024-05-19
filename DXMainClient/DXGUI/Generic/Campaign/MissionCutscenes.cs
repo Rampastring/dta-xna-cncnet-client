@@ -7858,14 +7858,20 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.AddSimpleStoryImage("Story/CR02/bg02.png", 2, 0f);
                     country1.Play();
                 },
-                null,
+                storyDisplay =>
+                {
+                    var ivanovtext = storyDisplay.AddSimpleStoryImage("Story/CR02/ivanovtext.png", 999, 0f);
+                    ivanovtext.AlphaRate = 3.0f;
+                    ivanovtext.ImageX.SnapToValue(930f);
+                    ivanovtext.ImageY.SnapToValue(300f);
+                },
                 null,
                 null));
 
             phases.Add(new Phase(3,
                 storyDisplay => storyDisplay.ConversationDisplay.ConversationText = "To offset the loss of one military base, the insurgents are attempting to set up another one.",
-                null,
-                null,
+                storyDisplay => storyDisplay.FindStoryImageById(999).AlphaRate = -3.0f,
+                storyDisplay => storyDisplay.RemoveStoryImageById(999),
                 null));
 
             phases.Add(new Phase(4,

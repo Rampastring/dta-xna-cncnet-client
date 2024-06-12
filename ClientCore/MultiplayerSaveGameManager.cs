@@ -178,6 +178,9 @@ namespace ClientCore
                 {
                     File.Delete(GetSaveGamePostSessionDirectoryPath() + 
                         "/" + string.Format("SVGM_{0}.NET", i.ToString("D3")));
+
+                    File.Delete(GetSaveGamePostSessionDirectoryPath() +
+                        "/" + string.Format("SVGM_{0}.sgmeta", i.ToString("D3")));
                 }
             }
             catch (Exception ex)

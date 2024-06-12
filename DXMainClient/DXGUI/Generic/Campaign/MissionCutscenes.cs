@@ -203,6 +203,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRC10();
                 case Cutscene.CRC11:
                     return CRC11();
+                case Cutscene.CRC12:
+                    return CRC12();
 
                 /* PTTP */
                 case Cutscene.PTTP1:
@@ -585,6 +587,342 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRC12()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "W3N - STRATEGIC ANALYSIS";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC12/bg01.png", 1, 0f);
+                    toney7.Play();
+                    TryPlaySong(raintro);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "The Brotherhood of Nod is suspected to have played a heavy role in destabilizing the country.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC12/bg02.png", 2, 0f);
+                },
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRC12/bg03.png", 3, 0f),
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They were most likely hoping for a revolution that would lead into a Communist government that they could lead from the shadows, undermining GDI forces in the region.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "That plan failed due to a strong Government military response with GDI support.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "While successful in thwarting the Nod-Communist advance, the GDI support turned out to be a failure in other ways, enabling the Government to perform serious war crimes.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC12/bg04.png", 4, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI attempted to alleviate this by withdrawing their support from Ivanov's regime, but it appears this move might have come too late.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Despite lack of support, Government forces have proceeded to the outskirts of Karhumäki, the most significant city of the Communist militia.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC12/bg05.png", 5, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Only a month ago this kind of progress looked almost impossible. A combined Communist-Nod force should have, at minimum, held their ground against Ivanov's forces.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "It is likely that the progress is partially enabled by Nod reducing their level of support for the neo-Soviets.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "There is a probable motive for this - as the previously GDI-supported Government has performed war crimes, it has become a significant stain in GDI's reputation.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC12/bg06.png", 6, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Allowing the Government to perform further war crimes on new territory will further undermine the legitimacy of GDI in the region, which allows the Brotherhood of Nod to present themselves as the morally superior side.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Additionally, even if the Government won the civil war, the unpopular leadership and international isolation would likely force the Government to seek assistance from the Brotherhood of Nod to survive in the long term.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC12/bg07.png", 7, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "To conclude, regardless of which side emerges victorious, the Brotherhood is set to have significant leverage on local affairs.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Of course, staying on the sidelines during the fight also preserves the Brotherhood's troops for potential future operations.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null, -2.5f),
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 8, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(fac2226m);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Commander.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 9, 0f);
+                    country1.Play();
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(8),
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I have made a strategic decision.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We need to send a strong message, both to our enemies as well as our \"friends\" at the Global Defense Initiative.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Destroy the city of Karhumäki.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Obliterate all buildings, regardless of form or function, and kill everyone you come across.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Man, woman, or child - it does not matter.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "All adults living there have picked their side by now. At the very least, they do not mind living under Communist leadership, which can already be seen as treason on its own.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(22,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Everyone truly loyal to us has escaped from there a long time ago.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(23,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "As for the children...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(24,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "...it can be seen as tragic, but if they are old enough to be conscious and they see our forces killing their parents, they will hate us forever.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(25,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Leaving them alive would, unfortunately, only spell trouble after a decade or two, when they have grown up and could perform violent acts of their own.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(26,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Thus, it is... necessary to pre-emptively neutralize them as well.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(27,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "What is also important is that this kind of an operation will destroy the Communist leadership.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(28,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Even if they escape the battle, losing such a major centre of population will prove the incompetency of their leadership to the regular soldier, causing a collapse in the ranks of their militia.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(29,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "To strengthen the symbolism of this act, I will be giving you control of our last GDI heavy equipment for this operation.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(30,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The international news agencies are going to be absolutely delighted by the sight of GDI Mammoth tanks leveling down the city - just imagine how much such a controversy increases their sales.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(31,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "And to the GDI leadership, it will signal that our course cannnot be changed through blackmailing us with sanctions, or even by ending military support.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(32,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Our final victory is at hand, Commander.";
+                },
+                null,
+                storyDisplay => { storyDisplay.FindStoryImageById(9).AlphaRate = -2.0f; toney4.Play(); },
+                null));
+
+            phases.Add(new Phase(33,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 10);
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRC11()

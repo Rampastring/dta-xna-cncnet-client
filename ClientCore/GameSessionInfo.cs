@@ -282,15 +282,24 @@ namespace ClientCore
             {
                 Logger.Log("Moving saved game " + Path.GetFileName(save) + " to MULTIPLAYER saves directory.");
                 string destinationPath = mpSaveDirPath + "/" + Path.GetFileName(save);
+                string metaFilePath = Path.ChangeExtension(save, SavedGameMetaExtension);
 
                 if (!File.Exists(destinationPath))
                 {
                     File.Move(save, destinationPath);
+
+                    if (File.Exists(metaFilePath))
+                    {
+                        Logger.Log($"The meta file for the save ({Path.GetFileName(metaFilePath)}) also exists. Moving it as well.");
+                        string destinationMetaFilePath = Path.ChangeExtension(destinationPath, SavedGameMetaExtension);
+                        File.Move(metaFilePath, destinationMetaFilePath);
+                    }
                 }
                 else
                 {
-                    Logger.Log("A saved game with the same filename already exists in the MULTIPLAYER saves directory. Deleting the save instead.");
+                    Logger.Log("A saved game with the same filename already exists in the MULTIPLAYER saves directory. Deleting the save and its meta file instead.");
                     File.Delete(save);
+                    File.Delete(metaFilePath);
                 }
             }
 

@@ -92,6 +92,8 @@ namespace DTAClient.DXGUI.Generic
         private Texture2D missionBackgroundTexture;
         private Texture2D darkeningTexture;
 
+        public string MissionAuthor { get; set; }
+
         public override void Initialize()
         {
             darkeningTexture = AssetLoader.CreateTexture(Color.Black, 2, 2);
@@ -131,6 +133,22 @@ namespace DTAClient.DXGUI.Generic
             {
                 DrawStringWithShadow(Text, FontIndex,
                     new Vector2(TextXMargin, TextYPosition), TextColor);
+            }
+
+            if (!string.IsNullOrWhiteSpace(MissionAuthor))
+            {
+                var briefingTextSize = Renderer.GetTextDimensions(Text, FontIndex);
+                string authorText = "Mission Author: " + MissionAuthor;
+                var missionAuthorTextSize = Renderer.GetTextDimensions(authorText, FontIndex);
+
+                // Only draw mission author text if there is space for it
+                if (briefingTextSize.Y + TextYPosition < Height - missionAuthorTextSize.Y)
+                {
+                    const int authorTextDistanceToBottom = 3;
+                    DrawStringWithShadow(authorText, FontIndex,
+                        new Vector2(Width - missionAuthorTextSize.X - UIDesignConstants.EMPTY_SPACE_SIDES,
+                        Height - missionAuthorTextSize.Y - authorTextDistanceToBottom), UISettings.ActiveSettings.SubtleTextColor);
+                }
             }
 
             if (DrawBorders)
@@ -605,6 +623,7 @@ namespace DTAClient.DXGUI.Generic
             PreconditionUIConfig(mission);
 
             tbMissionDescription.Text = mission.GUIDescription;
+            tbMissionDescription.MissionAuthor = mission.Author;
 
             if (!mission.Enabled)
             {
@@ -634,6 +653,8 @@ namespace DTAClient.DXGUI.Generic
             tbMissionDescription.LoadMissionBackgroundTexture(null);
             tbMissionDescription.Text = string.Empty;
             btnLaunch.AllowClick = false;
+            btnBonus.Disable();
+            tbMissionDescription.MissionAuthor = null;
             PreconditionUIConfig(null);
         }
 
@@ -957,6 +978,11 @@ namespace DTAClient.DXGUI.Generic
                 XNAListBoxItem item = new XNAListBoxItem();
                 item.Tag = mission;
                 item.Text = mission.GUIName;
+
+                if (!mission.Visible)
+                {
+                    return;
+                }
 
                 if (!mission.Enabled)
                 {

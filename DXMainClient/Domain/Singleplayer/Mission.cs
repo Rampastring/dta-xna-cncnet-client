@@ -26,10 +26,12 @@ namespace DTAClient.Domain.Singleplayer
 
             IconPath = iniSection.GetStringValue(nameof(IconPath), string.Empty);
             GUIDescription = iniSection.GetStringValue("LongDescription", string.Empty);
+            Author = iniSection.GetStringValue(nameof(Author), string.Empty);
             HeaderFor = iniSection.GetStringValue(nameof(HeaderFor), string.Empty);
             PreviewImagePath = iniSection.GetStringValue(nameof(PreviewImagePath), string.Empty);
             RequiredAddon = iniSection.GetBooleanValue(nameof(RequiredAddon), false);
-            Enabled = iniSection.GetBooleanValue(nameof(Enabled), true);
+            Enabled = iniSection.GetBooleanValue(nameof(Enabled), Enabled);
+            Visible = iniSection.GetBooleanValue(nameof(Visible), Visible);
             BuildOffAlly = iniSection.GetBooleanValue(nameof(BuildOffAlly), false);
             WarnOnHardWithoutMediumPlayed = iniSection.GetBooleanValue(nameof(WarnOnHardWithoutMediumPlayed), WarnOnHardWithoutMediumPlayed);
             PlayerAlwaysOnNormalDifficulty = iniSection.GetBooleanValue(nameof(PlayerAlwaysOnNormalDifficulty), false);
@@ -92,9 +94,11 @@ namespace DTAClient.Domain.Singleplayer
         public string GUIName { get; }
         public string IconPath { get; }
         public string GUIDescription { get; }
+        public string Author { get; }
         public string PreviewImagePath { get; }
         public bool RequiredAddon { get; }
-        public bool Enabled { get; }
+        public bool Enabled { get; } = true;
+        public bool Visible { get; } = true;
         public bool BuildOffAlly { get; }
 
         public bool PlayerAlwaysOnNormalDifficulty { get; }

@@ -49,6 +49,8 @@
         CRC10,
         CRC11,
         CRC12,
+        CRC13,
+        CRC14,
 
         PTTP1,
         PTTP2,

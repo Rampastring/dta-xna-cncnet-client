@@ -25,6 +25,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             bleep17 = new EnhancedSoundEffect("Story/Sounds/BLEEP17.WAV");
             country1 = new EnhancedSoundEffect("Story/Sounds/COUNTRY1.WAV");
             country4 = new EnhancedSoundEffect("Story/Sounds/COUNTRY4.WAV");
+            tone5 = new EnhancedSoundEffect("Story/Sounds/TONE5.WAV");
             toney4 = new EnhancedSoundEffect("Story/Sounds/TONEY4.WAV");
             toney7 = new EnhancedSoundEffect("Story/Sounds/TONEY7.WAV");
             mapwipe2 = new EnhancedSoundEffect("Story/Sounds/MAPWIPE2.WAV");
@@ -54,6 +55,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly EnhancedSoundEffect bleep17;
         private readonly EnhancedSoundEffect country1;
         private readonly EnhancedSoundEffect country4;
+        private readonly EnhancedSoundEffect tone5;
         private readonly EnhancedSoundEffect toney4;
         private readonly EnhancedSoundEffect toney7;
         private readonly EnhancedSoundEffect mapwipe2;
@@ -205,6 +207,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRC11();
                 case Cutscene.CRC12:
                     return CRC12();
+                case Cutscene.CRC13:
+                    return CRC13();
+                case Cutscene.CRC14:
+                    return CRC14();
 
                 /* PTTP */
                 case Cutscene.PTTP1:
@@ -587,6 +593,501 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private List<Phase> CRC14()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(fac2226m);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I have to admit.";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I am still astonished by how we survived that decapitation strike.";
+                    storyDisplay.RemoveStoryImageById(1);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The situation seemed very bleak there for a moment.";
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CRC14/bg01.png", 3, 0f);
+                    powrdn1.Play();
+                },
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.FindStoryImageById(3).AlphaRate = -2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "It looks like we still have some electricity problems after the last battle.";
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(3),
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Anyway, while we survived for now, the danger is far from over.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The GDI scum has continued their offensive in various directions.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Many of our military units have been simply eliminated, and what we have left, we have been forced to pull back.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The majority of our country is now either a gray zone or occupied by foreign powers.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Not only the Global Defense Initiative: The Brotherhood of Nod has exploited this opportunity as well.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    AddRADisplay(storyDisplay, 4);
+                    storyDisplay.ConversationDisplay.ConversationText = "To keep up some coherency in our lines, I assigned Toikka to defend the area of the destroyed vehicle factory.";
+                },
+                storyDisplay =>
+                {
+                    AddRADisplayImage(storyDisplay, "Story/CRC14/factory.png", 5);
+                },
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Unfortunately, he failed.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "A GDI assault forced him to fall back to the vehicle factory island and fortify himself there.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC14/fortifications.png", 6);
+                },
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(5),
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "His forces are now under siege, with GDI surrounding them and attacking them from land, air and the surrounding lake.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(16,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I need you to send your forces there and save him. Destroy GDI forces from the area and allow him to escape.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "This is going to be a hard operation, but losing him would be a significant blow to us.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(18,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "There are two factors that should easen your work a bit.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(19,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Firstly, now that the Communist problem is solved and we appear to have a common enemy, I contacted representatives of the Brotherhood of Nod.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC14/nodlogo.png", 7);
+                },
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(6),
+                null));
+
+            phases.Add(new Phase(20,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "We now have a ceasefire.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(21,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Nod also has their outpost in the area, and they are also being troubled by the GDI assault.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC14/nodoutpost.png", 8);
+                },
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(7),
+                null));
+
+            phases.Add(new Phase(22,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They are going to help you in combat. If you manage to help them keep their outpost operational, this could pave the way for greater cooperation in the future.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(23,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Secondly, I ordered our scientists to look into activating our nuclear warheads that we acquired from the black market afer the collapse of the USSR.";
+                    AddRADisplayImage(storyDisplay, "Story/CRC14/nukesilo.png", 9);
+                },
+                null,
+                storyDisplay => storyDisplay.RemoveStoryImageById(8),
+                null));
+
+            phases.Add(new Phase(24,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They have now managed to do so.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(25,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If you build a Nuclear Missile Silo, you will be able to launch nukes at the eagle.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(26,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I can't imagine anything more satisfying than that.";
+                    storyDisplay.FindStoryImageById(9).AlphaRate = -2.0f;
+                    bleep12.Play();
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(9),
+                null,
+                null));
+
+            phases.Add(new Phase(27,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "May they knock the bird off the sky.";
+                    storyDisplay.FindStoryImageById(4).AlphaRate = -crRAdisplayAlphaRate;
+                    bleep17.Play();
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    HideAllStoryImagesWithSound(storyDisplay, toney4);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 7);
+                },
+                null));
+
+            return phases;
+        }
+
+        private List<Phase> CRC13()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(fac2226m);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Commander!";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                },
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRC13/static1.png", 3, 0.85f),
+                storyDisplay =>
+                {
+                    powrdn1.Play();
+                    storyDisplay.RemoveStoryImageById(3);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static2.png", 4, 0.9f).AlphaRate = 0.1f;
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static3.png", 5, 1.0f);
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(4)));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "*** GDI has ******** a full as***** on ** from *** directions.";
+                    storyDisplay.RemoveStoryImageById(1);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static4.png", 6, 0.95f);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(5);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static5.png", 7, 0.95f).DrawOrder = 9999;
+                },
+                storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRC13/static6.png", 8, 0.9f).AlphaRate = 0.05f,
+                storyDisplay => storyDisplay.RemoveStoryImageById(8)));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(6);
+                    powrdn1.Play();
+                    storyDisplay.ConversationDisplay.ConversationText = "I **** your forces ** the HQ ************.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static7.png", 9, 1.0f);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(9);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static8.png", 10, 0.8f);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static9.png", 11, 0.9f).AlphaRate = 0.08f;
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(11)));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "They are ****** to ********** us for a ********* fast victory.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static1.png", 12, 1.0f);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(12);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static10.png", 13, 1.0f);
+                    storyDisplay.ConversationDisplay.ConversationText = "Do you";
+                    storyDisplay.RemoveStoryImageById(10);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static11.png", 14, 0.75f);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static7.png", 15, 0.8f);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/static8.png", 16, 0.9f);
+                },
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    powrdn1.Play();
+                    storyDisplay.ClearStoryImages();
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/staticfull.png", 17, 1.0f);
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.ConversationText = "TRANSMISSION INTERRUP";
+                },
+                storyDisplay =>
+                {
+                    country4.Play();
+                    TryPlaySong(tdmaptheme);
+                    storyDisplay.ClearStoryImages();
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/gdibg1.png", 18, 1.0f);
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "THIS TRANSMISSION HAS BEEN INTERCEPTED BY THE GLOBAL DEFENSE INITIATIVE.";
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "";
+                    country1.Play();
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/gdibg2.png", 19, 0f);
+                },
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.RemoveStoryImageById(18);
+                    storyDisplay.ConversationDisplay.ConversationText = "SURRENDER NOW, AND YOUR LIVES WILL BE SPARED.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(8,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "OTHERWISE, YOU WILL BE BOMBED UNTIL YOU CAN NO LONGER RESIST.";
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                null));
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ClearStoryImages();
+                    storyDisplay.ConversationDisplay.ConversationText = "----------------";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Reaching Ivanov's headquarters took you a couple of hours.";
+                },
+                null,
+                null,
+                storyDisplay => country1.Play()));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "All the while, GDI aircraft was striking your forces.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC13/gdiplanes.png", 20);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Despite maximizing anti-aircraft coverage, there were significant casualties.";
+                },
+                null,
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1)));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Upon your arrival, it seemed that the battle for the headquarters had just begun.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "While GDI had seized a lot of other areas and caused damage with air strikes, their land forces were only just about to arrive.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The situation looks hopeless, but maybe you can do something to turn it around...";
+                    HideAllStoryImagesWithSound(storyDisplay, toney4);
+                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 7);
+                },
+                null,
+                null,
+                null));
+
+            return phases;
         }
 
         private List<Phase> CRC12()
@@ -3402,7 +3903,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    world2.Play();
+                    tone5.Play();
                     storyDisplay.ConversationDisplay.ConversationText = "---------";
                 },
                 null,
@@ -3412,7 +3913,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    world2.Play();
+                    tone5.Play();
                     storyDisplay.ConversationDisplay.ConversationText = "---------";
                 },
                 null,

@@ -24,7 +24,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         /// <summary>
         /// The time in seconds it takes for each character to appear.
         /// </summary>
-        public double ConversationSpeed { get; set; } = 0.02;
+        public double ConversationSpeed { get; set; } = 0.03;
 
         public Color TextColor { get; set; } = Color.White;
 

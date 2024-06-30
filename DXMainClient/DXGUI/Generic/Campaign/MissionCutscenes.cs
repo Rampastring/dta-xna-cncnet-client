@@ -630,7 +630,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I am still astonished by how we survived that decapitation strike.";
-                    storyDisplay.RemoveStoryImageById(1);
                 },
                 null,
                 null,
@@ -866,14 +865,87 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     bleep17.Play();
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                null,
+                null));
+
+            phases.Add(new Phase(28,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
-                    HideAllStoryImagesWithSound(storyDisplay, toney4);
-                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 7);
+                    storyDisplay.FindStoryImageById(2).AlphaRate = -1.0f;
+                    toney4.Play();
                 },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(29,
+                storyDisplay =>
+                {
+                    HideAllStoryImagesWithSound(storyDisplay, bleep17);
+                    TryPlaySong(raintro);
+                    storyDisplay.ConversationDisplay.ConversationText = "----------------";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(30,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = "Analyzing the situation, you are clearly Ivanov's most achieved commander.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(31,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "While he instructured you to save Toikka, it is hard to say whether that will be possible due to GDI's overwhelming superiority in force.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(32,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "However, even if you failed, that would not change your position.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(33,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov has no one to replace you with, and you could continue military operations even without Toikka on your side.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(34,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The conclusion is: the most important objective here is to destroy GDI.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(35,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "You can also attempt to save Toikka. But while it's important for Ivanov, for you that is of secondary importance, an optional objective.";
+                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 10);
+                },
+                null,
+                null,
                 null));
 
             return phases;
@@ -8830,18 +8902,27 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg01.png", 1);
                     mapwipe2.Play();
                 },
-                null,
+                storyDisplay =>
+                {
+                    var mousehint = new StoryImage(windowManager, 9001);
+                    mousehint.Texture = AssetLoader.LoadTextureUncached("Story/CR01/mousehint.png");
+                    mousehint.Alpha = 0f;
+                    mousehint.AlphaRate = 2.0f;
+                    mousehint.ImageX.SnapToValue(UIDesignConstants.CUTSCENE_DESIGN_RES_X - mousehint.Texture.Width - 100);
+                    storyDisplay.AddStoryImage(mousehint);
+                },
                 null,
                 null));
 
             phases.Add(new Phase(2,
                storyDisplay =>
                {
+                   storyDisplay.FindStoryImageById(9001).AlphaRate = -1.0f;
                    storyDisplay.AddSimpleStoryImage("Story/CR01/bg02.png", 2);
                    mapwipe5.Play();
                },
                storyDisplay => storyDisplay.RemoveStoryImageById(1),
-               null,
+               storyDisplay => storyDisplay.RemoveStoryImageById(9001),
                null));
 
             phases.Add(new Phase(2,

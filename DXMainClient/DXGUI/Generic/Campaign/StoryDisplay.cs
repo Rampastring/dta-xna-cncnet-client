@@ -226,7 +226,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
             ConversationDisplay.BackgroundTexture = AssetLoader.CreateTexture(Color.Black * 0.5f, 2, 2);
             ConversationDisplay.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             ConversationDisplay.Scaling = 3;
-            ConversationDisplay.Width = Width / ConversationDisplay.Scaling;
+            // without +1 it doesn't fill the entire screen due to rounding
+            ConversationDisplay.Width = (Width / ConversationDisplay.Scaling) + 1;
             ConversationDisplay.Height = 65;
             ConversationDisplay.Y = Height - ConversationDisplay.ScaledHeight;
             ConversationDisplay.DrawOrder = 99999;

@@ -227,8 +227,7 @@ namespace DTAClient.DXGUI.Generic
             tbMissionDescription = FindChild<MissionDescriptionBox>(nameof(tbMissionDescription));
 
             trbDifficultySelector = FindChild<XNATrackbar>(nameof(trbDifficultySelector));
-            trbDifficultySelector.MinValue = 0;
-            trbDifficultySelector.MaxValue = 2;
+            trbDifficultySelector.ButtonTexture = AssetLoader.LoadTextureUncached("trackbarButton_difficulty.png");
 
             // Create controls for global variable customization
             // The indexes increase from bottom to top, meaning
@@ -256,7 +255,6 @@ namespace DTAClient.DXGUI.Generic
             lblNormal = FindChild<XNALabel>(nameof(lblNormal));
             lblHard = FindChild<XNALabel>(nameof(lblHard));
             lblBrutal = FindChild<XNALabel>(nameof(lblBrutal));
-
 
             btnLaunch = FindChild<XNAClientButton>(nameof(btnLaunch));
             btnLaunch.AllowClick = false;

@@ -3,6 +3,7 @@ using ClientGUI;
 using DTAClient.Domain;
 using DTAClient.Domain.Singleplayer;
 using DTAClient.DXGUI.Generic.Campaign;
+using DTAClient.DXGUI.Multiplayer.GameLobby;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.Tools;
@@ -158,15 +159,9 @@ namespace DTAClient.DXGUI.Generic
         }
     }
 
-    public class CampaignSelector : XNAWindow
+    public class CampaignSelector : INItializableWindow
     {
         private const int MAX_GLOBAL_COUNT = 4;
-
-        private const int DEFAULT_WIDTH = 650;
-        private const int DEFAULT_HEIGHT = 600;
-
-        private static readonly string[] DifficultyNames = new string[] { "Easy", "Medium", "Hard" };
-        private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
         public event EventHandler MusicOptions;
         public event EventHandler RefreshMusicState;
@@ -190,9 +185,9 @@ namespace DTAClient.DXGUI.Generic
         private XNALabel lblBrutal;
 
         private XNALabel lblPreconditionsHeader;
-        private XNALabel[] globalVariableNames = new XNALabel[MAX_GLOBAL_COUNT];
+        private XNALabel[] lblGlobalVariables = new XNALabel[MAX_GLOBAL_COUNT];
         private ToolTip[] globalVariableToolTips = new ToolTip[MAX_GLOBAL_COUNT];
-        private XNADropDown[] globalVariableValues = new XNADropDown[MAX_GLOBAL_COUNT];
+        private XNADropDown[] cmbGlobalVariables = new XNADropDown[MAX_GLOBAL_COUNT];
 
         private CheaterWindow cheaterWindow;
         private BonusSelectionWindow BonuseSelectionWindow;
@@ -223,68 +218,17 @@ namespace DTAClient.DXGUI.Generic
 
         public override void Initialize()
         {
-            BackgroundTexture = AssetLoader.LoadTexture("missionselectorbg.png");
-            ClientRectangle = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-            BorderColor = UISettings.ActiveSettings.PanelBorderColor;
+            Name = nameof(CampaignSelector);
+            base.Initialize();
 
-            Name = "CampaignSelector";
-
-            var lblSelectCampaign = new XNALabel(WindowManager);
-            lblSelectCampaign.Name = "lblSelectCampaign";
-            lblSelectCampaign.FontIndex = 1;
-            lblSelectCampaign.ClientRectangle = new Rectangle(12, 12, 0, 0);
-            lblSelectCampaign.Text = "MISSIONS:";
-
-            lbCampaignList = new BattleListBox(WindowManager);
-            lbCampaignList.Name = "lbCampaignList";
-            lbCampaignList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 2, 2);
-            lbCampaignList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            lbCampaignList.ClientRectangle = new Rectangle(12, 
-                lblSelectCampaign.Bottom + 6, 300, 516);
+            lbCampaignList = FindChild<BattleListBox>(nameof(lbCampaignList));
             lbCampaignList.SelectedIndexChanged += LbCampaignList_SelectedIndexChanged;
 
-            var lblMissionDescriptionHeader = new XNALabel(WindowManager);
-            lblMissionDescriptionHeader.Name = "lblMissionDescriptionHeader";
-            lblMissionDescriptionHeader.FontIndex = 1;
-            lblMissionDescriptionHeader.ClientRectangle = new Rectangle(
-                lbCampaignList.Right + 12, 
-                lblSelectCampaign.Y, 0, 0);
-            lblMissionDescriptionHeader.Text = "MISSION DESCRIPTION:";
+            tbMissionDescription = FindChild<MissionDescriptionBox>(nameof(tbMissionDescription));
 
-            tbMissionDescription = new MissionDescriptionBox(WindowManager);
-            tbMissionDescription.Name = "tbMissionDescription";
-            tbMissionDescription.ClientRectangle = new Rectangle(
-                lblMissionDescriptionHeader.X, 
-                lblMissionDescriptionHeader.Bottom + 6,
-                Width - 24 - lbCampaignList.Right, 430);
-            tbMissionDescription.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            tbMissionDescription.Alpha = 1.0f;
-
-            tbMissionDescription.BackgroundTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.AltUIBackgroundColor),
-                tbMissionDescription.Width, tbMissionDescription.Height);
-
-            var lblDifficultyLevel = new XNALabel(WindowManager);
-            lblDifficultyLevel.Name = "lblDifficultyLevel";
-            lblDifficultyLevel.Text = "DIFFICULTY LEVEL";
-            lblDifficultyLevel.FontIndex = 1;
-            Vector2 textSize = Renderer.GetTextDimensions(lblDifficultyLevel.Text, lblDifficultyLevel.FontIndex);
-            lblDifficultyLevel.ClientRectangle = new Rectangle(
-                tbMissionDescription.X + (tbMissionDescription.Width - (int)textSize.X) / 2,
-                tbMissionDescription.Bottom + 12, (int)textSize.X, (int)textSize.Y);
-
-            trbDifficultySelector = new XNATrackbar(WindowManager);
-            trbDifficultySelector.Name = "trbDifficultySelector";
-            trbDifficultySelector.ClientRectangle = new Rectangle(
-                tbMissionDescription.X, lblDifficultyLevel.Bottom + 6,
-                tbMissionDescription.Width, 30);
+            trbDifficultySelector = FindChild<XNATrackbar>(nameof(trbDifficultySelector));
             trbDifficultySelector.MinValue = 0;
             trbDifficultySelector.MaxValue = 2;
-            trbDifficultySelector.BackgroundTexture = AssetLoader.CreateTexture(
-                new Color(0, 0, 0, 128), 2, 2);
-            trbDifficultySelector.ButtonTexture = AssetLoader.LoadTextureUncached(
-                "trackbarButton_difficulty.png");
-
-            int y = lblDifficultyLevel.Y - UIDesignConstants.EMPTY_SPACE_BOTTOM;
 
             // Create controls for global variable customization
             // The indexes increase from bottom to top, meaning
@@ -295,108 +239,33 @@ namespace DTAClient.DXGUI.Generic
             // global slot #0
             for (int i = 0; i < MAX_GLOBAL_COUNT; i++)
             {
-                globalVariableValues[i] = new XNADropDown(WindowManager);
-                globalVariableValues[i].Name = "globalVariableValue" + i;
-                globalVariableValues[i].X = trbDifficultySelector.X;
-                globalVariableValues[i].Width = trbDifficultySelector.Width;
-                globalVariableValues[i].AddItem("Disabled");
-                globalVariableValues[i].AddItem("Enabled");
-                AddChild(globalVariableValues[i]);
-                globalVariableValues[i].Y = y - (UIDesignConstants.EMPTY_SPACE_BOTTOM * 2) - globalVariableValues[i].Height;
-                globalVariableValues[i].Disable();
+                cmbGlobalVariables[i] = FindChild<XNADropDown>($"cmbGlobalVariable{i}");
+                cmbGlobalVariables[i].AddItem("Disabled");
+                cmbGlobalVariables[i].AddItem("Enabled");
 
-                globalVariableNames[i] = new XNALabel(WindowManager);
-                globalVariableNames[i].Name = "globalVariableName" + i;
-                globalVariableNames[i].Text = "Global Variable #" + i;
-                globalVariableNames[i].TextAnchor = LabelTextAnchorInfo.RIGHT;
-                globalVariableNames[i].AnchorPoint = new Vector2(globalVariableValues[i].X, globalVariableValues[i].Y - globalVariableNames[i].Height);
-                AddChild(globalVariableNames[i]);
-                globalVariableNames[i].Disable();
+                lblGlobalVariables[i] = FindChild<XNALabel>($"lblGlobalVariable{i}");
 
-                globalVariableToolTips[i] = new ToolTip(WindowManager, globalVariableNames[i]);
-
-                y = globalVariableNames[i].Y;
+                globalVariableToolTips[i] = new ToolTip(WindowManager, lblGlobalVariables[i]);
             }
 
-            lblPreconditionsHeader = new XNALabel(WindowManager);
-            lblPreconditionsHeader.Name = nameof(lblPreconditionsHeader);
-            lblPreconditionsHeader.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
-            lblPreconditionsHeader.TextAnchor = LabelTextAnchorInfo.HORIZONTAL_CENTER;
-            lblPreconditionsHeader.AnchorPoint = new Vector2(trbDifficultySelector.ClientRectangle.Center.X,
-                globalVariableNames[0].Y - UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2);
-            lblPreconditionsHeader.Text = "PRECONDITIONS";
-            AddChild(lblPreconditionsHeader);
-            lblPreconditionsHeader.Disable();
+            lblPreconditionsHeader = FindChild<XNALabel>(nameof(lblPreconditionsHeader));
 
             PreconditionUIConfig(null);
 
-            lblEasy = new XNALabel(WindowManager);
-            lblEasy.Name = nameof(lblEasy);
-            lblEasy.TextAnchor = LabelTextAnchorInfo.RIGHT;
-            lblEasy.AnchorPoint = new Vector2(trbDifficultySelector.X,
-                trbDifficultySelector.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN);
-            lblEasy.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
-            lblEasy.Text = DifficultyNamesUIDefault[0];
+            lblEasy = FindChild<XNALabel>(nameof(lblEasy));
+            lblNormal = FindChild<XNALabel>(nameof(lblNormal));
+            lblHard = FindChild<XNALabel>(nameof(lblHard));
+            lblBrutal = FindChild<XNALabel>(nameof(lblBrutal));
 
-            lblNormal = new XNALabel(WindowManager);
-            lblNormal.Name = nameof(lblNormal);
-            lblNormal.TextAnchor = LabelTextAnchorInfo.HORIZONTAL_CENTER;
-            lblNormal.AnchorPoint = new Vector2(trbDifficultySelector.ClientRectangle.Center.X, lblEasy.AnchorPoint.Y);
-            lblNormal.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
-            lblNormal.Text = DifficultyNamesUIDefault[1];
 
-            lblHard = new XNALabel(WindowManager);
-            lblHard.Name = nameof(lblHard);
-            lblHard.TextAnchor = LabelTextAnchorInfo.LEFT;
-            lblHard.AnchorPoint = new Vector2(trbDifficultySelector.Right, lblEasy.AnchorPoint.Y);
-            lblHard.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
-            lblHard.Text = DifficultyNamesUIDefault[2];
-
-            lblBrutal = new XNALabel(WindowManager);
-            lblBrutal.Name = nameof(lblBrutal);
-            lblBrutal.TextAnchor = lblHard.TextAnchor;
-            lblBrutal.AnchorPoint = lblHard.AnchorPoint;
-            lblBrutal.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
-            lblBrutal.Text = DifficultyNamesUIDefault[3];
-            lblBrutal.Disable();
-
-            btnLaunch = new XNAClientButton(WindowManager);
-            btnLaunch.Name = nameof(btnLaunch);
-            btnLaunch.ClientRectangle = new Rectangle(12, Height - 35, 133, 23);
-            btnLaunch.Text = "Launch";
+            btnLaunch = FindChild<XNAClientButton>(nameof(btnLaunch));
             btnLaunch.AllowClick = false;
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
 
-            var btnCancel = new XNAClientButton(WindowManager);
-            btnCancel.Name = "btnCancel";
-            btnCancel.ClientRectangle = new Rectangle(Width - 145,
-                btnLaunch.Y, 133, 23);
-            btnCancel.Text = "Cancel";
-            btnCancel.LeftClick += BtnCancel_LeftClick;
+            FindChild<XNAClientButton>("btnCancel").LeftClick += BtnCancel_LeftClick;
 
-            btnBonus = new XNAClientButton(WindowManager);
-            btnBonus.Name = nameof(btnBonus);
-            btnBonus.ClientRectangle = new Rectangle(lblEasy.X, btnCancel.Y, 133, UIDesignConstants.BUTTON_HEIGHT);
-            btnBonus.Text = "Bonus";
-            AddChild(btnBonus);
-            btnBonus.Disable();
+            btnBonus = FindChild<XNAClientButton>(nameof(btnBonus));
             btnBonus.LeftClick += BtnBonus_LeftClick;
-
-            AddChild(lblSelectCampaign);
-            AddChild(lblMissionDescriptionHeader);
-            AddChild(lbCampaignList);
-            AddChild(tbMissionDescription);
-            AddChild(lblDifficultyLevel);
-            AddChild(btnLaunch);
-            AddChild(btnCancel);
-            AddChild(trbDifficultySelector);
-            AddChild(lblEasy);
-            AddChild(lblNormal);
-            AddChild(lblHard);
-            AddChild(lblBrutal);
-
-            // Set control attributes from INI file
-            base.Initialize();
 
             // Center on screen
             CenterOnParent();
@@ -530,7 +399,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void ConfigureDifficultySelectorForMission(Mission mission)
         {
-            string[] difficultyLabels = DifficultyNamesUIDefault;
+            string[] difficultyLabels = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
             if (mission != null && mission.DifficultyLabels != null && (!mission.RequiresUnlocking || mission.IsUnlocked))
                 difficultyLabels = mission.DifficultyLabels;
@@ -667,11 +536,11 @@ namespace DTAClient.DXGUI.Generic
             lblPreconditionsHeader.Disable();
             for (int i = 0; i < MAX_GLOBAL_COUNT; i++)
             {
-                globalVariableNames[i].Disable();
-                globalVariableValues[i].Disable();
+                lblGlobalVariables[i].Disable();
+                cmbGlobalVariables[i].Disable();
             }
 
-            tbMissionDescription.Height = globalVariableValues[0].Bottom - tbMissionDescription.Y;
+            tbMissionDescription.Height = cmbGlobalVariables[0].Bottom - tbMissionDescription.Y;
 
 
             if (mission != null && mission.UsedGlobalVariables.Length > 0)
@@ -690,9 +559,9 @@ namespace DTAClient.DXGUI.Generic
                         return;
                     }
 
-                    globalVariableNames[i].Text = global.UIName;
-                    globalVariableNames[i].TextColor = UISettings.ActiveSettings.TextColor;
-                    globalVariableNames[i].Enable();
+                    lblGlobalVariables[i].Text = global.UIName;
+                    lblGlobalVariables[i].TextColor = UISettings.ActiveSettings.TextColor;
+                    lblGlobalVariables[i].Enable();
                     globalVariableToolTips[i].Text = global.ToolTip;
 
                     bool disabledSelectable = global.IsDisabledUnlocked || global.DisableOptionFreeUnlock;
@@ -700,45 +569,45 @@ namespace DTAClient.DXGUI.Generic
 
                     if (disabledSelectable)
                     {
-                        globalVariableValues[i].Items[0].Text = global.UIDisabledOption ?? "No";
+                        cmbGlobalVariables[i].Items[0].Text = global.UIDisabledOption ?? "No";
                     }
                     else
                     {
-                        globalVariableValues[i].Items[0].Text = "Option not unlocked";
+                        cmbGlobalVariables[i].Items[0].Text = "Option not unlocked";
                     }
 
                     if (enabledSelectable)
                     {
-                        globalVariableValues[i].Items[1].Text = global.UIEnabledOption ?? "Yes";
+                        cmbGlobalVariables[i].Items[1].Text = global.UIEnabledOption ?? "Yes";
                     }
                     else
                     {
-                        globalVariableValues[i].Items[1].Text = "Option not unlocked";
+                        cmbGlobalVariables[i].Items[1].Text = "Option not unlocked";
                     }
 
-                    globalVariableValues[i].Items[0].Selectable = disabledSelectable;
-                    globalVariableValues[i].Items[1].Selectable = enabledSelectable;
-                    globalVariableValues[i].SelectedIndex = 0;
+                    cmbGlobalVariables[i].Items[0].Selectable = disabledSelectable;
+                    cmbGlobalVariables[i].Items[1].Selectable = enabledSelectable;
+                    cmbGlobalVariables[i].SelectedIndex = 0;
                     if (global.IsEnabledUnlocked)
                     {
                         if (!global.IsDisabledUnlocked || global.EnabledThroughPreviousScenario)
-                            globalVariableValues[i].SelectedIndex = 1;
+                            cmbGlobalVariables[i].SelectedIndex = 1;
                     }
 
                     if (global.HideIfNotEnabledUnlocked && !global.IsEnabledUnlocked)
                     {
-                        globalVariableValues[i].Items[0].Text = "-";
-                        globalVariableValues[i].Items[1].Text = "-";
-                        globalVariableNames[i].Text = "Unknown Condition (not yet unlocked)";
-                        globalVariableNames[i].TextColor = UISettings.ActiveSettings.DisabledItemColor;
+                        cmbGlobalVariables[i].Items[0].Text = "-";
+                        cmbGlobalVariables[i].Items[1].Text = "-";
+                        lblGlobalVariables[i].Text = "Unknown Condition (not yet unlocked)";
+                        lblGlobalVariables[i].TextColor = UISettings.ActiveSettings.DisabledItemColor;
                         globalVariableToolTips[i].Text = string.Empty;
                     }
 
-                    globalVariableValues[i].Enable();
+                    cmbGlobalVariables[i].Enable();
                 }
 
-                int preconditionsHeaderY = mission.UsedGlobalVariables.Length >= MAX_GLOBAL_COUNT ? globalVariableNames[0].Y :
-                    globalVariableNames[mission.UsedGlobalVariables.Length - 1].Y;
+                int preconditionsHeaderY = mission.UsedGlobalVariables.Length >= MAX_GLOBAL_COUNT ? lblGlobalVariables[0].Y :
+                    lblGlobalVariables[mission.UsedGlobalVariables.Length - 1].Y;
                 preconditionsHeaderY -= UIDesignConstants.CONTROL_VERTICAL_MARGIN * 3;
                 lblPreconditionsHeader.Y = preconditionsHeaderY;
                 lblPreconditionsHeader.Enable();
@@ -874,7 +743,7 @@ namespace DTAClient.DXGUI.Generic
                     CampaignGlobalVariable globalVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == globalFlagName);
                     if (globalVariable != null)
                     {
-                        if (globalVariableValues[i].SelectedIndex > 0)
+                        if (cmbGlobalVariables[i].SelectedIndex > 0)
                         {
                             // Global flag values default to disabled/false by default,
                             // so we only need to add enabled flags to the dictionary

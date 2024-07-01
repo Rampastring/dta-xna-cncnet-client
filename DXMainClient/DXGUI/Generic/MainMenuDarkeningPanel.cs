@@ -67,7 +67,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void Child_EnabledChanged(object sender, EventArgs e)
         {
-            XNAWindow child = (XNAWindow)sender;
+            XNAPanel child = (XNAPanel)sender;
             if (!child.Enabled)
                 Hide();
         }

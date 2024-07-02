@@ -173,6 +173,7 @@ namespace DTAClient.DXGUI.Generic
 
         private DiscordHandler discordHandler;
 
+        private XNAPanel MapPreviewBox;
         private XNAListBox lbCampaignList;
         private XNAClientButton btnLaunch;
         private MissionDescriptionBox tbMissionDescription;
@@ -220,6 +221,8 @@ namespace DTAClient.DXGUI.Generic
         {
             Name = nameof(CampaignSelector);
             base.Initialize();
+
+            MapPreviewBox = FindChild<XNAPanel>(nameof(MapPreviewBox));
 
             lbCampaignList = FindChild<BattleListBox>(nameof(lbCampaignList));
             lbCampaignList.SelectedIndexChanged += LbCampaignList_SelectedIndexChanged;
@@ -538,7 +541,7 @@ namespace DTAClient.DXGUI.Generic
                 cmbGlobalVariables[i].Disable();
             }
 
-            tbMissionDescription.Height = cmbGlobalVariables[0].Bottom - tbMissionDescription.Y;
+            MapPreviewBox.Height = cmbGlobalVariables[0].Bottom - MapPreviewBox.Y;
 
 
             if (mission != null && mission.UsedGlobalVariables.Length > 0)
@@ -610,7 +613,7 @@ namespace DTAClient.DXGUI.Generic
                 lblPreconditionsHeader.Y = preconditionsHeaderY;
                 lblPreconditionsHeader.Enable();
 
-                tbMissionDescription.Height = lblPreconditionsHeader.Y - (UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2) - tbMissionDescription.Y;
+                MapPreviewBox.Height = lblPreconditionsHeader.Y - (UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2) - MapPreviewBox.Y;
             }
         }
 

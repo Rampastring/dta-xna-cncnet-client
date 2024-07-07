@@ -356,7 +356,12 @@ namespace DTAClient.Domain.Singleplayer
                 swriter.WriteLine("CampaignID=" + (-1) /*mission.Index, meh, we handle our own campaign progression so the game doesn't need to know*/);
                 swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
                 swriter.WriteLine("Firestorm=" + mission.RequiredAddon);
-                swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.Side));
+
+                if (!string.IsNullOrWhiteSpace(mission.LoadingScreenPath))
+                    swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.LoadingScreenPath));
+                else
+                    swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.Side));
+
                 swriter.WriteLine("IsSinglePlayer=Yes");
                 swriter.WriteLine("SidebarHack=" + ClientConfiguration.Instance.SidebarHack);
                 swriter.WriteLine("Side=" + mission.Side);

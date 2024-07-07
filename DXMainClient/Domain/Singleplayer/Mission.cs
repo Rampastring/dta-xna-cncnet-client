@@ -29,6 +29,7 @@ namespace DTAClient.Domain.Singleplayer
             Author = iniSection.GetStringValue(nameof(Author), string.Empty);
             HeaderFor = iniSection.GetStringValue(nameof(HeaderFor), string.Empty);
             PreviewImagePath = iniSection.GetStringValue(nameof(PreviewImagePath), string.Empty);
+            LoadingScreenPath = iniSection.GetStringValue(nameof(LoadingScreenPath), string.Empty);
             RequiredAddon = iniSection.GetBooleanValue(nameof(RequiredAddon), false);
             Enabled = iniSection.GetBooleanValue(nameof(Enabled), Enabled);
             Visible = iniSection.GetBooleanValue(nameof(Visible), Visible);
@@ -96,6 +97,7 @@ namespace DTAClient.Domain.Singleplayer
         public string GUIDescription { get; }
         public string Author { get; }
         public string PreviewImagePath { get; }
+        public string LoadingScreenPath { get; }
         public bool RequiredAddon { get; }
         public bool Enabled { get; } = true;
         public bool Visible { get; } = true;

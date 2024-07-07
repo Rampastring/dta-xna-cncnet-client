@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace ClientCore
 {
@@ -6,25 +7,32 @@ namespace ClientCore
     {
         public static string GetLoadScreenName(int sideId)
         {
-            int resHeight = UserINISettings.Instance.IngameScreenHeight;
-
-            string loadingScreenName = ProgramConstants.BASE_RESOURCE_PATH + "l";
-            if (resHeight < 480)
-                loadingScreenName = loadingScreenName + "400";
-            else if (resHeight < 600)
-                loadingScreenName = loadingScreenName + "480";
-            else
-                loadingScreenName = loadingScreenName + "600";
-
-            loadingScreenName = loadingScreenName + "s" + sideId;
+            string loadingScreenName = ProgramConstants.BASE_RESOURCE_PATH + "l" + GetResolutionLabel();
+            loadingScreenName = loadingScreenName + "s" + sideId.ToString(CultureInfo.InvariantCulture);
 
             Random random = new Random();
             int randomInt = random.Next(1, 1 + ClientConfiguration.Instance.LoadingScreenCount);
 
-            loadingScreenName = loadingScreenName + Convert.ToString(randomInt);
+            loadingScreenName = loadingScreenName + randomInt.ToString(CultureInfo.InvariantCulture);
             loadingScreenName = loadingScreenName + ".pcx";
 
             return loadingScreenName;
+        }
+
+        public static string GetLoadScreenName(string baseName)
+        {
+            return baseName + GetResolutionLabel() + ".pcx";
+        }
+
+        private static string GetResolutionLabel()
+        {
+            int resHeight = UserINISettings.Instance.IngameScreenHeight;
+            if (resHeight < 480)
+                return "400";
+            else if (resHeight < 600)
+                return "480";
+            else
+                return "600";
         }
     }
 }

@@ -621,12 +621,12 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
-            // if (mission.RequiresUnlocking && !mission.IsUnlocked)
-            // {
-            //     MissionList_InvalidMission();
-            //     tbMissionDescription.Text = "You have not yet unlocked this mission.";
-            //     return;
-            // }
+            if (mission.RequiresUnlocking && !mission.IsUnlocked)
+            {
+                MissionList_InvalidMission();
+                tbMissionDescription.Text = "You have not yet unlocked this mission.";
+                return;
+            }
 
             hasMissionBeenSelected = true;
 
@@ -683,9 +683,16 @@ namespace DTAClient.DXGUI.Generic
             tbMissionDescription.LoadMissionBackgroundTexture(null);
             tbMissionDescription.Text = string.Empty;
             btnLaunch.AllowClick = false;
+            lblBonus.Disable();
             btnBonus.Disable();
             tbMissionDescription.MissionAuthor = null;
             PreconditionUIConfig(null);
+
+            if (panelPreview.BackgroundTexture != null)
+            {
+                panelPreview.BackgroundTexture.Dispose();
+                panelPreview.BackgroundTexture = null;
+            }
         }
 
         /// <summary>

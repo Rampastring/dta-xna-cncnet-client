@@ -9752,7 +9752,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "One of the republics in particular felt that they were coldly forgotten about after the dissolution of the Soviet empire, which left the area in an unstable state of partial political vacuum.";
-                    storyDisplay.AddSimpleStoryImage("Story/CR01/bg05.png", 5);
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 5);
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },

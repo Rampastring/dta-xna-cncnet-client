@@ -33,6 +33,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             newtarg1 = new EnhancedSoundEffect("Story/Sounds/NEWTARG1.WAV");
             powrdn1 = new EnhancedSoundEffect("Story/Sounds/POWRDN1.WAV");
             world2 = new EnhancedSoundEffect("Story/Sounds/WORLD2.WAV");
+            ionbeam = new EnhancedSoundEffect("Story/Sounds/IONBEAM.WAV");
 
             ramap = AssetLoader.LoadSong("Story/Music/ramap");
             raintro = AssetLoader.LoadSong("Story/Music/raintro");
@@ -63,6 +64,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly EnhancedSoundEffect newtarg1;
         private readonly EnhancedSoundEffect powrdn1;
         private readonly EnhancedSoundEffect world2;
+        private readonly EnhancedSoundEffect ionbeam;
 
         private readonly Song ramap;
         private readonly Song raintro;
@@ -215,6 +217,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CRC15();
                 case Cutscene.CRC15Victory:
                     return CRC15Victory();
+                case Cutscene.CRC16:
+                    return CRC16();
+                case Cutscene.CRC16Victory:
+                    return CRC16Victory();
 
                 /* PTTP */
                 case Cutscene.PTTP1:
@@ -670,6 +676,459 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null));
         }
 
+        private List<Phase> CRC16Victory()
+        {
+            var phases = new List<Phase>();
+
+            string endingText;
+
+            var radarsDestroyedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_C_RADARS_DESTROYED");
+
+            if (radarsDestroyedVariable != null && !radarsDestroyedVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                        storyDisplay.ConversationDisplay.IsCentered = true;
+                        country4.Play();
+
+                        TryPlaySong(secondhand);
+                        MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "I had to make a decision.";
+                        storyDisplay.ConversationDisplay.IsCentered = false;
+                        storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg01.png", 1, 0f);
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "I am not giving control of our country to you.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "I am fleeing to GDI-controlled territory.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "They will prosecute me as a war criminal, but at least I'll live on for a bit longer, and our country might have a better chance to prosper under GDI control.";
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg02.png", 2, 1f);
+                    },
+                    storyDisplay => storyDisplay.RemoveStoryImageById(1),
+                    null,
+                    null));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "You are quite possibly the most talented military commander in history.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "A real machine of destruction and genocide.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "But this is where you meet your end.";
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg01.png", 1, 1f);
+                    },
+                    storyDisplay => storyDisplay.RemoveStoryImageById(2),
+                    null,
+                    null));
+
+                phases.Add(new Phase(9,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "You failed to take out all of my radars in time.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(10,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "GDI also knows your location and is tracking it in real time.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(11,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "I have often criticized GDI for being incompetent, but I have to give them credit where credit is due.";
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg02.png", 2, 1f);
+                    },
+                    storyDisplay => storyDisplay.RemoveStoryImageById(1),
+                    null,
+                    null));
+
+                phases.Add(new Phase(12,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "When they really want someone dead, they tend to have the methods for achieving it.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(13,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.TextColor = Color.Red;
+                        storyDisplay.ConversationDisplay.ConversationText = "See you in hell, Commander.";
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg03.png", 3, 1f);
+                    },
+                    storyDisplay => storyDisplay.RemoveStoryImageById(2),
+                    storyDisplay =>
+                    {
+                        StopMusic();
+                        storyDisplay.FindStoryImageById(3).AlphaRate = 1.0f;
+                        storyDisplay.ConversationDisplay.ConversationText = "";
+                    },
+                    null));
+
+                phases.Add(new Phase(14,
+                    storyDisplay =>
+                    {
+                        storyDisplay.RemoveStoryImageById(3);
+                        ionbeam.Play();
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/icp0.png", 3, 0f);
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/icp1.png", 4, 0f).AlphaRate = 0.5f;
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/icp2.png", 5, 0f).AlphaRate = 0.33f;
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/icp3.png", 6, 0f).AlphaRate = 0.25f;
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/icp4.png", 7, 0f).AlphaRate = 0.17f;
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/icp5.png", 8, 0f).AlphaRate = 0.1f;
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, null, -0.5f),
+                    null));
+
+                endingText = "                              ENDING IX" + Environment.NewLine +
+                             "                      Obliterated by Ion Cannon";
+            }
+            else
+            {
+                phases.Add(new Phase(1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg04.png", 1);
+                        storyDisplay.ConversationDisplay.ConversationText = "You destroyed Ivanov's forces.";
+                        storyDisplay.ConversationDisplay.IsCentered = false;
+                        country4.Play();
+
+                        TryPlaySong(raintro);
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg05.png", 2);
+                        storyDisplay.ConversationDisplay.ConversationText = "The man himself was initially nowhere to be seen.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Eventually, through investigation, his remains were located from a village near the country's border.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "It is likely that he fled the scene of combat and performed suicide when he realized he had no good options left.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Neither you nor Nod would have had any use for him, and GDI would have trialed him as a war criminal, ending in life imprisonment.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.AddSimpleStoryImage("Story/CRC16/victorybg06.png", 3);
+                        TryPlaySong(hellmarch);
+                        storyDisplay.ConversationDisplay.ConversationText = "The people were so tired from fighting that absolutely no resistance formed against you as you took over the government.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Not like they would have had a reason to resist either, with them now having such an excellent leader in charge.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Your forces were only a small stub of a military compared to what you had a year earlier, but you still had enough for an aesthetically pleasing inauguration parade. Barely, but still.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "With the Brotherhood of Nod behind your back, and your hands full of the blood of your crushed enemies, you are now wielding absolute power in the state.";
+                    },
+                    null,
+                    null,
+                    null));
+
+
+                phases.Add(new Phase(9,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Internationally, you are known as the Butcher of Karelia for your war crimes, but also as a terrifying commander who put the world's greatest military power, the Global Defense Initiative, to shame.";
+                    },
+                    null,
+                    storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1, -1.0f),
+                    storyDisplay => storyDisplay.ClearStoryImages()));
+
+                endingText = "                              ENDING X" + Environment.NewLine +
+                             "                        The Supreme Leader";
+            }
+
+            phases.Add(new Phase(17,
+                storyDisplay =>
+                {
+                    storyDisplay.ClearStoryImages();
+                    storyDisplay.AddSimpleStoryImage("Story/CRC09/crtitle_bloodred.png", 10);
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.ConversationText = endingText;
+                },
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "";
+                    storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE);
+                },
+                storyDisplay => storyDisplay.ClearStoryImages()));
+
+            AddCreditPhases(phases, new Color(128, 0, 0));
+
+            return phases;
+        }
+
+        private List<Phase> CRC16()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    country4.Play();
+
+                    TryPlaySong(fac2226m);
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Commander?";
+                    storyDisplay.ConversationDisplay.IsCentered = false;
+                    storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Why are your forces approaching this way?";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I cannot recall giving you an order to send them here.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(5,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "After all the great victories we have achieved together...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(6,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "You are trying to challenge me?";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(7,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I cannot say I would be completely surprised.";
+                },
+                null,
+                null,
+                null));
+
+            var toikkaSavedVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_ROUTE_C_TOIKKA_SAVED");
+            if (toikkaSavedVariable != null && !toikkaSavedVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "That must have been why you left Toikka to die as well.";
+                    },
+                    null,
+                    null,
+                    null));
+            }
+
+            phases.Add(new Phase(9,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "I might have done the same in your shoes.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(10,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "The world considers us both real maniacs.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(11,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "If this is it...";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Tell your troops that I have my nukes prepared, so they can desert in time and spare their lives.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.Red;
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "You are now officially a traitorous bastard, an enemy of the people.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(14,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CRC16/bg01.png", 3);
+                    storyDisplay.ConversationDisplay.ConversationText = "I will destroy you and have you hanged by the central square of our government building.";
+                },
+                storyDisplay => storyDisplay.RemoveStoryImageById(2),
+                null,
+                null));
+
+            phases.Add(new Phase(15,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                    storyDisplay.FindStoryImageById(3).AlphaRate = -1.0f;
+                    toney4.Play();
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
         private List<Phase> CRC15Victory()
         {
             var phases = new List<Phase>();
@@ -990,7 +1449,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             string endingTitle;
             if (nodOutpostSavedVariable != null && nodOutpostSavedVariable.EnabledThroughPreviousScenario)
             {
-                endingTitle = "           ENDING IIX" + Environment.NewLine + 
+                endingTitle = "           ENDING VIII" + Environment.NewLine + 
                               "   The Supreme Commander";
             }
             else
@@ -1587,7 +2046,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(23,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Secondly, I ordered our scientists to look into activating our nuclear warheads that we acquired from the black market afer the collapse of the USSR.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Secondly, I ordered our scientists to look into activating our nuclear warheads that we acquired from the black market after the collapse of the USSR.";
                     AddRADisplayImage(storyDisplay, "Story/CRC14/nukesilo.png", 9);
                 },
                 null,
@@ -1626,7 +2085,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(27,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "May they knock the bird off the sky.";
+                    storyDisplay.ConversationDisplay.ConversationText = "May they knock the bird out of the sky.";
                     storyDisplay.FindStoryImageById(4).AlphaRate = -crRAdisplayAlphaRate;
                     bleep17.Play();
                 },
@@ -1880,7 +2339,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "All the while, GDI aircraft was striking your forces.";
+                    storyDisplay.ConversationDisplay.ConversationText = "All the while, GDI aircraft were striking your forces.";
                     storyDisplay.AddSimpleStoryImage("Story/CRC13/gdiplanes.png", 20);
                 },
                 null,

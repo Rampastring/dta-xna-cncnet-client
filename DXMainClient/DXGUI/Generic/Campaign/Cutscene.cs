@@ -53,6 +53,8 @@
         CRC14,
         CRC15,
         CRC15Victory,
+        CRC16,
+        CRC16Victory,
 
         PTTP1,
         PTTP2,

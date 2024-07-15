@@ -6696,7 +6696,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(0,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "After a heavy battle with lots of casualties on both sides, the Government forces finally destroyed the Nod base, pushing Nod out from the country.";
+                    storyDisplay.ConversationDisplay.ConversationText = "After a heavy battle with lots of casualties on both sides, Government forces finally destroyed the Nod base, pushing Nod out from the country.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/victorybg01.png", 1);
                     country4.Play();
                     TryPlaySong(raintro);
@@ -6708,7 +6708,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Government, supported by GDI, achieved their final victory over the neo-Soviets and the Brotherhood of Nod.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Government, supported by GDI, had achieved their final victory over the Communists and the Brotherhood of Nod.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -6736,7 +6736,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Government promised to start rebuilding efforts immediately.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Government promised to start reconstruction efforts immediately.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/victorybg03.png", 3);
                 },
                 null,
@@ -6746,7 +6746,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "As part of it, a program was launched to cleanse the recaptured territory of Tiberium.";
+                    storyDisplay.ConversationDisplay.ConversationText = "As part of reconstruction, a program was launched to cleanse recaptured territory of Tiberium.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/victorybg04.png", 4);
                 },
                 null,
@@ -6765,7 +6765,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "While some people were suffering from the spread of Tiberium and poisoning of their neighbourhoods, others figured that Tiberium harvesting would make a good source of income for the poor country - and, with it, also for themselves.";
+                    storyDisplay.ConversationDisplay.ConversationText = "While some people suffered from the spread of Tiberium and poisoning of their neighbourhoods, others figured that Tiberium harvesting would make a good source of income for the poor country - and, also for themselves.";
                 },
                 null,
                 null,
@@ -6806,7 +6806,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(11,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Toikka was watching his soldiers march, while the other Commander had been dismissed for \"fatal tactical mistakes\" soon after the victory.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Toikka was watching his soldiers march, while the other Commander had been dismissed for \"fatal tactical mistakes\" soon after the final victory.";
                     },
                     null,
                     null,
@@ -6815,7 +6815,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(12,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "The reason is not clear, but some international observers suspect that Ivanov saw the other Commander's great popularity within the soldiers as a risk for his leadership.";
+                        storyDisplay.ConversationDisplay.ConversationText = "The reason is not clear, but some international observers suspect that Ivanov saw the other Commander's great popularity amongst the soldiers as a risk to his leadership.";
                     },
                     null,
                     storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -6824,7 +6824,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(13,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Many lower-level officers report being shocked at the decision, but most likely, it will pass.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Many lower-level officers report being shocked at the dismissal, but most likely, these feelings will pass.";
                         storyDisplay.AddSimpleStoryImage("Story/CRA14/ending2.png", 6);
                     },
                     null,
@@ -6834,7 +6834,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(14,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "After a heavy civil war, the people would not support any officers who attempted to start another one.";
+                        storyDisplay.ConversationDisplay.ConversationText = "After this heavy civil war, the people would not support any officers who attempted to start another one.";
                     },
                     null,
                     null,
@@ -6897,7 +6897,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(11,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Thousands of people were marching to tone to celebrate your success...";
+                        storyDisplay.ConversationDisplay.ConversationText = "Thousands of people were marching in sync to celebrate your success...";
                     },
                     null,
                     null,
@@ -6989,7 +6989,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The process was chaotic in many ways. Partially the force was seen as purposeless and harmful due to the recent Allied victory. The Allies didn't want the parts of the ex-USSR to have a strong military.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The process was chaotic in many ways. There were mixed opinions about the new defense forces - the Allies didn't want the parts of the ex-USSR to have a strong military due to the recent war.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/bg03.png", 3);
                 },
                 null,
@@ -7008,7 +7008,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "These parts were often clashing with each other, and the military was crippled by corruption.";
+                    storyDisplay.ConversationDisplay.ConversationText = "These officers were often clashing with each other, and to make matters worse, the military was crippled by corruption.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -7017,7 +7017,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov's rise to power did not solve this issue. Eventually, he appointed Toikka as Commander of the defense forces.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov's rise to power did not solve these issues. Eventually, he appointed Toikka as Commander of the defense forces.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/bg04.png", 4);
                 },
                 null,
@@ -7027,7 +7027,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Toikka was not seen as particularly skilled, being a fairly generic officer in the military's ranks.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Toikka was not seen as particularly skilled. He had so far led a fairly unremarkable military career.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/bg05.png", 5);
                 },
                 null,
@@ -7037,7 +7037,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "He had mostly stayed neutral in the doctrinal clash between the eastern and western styles of waging war, which means he was widely accepted - considered \"good enough\", but not optimal, by both sides.";
+                    storyDisplay.ConversationDisplay.ConversationText = "He had mostly stayed neutral in the doctrinal clash between the eastern and western styles of waging war, which means he was generally accepted as a compromise candidate - though neither side truly favored him.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -7046,7 +7046,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "His greatest benefit was his absolute loyalty. Ivanov gave him his own, personally beneficial position, which Toikka was happy with. He did not aspire to challenge Ivanov for leadership of the country.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Toikka's greatest benefit was his absolute loyalty. He has enjoyed the personally beneficial position Ivanov bestowed upon him. He has never aspired to challenge Ivanov for leadership of the country.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/bg06.png", 6);
                 },
                 null,
@@ -7056,7 +7056,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Instead, he used brutal methods to crush any armed opposition, keeping his superior pleased with him.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Instead, Toikka has acted as Ivanov's enforcer, using brutal methods to crush any armed opposition, keeping his superior pleased.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -7075,7 +7075,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "As threat of actual revolution and change of power seemed significant, Ivanov decided to assign another Commander to handle roughly half of the battles.";
+                    storyDisplay.ConversationDisplay.ConversationText = "As threat of actual revolution and change of power grew, Ivanov decided to assign another Commander to handle roughly half of the battles.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -7084,7 +7084,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(13,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The new Commander quickly started performing better than Toikka, creating a competitive environment between the Commanders within the Government's military.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The new Commander quickly started performing better than Toikka, creating a competitive environment within the Government's military.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA14/bg08.png", 8);
                 },
                 null,
@@ -7094,7 +7094,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(14,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "It remains to be seen whether this \"rising star\" will replace Toikka, or whether they will survive in this system built around not stepping on anyone's toes.";
+                    storyDisplay.ConversationDisplay.ConversationText = "It remains to be seen whether this \"rising star\" will replace Toikka or not. It is challenging to thrive in this system built around not stepping on anyone's toes.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -7149,7 +7149,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(19,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The cowards had supposedly tried to escape farther away to Nod-controlled or gray territory outside of our country.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The cowards supposedly tried to escape farther away to Nod-controlled or neutral territory outside of our country.";
                 },
                 null,
                 null,
@@ -7185,7 +7185,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(23,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Oh, how I'd love to hang or maybe just have those bastards shot publicly... but GDI would disapprove.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Oh, how I'd love to hang those bastards, or maybe just have them shot publicly... but GDI would disapprove.";
                 },
                 null,
                 null,
@@ -7194,7 +7194,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(24,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Speaking of GDI, they have warned us about Nod potentially having new toys, developed from the technology they have taken from us, the GDI, and the Soviets.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Speaking of GDI, they have warned us about Nod potentially having new toys; weapons developed from the technology they have taken from us, from GDI, and from the Soviets.";
                 },
                 null,
                 null,
@@ -7230,7 +7230,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(28,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We still haven't found those Construction Yards that Nod stole from us and the GDI.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We still haven't found those Construction Yards that Nod stole from us and  GDI.";
                 },
                 null,
                 null,
@@ -7239,7 +7239,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(29,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "If you happen spot any Nod buildings of special interest, be sure to capture them. Maybe their archives will contain some information.";
+                    storyDisplay.ConversationDisplay.ConversationText = "If you happen to spot any Nod buildings of special interest, be sure to capture them. Maybe their archives will contain some information.";
                 },
                 null,
                 null,
@@ -7266,7 +7266,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(0,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "With the border back in Government control, the situation is now clear.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With the border back under Government control, the situation is now clear.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA13/victorybg01.png", 1);
                     country4.Play();
                     TryPlaySong(raintro);
@@ -7278,7 +7278,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Only one area with enemy forces remains. It is the main base that Nod has set up on the territory of the Government.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Only one area with enemy forces remains. In it lies the main base that Nod has set up on the territory of the Government.";
                 },
                 null,
                 null,
@@ -7312,7 +7312,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(4,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Usually he has congratulated some time after your successes, but this time, you haven't received a word from him.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Usually he has congratulated you some time after your successes, but this time, you haven't received a word from him.";
                     },
                     null,
                     null,
@@ -7352,7 +7352,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "The joint Government-GDI covert operation on Karhumäki took the Communists by surprise.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The joint Government-GDI covert operation at Karhumäki took the Communists by surprise.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA13/bg02.png", 2);
                 },
                 null,
@@ -7362,7 +7362,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "With their main support hub fallen, their frontlines quickly collapsed.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With the fall of their main support hub, their frontlines quickly collapsed.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -7447,7 +7447,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     AddRADisplayImage(storyDisplay, "Story/CRA13/borderriver.png", 8);
-                    storyDisplay.ConversationDisplay.ConversationText = "They have been training and giving weapons to this scum and then throwing them against us.";
+                    storyDisplay.ConversationDisplay.ConversationText = "They have been training and giving weapons to these scum and then throwing them against us.";
                 },
                 null,
                 null,
@@ -7513,7 +7513,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "A military parade was held at the city by the Government. Officially, the local populace was said to be excited about the liberation, but there were also many thinly veiled signs of disapproval.";
+                    storyDisplay.ConversationDisplay.ConversationText = "A military parade was held in the city by the Government. Officially, the local populace was said to be excited about the liberation, but on the ground, there were many thinly veiled signs of disapproval.";
                 },
                 null,
                 null,
@@ -7571,7 +7571,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov, head of the republic, assures that the fighting will continue until the whole country has been liberated.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov, head of the republic, has assured the public that the fighting will continue until the whole country has been liberated.";
                 },
                 null,
                 null,
@@ -7615,7 +7615,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "They have left their main city underdefended. This has given us a golden opportunity to strike and capture it, without needing to level it in heavy urban combat.";
+                    storyDisplay.ConversationDisplay.ConversationText = "They have left their main city underdefended. This gives us a golden opportunity to strike and capture it, without needing to level it in heavy urban combat.";
                 },
                 null,
                 null,
@@ -7624,7 +7624,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Even though that could also be a sight to see, especially if anyone else has intentions to challenge us in the future...";
+                    storyDisplay.ConversationDisplay.ConversationText = "Although that kind of destruction would also be a sight to see, especially to anyone else thinking about challenging us in the future...";
                 },
                 null,
                 null,
@@ -7633,7 +7633,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Anyway.\r\n\r\nWe have carefully devised a plan for a multi-stage operation for taking the town. It is complex, but realistic.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Anyway.\r\n\r\nWe have carefully devised a multi-stage operation for taking the town. It is complex, but realistic.";
                 },
                 null,
                 null,
@@ -7661,7 +7661,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Capture the radar, which will allow us to push our own propaganda on the civilians and confuse the enemy's communications.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Capture the radar, which will allow us to push our own propaganda out to the civilians and confuse the enemy's communications.";
                 },
                 null,
                 null,
@@ -7670,7 +7670,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Once done, we will send in another batch of special forces. There is a railway that we want access into, but it is defended by the enemy.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Once done, we will send in another batch of special forces. There is a railway that we want access to, but it is defended by the enemy.";
                 },
                 storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRA12/railway.png", 5),
                 null,
@@ -7679,7 +7679,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Assault the railway defenses with your new batch of special forces and destroy the SAM sites. GDI will follow with A-10s to take out their Tesla Coils.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Assault the railway defenses with the second batch of special forces and destroy the SAM sites. GDI will follow with A-10s to take out the enemy's Tesla Coils.";
                 },
                 null,
                 null,
@@ -7688,7 +7688,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "That will allow us to deliver a batch of vehicles to the city center by train.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Clearing the Tesla Coils will allow us to deliver a batch of vehicles to the city center by train.";
                 },
                 storyDisplay => AddRADisplayImage(storyDisplay, "Story/CRA12/trains.png", 6),
                 null,
@@ -7715,7 +7715,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(13,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "I trust you to make sure my work does not go to waste.";
+                    storyDisplay.ConversationDisplay.ConversationText = "I trust you will make sure my work does not go to waste.";
                 },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
                 null,
@@ -7754,7 +7754,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "However, Nod and the neo-Soviets had brought up surprisingly many reinforcements to the area, which had made the operation more difficult than anticipated.";
+                    storyDisplay.ConversationDisplay.ConversationText = "However, Nod and the Communists brought a surprisingly high amount of reinforcements to the area, which had made the operation more difficult than anticipated.";
                 },
                 null,
                 null,
@@ -7763,7 +7763,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Upon strategic inspection at the Government HQ, it appears that the Communists had likely transferred forces away from their most significant urban area at Karhumäki.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Government strategic analysis indicates that the Communists had likely transferred forces away from their most significant urban area at Karhumäki to accomplish this maneuver.";
                 },
                 null,
                 null,
@@ -7772,7 +7772,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Its surrounding countryside still holds significant enemy forces, but this likely opens up a possibility for a successful flank or a sneak attack on the town.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The surrounding countryside still holds significant enemy forces, but this troop redeployment likely opens up the possibility for a flanking operation or sneak attack on the town.";
                 },
                 null,
                 null,
@@ -7802,7 +7802,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "Just some time prior, in the winter, it looked like the war was coming to a standstill.";
+                    storyDisplay.ConversationDisplay.ConversationText = "In the winter, it looked like the war was coming to a standstill.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA11/bg02.png", 2);
                 },
                 null,
@@ -7812,7 +7812,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Yet, thanks to GDI sensor technology, tactical successes and successful pressure on Communist Tiberium harvesting operations from the Government side, the power balance has shifted to the Government's favor.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Yet, thanks to GDI sensor technology, tactical victories and successful pressure on Communist Tiberium harvesting operations, the power balance has shifted to the Government's favor.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA11/bg03.png", 3);
                 },
                 null,
@@ -7832,7 +7832,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "An anonymous Nod senior officer has revealed that the main aim of their operation is no longer to allow the Communist side to win, but to drain as much resources from GDI as possible.";
+                    storyDisplay.ConversationDisplay.ConversationText = "An anonymous Nod senior officer has revealed that the main aim of their operation is no longer to help the Communist side to win, but to drain as many resources from GDI as possible.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -7841,7 +7841,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Meanwhile, the GDI has kept up its support for the Government.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Meanwhile, GDI has kept up its support for the Government.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA11/bg05.png", 5);
                 },
                 null,
@@ -7851,7 +7851,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "In latest talks between GDI head Sheppard and President Ivanov, GDI assured they will keep sending weaponry and forces to help the Government until military victory.";
+                    storyDisplay.ConversationDisplay.ConversationText = "In latest talks between GDI Supreme Commander Sheppard and President Ivanov, GDI assured the President that they will keep sending weaponry and forces to help the Government until a complete military victory is achieved.";
                 },
                 null,
                 null,
@@ -7860,7 +7860,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "It appears likely the Communists will be defeated, ensuring a period of peace and stability once Nod has suffered the expected global defeat in Europe and Africa.";
+                    storyDisplay.ConversationDisplay.ConversationText = "It appears likely that the Communists will be defeated, ensuring a period of peace and stability, at least as long as Nod also suffers the expected global defeat in Europe and Africa.";
                 },
                 null,
                 null,
@@ -7906,7 +7906,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The GDI has given us a fresh batch of vehicles. Hum-vees, Medium tanks... all the good stuff a commander could ever wish for.";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI has given us a fresh batch of vehicles. Hum-vees, Medium tanks... all the good stuff a commander could ever wish for.";
                 },
                 null,
                 null,
@@ -7915,7 +7915,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "There is an area where the Soviets have fortified both sides of a river. With these GDI weapon supplies, you can launch a direct attack on both sides of the river at once.";
+                    storyDisplay.ConversationDisplay.ConversationText = "There is an area where the Soviets have fortified both sides of a river. With these GDI weapons, you can launch a direct attack on both sides of the river at once.";
                 },
                 null,
                 null,
@@ -8017,7 +8017,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     AddRADisplayImage(storyDisplay, "Story/CRA10/arrows.png", 4);
-                    storyDisplay.ConversationDisplay.ConversationText = "They are still also receiving major support from Russian neo-communists who have taken inspiration and are crossing our border, joining the enemy as mercenaries.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The rebels are also receiving major support from Russian Communists who have taken inspiration and are crossing our border, joining the enemy as mercenaries.";
                 },
                 null,
                 null,
@@ -8026,7 +8026,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "GDI is shifting resources to counter them to make sure there won't be a larger Communist uprising in Russia, so we might have to rely mostly on our own resources in these final fights.";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI is shifting resources to prevent a larger Communist uprising in Russia, so we might have to rely mostly on our own resources in these final fights.";
                 },
                 null,
                 null,
@@ -8078,7 +8078,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "I'll soon be off at negotiations with GDI for some days. I'll be awaiting news of your victory.";
+                    storyDisplay.ConversationDisplay.ConversationText = "I'll soon be off to negotiate with GDI for some days. I'll be awaiting news of your victory.";
                 },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
                 null,
@@ -8117,7 +8117,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "However, with the earlier capture of a GDI base and now a Government base, Nod could acquire significant technology from them.";
+                    storyDisplay.ConversationDisplay.ConversationText = "However, now that Nod has captured both GDI and Government bases, the Brotherhood could acquire significant technology that it would not otherwise have access to.";
                 },
                 null,
                 null,
@@ -8126,7 +8126,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "It remains to be seen how this will affect the rest of the war.";
+                    storyDisplay.ConversationDisplay.ConversationText = "It remains to be seen how Nod's technology acquisitions will affect the rest of the war.";
                 },
                 null,
                 null,
@@ -8156,7 +8156,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "The combined Government and GDI forces had great success at the battle for the vehicle factory a few weeks ago.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Combined Government and GDI forces had great success in the battle for the major vehicle factory a few weeks ago.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/bg02.png", 2);
                 },
                 null,
@@ -8166,7 +8166,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "However, while it was expected to be a strategic success, the impact has remained mostly tactical and final victory for the Allies still seems uncertain.";
+                    storyDisplay.ConversationDisplay.ConversationText = "However, while that victory was expected to have strategic importance, its impact has remained tactical. Final victory for the Government seems still uncertain.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -8175,7 +8175,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The main reason appears to be Nod's \"Ezekiel's Wheel\" tanks - stealth tanks that perform surgical strikes on bases, harvesters and vulnerable supplies, and then disappear before the Government military can catch them.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The main hindrance is Nod's \"Ezekiel's Wheel\" tanks - stealth tanks that perform surgical strikes on bases, harvesters and vulnerable supplies, and then disappear before the Government military can catch them.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/bg03.png", 3);
                 },
                 null,
@@ -8185,7 +8185,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "This leaves Allied frontline units starved for supplies and reinforcements, making defending against them easy and greatly increasing casualties for the Government and GDI.";
+                    storyDisplay.ConversationDisplay.ConversationText = "These stealth tank raids leave Government and GDI frontline units starved for supplies and reinforcements, slowing down offensives and greatly increasing casualties.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/bg04.png", 4);
                 },
                 null,
@@ -8195,7 +8195,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "In the meanwhile, Nod and the Communist rebels appear to be working on ramping up production on their remaining territory.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Meanwhile, Nod and the Communist rebels appear to be working on ramping up production in their remaining territory.";
                 },
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRA09/bg05.png", 5),
                 null,
@@ -8204,7 +8204,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Satellite comparison images taken from the area have revealed a rapid increase of Tiberium growth ever since the start of the war. This development has been noted before, but the reason for it has not been known.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Satellite comparison images taken from the area have revealed a rapid increase of Tiberium growth ever since the start of the war. The reason for such explosive Tiberium growth is unknown.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/bg06.png", 6);
                     mapwipe5.Play();
                 },
@@ -8215,7 +8215,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "However, lately fully-grown areas seem to have been harvested for resources.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Lately the Tiberium from fully-infested areas appears to have been harvested for resources.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/bg08.png", 8);
                 },
                 null,
@@ -8225,7 +8225,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Hence, the Government forces might be pressured against time to make advances before Nod manages to fully rebuild the supply line with Tiberium-based resources.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Hence, Government forces might be pressured against the clock - to make advances before Nod manages to fully rebuild their supply line with Tiberium-based resources.";
                 },
                 null,
                 null,
@@ -8234,7 +8234,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Anonymous GDI officers have also told the press that the neo-Soviets seem to have surprisingly high amounts of manpower.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Anonymous GDI officers have also told the press that the Communists seem to have surprisingly high amounts of manpower.";
                     storyDisplay.AddSimpleStoryImage("Story/CRA09/bg09.png", 8);
                 },
                 null,
@@ -8244,7 +8244,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "With their low population base in the country, it was expected that they'd have a shortage of soldiers by now.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With their low population base in the country, it was expected that they would have a shortage of soldiers by now.";
                 },
                 null,
                 null,
@@ -8253,7 +8253,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "However there is none of that in sight. It is suspected that the neo-Communists are being aided by significant numbers of mercenaries from other ex-Soviet countries.";
+                    storyDisplay.ConversationDisplay.ConversationText = "However, there is none of that in sight. It is suspected that the Communists are recruiting significant numbers of mercenaries from other ex-Soviet countries.";
                 },
                 null,
                 null,
@@ -8262,7 +8262,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "This trifecta of Stealth tanks, increased Tiberium harvesting and foreign reinforcements threatens to turn the tide of the war.";
+                    storyDisplay.ConversationDisplay.ConversationText = "This trifecta of Stealth tanks, increased Tiberium resources, and foreign reinforcements threatens to turn the tide of the war back in the favor of Nod and the Communists.";
                 },
                 null,
                 null,
@@ -8299,7 +8299,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(15,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Thankfully GDI has given us a solution. Their Mobile Sensor Arrays can be escorted with other forces and deployed anywhere on the battlefield, and they can sense the Stealth tanks from afar.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Thankfully GDI has given us a solution. Their Mobile Sensor Arrays can be escorted with other forces and deployed anywhere on the battlefield. They can sense the Stealth tanks from afar.";
                     AddRADisplayImage(storyDisplay, "Story/CRA09/sensorarrays.png", 13);
                 },
                 null,

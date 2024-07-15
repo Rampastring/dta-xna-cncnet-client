@@ -10,6 +10,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
     {
         public BonusInfoPanel(WindowManager windowManager) : base(windowManager)
         {
+            PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.TILED;
         }
 
         private XNALabel lblBonusName;

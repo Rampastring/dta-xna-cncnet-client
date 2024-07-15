@@ -68,6 +68,7 @@ namespace DTAClient.Domain.Singleplayer
             UnlockMissions = iniSection.GetStringValue(nameof(UnlockMissions), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             UsedGlobalVariables = iniSection.GetStringValue(nameof(UsedGlobalVariables), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             UnlockGlobalVariables = iniSection.GetStringValue(nameof(UnlockGlobalVariables), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            InvalidGlobalCombination = iniSection.GetStringValue(nameof(InvalidGlobalCombination), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Parse conditional mission unlocks
             int i = 0;
@@ -171,6 +172,13 @@ namespace DTAClient.Domain.Singleplayer
         /// The global variables that winning this mission unlocks.
         /// </summary>
         public string[] UnlockGlobalVariables { get; private set; }
+
+        /// <summary>
+        /// Specifies an invalid global configuration. The user is unable to launch
+        /// the mission if all of the globals specified in this array are enabled.
+        /// </summary>
+        public string[] InvalidGlobalCombination { get; private set; }
+
 
         private int DifficultyRankToIndex(DifficultyRank rank)
         {

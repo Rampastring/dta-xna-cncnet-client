@@ -792,6 +792,16 @@ namespace DTAClient.DXGUI.Generic
         {
             var mission = lbCampaignList.SelectedItem.Tag as Mission;
 
+            if (IsPreconditionCombinationInvalid(mission))
+            {
+                XNAMessageBox.Show(WindowManager,
+                    "Invalid Preconditions",
+                    "The mission cannot be launched with your selected combination of preconditions." + Environment.NewLine + Environment.NewLine +
+                    "Please try again with a different combination of preconditions.");
+
+                return;
+            }
+
             isCheater = false;
             missionToLaunch = mission;
 
@@ -810,6 +820,30 @@ namespace DTAClient.DXGUI.Generic
             }
 
             PostCheaterWindow();
+        }
+
+        private bool IsPreconditionCombinationInvalid(Mission mission)
+        {
+            if (mission.UsedGlobalVariables.Length > 1 && mission.InvalidGlobalCombination.Length > 0)
+            {
+                bool[] isEnabled = new bool[mission.InvalidGlobalCombination.Length];
+                for (int i = 0; i < mission.UsedGlobalVariables.Length && i < MAX_GLOBAL_COUNT; i++)
+                {
+                    int indexWithinArray = Array.FindIndex(mission.InvalidGlobalCombination, s => s == mission.UsedGlobalVariables[i]);
+
+                    if (indexWithinArray > -1)
+                    {
+                        isEnabled[indexWithinArray] = globalVariableValues[i].SelectedIndex > 0;
+                    }
+                }
+
+                if (Array.TrueForAll(isEnabled, b => b))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

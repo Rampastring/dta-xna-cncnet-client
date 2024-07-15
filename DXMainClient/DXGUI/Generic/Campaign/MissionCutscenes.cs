@@ -8354,7 +8354,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(0,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The fresh star of the Government's military leadership has once again brought victory.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The rising star of the Government's military leadership has once again brought victory.";
                     storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg01.png", 1);
                     country4.Play();
                     TryPlaySong(raintro);
@@ -8446,7 +8446,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                             TryPlaySong(secondhand);
                             storyDisplay.AddSimpleStoryImage("Story/CR08/victorybg02.png", 2);
                             storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
-                            storyDisplay.ConversationDisplay.ConversationText = "The civilian bodies that your units discovered match with the accusations that the civilians you saved earlier made towards the Government.";
+                            storyDisplay.ConversationDisplay.ConversationText = "The civilian bodies that your units discovered indicate the civilians you saved earlier were not wrong in their accusations of Government atrocities.";
                         },
                         null,
                         null,
@@ -8455,7 +8455,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     phases.Add(new Phase(4,
                         storyDisplay =>
                         {
-                            storyDisplay.ConversationDisplay.ConversationText = "It is unknown whether the Supreme Leader himself had ordered these attacks, or whether it was someone down on the chain of command.";
+                            storyDisplay.ConversationDisplay.ConversationText = "It is unknown whether the Supreme Leader himself ordered these attacks, or whether it was someone lower in the chain of command.";
                         },
                         null,
                         null,
@@ -8582,7 +8582,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Allies wanted the country to be weak enough that Russia could never launch a full-scale invasion of Europe again.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Allies wanted Russia to be weak enough that it could never launch a full-scale invasion of Europe again.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -8591,7 +8591,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The death of Stalin, liquidation of Soviet war criminals and the emergence of various smaller states required new, previously mostly unknown people to step up and take lead of the countries.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The death of Stalin, the liquidation of Soviet war criminals and the emergence of various smaller states required new, mostly unknown people to step up and take lead of the countries.";
                     storyDisplay.AddSimpleStoryImage("Story/CR08/bg03.png", 3);
                 },
                 null,
@@ -8601,7 +8601,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov, born in 1963, achieved this through posing as a modern post-Soviet leader aspiring liberating the society and healthy relations with the West and the newly-independent Eastern European countries.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Ivanov, born in 1963, came to power by posing as a modern post-Soviet leader aspiring the liberalization of the society, and by pursuing healthy relations with the West and the newly-independent Eastern European countries.";
                     storyDisplay.AddSimpleStoryImage("Story/CR08/bg04.png", 4);
                 },
                 null,
@@ -8620,7 +8620,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "But any serious opposition showing up has quickly got tangled in corruption scandals. Certain international observers have speculated some of the charges to be forged, but there has been little pressure for Ivanov to change course.";
+                    storyDisplay.ConversationDisplay.ConversationText = "But any serious opposition showing up has quickly been entangled in corruption scandals. Certain international observers have speculated some of the charges to be forged, but there has been little pressure for Ivanov to change course.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -8629,7 +8629,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "GDI has been happy with him keeping a hard line on neo-Communism and Russian influence, and due to him having no serious competition, he has been able to - at least officially - win all elections so far.";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI has been happy with Ivanov keeping a hard line on neo-Communism and Russian influence, and due to a lack of serious competition, he has been able to - at least officially - win all elections so far.";
                     storyDisplay.AddSimpleStoryImage("Story/CR08/bg05.png", 4);
                 },
                 null,
@@ -8712,7 +8712,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(15,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We need you to grab control of the Enforcer, and since the local waterways are now frozen, use the cover of the night to bring the Enforcer over the ice onto a bridgehead that the enemy needs for supplying the factory.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We need you to grab control of the Enforcer, and since the local waterways are now frozen, use the cover of night to bring the Enforcer over the ice onto a bridgehead that the enemy needs for supplying the factory.";
                 },
                 null,
                 null,
@@ -8796,7 +8796,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The information gathered from the command center revealed that industry under Communist and Nod controlled territory is producing surprisingly large numbers of military equipment.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The information gathered from the command center revealed that industry in Communist and Nod controlled territory is producing surprisingly large numbers of military equipment.";
                     storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
                 },
                 null,
@@ -8806,7 +8806,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "For that, the industry must have access to more raw materials than has earlier been possible.";
+                    storyDisplay.ConversationDisplay.ConversationText = "This scale of production of only possible if the enemy industry has access to more raw materials than previously thought.";
                     storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg02.png", 1);
                 },
                 null,
@@ -8816,17 +8816,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "An anonymous source from GDI intelligence has suspected that Nod is providing them with cheap Tiberium-extracted minerals.";
+                    storyDisplay.ConversationDisplay.ConversationText = "An anonymous source in GDI intelligence suspects that Nod is providing the Communists with cheap Tiberium-extracted minerals.";
                     storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg03.png", 1);
-                },
-                null,
-                null,
-                null));
-
-            phases.Add(new Phase(4,
-                storyDisplay =>
-                {
-                    storyDisplay.ConversationDisplay.ConversationText = "To achieve a lower price for the minerals, a deal with Nod is suspected where Nod gives the tiberium-extracted minerals at a discount to enterprises that build military equipment for them or the Communists.";
                 },
                 null,
                 null,
@@ -8835,7 +8826,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "It is necessary for the Government and GDI to strike the manufacturing sites or cut the source of Tiberium minerals if they want to reduce the number of enemy vehicles.";
+                    storyDisplay.ConversationDisplay.ConversationText = "It is necessary for the Government and GDI to strike enemy manufacturing sites or cut the supply of Tiberium minerals if they want to reduce the number of enemy vehicles.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -8850,7 +8841,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     {
                         TryPlaySong(chrg226m);
                         storyDisplay.AddSimpleStoryImage("Story/CR07/victorybg05.png", 1);
-                        storyDisplay.ConversationDisplay.ConversationText = "Separately from military matters, there are reports that Government forces have brutally destroyed civilian villages loyal to the Communists.";
+                        storyDisplay.ConversationDisplay.ConversationText = "In more troubling news, there are now more substantive reports that Government forces have brutally destroyed civilian villages loyal to the Communists.";
                     },
                     null,
                     null,
@@ -8859,7 +8850,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(7,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Ivanov has denied the claims, saying that only military forces are targeted. Civilians, especially collaborators near Communist military assets, might suffer from limited collateral damage, however.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Ivanov has denied the claims, saying that only military forces are targeted. He added, however, that civilians, especially collaborators near Communist military assets, might suffer from limited collateral damage.";
                     },
                     null,
                     null,
@@ -8894,7 +8885,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     phases.Add(new Phase(7,
                         storyDisplay =>
                         {
-                            storyDisplay.ConversationDisplay.ConversationText = "They claim that Government forces under other commanders' command have committed attacks on civilian villages, killing and torturing entire villages if they've suspected collaboration with the enemy.";
+                            storyDisplay.ConversationDisplay.ConversationText = "They claim that Government forces under other commanders' command have committed attacks on civilian villages, killing and torturing entire villages if the civilians are suspected of collaboration with the enemy.";
                         },
                         null,
                         null,
@@ -8903,7 +8894,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     phases.Add(new Phase(8,
                         storyDisplay =>
                         {
-                            storyDisplay.ConversationDisplay.ConversationText = "According to them, this has also eroded public support for the Government and GDI, and increased support for the Communists and Nod. Many people who were loyal to the Government have defected due to this.";
+                            storyDisplay.ConversationDisplay.ConversationText = "They say these actions have eroded public support for the Government and GDI, and increased support for the enemy. Many people who were loyal to the Government have defected due to these atrocities.";
                         },
                         null,
                         null,
@@ -9029,7 +9020,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We know that this archipelago has been a significant delivery route of both vehicles and manpower for them, and with our quick progress they possibly haven't been able to eradicate all traces of it yet.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We know that this archipelago has been a significant delivery route of both vehicles and manpower for them, and with our quick progress they probably haven't been able to eradicate all traces of it yet.";
                 },
                 null,
                 null,
@@ -9038,7 +9029,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "But there's no further time to waste. When the night falls, infiltrate their forward command center with a Spy. Our advisors will analyze any data that you can get out, and will give you further orders depending on the outcome.";
+                    storyDisplay.ConversationDisplay.ConversationText = "But there's no further time to waste. When night falls, infiltrate their forward command center with a Spy. Our advisors will analyze any data that you can get out, and will give you further orders depending on the outcome.";
                     storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f;
                     bleep12.Play();
                 },
@@ -9083,7 +9074,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "With the earlier chemical attack on the Government forces, a tactical bait and subsequent destruction of a Global Defense Initiative base, Nod entered the civil war with a strong show.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With the earlier chemical attack on the Government forces and the destruction of a GDI base with a skilled tactical maneuver, Nod entered the civil war with a strong showing.";
                     storyDisplay.AddSimpleStoryImage("Story/CR06/bg02.png", 2, 0f);
                 },
                 null,
@@ -9120,7 +9111,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "With these steps, the war is seen to have evolved from a civil war to another theater of the full-blown war between GDI and Nod, which was thought to be nearing its end.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With GDI and Nod involvement escalating, the war is has evolved from a civil war into another theater of the larger war between GDI and Nod, which has been thought to be nearing its end.";
                 },
                 null,
                 null,
@@ -9129,7 +9120,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Numerically, most forces in the area are still from the local factions, but GDI and Nod are far more resourceful.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Numerically, most forces in the area are still composed of local troops, but GDI and Nod have far more resources at their disposal.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -9325,7 +9316,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Poster and other activity by Communist partisans had greatly increased, mocking the sudden loss of the GDI and Government shoreline bases.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Propaganda activity by Communist partisans had greatly increased, mocking the sudden loss of the GDI and Government shoreline bases.";
                     storyDisplay.AddSimpleStoryImage("Story/CR05/victorybg02.png", 1);
                 },
                 null,
@@ -9345,7 +9336,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Only a rumor exists that Nod had captured major GDI technology during the operation. GDI has refused to comment on this rumor, citing operation security as the reason for the silence.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Yet a new rumor claims that Nod had captured major GDI technology during the operation. GDI has refused to comment on this rumor, citing operational security as the reason for the silence.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -9357,7 +9348,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(4,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "There is also another claim that the Government forces have heavily attacked civilians, including destroying churches and other village buildings and organizing punishmental killings while dealing with Nod collaborators.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Another rumor claims that Government forces have performed war crimes on a large scale. They have killed civilians, destroyed churches, razed villages, and organized executions while dealing with Nod collaborators.";
                         storyDisplay.AddSimpleStoryImage("Story/CR05/victorybg03.png", 1);
                     },
                     null,
@@ -9367,11 +9358,38 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(5,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "The Government has denied these claims, stating that they only deal with collaborators and even those are tried in court. No regular civilian needs to be afraid of their forces.";
+                        storyDisplay.ConversationDisplay.ConversationText = "The Government representative denied these claims, stating that no regular civilian needs to fear the military. It was further emphasized that even collaborators are tried in court.";
                     },
                     null,
                     storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Another linked rumour tells that GDI has started looking into whether these accusations hold true.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "This could turn out problematic for you in the future.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "In case you'd like to reconsider some of your previous choices, this is the point where you have gone too far.";
+                    },
+                    null,
+                    null,
+                    null));
             }
 
             return phases;
@@ -9411,7 +9429,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "There is a Tiberium-infested river basin where GDI had a Tiberium research and containment facility, which they were transforming into a base to counter Nod.";
+                    storyDisplay.ConversationDisplay.ConversationText = "There is a Tiberium-infested river basin where GDI had a Tiberium research and containment facility. They were transforming it into a base to counter Nod.";
                 },
                 storyDisplay => AddRADisplayImage(storyDisplay, "Story/CR05/tibriver.png", 4),
                 null,
@@ -9420,7 +9438,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "At the height of their incompetence, GDI didn't pay enough attention that Nod had noticed their efforts and was preparing a strike.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The incompetent local GDI officer in charge didn't pay enough attention. Nod had noticed their efforts and prepared a strike.";
                 },
                 null,
                 null,
@@ -9457,7 +9475,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We are already getting ridiculed in pro-Soviet posters and messages in the networks, giving up here would make it far worse.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We are already getting ridiculed in pro-Soviet posters and online messages. Giving up here would make it far worse.";
                 },
                 null,
                 null,
@@ -9466,7 +9484,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Thinking of the sudden progress of our enemy, I bet some civilians in the area were cooperating with Nod on intel regarding the GDI base. We should give them a fitting punishment once the operation is over...";
+                    storyDisplay.ConversationDisplay.ConversationText = "Thinking on the sudden progress of our enemy, I suspect civilians in the area provided Nod with intel regarding the GDI base. We should give them a fitting punishment once the operation is over...";
                 },
                 null,
                 null,
@@ -9476,7 +9494,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     AddRADisplayImage(storyDisplay, "Story/CR05/bridge.png", 6);
-                    storyDisplay.ConversationDisplay.ConversationText = "Anyway, for the mission itself, take a force and use them to reclaim control over a critical bridge. If you succeed, our HQ will send you an MCV and more reinforcements.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Anyway, for the mission itself, take some forces and use them to reclaim control over a critical bridge. If you succeed, our HQ will send you an MCV and more reinforcements.";
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(5),
                 storyDisplay => { storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f; bleep12.Play(); },
@@ -9536,7 +9554,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Allies partially disarmed them and forced the Government to downscale their military industry. As a result, the Government had to rely on buying or loaning equipment from the Allies when rebuilding their military.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Allies partially disarmed the military and forced the Government to downscale their arms industry. As a result, the Government had to rely on buying or leasing equipment from the Allies when rebuilding their forces.";
                 },
                 null,
                 null,
@@ -9545,7 +9563,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Some of the Soviet equipment was still widely used, but was in the process of being phased out. That process was slowed down by military personnel used to the Soviet overwhelming raw power tactics, of whom many defected to the Resistance.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Some of the Soviet equipment was still widely used, but was in the process of being phased out. That process was slowed down by military personnel used to the Soviet overwhelming raw power tactics. Many of these officers defected to the Resistance.";
                 },
                 null,
                 null,
@@ -9563,7 +9581,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The First Tiberium War only made this discrepancy more significant, as the Allied Nations needed their advanced equipment for fighting the Brotherhood of Nod.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The First Tiberium War has only made this disprecancy more stark, as the Allied Nations have needed their advanced equipment for fighting the Brotherhood of Nod.";
                     storyDisplay.AddSimpleStoryImage("Story/CR04/bg03.png", 1, 0f);
                 },
                 null,
@@ -9582,7 +9600,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "To answer modern challenges, a large upgrade program was started to modernize the old Allied equipment to match the latest GDI and Nod designs.";
+                    storyDisplay.ConversationDisplay.ConversationText = "To answer modern challenges, a large upgrade program was started to modernize the old Allied equipment and match the latest GDI and Nod designs.";
                     storyDisplay.AddSimpleStoryImage("Story/CR04/bg04.png", 1, 0f);
                 },
                 null,
@@ -9602,7 +9620,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "While the program continues, the Communist militia has also been upgrading their Soviet-era vehicles with modern capabilities.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Not to be outdone, the Communist militia has also been upgrading their Soviet-era vehicles with modern capabilities.";
                     storyDisplay.AddSimpleStoryImage("Story/CR04/bg06.png", 1, 0f);
                 },
                 null,
@@ -9612,7 +9630,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "It is unknown where and how they get the resources for upgrades.";
+                    storyDisplay.ConversationDisplay.ConversationText = "It is unknown where and how they get the resources for such upgrades.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
@@ -9631,7 +9649,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(13,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "GDI has expressed worry about the escalating levels of violence that the modernized equipment will bring, and strongly condemned the use of chemical weapons.";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI has expressed worry about the escalating levels of violence that modernized equipment will bring, and has strongly condemned the use of chemical weapons.";
                 },
                 null,
                 storyDisplay =>
@@ -9670,7 +9688,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(16,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The chemical attack on our MCV train and the chemical weapons found at the oil industry were a godsend. They actually got GDI to strengthen their support for us. Seems our enemy miscalculated when they teamed up with Nod.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The chemical attack on our MCV train and the chemical weapons found at the oil complex were a godsend. They actually encouraged GDI to strengthen their support for us. Seems our enemy miscalculated when they teamed up with Nod.";
                 },
                 null,
                 null,
@@ -9715,7 +9733,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(21,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "With the force of the GDI behind us, we'll be victorious in no time.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With the force of GDI behind us, we'll be victorious in no time.";
                 },
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; toney4.Play(); },
@@ -9760,7 +9778,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.ConversationDisplay.ConversationText = "The recent joint covert operation between the GDI and the Government to eliminate a Communist base was successful.";
+                    storyDisplay.ConversationDisplay.ConversationText = "A recent joint covert operation between the GDI and the Government to eliminate a Communist base was successful.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg02.png", 2, 0f);
                 },
                 null,
@@ -9774,7 +9792,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Afterwards the Government was making quick progress. It seemed that the neo-Soviets were on their last legs and would fall within weeks.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Government forces followed up with an offensive that made quick progress. It seemed that the neo-Soviets were on their last legs and would fall within weeks.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg03.png", 3, 0f);
                 },
                 null,
@@ -9784,7 +9802,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "But then something happened. The Communists suddenly attacked new areas with much more power than before and gained significant territory, including multiple oil refinement facilities.";
+                    storyDisplay.ConversationDisplay.ConversationText = "However, this state of affairs did not last long. The Communists launched a powerful counter-offensive and gained significant territory, including several oil refinement facilities.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg04.png", 4, 0f);
                 },
                 null,
@@ -9807,7 +9825,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The neo-Soviets themselves have said that brutal actions taken by the government have led to an increased number of volunteer troops and financial donations on their side, and the Government has managed their forces laughably poorly.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Communist representatives have said that brutal actions taken by the Government have led to increased volunteer participation and financial donations on their side. They added that the Government has managed its troops laughably poorly.";
                 },
                 null,
                 storyDisplay =>
@@ -9820,7 +9838,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The sudden shift in the situation was recently discussed by experts on live TV. While discussing Government military failures, the transmission was suddenly cut, with the broadcasting company pointing to technical issues as the reason.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The sudden shift in the situation was recently discussed by experts on live TV. While discussing Government military failures, the transmission was suddenly cut, with the broadcasting company citing \"technical issues\" as the reason.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg05.png", 5, 0f);
                 },
                 null,
@@ -9843,7 +9861,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Rumors say that there's significant disappointment towards the GDI among the Government.";
+                    storyDisplay.ConversationDisplay.ConversationText = "New rumors claim Government decision-makers are disappointed with the scope fo GDI's assistance.";
                 },
                 null,
                 null,
@@ -9852,7 +9870,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The GDI thinks that they shouldn't intervene heavily in a civil war, which is internal affairs of the country.";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI has stated that they are reluctant to heavily intervene in a civil war, which is considered internal affairs of the country.";
                 },
                 null,
                 storyDisplay =>
@@ -9865,7 +9883,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Government instead stresses that should the nation fall to the neo-Soviets, the whole region of Eastern Europe would be threatened and the Allied nations might eventually face a new World War.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Government stresses that should the nation fall to the Communists, all of Eastern Europe will be threatened by a Communist resurgence, and the West might might eventually face a new World War.";
                     storyDisplay.AddSimpleStoryImage("Story/CR03/bg06.png", 6, 0f);
                 },
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CR03/bg07.png", 7, 0f),
@@ -9927,7 +9945,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(17,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The GDI isn't taking us seriously enough. They haven't yet realized that we're fighting not only for ourselves, but also for them. I bet the Brotherhood of Nod would like to form an alliance with a renewed Soviet Union.";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI isn't taking us seriously enough. They haven't yet realized that we're fighting not only for ourselves, but also for them. I bet the Brotherhood of Nod would like to form an alliance with a renewed Soviet Union.";
                 },
                 storyDisplay => { storyDisplay.FindStoryImageById(3).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
                 null,
@@ -10033,7 +10051,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "GDI also provided us some Orca aircraft. You'll get our best Commando under your command. Use him and the Orcas to destroy the SAM sites, and the GDI best do the rest.";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI has also provided us with some Orca aircraft. You'll get our best Commando under your command. Use him and the Orcas to destroy the SAM sites, and the GDI best do the rest.";
                     AddRADisplayImage(storyDisplay, "Story/CR02/orca.png", 5);
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(4),
@@ -10101,7 +10119,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(0,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "The church in the nearby village was destroyed during the operation. The Government denies all responsibility, blaming the occurence on the Communist militia.";
+                        storyDisplay.ConversationDisplay.ConversationText = "The church in the nearby village was destroyed during the operation. The Government denies all responsibility, blaming the destruction on the Communist militia.";
                         storyDisplay.AddSimpleStoryImage("Story/CR01/churchbg.png", 2);
                     },
                     null,
@@ -10123,7 +10141,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
 
-                    storyDisplay.ConversationDisplay.ConversationText = "After the fall of the Soviet Union in the end of the Second World War, most of the Soviet republics gained independence and were militarily integrated into the newly-formed Global Defense Initiative.";
+                    storyDisplay.ConversationDisplay.ConversationText = "After the fall of the Soviet Union at the end of the Second World War, most of the Soviet republics gained independence and were militarily integrated into the newly-formed Global Defense Initiative.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg01.png", 1);
                     mapwipe2.Play();
                 },
@@ -10181,7 +10199,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Allied Nations, which became the newly-formed GDI, kept an eye on, but did not micromanage the countries. The ex-Soviet republics were mostly self-governing, with support from GDI.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Allied Nations kept an eye on these countries, but did not micromanage them. The ex-Soviet republics were mostly self-governing, requiring only limited support from the newly-formed GDI.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg02.png", 1);
                 },
                 null,
@@ -10191,7 +10209,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "GDI publicly advocates liberal democracy, but practically the republics have been free to decide their own structure of government.";
+                    storyDisplay.ConversationDisplay.ConversationText = "In public, GDI has pushed for liberal democracy in these regions, but in practice, the republics have been free to decide their own structure of government.";
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -10200,7 +10218,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Decades went by, but not all people lost their nostalgia for the Soviet lifestyle.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Decades have passed since the end of the war, but not everyone has lost their nostalgia for the Soviet lifestyle.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg04.png", 4);
                 },
                 null,
@@ -10210,7 +10228,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "One of the republics in particular felt that they were coldly forgotten about after the dissolution of the Soviet empire, which left the area in an unstable state of partial political vacuum.";
+                    storyDisplay.ConversationDisplay.ConversationText = "After the dissolution of the Soviet empire, one particular republic was left in an unstable state of partial political vacuum. Many feel coldly abandoned by the West.";
                     storyDisplay.AddSimpleStoryImage("Story/coatofarms.png", 5);
                 },
                 null,
@@ -10220,7 +10238,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "This was worsened by the global economic crisis brought by the First Tiberium War. Exploiting the unrest generated by the crisis, a faction of Communist radicals took up arms and wanted to overthrow the government.";
+                    storyDisplay.ConversationDisplay.ConversationText = "This feeling was worsened by the global economic crisis brought by the First Tiberium War. Exploiting the unrest generated by the crisis, a faction of Communist radicals has taken up arms and aims to overthrow the government.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg06.png", 6);
                 },
                 null,
@@ -10230,7 +10248,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The government response was to quench the unrest with their own forces. However, the Communist radicals' propaganda machine had grown too influential.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The government response has been to quench the unrest with military action. However, the Communist radicals' propaganda machine has grown very influential.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg07.png", 7);
                 },
                 null,
@@ -10240,7 +10258,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "They were accountable for the bloodshed, but their leaflets and posts on message boards managed to shift the blame towards the government for many people.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Communists are accountable for much of the bloodshed, but their leaflets and posts on message boards have managed to shift the blame towards the government for many people.";
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -10249,7 +10267,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "After various smaller conflicts with mixed results, some of the republic's military generals defected to the Communist side and recommissioned abandoned Soviet bases, using them to produce military equipment.";
+                    storyDisplay.ConversationDisplay.ConversationText = "After recent skirmishes produced mixed results, some of the republic's military generals defected to the Communist side and recommissioned abandoned Soviet bases, using them to produce military equipment.";
                     storyDisplay.AddSimpleStoryImage("Story/CR01/bg09.png", 9);
                 },
                 null,
@@ -10259,7 +10277,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "This is an unacceptable escalation in the situation. As the government military organization was ill-equipped to deal with this force, the government has assigned a new Commander to handle the situation.";
+                    storyDisplay.ConversationDisplay.ConversationText = "These defections have caused an unacceptable escalation in the conflict. As the government military organization was ill-equipped to deal with this force, the government has assigned a new Commander to handle the situation.";
                 },
                 null,
                 null,

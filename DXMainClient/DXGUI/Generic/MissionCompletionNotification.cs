@@ -43,14 +43,14 @@ namespace DTAClient.DXGUI.Generic
             };
 
             Width = 300;
-            Height = 60;
+            Height = 70;
             Y = 200;
 
             starIconPanel = new XNAPanel(WindowManager);
             starIconPanel.Name = nameof(starIconPanel);
             starIconPanel.Width = 60;
             starIconPanel.X = UIDesignConstants.EMPTY_SPACE_SIDES;
-            starIconPanel.Y = UIDesignConstants.EMPTY_SPACE_TOP;
+            starIconPanel.Y = UIDesignConstants.EMPTY_SPACE_TOP * 2;
             starIconPanel.Height = Height - starIconPanel.Y - UIDesignConstants.EMPTY_SPACE_BOTTOM;
             starIconPanel.Width = starIconPanel.Height;
             starIconPanel.DrawBorders = false;
@@ -70,7 +70,7 @@ namespace DTAClient.DXGUI.Generic
             lblDescription.Name = nameof(lblDescription);
             lblDescription.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
             lblDescription.TextAnchor = LabelTextAnchorInfo.HORIZONTAL_CENTER;
-            lblDescription.AnchorPoint = new Vector2(Width / 2f, lblMissionName.Bottom + UIDesignConstants.EMPTY_SPACE_TOP * 2);
+            lblDescription.AnchorPoint = new Vector2(Width / 2f, lblMissionName.Bottom + UIDesignConstants.EMPTY_SPACE_TOP * 3);
             lblDescription.Text = "Completed on Difficulty";
             AddChild(lblDescription);
 

@@ -89,6 +89,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private const float crRAdisplayAlphaRate = 5.0f;
         private const float crTDdisplayImageDisappearAlphaRate = -2.5f;
 
+        private const string crOfficeBgPath = "Story/CR02/bg02.png";
+
         private IStoryDisplay storyDisplay;
         private WindowManager windowManager;
 
@@ -126,6 +128,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CR01Victory();
                 case Cutscene.CR02:
                     return CR02();
+                case Cutscene.CR02Victory:
+                    return CR02Victory();
                 case Cutscene.CR03:
                     return CR03();
                 case Cutscene.CR04:
@@ -488,31 +492,31 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                if (!extraBeat)
-                {
-                    if (extraUnlocked)
-                    {
-                        phases.Add(new Phase(lastPhaseID + 5,
-                            storyDisplay =>
-                            {
-                                storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
-                            },
-                            null,
-                            null,
-                            null));
-                    }
-                    else
-                    {
-                        phases.Add(new Phase(lastPhaseID + 5,
-                            storyDisplay =>
-                            {
-                                storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
-                            },
-                            null,
-                            null,
-                            null));
-                    }
-                }
+                // if (!extraBeat)
+                // {
+                //     if (extraUnlocked)
+                //     {
+                //         phases.Add(new Phase(lastPhaseID + 5,
+                //             storyDisplay =>
+                //             {
+                //                 storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
+                //             },
+                //             null,
+                //             null,
+                //             null));
+                //     }
+                //     else
+                //     {
+                //         phases.Add(new Phase(lastPhaseID + 5,
+                //             storyDisplay =>
+                //             {
+                //                 storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
+                //             },
+                //             null,
+                //             null,
+                //             null));
+                //     }
+                // }
 
                 return;
             }
@@ -613,31 +617,31 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                if (!extraBeat)
-                {
-                    if (extraUnlocked)
-                    {
-                        phases.Add(new Phase(lastPhaseID + 5,
-                            storyDisplay =>
-                            {
-                                storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
-                            },
-                            null,
-                            null,
-                            null));
-                    }
-                    else
-                    {
-                        phases.Add(new Phase(lastPhaseID + 5,
-                            storyDisplay =>
-                            {
-                                storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
-                            },
-                            null,
-                            null,
-                            null));
-                    }
-                }
+                // if (!extraBeat)
+                // {
+                //     if (extraUnlocked)
+                //     {
+                //         phases.Add(new Phase(lastPhaseID + 5,
+                //             storyDisplay =>
+                //             {
+                //                 storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
+                //             },
+                //             null,
+                //             null,
+                //             null));
+                //     }
+                //     else
+                //     {
+                //         phases.Add(new Phase(lastPhaseID + 5,
+                //             storyDisplay =>
+                //             {
+                //                 storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
+                //             },
+                //             null,
+                //             null,
+                //             null));
+                //     }
+                // }
 
                 return;
             }
@@ -993,7 +997,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "Commander?";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage("Story/CR02/bg02.png", 2, 0f);
                 },
                 null,
                 null,
@@ -1340,7 +1344,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "Commander.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 11, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 11, 0f);
                     country1.Play();
                 },
                 null,
@@ -1665,7 +1669,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = false;
                         storyDisplay.ConversationDisplay.ConversationText = "Good job on saving Toikka, Commander.";
                         storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                        storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 9, 0f);
+                        storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 9, 0f);
                         country1.Play();
                     },
                     null,
@@ -1689,7 +1693,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = false;
                         storyDisplay.ConversationDisplay.ConversationText = "I believe this is the first time you have failed to perform a task that I have assigned to you.";
                         storyDisplay.ConversationDisplay.TextColor = Color.Red;
-                        storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 9, 0f);
+                        storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 9, 0f);
                         country1.Play();
                     },
                     null,
@@ -1845,7 +1849,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "I have to admit.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                 },
                 null,
                 null,
@@ -2201,7 +2205,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "Commander!";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                 },
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CRC13/static1.png", 3, 0.85f),
                 storyDisplay =>
@@ -2548,7 +2552,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "Commander.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 9, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 9, 0f);
                     country1.Play();
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(8),
@@ -2748,7 +2752,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "You have done some astonishing work.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                 },
                 null,
                 null,
@@ -3021,7 +3025,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "The enemy's long-term defensive strategy relies on a river between our forces and the city of Karhumäki.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 9, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 9, 0f);
                     country1.Play();
                 },
                 storyDisplay => AddRADisplay(storyDisplay, 10),
@@ -3210,7 +3214,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "So, as you certainly already know, the Global Defense Initiative halted their support for us.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                 },
                 null,
                 null,
@@ -5235,7 +5239,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "Commander.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 8, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 8, 0f);
                     country1.Play();
                 },
                 null,
@@ -7121,7 +7125,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "Our final victory is at hand.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 10, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 10, 0f);
                     country1.Play();
                 },
                 null,
@@ -7418,7 +7422,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "Well, that went perfectly according to plan.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 6, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 6, 0f);
                     country1.Play();
                 },
                 null,
@@ -7605,7 +7609,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "What an amazing victory you've brought to us. The Commies are really stretching themselves at the frontline after losing so much equipment.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 1, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 1, 0f);
                     country1.Play();
                 },
                 null,
@@ -7987,7 +7991,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "Toikka has been making progress on the frontline again with the help of the Sensor Arrays that have prevented Nod flanking attacks.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 1, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 1, 0f);
                     country1.Play();
                 },
                 null,
@@ -8289,7 +8293,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "As you've surely heard from the news, these Kane's wheels are humiliating our forces.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CRA09/officebg01.png", 11, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 11, 0f);
                     country1.Play();
                 },
                 null,
@@ -8948,7 +8952,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "Well. We didn't expect the Commies to have nukes.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR07/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                 },
                 null,
                 null,
@@ -9211,7 +9215,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "We were discussing the appearance of enemy naval forces with GDI, and found out that our enemy has expanded into some of our islands.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR06/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                     country1.Play();
                 },
                 null,
@@ -9420,7 +9424,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "Despite your victory, it looks like allocating our forces to the supply route was a big mistake.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                 },
                 null,
                 storyDisplay => AddRADisplay(storyDisplay, 3),
@@ -9679,7 +9683,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "What the world doesn't yet know is that the Brotherhood of Nod has been helping the Reds modernize.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                 },
                 null,
                 null,
@@ -9915,7 +9919,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "As you hopefully already know, the enemy has suddenly strengthened their forces and is in the process of conquering an industrial area.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR03/officebg01.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                     country1.Play();
                 },
                 storyDisplay => AddRADisplay(storyDisplay, 3),
@@ -9983,6 +9987,52 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
+        private List<Phase> CR02Victory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "You have just unlocked your first Bonus.";
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Bonuses are modifiers that allow you to customize the strengths of your army, enabling you to experiment with different kinds of tactics.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "While using them is optional, Covert Revolt missions have been designed with use of Bonuses in mind.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(4,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Keep playing Covert Revolt missions to unlock more Bonuses!";
+                },
+                null,
+                null,
+                null));
+
+            return phases;
+        }
+
         private List<Phase> CR02()
         {
             var phases = new List<Phase>();
@@ -10009,7 +10059,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "Your first operation was so successful that I'm going to brief you directly from now on.";
                     storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
-                    storyDisplay.AddSimpleStoryImage("Story/CR02/bg02.png", 2, 0f);
+                    storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 2, 0f);
                     country1.Play();
                 },
                 storyDisplay =>

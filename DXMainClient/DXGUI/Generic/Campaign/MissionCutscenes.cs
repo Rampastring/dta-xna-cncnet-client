@@ -10445,7 +10445,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                    storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                    storyDisplay.ConversationDisplay.IsCentered = true;
-                   storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide1.png", 1);
+                   storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide1.png", 1);
                    country4.Play();
                },
                null,
@@ -10455,7 +10455,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide2.png", 2);
                     storyDisplay.ConversationDisplay.ConversationText = "In today's news: what some are labeling as a \"Tiberium War\" continues to engulf the African continent.";
                     mapwipe5.Play();
                 },
@@ -10471,7 +10471,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The latest victim: the Republic of Serunda, which has seen Nod forces cross the border only just last month.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide3.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide3.png", 3);
                 },
                 null, null, null));
 
@@ -10493,7 +10493,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Global Defense Initiative peacekeepers have stationed themselves at key positions across the nation and taken over the functions of the former Serundan government.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide4.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide4.png", 3);
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -10503,7 +10503,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "GDI General Mark Jamison Sheppard has stated publicly that the decision was made \"to prevent civil disorder.\"";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide5.png", 4);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide5.png", 4);
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -10513,7 +10513,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Serunda, of course, is no stranger to conflict.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide6.png", 5);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide6.png", 5);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                 },
                 null,
@@ -10524,7 +10524,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The quasi-anarchist Serundan Liberation Front, or SLF, fought a guerilla war against the government for decades.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide7.png", 6);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide7.png", 6);
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -10534,7 +10534,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Their charismatic leader, Mthunzi Gumede, led SLF resistance right up until his passing just two years ago, with his daughter, Ulwazi, succeeding him as head of the group.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide8.png", 7);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide8.png", 7);
                 },
                 null,
                 null,
@@ -10553,7 +10553,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But it's safe to say that in the face of this massive military and ideological conflict between GDI and Nod, whatever relevance the SLF may once have had in Serunda has long since deteriorated to insignificance.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide9.png", 9);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide9.png", 9);
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -10564,7 +10564,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide1.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -10578,7 +10578,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide11.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide11.png", 1);
                     country4.Play();
                 },
                 null,
@@ -10588,7 +10588,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(14,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide10.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide10.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                     storyDisplay.ConversationDisplay.ConversationText = "Are you receiving this message? ...Good. Our equipment barely works sometimes.";
@@ -10619,7 +10619,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(17,
                  storyDisplay =>
                  {
-                     AddRADisplayImage(storyDisplay, "Story/PTTP1/small1.png", 4);
+                     AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP1/small1.png", 4);
                      storyDisplay.ConversationDisplay.ConversationText = "To make matters worse, this \"Brotherhood of Nod\" has entered our country and co-opted our message of resistance to Western imperialism.";
                  },
                  null,
@@ -10638,7 +10638,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(19,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP1/small2.png", 5);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP1/small2.png", 5);
                     storyDisplay.ConversationDisplay.ConversationText = "There is a man that I know the Brotherhood is already planning to assassinate - Mayardit.";
                 },
                 null,
@@ -10678,7 +10678,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP1/slide11.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide11.png", 1);
                     toney7.Play();
 
                 },
@@ -10704,7 +10704,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP2/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP2/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -10714,7 +10714,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP2/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP2/slide2.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                     storyDisplay.ConversationDisplay.ConversationText = "You've done well - Mayardit is an important figure to the people locally, and he has many significant connections.";
@@ -10748,7 +10748,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.ConversationText = "<REROUTING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP2/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP2/slide1.png", 1);
                     newtarg1.Play();
                 },
                 null,
@@ -10758,7 +10758,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP2/slide3.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP2/slide3.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                     storyDisplay.ConversationDisplay.ConversationText = "Ah, my friend! I am very grateful to you for your efforts in protecting myself and my village.";
@@ -10790,7 +10790,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But when the eagle stepped in to take the reins, not only did they not release these people, but they moved them to a new prison deep in the desert.";
-                    AddRADisplayImage(storyDisplay, "Story/PTTP2/small1.png", 4);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP2/small1.png", 4);
                 },
                 null,
                 null,
@@ -10820,7 +10820,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP2/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP2/slide1.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -10845,7 +10845,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP3/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP3/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -10855,7 +10855,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP3/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP3/slide2.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                     storyDisplay.ConversationDisplay.ConversationText = "Your actions are bearing fruit. Word spreads through the villages and the towns that the SLF is back, and that this time around it is truly acting in defence of the people.";
@@ -10877,7 +10877,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP3/slide3.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP3/slide3.png", 3);
                     bleep11.Play();
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                     storyDisplay.ConversationDisplay.ConversationText = "My friend; Ulwazi. Things become worse.";
@@ -10889,7 +10889,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP3/small1.png", 5);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP3/small1.png", 5);
                     storyDisplay.ConversationDisplay.ConversationText = "The historic villages of Ondari and Darshad are now between the frontlines of the eagle and the scorpion. They will be little but smoking rubble in a matter of days.";
                 },
                 null,
@@ -10923,7 +10923,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP3/slide3.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP3/slide3.png", 3);
                     bleep11.Play();
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                     storyDisplay.ConversationDisplay.ConversationText = "Those villages are important to both the Hadarah and the Kwandari. They will be indebted to us if we save Ondari and Darshad from armageddon.";
@@ -10970,7 +10970,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP3/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP3/slide1.png", 1);
                     toney7.Play();
 
                 },
@@ -10998,7 +10998,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -11008,7 +11008,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide2.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "During the Second Great War, the Soviet Union supplied funds and conventional weapons to anti-colonial movements across Africa and Asia.";
                     mapwipe5.Play();
@@ -11025,7 +11025,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The SLF, initially founded as a response to British colonization of Serunda, took full advantage of the Soviet supplies on offer and fought the British for years.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide3.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide3.png", 3);
                 },
                 null,
                 storyDisplay =>
@@ -11040,7 +11040,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "At war's end, despite the collapse of the USSR, European powers found little relief in their beleaguered colonies, and abandoned them either by choice or at the head of a gun.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide4.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide4.png", 3);
                 },
                 null,
                 storyDisplay =>
@@ -11055,7 +11055,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "In Serunda, there was a peaceful transition of power.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide11.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide11.png", 3);
                 },
                 null,
                 null,
@@ -11074,7 +11074,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "It was to last only a matter of weeks.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide5.png", 5);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide5.png", 5);
                 },
                 null,
                 null,
@@ -11093,7 +11093,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The fighting reignited and intensified as both sides ruthlessly attempted to eradicate their opposition, committing numerous atrocities across Serunda.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide6.png", 7);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide6.png", 7);
                 },
                 null,
                 null,
@@ -11112,7 +11112,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Decades of strife and suffering passed before the Serundan military came out on top.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide7.png", 9);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide7.png", 9);
                 },
                 null,
                 null,
@@ -11131,7 +11131,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The Republic of Serunda was in dire straits, ripe for yet another terrible upheaval as it entered a new era - the Tiberian era.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide8.png", 9);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide8.png", 9);
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -11142,7 +11142,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide1.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -11156,7 +11156,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide9.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide9.png", 1);
                     country4.Play();
                 },
                 null,
@@ -11166,7 +11166,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(16,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide10.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide10.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Khaki;
                     storyDisplay.ConversationDisplay.ConversationText = "Hello.  I am aware you do not know who I am.  You may call me Jamal.";
@@ -11215,7 +11215,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(21,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP4/small1.png", 4);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP4/small1.png", 4);
                     storyDisplay.ConversationDisplay.ConversationText = "The fact of the matter is that the SLF needs equipment, and our best chance of obtaining that equipment is to purchase it from sources in the former USSR.";
                 },
                 null,
@@ -11234,7 +11234,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(23,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP4/small2.png", 5);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP4/small2.png", 5);
                     storyDisplay.ConversationDisplay.ConversationText = "So, you will get these funds. You will harvest Tiberium from the Nkoma valley, where GDI and Nod are currently thrashing it out, and then you will retreat.";
                 },
                 null,
@@ -11244,7 +11244,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(24,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP4/small3.png", 6);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP4/small3.png", 6);
                     storyDisplay.ConversationDisplay.ConversationText = "You will prioritize eliminating Nod's SAM Sites.";
                 },
                 null,
@@ -11254,7 +11254,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(25,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP4/small4.png", 7);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP4/small4.png", 7);
                     storyDisplay.ConversationDisplay.ConversationText = "The local A-10 colonel is corrupt, and will gladly go after the Brotherhood if he can grab all the glory without risking his planes.";
                 },
                 null,
@@ -11264,7 +11264,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(26,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP4/small5.png", 8);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP4/small5.png", 8);
                     storyDisplay.ConversationDisplay.ConversationText = "You will NOT attack the major GDI airbase there - it is too high profile a target. Frankly, I think our past engagements with GDI have already flown us too close to the sun.";
                 },
                 null,
@@ -11287,7 +11287,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP4/slide9.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide9.png", 1);
                     toney7.Play();
 
                 },
@@ -11313,7 +11313,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP5/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP5/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -11323,7 +11323,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP5/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP5/slide2.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Khaki;
                     storyDisplay.ConversationDisplay.ConversationText = "Good work.  Ulwazi is still busy.";
@@ -11354,7 +11354,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                storyDisplay =>
                {
-                   AddRADisplayImage(storyDisplay, "Story/PTTP5/small1.png", 4);
+                   AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP5/small1.png", 4);
                    storyDisplay.ConversationDisplay.ConversationText = "GDI is moving a nuclear detonator through our country in an effort to take it off the continent.";
                },
                null,
@@ -11373,7 +11373,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP5/small2.png", 5);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP5/small2.png", 5);
                     storyDisplay.ConversationDisplay.ConversationText = "I will be clear - we have no use for the detonator itself.  It would only bring heat on us politically, and potentially alienate us from the people.";
                 },
                 null,
@@ -11383,7 +11383,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP5/small3.png", 6);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP5/small3.png", 6);
                     storyDisplay.ConversationDisplay.ConversationText = "However, a nuclear detonator is something we could definitely sell to whoever we end up bartering with in the former USSR.";
                 },
                 null,
@@ -11393,7 +11393,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP5/small4.png", 7);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP5/small4.png", 7);
                     storyDisplay.ConversationDisplay.ConversationText = "We know little of Nod's specific heist plans for the detonator, other than that they will launch the operation from a nearby base, and try to exfiltrate it out of the area through a route unknown to us.";
                 },
                 null,
@@ -11403,7 +11403,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP5/small5.png", 8);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP5/small5.png", 8);
                     storyDisplay.ConversationDisplay.ConversationText = "You will lead a small team to capture one of their communications facilities.  Once inside, you should have a better idea of how to hijack their efforts.";
                 },
                 null,
@@ -11413,7 +11413,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP5/small6.png", 9);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP5/small6.png", 9);
                     storyDisplay.ConversationDisplay.ConversationText = "Do NOT inflict any harm on GDI personnel... or let GDI discover you are in the area.";
                 },
                 null,
@@ -11444,7 +11444,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP5/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP5/slide1.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -11471,7 +11471,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -11481,7 +11481,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide2.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "In today's news: the situation in the Republic of Serunda has undergone a number of surprising new developments.";
                     mapwipe5.Play();
@@ -11498,7 +11498,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The SLF, previously seen as a relic of a bygone era, has launched a series of small but undeniably successful operations across the country.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide3.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide3.png", 3);
                 },
                 null,
                 storyDisplay =>
@@ -11513,7 +11513,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Both GDI and Nod forces have found themselves surprised by the effect the SLF is having on their activities.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide4.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide4.png", 3);
                 },
                 null,
                 null,
@@ -11531,7 +11531,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide5.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide5.png", 3);
                     storyDisplay.ConversationDisplay.ConversationText = "Nod forces in particular have been repeatedly humiliated by the SLF's new leadership, finding assassination, prisoner rescue and even general offensives disrupted by SLF operations.";
                 },
                 null,
@@ -11550,7 +11550,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide6.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide6.png", 3);
                     storyDisplay.ConversationDisplay.ConversationText = "It's even been rumored that Nod's commander on the Serundan front has been replaced for incompetence - which, as we understand Nod's practices, usually means execution.";
                 },
                 null,
@@ -11560,7 +11560,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide7.png", 7);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide7.png", 7);
                     storyDisplay.ConversationDisplay.ConversationText = "Western intelligence analysts estimate that the number of SLF soldiers may have increased by as much as tenfold since they began this latest set of actions.";
                 },
                 null,
@@ -11570,7 +11570,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide8.png", 7);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide8.png", 7);
                     storyDisplay.ConversationDisplay.ConversationText = "While the SLF has engaged GDI forces before, it has largely steered clear of attacking major facilities.";
                 },
                 null,
@@ -11580,7 +11580,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide9.png", 9);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide9.png", 9);
                     storyDisplay.ConversationDisplay.ConversationText = "This may not stop GDI from taking a heavier hand with the rebel group, as General Mark Jamison Sheppard remarked today at a press conference that there is \"growing concern\" among the GDI leadership at what's happening in the Republic of Serunda.";
                 },
                 null,
@@ -11592,7 +11592,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide1.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -11606,7 +11606,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide10.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide10.png", 1);
                     country4.Play();
                 },
                 null,
@@ -11616,7 +11616,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(14,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide11.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide11.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                     storyDisplay.ConversationDisplay.ConversationText = "Comrade - I have good news and bad news.";
@@ -11629,7 +11629,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(15,
                  storyDisplay =>
                  {
-                     AddRADisplayImage(storyDisplay, "Story/PTTP6/small1.png", 4);
+                     AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP6/small1.png", 4);
                      storyDisplay.ConversationDisplay.ConversationText = "The good news is that I successfully made contact with interested parties in the former Soviet Union.";
                  },
                  null,
@@ -11639,7 +11639,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(16,
                  storyDisplay =>
                  {
-                     AddRADisplayImage(storyDisplay, "Story/PTTP6/small2.png", 5);
+                     AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP6/small2.png", 5);
                      storyDisplay.ConversationDisplay.ConversationText = "We have agreed on a deal - the funds and the detonator for valuable Soviet military equipment and the schematics to produce it.";
                  },
                  null,
@@ -11649,7 +11649,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(17,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP6/small3.png", 6);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP6/small3.png", 6);
                     storyDisplay.ConversationDisplay.ConversationText = "It is to arrive in two shipments - the first shipment made landfall a few days ago, and we have already begun making use of the technology.";
                 },
                 null,
@@ -11660,7 +11660,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     bleep11.Play();
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide13.png", 7);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide13.png", 7);
                     storyDisplay.ConversationDisplay.TextColor = Color.Khaki;
                     storyDisplay.ConversationDisplay.ConversationText = "The bad news is that the logistics center which handles these operations has fallen under a sustained attack.";
                 },
@@ -11677,7 +11677,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     bleep11.Play();
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide12.png", 8);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide12.png", 8);
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                     storyDisplay.ConversationDisplay.ConversationText = "And of course, it is not just the scorpion, but also the eagle who besieges us!  Were your plans not supposed to prevent this very outcome?";
                 },
@@ -11703,7 +11703,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     bleep11.Play();
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide12.png", 8);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide12.png", 8);
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                     storyDisplay.ConversationDisplay.ConversationText = "Or were you just trying to prevent too many of the eagle's men from getting torn apart?";
                 },
@@ -11729,7 +11729,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     bleep11.Play();
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide12.png", 8);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide12.png", 8);
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                     storyDisplay.ConversationDisplay.ConversationText = "There are voices on the Liberation Council saying that -";
                 },
@@ -11748,7 +11748,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(24,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide11.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide11.png", 2);
                     storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                     storyDisplay.ConversationDisplay.ConversationText = "Enough! The fact of the matter is that we may not even receive the second shipment at all if the logistics facility falls before it arrives.";
                 },
@@ -11771,7 +11771,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP6/slide10.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP6/slide10.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -11798,7 +11798,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -11808,7 +11808,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide2.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.ConversationText = "The SLF's leadership structure has remained consistent for decades. In theory, if not in practice. ";
                     mapwipe5.Play();
@@ -11825,7 +11825,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "In theory, the SLF is organized according to anarcho-syndicalist principles, and governed by a Liberation Council of a dozen different individuals.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide3.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide3.png", 3);
                 },
                 null,
                 null,
@@ -11848,7 +11848,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Decision on lesser matters is handed by smaller sub-councils, sometimes affiliated with military units, sometimes affiliated with towns or villages.";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide4.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide4.png", 3);
                 },
                 null,
                 null,
@@ -11870,7 +11870,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(7,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide5.png", 3);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide5.png", 3);
                     storyDisplay.ConversationDisplay.ConversationText = "In practice, the SLF for most of its lifespan has operated under the authoritarian rule of Mthunzi Gumede.";
                 },
                 null,
@@ -11898,7 +11898,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(10,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide6.png", 7);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide6.png", 7);
                     storyDisplay.ConversationDisplay.ConversationText = "Only recently has this begun to change, according to the latest reports from anonymous sources.";
                 },
                 null,
@@ -11917,7 +11917,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(12,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide7.png", 7);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide7.png", 7);
                     storyDisplay.ConversationDisplay.ConversationText = "However, it remains to be seen if this is a viable approach for the governance of a revolutionary army.";
                 },
                 null,
@@ -11938,7 +11938,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide1.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -11952,7 +11952,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide8.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide8.png", 1);
                     country4.Play();
                 },
                 null,
@@ -11962,7 +11962,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(16,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide9.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide9.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                     storyDisplay.ConversationDisplay.ConversationText = "Ah, my friend!  It is so good that you managed to save our facility.";
@@ -12002,7 +12002,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(20,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP7/small1.png", 4);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP7/small1.png", 4);
                     storyDisplay.ConversationDisplay.ConversationText = "You see, the Liberation Council is mobilizing most of our forces for a grand, surprise offensive.";
                 },
                 null,
@@ -12021,7 +12021,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(22,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP7/small2.png", 5);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP7/small2.png", 5);
                     storyDisplay.ConversationDisplay.ConversationText = "With these troops, I must ask you to punish the eagle.  Destroy their holdings, raze their structures, kill their troops.";
                 },
                 null,
@@ -12049,7 +12049,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP7/slide8.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide8.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -12074,7 +12074,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -12084,7 +12084,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(1,
                 storyDisplay =>
                 {
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide2.png", 2);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide2.png", 2);
                     storyDisplay.ConversationDisplay.IsCentered = false;
                     storyDisplay.ConversationDisplay.TextColor = Color.Khaki;
                     storyDisplay.ConversationDisplay.ConversationText = "We must speak quickly.  I don't know what Mayardit was thinking with that last operation.";
@@ -12106,7 +12106,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP8/small1.png", 4);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP8/small1.png", 4);
                     storyDisplay.ConversationDisplay.ConversationText = "Regardless, what is clear to me is that GDI's Mammoth Tanks could still throw a wrench in the offensive being planned by the Liberation Council.";
                 },
                 null,
@@ -12126,7 +12126,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP8/small2.png", 5);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP8/small2.png", 5);
                     storyDisplay.ConversationDisplay.ConversationText = "However, what I can tell you is that GDI's concentrated all of their Mammoth production in Serunda at a single facility.";
                 },
                 null,
@@ -12154,7 +12154,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    AddRADisplayImage(storyDisplay, "Story/PTTP8/small3.png", 6);
+                    AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP8/small3.png", 6);
                     storyDisplay.ConversationDisplay.ConversationText = "You will also destroy the Nod base planning an offensive across the river using our new V2 Launchers - this plan might as well be dust in the wind if the Brotherhood levels the facility.";
                 },
                 null,
@@ -12183,7 +12183,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
                     storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide1.png", 1);
                     toney7.Play();
                 },
                 null,
@@ -12208,7 +12208,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide1.png", 1);
                     country4.Play();
 
                 },
@@ -12223,7 +12223,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(1,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide3.png", 2);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide3.png", 2);
                         storyDisplay.ConversationDisplay.IsCentered = false;
                         storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                         storyDisplay.ConversationDisplay.ConversationText = "Comrade.  I'm not sure I fully understand why you decided to continue with the operation.";
@@ -12275,7 +12275,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = true;
                         storyDisplay.ConversationDisplay.TextColor = Color.White;
                         storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide1.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide1.png", 1);
                         toney7.Play();
                     },
                     null,
@@ -12291,7 +12291,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(1,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide3.png", 2);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide3.png", 2);
                         storyDisplay.ConversationDisplay.IsCentered = false;
                         storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                         storyDisplay.ConversationDisplay.ConversationText = "Comrade.  Thank you for abandoning the operation so quickly.";
@@ -12334,7 +12334,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = true;
                         storyDisplay.ConversationDisplay.TextColor = Color.White;
                         storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP8/slide1.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP8/slide1.png", 1);
                         toney7.Play();
                     },
                     null,
@@ -12360,7 +12360,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide1.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide1.png", 1);
                     country4.Play();
                 },
                 null,
@@ -12373,7 +12373,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(1,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide2.png", 2);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide2.png", 2);
                         storyDisplay.ConversationDisplay.IsCentered = false;
                         storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                         storyDisplay.ConversationDisplay.ConversationText = "The day is finally here.  Across Serunda, our well-equipped forces are prepared to launch a simultaneous offensive that will throw the occupiers out of our country!";
@@ -12388,7 +12388,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay =>
                     {
                         bleep11.Play();
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide3.png", 3);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide3.png", 3);
                         storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                         storyDisplay.ConversationDisplay.ConversationText = "I don't understand why our \"friend\" is here.  Has he not proved himself to be in line with the traitor Jamal?";
                     },
@@ -12410,7 +12410,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay =>
                     {
                         bleep11.Play();
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide3.png", 3);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide3.png", 3);
                         storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                         storyDisplay.ConversationDisplay.ConversationText = "Approving the plan is one thing. Placing our friend in charge of it is asking for trouble.";
                     },
@@ -12432,7 +12432,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay =>
                     {
                         bleep17.Play();
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide4.png", 3);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide4.png", 3);
                         storyDisplay.ConversationDisplay.ConversationText = "Comrade - the Council did not want to place you in charge of this operation.";
                     },
                     null,
@@ -12460,7 +12460,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(9,
                     storyDisplay =>
                     {
-                        AddRADisplayImage(storyDisplay, "Story/PTTP9/small1.png", 5);
+                        AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP9/small1.png", 5);
                         storyDisplay.ConversationDisplay.ConversationText = "You will attack and level GDI's largest stronghold in our country at Jazahiri, which contains a sizable air contingent and their Ion Cannon Uplink.";
                     },
                     null,
@@ -12470,7 +12470,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(10,
                     storyDisplay =>
                     {
-                        AddRADisplayImage(storyDisplay, "Story/PTTP9/small4.png", 6);
+                        AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP9/small4.png", 6);
                         storyDisplay.ConversationDisplay.ConversationText = "You will use the saboteurs placed in GDI's Mammoth Tanks to launch a sneak attack on their operations there and cripple their infrastructure.";
                     },
                     null,
@@ -12480,7 +12480,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(11,
                     storyDisplay =>
                     {
-                        AddRADisplayImage(storyDisplay, "Story/PTTP9/small2.png", 7);
+                        AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP9/small2.png", 7);
                         storyDisplay.ConversationDisplay.ConversationText = "You will also eliminate the Brotherhood forces.  They have constructed a Temple in a desperate effort to justify their relevance.";
                     },
                     null,
@@ -12490,7 +12490,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(12,
                     storyDisplay =>
                     {
-                        AddRADisplayImage(storyDisplay, "Story/PTTP9/small3.png", 8);
+                        AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP9/small3.png", 8);
                         storyDisplay.ConversationDisplay.ConversationText = "This is the most fortified area in Serunda. Liberating it is the signal to our troops that the day has come, and the signal to the occupiers that their days are numbered.";
                     },
                     null,
@@ -12526,7 +12526,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = true;
                         storyDisplay.ConversationDisplay.TextColor = Color.White;
                         storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide1.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide1.png", 1);
                         toney7.Play();
                     },
                     null,
@@ -12542,7 +12542,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(1,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide2.png", 2);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide2.png", 2);
                         storyDisplay.ConversationDisplay.IsCentered = false;
                         storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
                         storyDisplay.ConversationDisplay.ConversationText = "The day is finally here.  Across Serunda, our well-equipped forces are prepared to launch a simultaneous offensive that will throw the occupiers out of our country!";
@@ -12556,7 +12556,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay =>
                     {
                         bleep11.Play();
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide3.png", 3);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide3.png", 3);
                         storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                         storyDisplay.ConversationDisplay.ConversationText = "With the traitor Jamal gone, nothing can undermine our success now.";
                     },
@@ -12586,7 +12586,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(5,
                     storyDisplay =>
                     {
-                        AddRADisplayImage(storyDisplay, "Story/PTTP9/small1.png", 5);
+                        AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP9/small1.png", 5);
                         storyDisplay.ConversationDisplay.ConversationText = "You will attack and level GDI's largest stronghold in our country at Jazahiri, which contains a sizable air contingent and their Ion Cannon Uplink.";
                     },
                     null,
@@ -12596,7 +12596,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(6,
                     storyDisplay =>
                     {
-                        AddRADisplayImage(storyDisplay, "Story/PTTP9/small2.png", 6);
+                        AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP9/small2.png", 6);
                         storyDisplay.ConversationDisplay.ConversationText = "You will also eliminate the Brotherhood forces.  They have constructed a Temple in a desperate effort to justify their relevance.";
                     },
                     null,
@@ -12606,7 +12606,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(7,
                     storyDisplay =>
                     {
-                        AddRADisplayImage(storyDisplay, "Story/PTTP9/small3.png", 7);
+                        AddRADisplayImage(storyDisplay, "Story/PTTP/PTTP9/small3.png", 7);
                         storyDisplay.ConversationDisplay.ConversationText = "This is the most fortified area in Serunda. Liberating it is the signal to our troops that the day has come, and the signal to the occupiers that their days are numbered.";
                     },
                     null,
@@ -12631,7 +12631,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay =>
                     {
                         bleep11.Play();
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide3.png", 3);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide3.png", 3);
                         storyDisplay.ConversationDisplay.TextColor = Color.SandyBrown;
                         storyDisplay.ConversationDisplay.ConversationText = "I will personally assist you with my forces on the battlefield, Comrade.  It will be a most glorious day.";
                     },
@@ -12655,7 +12655,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = true;
                         storyDisplay.ConversationDisplay.TextColor = Color.White;
                         storyDisplay.ConversationDisplay.ConversationText = "<CLOSING CONNECTION...>";
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide1.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide1.png", 1);
                         toney7.Play();
                     },
                     null,
@@ -12680,7 +12680,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                     storyDisplay.ConversationDisplay.ConversationText = "The SLF's overwhelming victory at Jazahiri caught both GDI and the Brotherhood by surprise, and threw their troops into disarray.";
                     storyDisplay.ConversationDisplay.IsCentered = false;
-                    storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide5.png", 1);
+                    storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide5.png", 1);
                     mapwipe2.Play();
                 },
                 null,
@@ -12706,7 +12706,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(2,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide6.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide6.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "Ulwazi Gumede was different than her predecessor. Under her guidance, the SLF had become more true to its anarchist principles.";
                     },
                     null,
@@ -12729,7 +12729,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(4,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide10.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide10.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "Ulwazi was the face of the new government, but she was not the ruler - the Liberation Council and the various sub-councils acted as a new kind of leadership for a new kind of state.";
                     },
                     null,
@@ -12752,7 +12752,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(6,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide12.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide12.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "While the war raged on in Africa between GDI and Nod, in Serunda, the war was over.  However, the war was not gone.";
                     },
                     null,
@@ -12766,7 +12766,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(7,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide8.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide8.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "It was etched in the faces of those who had survived, and scarred in the craters. It burned in the still-growing Tiberium fields of the countryside.";
                     },
                     null,
@@ -12780,7 +12780,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(8,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide9.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide9.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "As the devastated Serundan people attempted to piece their lives back together with hopeful eyes and a new feeling of inspiration, Ulwazi looked into the distance.";
                     },
                     null,
@@ -12803,15 +12803,15 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(10,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide11.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/endingtitle.png", 1);
                         storyDisplay.ConversationDisplay.IsCentered = true;
-                        storyDisplay.ConversationDisplay.ConversationText = "...";
+                        storyDisplay.ConversationDisplay.ConversationText = "  ENDING II" + Environment.NewLine + "Leap of Faith";
                     },
                     null,
                     storyDisplay =>
                     {
-                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
-                        storyDisplay.ConversationDisplay.ConversationText = string.Empty;
+                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE);
+                        storyDisplay.ConversationDisplay.ConversationText = "";
                         storyDisplay.ConversationDisplay.IsCentered = false;
                     },
                     storyDisplay => storyDisplay.ClearStoryImages()));
@@ -12821,7 +12821,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(2,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide6.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide6.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "It had seemed for a while that Ulwazi Gumede might be different than her predecessor. Under her guidance, the SLF had at first become more true to its anarchist principles.";
                     },
                     null,
@@ -12844,7 +12844,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(4,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide7.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide7.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "Ulwazi did not rule for long.  Within months, she had vanished from the public eye, her co-executive Mayardit now the face of the People's Republic of Serunda. She was not the last to disappear.";
                     },
                     null,
@@ -12858,7 +12858,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(5,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide12.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide12.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "While the war raged on in Africa between GDI and Nod, in Serunda, the war was over.  However, the war was not gone.";
                     },
                     null,
@@ -12872,7 +12872,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(6,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide8.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide8.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "It was etched in the faces of those who had survived, and scarred in the craters. It burned in the still-growing Tiberium fields of the countryside.";
                     },
                     null,
@@ -12886,7 +12886,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(7,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide9.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/slide9.png", 1);
                         storyDisplay.ConversationDisplay.ConversationText = "As the devastated Serundan people attempted to piece their lives back together under the watchful eyes of their new government, Mayardit looked into the distance.";
                     },
                     null,
@@ -12909,15 +12909,15 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(9,
                     storyDisplay =>
                     {
-                        storyDisplay.AddSimpleStoryImage("Story/PTTP9/slide11.png", 1);
+                        storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP9/endingtitle.png", 1);
                         storyDisplay.ConversationDisplay.IsCentered = true;
-                        storyDisplay.ConversationDisplay.ConversationText = "...";
+                        storyDisplay.ConversationDisplay.ConversationText = "ENDING I" + Environment.NewLine + "Full Circle";
                     },
                     null,
                     storyDisplay =>
                     {
-                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f);
-                        storyDisplay.ConversationDisplay.ConversationText = string.Empty;
+                        storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = ENDING_ALPHA_RATE);
+                        storyDisplay.ConversationDisplay.ConversationText = "";
                         storyDisplay.ConversationDisplay.IsCentered = false;
                     },
                     storyDisplay => storyDisplay.ClearStoryImages()));

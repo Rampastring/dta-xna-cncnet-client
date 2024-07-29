@@ -28,7 +28,7 @@ namespace DTAClient.Domain.Singleplayer
             GUIDescription = iniSection.GetStringValue("LongDescription", string.Empty);
             Author = iniSection.GetStringValue(nameof(Author), string.Empty);
             HeaderFor = iniSection.GetStringValue(nameof(HeaderFor), string.Empty);
-            PreviewImagePath = iniSection.GetStringValue(nameof(PreviewImagePath), string.Empty);
+            PreviewImagePath = iniSection.GetStringValue(nameof(PreviewImagePath), Scenario.Replace(".map", ".png").Replace(".MAP", ".PNG"));
             LoadingScreenPath = iniSection.GetStringValue(nameof(LoadingScreenPath), string.Empty);
             RequiredAddon = iniSection.GetBooleanValue(nameof(RequiredAddon), false);
             Enabled = iniSection.GetBooleanValue(nameof(Enabled), Enabled);

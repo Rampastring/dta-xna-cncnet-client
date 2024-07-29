@@ -648,7 +648,10 @@ namespace DTAClient.DXGUI.Generic
             }
 
             if (!string.IsNullOrWhiteSpace(mission.PreviewImagePath))
-                panelPreview.BackgroundTexture = AssetLoader.LoadTextureUncached(mission.PreviewImagePath);
+            {
+                if (AssetLoader.AssetExists(mission.PreviewImagePath))
+                    panelPreview.BackgroundTexture = AssetLoader.LoadTextureUncached(mission.PreviewImagePath);
+            }
 
             PreconditionUIConfig(mission);
 

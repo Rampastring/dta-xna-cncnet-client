@@ -821,10 +821,22 @@ namespace DTAConfig.OptionPanels
             GameProcessLogic.UseQres = selectedRenderer.UseQres;
             GameProcessLogic.SingleCoreAffinity = selectedRenderer.SingleCoreAffinity;
 
+            SaveRendererConfigFile();
+
+            IniSettings.Renderer.Value = selectedRenderer.InternalName;
+
+            return restartRequired;
+        }
+
+        private void SaveRendererConfigFile()
+        {
+            IniFile rendererSettingsIni = null;
+
+            bool writeRendererSettings = false;
+
             if (selectedRenderer.UsesCustomWindowedOption())
             {
-                IniFile rendererSettingsIni = new IniFile(
-                    ProgramConstants.GamePath + selectedRenderer.ConfigFileName);
+                rendererSettingsIni = new IniFile(ProgramConstants.GamePath + selectedRenderer.ConfigFileName);
 
                 rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
                     selectedRenderer.WindowedModeKey, chkWindowedMode.Checked);
@@ -838,13 +850,27 @@ namespace DTAConfig.OptionPanels
                     rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
                         selectedRenderer.BorderlessWindowedModeKey, borderlessModeIniValue);
                 }
-                
-                rendererSettingsIni.WriteIniFile();
+
+                writeRendererSettings = true;
             }
 
-            IniSettings.Renderer.Value = selectedRenderer.InternalName;
+            if (selectedRenderer.ForcedConfigValues.Count > 0)
+            {
+                if (rendererSettingsIni == null)
+                {
+                    rendererSettingsIni = new IniFile(ProgramConstants.GamePath + selectedRenderer.ConfigFileName);
+                }
 
-            return restartRequired;
+                foreach (var configValue in selectedRenderer.ForcedConfigValues)
+                {
+                    rendererSettingsIni.SetStringValue(configValue.Section, configValue.Key, configValue.Value);
+                }
+
+                writeRendererSettings = true;
+            }
+
+            if (writeRendererSettings)
+                rendererSettingsIni.WriteIniFile();
         }
 
         private List<ScreenResolution> GetResolutions(int minWidth, int minHeight, int maxWidth, int maxHeight)

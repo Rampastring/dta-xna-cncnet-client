@@ -2,12 +2,26 @@
 using Rampastring.Tools;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace DTAConfig
 {
+    struct DirectDrawWrapperConfigValue
+    {
+        public string Section;
+        public string Key;
+        public string Value;
+
+        public DirectDrawWrapperConfigValue(string section, string key, string value)
+        {
+            Section = section;
+            Key = key;
+            Value = value;
+        }
+    }
+
     /// <summary>
     /// A DirectDraw wrapper option.
     /// </summary>
@@ -74,6 +88,8 @@ namespace DTAConfig
         /// The filename of the configuration INI of the renderer in the game directory.
         /// </summary>
         public string ConfigFileName { get; private set; }
+
+        public List<DirectDrawWrapperConfigValue> ForcedConfigValues { get; private set; } = new List<DirectDrawWrapperConfigValue>();
 
         private string ddrawDLLPath;
         private string resConfigFileName;
@@ -146,6 +162,35 @@ namespace DTAConfig
             {
                 if (!File.Exists(ProgramConstants.GetBaseResourcePath() + file))
                     Logger.Log("DirectDrawWrapper: Additional file '" + file + "' for renderer '" + InternalName + "' does not exist!");
+            }
+
+            int configOptionIndex = 0;
+            while (true)
+            {
+                string keyName = "ForcedConfigValue" + configOptionIndex.ToString(CultureInfo.InvariantCulture);
+
+                if (section.KeyExists(keyName))
+                {
+                    string keyValue = section.GetStringValue(keyName, string.Empty);
+                    var valueSplit = keyValue.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (valueSplit.Length > 2)
+                    {
+                        // In case the value contains commas, join elements back together after first two
+                        var configKeyValue = string.Join(",", valueSplit.Skip(2));
+                        ForcedConfigValues.Add(new DirectDrawWrapperConfigValue(valueSplit[0], valueSplit[1], configKeyValue));
+                    }
+                    else
+                    {
+                        Logger.Log($"Incorrect forced config value for renderer {InternalName}: {keyValue}");
+                    }
+
+                    configOptionIndex++;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
 

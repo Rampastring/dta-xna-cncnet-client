@@ -903,7 +903,7 @@ namespace DTAClient.DXGUI.Generic
                 return;
 
             // Fade during 1 second
-            float step = SoundPlayer.Volume * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float step = MediaPlayer.Volume * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (MediaPlayer.Volume > step)
             {

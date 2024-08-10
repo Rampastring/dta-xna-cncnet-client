@@ -886,23 +886,40 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 int aiLevel = Conversions.IntFromString(parts[baseIndex + 7], -1);
 
                 if (side < 0 || side > SideCount + RandomSelectorCount)
+                {
+                    Logger.Log($"Invalid side value for player in LAN player options broadcast message: {side}");
                     return;
+                }
 
                 if (color < 0 || color > MPColors.Count)
+                {
+                    Logger.Log($"Invalid color value for player in LAN player options broadcast message: {color}");
                     return;
+                }
 
                 if (start < 0 || start > MAX_PLAYER_COUNT)
+                {
+                    Logger.Log($"Invalid starting location value for player in LAN player options broadcast message: {start}");
                     return;
+                }
 
                 if (team < 0 || team > 4)
+                {
+                    Logger.Log($"Invalid team value for player in LAN player options broadcast message: {team}");
                     return;
+                }
 
                 if (ipAddress == "127.0.0.1")
+                {
                     ipAddress = hostEndPoint.Address.ToString();
+                }
 
                 bool isAi = aiLevel > -1;
-                if (aiLevel > 2)
+                if (aiLevel > 4)
+                {
+                    Logger.Log($"Invalid AI level value for player in LAN player options broadcast message: {aiLevel}");
                     return;
+                }
 
                 PlayerInfo pInfo;
 

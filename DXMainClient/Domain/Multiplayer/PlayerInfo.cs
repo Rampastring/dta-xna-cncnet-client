@@ -47,7 +47,7 @@ namespace DTAClient.Domain.Multiplayer
         /// <summary>
         /// The difficulty level of an AI player for in-client purposes.
         /// Logical increasing scale, like in the vanilla Tiberian Sun UI.
-        /// 3 = Very Hard, 2 = Hard, 1 = Medium, 0 = Easy.
+        /// 4 = Ultimate, 3 = Brutal, 2 = Hard, 1 = Medium, 0 = Easy.
         /// </summary>
         public int AILevel { get; set; }
 

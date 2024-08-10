@@ -251,11 +251,6 @@ namespace DTAConfig
 
         private void SwitchToTab(int index)
         {
-            foreach (var panel in optionsPanels)
-            {
-                panel.Disable();
-            }
-
             tabControl.SelectedTab = index;
         }
 

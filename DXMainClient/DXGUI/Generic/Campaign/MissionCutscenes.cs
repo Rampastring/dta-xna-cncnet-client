@@ -1170,7 +1170,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/CR/CRC16/bg01.png", 3);
-                    storyDisplay.ConversationDisplay.ConversationText = "I will destroy you and have you hanged by the central square the capital.";
+                    storyDisplay.ConversationDisplay.ConversationText = "I will destroy you and have you hanged by the central square of the capital.";
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(2),
                 null,
@@ -8877,7 +8877,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "This scale of production of only possible if the enemy industry has access to more raw materials than previously thought.";
+                    storyDisplay.ConversationDisplay.ConversationText = "This scale of production is only possible if the enemy industry has access to more raw materials than previously thought.";
                     storyDisplay.AddSimpleStoryImage("Story/CR/CR07/victorybg02.png", 1);
                 },
                 null,

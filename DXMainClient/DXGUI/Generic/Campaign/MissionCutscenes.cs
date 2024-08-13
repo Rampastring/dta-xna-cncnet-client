@@ -1347,7 +1347,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(2004,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "These smuggling efforts sneak enough supplies across the border to keep the population fed and an to keep rebuilding efforts progressing, albeit slowly.";
+                        storyDisplay.ConversationDisplay.ConversationText = "These smuggling efforts sneak enough supplies across the border to keep the population fed and rebuilding efforts progressing, albeit slowly.";
                     },
                     null,
                     storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),

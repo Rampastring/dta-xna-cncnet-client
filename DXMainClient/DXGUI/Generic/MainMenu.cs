@@ -832,6 +832,8 @@ namespace DTAClient.DXGUI.Generic
         {
             innerPanel.GameLoadingWindow.ListSaves();
 
+            isMusicFading = false;
+
             // If music is disabled on menus, check if the main menu is the top-most
             // window of the top bar and only play music if it is
             // LAN has the top bar disabled, so to detect the LAN game lobby

@@ -96,6 +96,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             ConversationDisplay.ConversationText = string.Empty;
             ConversationDisplay.IsCentered = false;
             cutsceneStarted = false;
+            isFadingOutMusic = false;
 
             skipGraphicAlpha = InitialSkipGraphicAlpha;
             escPressMilliseconds = 0f;

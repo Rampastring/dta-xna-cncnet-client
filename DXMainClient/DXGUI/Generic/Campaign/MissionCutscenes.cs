@@ -1472,7 +1472,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "I am not sure how long-lasting this period of peace is going to be, especially as Nod appears to be losing the First Tiberium War.";
+                    storyDisplay.ConversationDisplay.ConversationText = "I am not sure how long-lasting this period of peace is going to be, especially as Nod appears to be losing the Tiberium War.";
                 },
                 null,
                 null,
@@ -1689,7 +1689,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "With war weariness among European population already at high levels due to the broader First Tiberium War, the idea of getting bogged down in another conflict is not popular.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With war weariness among European population already at high levels due to the broader Tiberium War, the idea of getting bogged down in another conflict is not popular.";
                     storyDisplay.AddSimpleStoryImage("Story/CR/CRC15/bg07.png", 7, 0f);
                 },
                 null,
@@ -9182,7 +9182,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "With GDI and Nod involvement escalating, the war is has evolved from a civil war into another theater of the larger war between GDI and Nod, which has been thought to be nearing its end.";
+                    storyDisplay.ConversationDisplay.ConversationText = "With GDI and Nod involvement escalating, the war has evolved from a civil war into another theater of the larger war between GDI and Nod, which has been thought to be nearing its end.";
                 },
                 null,
                 null,
@@ -9954,7 +9954,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Government stresses that should the nation fall to the Communists, all of Eastern Europe will be threatened by a Communist resurgence, and the West might might eventually face a new World War.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Government stresses that should the nation fall to the Communists, all of Eastern Europe will be threatened by a Communist resurgence, and the West might eventually face a new World War.";
                     storyDisplay.AddSimpleStoryImage("Story/CR/CR03/bg06.png", 6, 0f);
                 },
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/CR/CR03/bg07.png", 7, 0f),

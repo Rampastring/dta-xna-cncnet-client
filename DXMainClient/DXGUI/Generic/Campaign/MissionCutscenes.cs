@@ -970,7 +970,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new Phase(6,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Not like they have a reason to resist either, now that htey have such an excellent leader in charge.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Not like they have a reason to resist either, now that they have such an excellent leader in charge.";
                     },
                     null,
                     null,
@@ -3924,7 +3924,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     phases.Add(new Phase(29,
                         storyDisplay =>
                         {
-                            storyDisplay.ConversationDisplay.ConversationText = "You still lead the local detachment of GDI forces, but the have Communists distanced you from the country's affairs as much as they can.";
+                            storyDisplay.ConversationDisplay.ConversationText = "You still lead the local detachment of GDI forces, but the Communists have distanced you from the country's affairs as much as they can.";
                             storyDisplay.AddSimpleStoryImage("Story/CR/CRB17/victorybg13.png", 23);
                         },
                         null,
@@ -4229,7 +4229,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                             storyDisplay.ConversationDisplay.IsCentered = true;
                             storyDisplay.ConversationDisplay.TextColor = Color.White;
                             storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/crtitle_yellow.png", 26);
-                            storyDisplay.ConversationDisplay.ConversationText = "           ENDING III" + Environment.NewLine + "           Status Quo";
+                            storyDisplay.ConversationDisplay.ConversationText = " ENDING III" + Environment.NewLine + 
+                                                                                "Status Quo";
                         },
                         null,
                         storyDisplay =>
@@ -6931,7 +6932,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         storyDisplay.ConversationDisplay.IsCentered = true;
                         storyDisplay.ConversationDisplay.TextColor = Color.White;
                         storyDisplay.AddSimpleStoryImage("Story/CR/CRA14/endingtitle.png", 7);
-                        storyDisplay.ConversationDisplay.ConversationText = "  ENDING II" + Environment.NewLine + "Dismissed";
+                        storyDisplay.ConversationDisplay.ConversationText = "ENDING II" + Environment.NewLine + 
+                                                                            "Dismissed";
                     },
                     null,
                     storyDisplay =>
@@ -9932,7 +9934,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(9,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "New rumors claim Government decision-makers are disappointed with the scope fo GDI's assistance.";
+                    storyDisplay.ConversationDisplay.ConversationText = "New rumors claim Government decision-makers are disappointed with the scope of GDI's assistance.";
                 },
                 null,
                 null,

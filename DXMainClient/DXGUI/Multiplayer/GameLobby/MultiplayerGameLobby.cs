@@ -581,6 +581,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             string error = AddGameOptionPreset(presetName);
             if (!string.IsNullOrEmpty(error))
                 AddNotice(error);
+            else
+                AddNotice($"Preset {presetName} loaded.");
         }
 
         private void HandleGameOptionPresetLoadCommand(string presetName)

@@ -1990,6 +1990,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
 
             GameOptionPresets.Instance.AddPreset(preset);
+
             return null;
         }
 

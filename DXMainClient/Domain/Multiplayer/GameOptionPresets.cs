@@ -27,6 +27,9 @@ namespace DTAClient.Domain.Multiplayer
         /// </summary>
         public static string IsNameValid(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return "Game option preset name cannot be empty.";
+
             if (name.Contains('[') || name.Contains(']'))
                 return "Game option preset name cannot contain the [] characters.";
 

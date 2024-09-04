@@ -12925,7 +12925,43 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.ClearStoryImages()));
             }
 
+            AddPTTPCreditPhases(phases, Color.Red);
             return phases;
+        }
+
+        private void AddPTTPCreditPhases(List<Phase> phases, Color color)
+        {
+            int lastPhaseID = phases[phases.Count - 1].ID;
+
+            phases.Add(new Phase(lastPhaseID + 1,
+                storyDisplay =>
+                {
+                    TryPlaySong(tdmaptheme);
+                    storyDisplay.ConversationDisplay.ConversationText = "";
+
+                    const double rate = 60.0;
+
+                    var creditsStoryImage = new StoryImage(windowManager, 1);
+                    creditsStoryImage.Texture = AssetLoader.LoadTextureUncached("Story/PTTP/creditsp1.png");
+                    creditsStoryImage.Color = color;
+                    creditsStoryImage.ImageHeight.SnapToValue(creditsStoryImage.Texture.Height);
+                    creditsStoryImage.ImageY.Value = windowManager.RenderResolutionY;
+                    creditsStoryImage.ImageY.TargetValue = -creditsStoryImage.Texture.Height;
+                    creditsStoryImage.ImageY.Rate = rate;
+                    storyDisplay.AddStoryImage(creditsStoryImage);
+
+                    var creditsStoryImage2 = new StoryImage(windowManager, 2);
+                    creditsStoryImage2.Texture = AssetLoader.LoadTextureUncached("Story/PTTP/creditsp2.png");
+                    creditsStoryImage2.Color = color;
+                    creditsStoryImage2.ImageHeight.SnapToValue(creditsStoryImage2.Texture.Height);
+                    creditsStoryImage2.ImageY.Value = creditsStoryImage.ImageY.Value + creditsStoryImage.ImageHeight.Value;
+                    creditsStoryImage2.ImageY.TargetValue = 0;
+                    creditsStoryImage2.ImageY.Rate = rate;
+                    storyDisplay.AddStoryImage(creditsStoryImage2);
+                },
+                null,
+                storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),
+                storyDisplay => storyDisplay.ClearStoryImages()));
         }
 
         #endregion

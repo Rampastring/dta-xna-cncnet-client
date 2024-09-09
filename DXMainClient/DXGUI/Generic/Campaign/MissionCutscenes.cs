@@ -10472,7 +10472,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The latest victim: the Republic of Serunda, which has seen Nod forces cross the border only just last month.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The latest victim: the Republic of Serunda, which saw Nod forces cross the border only just last month.";
                     storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide3.png", 3);
                 },
                 null, null, null));
@@ -10504,7 +10504,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(6,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "GDI General Mark Jamison Sheppard has stated publicly that the decision was made \"to prevent civil disorder.\"";
+                    storyDisplay.ConversationDisplay.ConversationText = "GDI General Mark Jamison Sheppard has stated publicly that GDI has intervened in Serunda \"to prevent civil disorder.\"";
                     storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide5.png", 4);
                 },
                 null,
@@ -10525,7 +10525,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The quasi-anarchist Serundan Liberation Front, or SLF, fought a guerilla war against the government for decades.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The quasi-anarchist Serundan Liberation Front, or SLF, fought a guerrilla war against the government for decades.";
                     storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP1/slide7.png", 6);
                 },
                 null,
@@ -10997,7 +10997,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     TryPlaySong(secondhand);
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
-                
+
                     storyDisplay.ConversationDisplay.ConversationText = "<OPENING CONNECTION...>";
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide1.png", 1);
@@ -11085,7 +11085,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(8,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "The Serundan military quickly overthrew the civilian government, turning the new Republic of Serunda into an autocratic dictatorship and forcing the SLF back into a campaign of guerilla resistance.";
+                    storyDisplay.ConversationDisplay.ConversationText = "The Serundan military quickly overthrew the civilian government, turning the new Republic of Serunda into an autocratic dictatorship and forcing the SLF back into a campaign of guerrilla resistance.";
                 },
                 null,
                 storyDisplay => { storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f); country1.Play(); },
@@ -11849,7 +11849,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Decision on lesser matters is handed by smaller sub-councils, sometimes affiliated with military units, sometimes affiliated with towns or villages.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Decision on lesser matters is handled by smaller sub-councils, sometimes affiliated with military units, sometimes affiliated with towns or villages.";
                     storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP7/slide4.png", 3);
                 },
                 null,
@@ -12180,7 +12180,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
             phases.Add(new Phase(10,
-             storyDisplay =>
+                storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
@@ -12234,7 +12234,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.RemoveStoryImageById(1),
                     null,
                     null));
-      
+
                 phases.Add(new Phase(2,
                     storyDisplay =>
                     {
@@ -12924,7 +12924,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     },
                     storyDisplay => storyDisplay.ClearStoryImages()));
             }
-
             AddPTTPCreditPhases(phases, Color.Red);
             return phases;
         }

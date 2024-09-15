@@ -71,7 +71,7 @@ namespace DTAClient.DXGUI.Generic
 
         private TopBar topBar;
 
-        private XNAMessageBox firstRunMessageBox;
+        private XNAMessageBox activeMessageBox;
 
         private bool _updateInProgress;
         private bool UpdateInProgress
@@ -448,19 +448,34 @@ namespace DTAClient.DXGUI.Generic
         /// If it is, displays a dialog asking the user if they'd like
         /// to configure settings.
         /// </summary>
-        private void CheckIfFirstRun()
+        private void CheckIfFirstRunOrBeforeHotkeyConfig()
         {
             if (UserINISettings.Instance.IsFirstRun)
             {
                 UserINISettings.Instance.IsFirstRun.Value = false;
+                UserINISettings.Instance.NewSidebarHotkeysPromptShown.Value = true;
                 UserINISettings.Instance.SaveSettings();
 
-                firstRunMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Initial Installation",
+                activeMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Initial Installation",
                     string.Format("You have just installed {0}." + Environment.NewLine +
                     "It's highly recommended that you configure your settings before playing." +
                     Environment.NewLine + "Do you want to configure them now?", ClientConfiguration.Instance.LocalGame));
-                firstRunMessageBox.YesClickedAction = FirstRunMessageBox_YesClicked;
-                firstRunMessageBox.NoClickedAction = FirstRunMessageBox_NoClicked;
+                activeMessageBox.YesClickedAction = FirstRunMessageBox_YesClicked;
+                activeMessageBox.NoClickedAction = FirstRunMessageBox_NoClicked;
+            }
+            else if (!UserINISettings.Instance.NewSidebarHotkeysPromptShown)
+            {
+                UserINISettings.Instance.NewSidebarHotkeysPromptShown.Value = true;
+                UserINISettings.Instance.SaveSettings();
+
+                activeMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "New Hotkeys",
+                    $"This update of {ClientConfiguration.Instance.LocalGame} contains a new sidebar with tabs, similarly to later C&C games" + Environment.NewLine +
+                    "like Red Alert 2 and the C&C Remastered Collection. This new sidebar also comes with" + Environment.NewLine +
+                    "new hotkeys for selecting the sidebar tabs, which can conflict with your existing hotkeys." + Environment.NewLine + Environment.NewLine +
+                    "It is recommended that you configure your hotkeys related to the sidebar," + Environment.NewLine +
+                    "or alternatively, reset all keys to remove potential conflicts between hotkeys." + Environment.NewLine + Environment.NewLine +
+                    "Do you want to configure your hotkeys now?");
+                activeMessageBox.YesClickedAction = (msgBox) => optionsWindow.OpenHotkeyConfigurationWindow();
             }
 
             optionsWindow.PostInit();
@@ -586,7 +601,7 @@ namespace DTAClient.DXGUI.Generic
 
             CheckRequiredFiles();
             CheckForbiddenFiles();
-            CheckIfFirstRun();
+            CheckIfFirstRunOrBeforeHotkeyConfig();
             CheckIfViniferaDependenciesPresent();
         }
 
@@ -727,7 +742,7 @@ namespace DTAClient.DXGUI.Generic
             if (UpdateInProgress)
                 return;
 
-            if ((firstRunMessageBox != null && firstRunMessageBox.Visible) || optionsWindow.Enabled)
+            if ((activeMessageBox != null && activeMessageBox.Visible) || optionsWindow.Enabled)
             {
                 // If the custom components are out of date on the first run
                 // or the options window is already open, don't show the dialog

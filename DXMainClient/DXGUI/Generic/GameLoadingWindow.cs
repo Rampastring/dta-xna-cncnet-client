@@ -258,6 +258,26 @@ namespace DTAClient.DXGUI.Generic
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
+            if (sg.SessionInfo == null)
+            {
+                var dialog = XNAMessageBox.ShowYesNoDialog(WindowManager, "Warning",
+                    "Metadata not found for selected saved game. Completing a mission from" + Environment.NewLine +
+                    "this save file will not proceed a campaign forward." + Environment.NewLine + Environment.NewLine +
+                    "If this is a campaign save and you want to make progress in the campaign," + Environment.NewLine +
+                    "you will have to launch the mission again from the New Campaign menu." + Environment.NewLine + Environment.NewLine +
+                    "Do you still wish to load the game?");
+
+                dialog.YesClickedAction = _ => DoLaunch();
+
+                return;
+            }
+
+            DoLaunch();
+        }
+
+        private void DoLaunch()
+        {
+            SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
             Logger.Log("Loading saved game " + sg.FilePath);
 
             var gameSessionInfo = new GameSessionManager(sg.SessionInfo, WindowManager.AddCallback);

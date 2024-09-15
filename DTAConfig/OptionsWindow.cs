@@ -13,6 +13,8 @@ namespace DTAConfig
 {
     public class OptionsWindow : XNAWindow
     {
+        const int GameOptionsPanelIndex = 2;
+
         public OptionsWindow(WindowManager windowManager, GameCollection gameCollection, XNAControl topBar) : base(windowManager)
         {
             this.gameCollection = gameCollection;
@@ -237,6 +239,13 @@ namespace DTAConfig
             Enable();
         }
 
+        public void OpenHotkeyConfigurationWindow()
+        {
+            Open();
+            SwitchToGamePanel();
+            ((GameOptionsPanel)optionsPanels[GameOptionsPanelIndex]).OpenHotkeyConfigurationWindow();
+        }
+
         public void ToggleMainMenuOnlyOptions(bool enable)
         {
             foreach (var panel in optionsPanels)
@@ -246,6 +255,8 @@ namespace DTAConfig
         }
 
         public void SwitchToAudioPanel() => SwitchToTab(1);
+
+        public void SwitchToGamePanel() => SwitchToTab(GameOptionsPanelIndex);
 
         public void SwitchToCustomComponentsPanel() => SwitchToTab(5);
 

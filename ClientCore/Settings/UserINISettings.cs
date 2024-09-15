@@ -72,6 +72,7 @@ namespace ClientCore
             FilterBandBoxSelection = new BoolSetting(iniFile, OPTIONS, "FilterBandBoxSelection", true);
             ShowHiddenObjects = new BoolSetting(iniFile, OPTIONS, "ShowHidden", true);
             MoveToUndeploy = new BoolSetting(iniFile, OPTIONS, "MoveToUndeploy", true);
+            SortDefensesAsLast = new BoolSetting(iniFile, OPTIONS, nameof(SortDefensesAsLast), false);
             TextBackgroundColor = new IntSetting(iniFile, OPTIONS, "TextBackgroundColor", 0);
             DragDistance = new IntSetting(iniFile, OPTIONS, "DragDistance", 4);
             DoubleTapInterval = new IntSetting(iniFile, OPTIONS, "DoubleTapInterval", 30);
@@ -98,6 +99,7 @@ namespace ClientCore
 
             PrivacyPolicyAccepted = new BoolSetting(iniFile, OPTIONS, "PrivacyPolicyAccepted", false);
             IsFirstRun = new BoolSetting(iniFile, OPTIONS, "IsFirstRun", true);
+            NewSidebarHotkeysPromptShown = new BoolSetting(iniFile, OPTIONS, nameof(NewSidebarHotkeysPromptShown), false);
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             ClientDifficulty = new IntSetting(iniFile, OPTIONS, "ClientDifficulty", 1);
@@ -156,6 +158,7 @@ namespace ClientCore
         public BoolSetting FilterBandBoxSelection { get; private set; }
         public BoolSetting ShowHiddenObjects { get; private set; }
         public BoolSetting MoveToUndeploy { get; private set; }
+        public BoolSetting SortDefensesAsLast { get; private set; }
         public IntSetting TextBackgroundColor { get; private set; }
         public IntSetting DragDistance { get; private set; }
         public IntSetting DoubleTapInterval { get; private set; }
@@ -194,6 +197,7 @@ namespace ClientCore
 
         public BoolSetting PrivacyPolicyAccepted { get; private set; }
         public BoolSetting IsFirstRun { get; private set; }
+        public BoolSetting NewSidebarHotkeysPromptShown { get; private set; }
         public BoolSetting CustomComponentsDenied { get; private set; }
 
         public IntSetting Difficulty { get; private set; }

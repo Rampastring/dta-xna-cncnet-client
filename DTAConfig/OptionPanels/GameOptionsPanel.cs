@@ -30,6 +30,7 @@ namespace DTAConfig.OptionPanels
 
         private XNAClientCheckBox chkAltToUndeploy;
         private XNAClientCheckBox chkBlackChatBackground;
+        private XNAClientCheckBox chkSortDefensesAsLast;
 
         private XNAControl topBar;
 
@@ -98,32 +99,39 @@ namespace DTAConfig.OptionPanels
             chkFilterBandBoxSelection.Name = "chkFilterBandBoxSelection";
             chkFilterBandBoxSelection.Text = "Filter Band-Box Selection";
             chkFilterBandBoxSelection.ClientRectangle = new Rectangle(
-                lblScrollRate.X,
-                chkTooltips.Bottom + CheckBoxSpacing, 0, 0);
+                chkScrollCoasting.Right + 50,
+                chkScrollCoasting.Y, 0, 0);
             AddChild(chkFilterBandBoxSelection);
 
             chkAltToUndeploy = new XNAClientCheckBox(WindowManager);
             chkAltToUndeploy.Name = "chkAltToUndeploy";
             chkAltToUndeploy.ClientRectangle = new Rectangle(
-                chkScrollCoasting.X,
+                chkFilterBandBoxSelection.X,
                 chkFilterBandBoxSelection.Bottom + CheckBoxSpacing, 0, 0);
-            chkAltToUndeploy.Text = "Undeploy units by holding Alt key instead of a regular move command";
+            chkAltToUndeploy.Text = "Hold Alt to Undeploy";
             AddChild(chkAltToUndeploy);
 
             chkBlackChatBackground = new XNAClientCheckBox(WindowManager);
             chkBlackChatBackground.Name = "chkBlackChatBackground";
             chkBlackChatBackground.ClientRectangle = new Rectangle(
-                chkScrollCoasting.X,
+                chkFilterBandBoxSelection.X,
                 chkAltToUndeploy.Bottom + CheckBoxSpacing, 0, 0);
-            chkBlackChatBackground.Text = "Use black background for in-game chat messages";
+            chkBlackChatBackground.Text = "Dark Chat Background";
             AddChild(chkBlackChatBackground);
+
+            chkSortDefensesAsLast = new XNAClientCheckBox(WindowManager);
+            chkSortDefensesAsLast.Name = nameof(chkSortDefensesAsLast);
+            chkSortDefensesAsLast.X = chkFilterBandBoxSelection.Right + 50;
+            chkSortDefensesAsLast.Y = chkScrollCoasting.Y;
+            chkSortDefensesAsLast.Text = "Sort Defenses as Last";
+            AddChild(chkSortDefensesAsLast);
 
             var lblPlayerName = new XNALabel(WindowManager);
             lblPlayerName.Name = "lblPlayerName";
             lblPlayerName.Text = "Player Name*:";
             lblPlayerName.ClientRectangle = new Rectangle(
                 lblScrollRate.X,
-                chkBlackChatBackground.Bottom + 20, 0, 0);
+                chkBlackChatBackground.Bottom + 50, 0, 0);
 
             tbPlayerName = new XNATextBox(WindowManager);
             tbPlayerName.Name = "tbPlayerName";
@@ -180,6 +188,12 @@ namespace DTAConfig.OptionPanels
             lblScrollRateValue.Text = trbScrollRate.Value.ToString();
         }
 
+        public void OpenHotkeyConfigurationWindow()
+        {
+            BtnConfigureHotkeys_LeftClick(this, EventArgs.Empty);
+            hotkeyConfigWindow.OpenSidebarHotkeys();
+        }
+
         public override void Load()
         {
             base.Load();
@@ -197,6 +211,7 @@ namespace DTAConfig.OptionPanels
             chkTooltips.Checked = IniSettings.Tooltips;
             chkFilterBandBoxSelection.Checked = IniSettings.FilterBandBoxSelection;
             chkAltToUndeploy.Checked = !IniSettings.MoveToUndeploy;
+            chkSortDefensesAsLast.Checked = IniSettings.SortDefensesAsLast;
             chkBlackChatBackground.Checked = IniSettings.TextBackgroundColor == TEXT_BACKGROUND_COLOR_BLACK;
             tbPlayerName.Text = UserINISettings.Instance.PlayerName;
         }
@@ -211,8 +226,9 @@ namespace DTAConfig.OptionPanels
             IniSettings.TargetLines.Value = chkTargetLines.Checked;
             IniSettings.Tooltips.Value = chkTooltips.Checked;
             IniSettings.FilterBandBoxSelection.Value = chkFilterBandBoxSelection.Checked;
-
             IniSettings.MoveToUndeploy.Value = !chkAltToUndeploy.Checked;
+            IniSettings.SortDefensesAsLast.Value = chkSortDefensesAsLast.Checked;
+
             if (chkBlackChatBackground.Checked)
                 IniSettings.TextBackgroundColor.Value = TEXT_BACKGROUND_COLOR_BLACK;
             else

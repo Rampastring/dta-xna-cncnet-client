@@ -224,6 +224,13 @@ namespace DTAConfig
             EnabledChanged += HotkeyConfigurationWindow_EnabledChanged;
         }
 
+        public void OpenSidebarHotkeys()
+        {
+            ddCategory.SelectedIndex = ddCategory.Items.FindIndex(ddi => ddi.Text == "Sidebar");
+            if (ddCategory.SelectedIndex == -1)
+                ddCategory.SelectedIndex = 0;
+        }
+
         /// <summary>
         /// Reads game commands from an INI file.
         /// </summary>
@@ -272,6 +279,8 @@ namespace DTAConfig
             }
 
             RefreshHotkeyList();
+
+            XNAMessageBox.Show(WindowManager, "Done", "All keys have been successfully reseted to their defaults.");
         }
 
         private void HotkeyConfigurationWindow_EnabledChanged(object sender, EventArgs e)

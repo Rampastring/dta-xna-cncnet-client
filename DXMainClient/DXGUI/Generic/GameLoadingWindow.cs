@@ -175,7 +175,7 @@ namespace DTAClient.DXGUI.Generic
 
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
 
-            if (sg.SessionInfo == null)
+            if (sg.SessionInfo == null || sg.SessionInfo.SessionType == GameSessionType.UNKNOWN)
             {
                 ClearSaveInformation(string.Empty);
                 lblSessionTypeValue.Text = "Unknown";
@@ -258,7 +258,7 @@ namespace DTAClient.DXGUI.Generic
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
-            if (sg.SessionInfo == null)
+            if (sg.SessionInfo.SessionType == GameSessionType.UNKNOWN)
             {
                 var dialog = XNAMessageBox.ShowYesNoDialog(WindowManager, "Warning",
                     "Metadata not found for selected saved game. Completing a mission from" + Environment.NewLine +

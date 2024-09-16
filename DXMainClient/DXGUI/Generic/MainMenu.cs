@@ -377,7 +377,7 @@ namespace DTAClient.DXGUI.Generic
         /// </summary>
         private void SettingsSaved(object sender, EventArgs e)
         {
-            if (isMediaPlayerAvailable)
+            if (isMediaPlayerAvailable && !GameProcessLogic.IsGameRunning)
             {
                 if (MediaPlayer.State == MediaState.Playing)
                 {
@@ -916,11 +916,11 @@ namespace DTAClient.DXGUI.Generic
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         private void FadeMusic(GameTime gameTime)
         {
-            if (!isMediaPlayerAvailable || !isMusicFading || themeSong == null)
+            if (!isMediaPlayerAvailable || !isMusicFading || themeSong == null || innerPanel.CampaignSelector.IsCutsceneDisplayed)
                 return;
 
             // Fade during 1 second
-            float step = MediaPlayer.Volume * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float step = Math.Max(0.1f, (float)UserINISettings.Instance.ScoreVolume.Value) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (MediaPlayer.Volume > step)
             {

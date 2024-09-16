@@ -27,6 +27,8 @@ namespace ClientGUI
 
         public static bool INIPreprocessingFailed = false;
 
+        public static bool IsGameRunning = false;
+
         /// <summary>
         /// Starts the main game process.
         /// </summary>
@@ -152,6 +154,7 @@ namespace ClientGUI
                     DtaProcess.ProcessorAffinity = (IntPtr)2;
             }
 
+            IsGameRunning = true;
             GameProcessStarted?.Invoke();
 
             Logger.Log("Waiting for qres.dat or " + gameExecutableName + " to exit.");
@@ -160,6 +163,7 @@ namespace ClientGUI
         static void Process_Exited(object sender, EventArgs e)
         {
             Logger.Log("GameProcessLogic: Process exited.");
+            IsGameRunning = false;
             Process proc = (Process)sender;
             proc.Exited -= Process_Exited;
             proc.Dispose();

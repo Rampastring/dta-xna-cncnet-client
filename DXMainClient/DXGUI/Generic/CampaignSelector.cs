@@ -217,6 +217,7 @@ namespace DTAClient.DXGUI.Generic
         private Mission missionToLaunch;
         private bool isCheater;
         private Dictionary<int, bool> globalFlagInfo;
+        private Difficulty bonusDifficulty;
         private string difficultyName;
 
         private bool hasMissionBeenSelected = false;
@@ -526,6 +527,8 @@ namespace DTAClient.DXGUI.Generic
                 storyDisplay.Begin(e.Mission.EndCutscene, true);
             }
         }
+
+        public bool IsCutsceneDisplayed => storyDisplay.Visible;
 
         private void PostDebriefing_RefreshMusicState(object sender, EventArgs e)
         {
@@ -963,15 +966,9 @@ namespace DTAClient.DXGUI.Generic
                 }
             }
 
-            Difficulty bonusDifficulty = null;
+            bonusDifficulty = null;
             if (missionToLaunch.AllowBonuses && bonusSelectionWindow.SelectedBonus != null)
                 bonusDifficulty = bonusSelectionWindow.SelectedBonus.Difficulty;
-
-            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, TrackbarValueToDiffRank(), globalFlagInfo, bonusDifficulty);
-            difficultyName = missionToLaunch.GetNameForDifficultyRankStylized(TrackbarValueToDiffRank());
-
-            UserINISettings.Instance.ClientDifficulty.Value = trbDifficultySelector.Value;
-            UserINISettings.Instance.SaveSettings();
 
             ((MainMenuDarkeningPanel)Parent).Hide();
 
@@ -1013,6 +1010,12 @@ namespace DTAClient.DXGUI.Generic
 
         private void LaunchMission_PostStoryDisplay(object sender, EventArgs e)
         {
+            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, TrackbarValueToDiffRank(), globalFlagInfo, bonusDifficulty);
+            difficultyName = missionToLaunch.GetNameForDifficultyRankStylized(TrackbarValueToDiffRank());
+
+            UserINISettings.Instance.ClientDifficulty.Value = trbDifficultySelector.Value;
+            UserINISettings.Instance.SaveSettings();
+
             discordHandler?.UpdatePresence(missionToLaunch.GUIName, difficultyName, missionToLaunch.IconPath, true);
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 

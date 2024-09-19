@@ -381,20 +381,29 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnDelete_LeftClick(object sender, EventArgs e)
         {
-            SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
-            var msgBox = new XNAMessageBox(WindowManager, "Delete Confirmation",
-                    "The following saved game will be deleted permanently:" + Environment.NewLine +
-                    Environment.NewLine +
-                    "Filename: " + sg.FileName + Environment.NewLine +
-                    "Saved game name: " + Renderer.GetSafeString(sg.GUIName, lbSaveGameList.FontIndex) + Environment.NewLine +
-                    "Date and time: " + sg.LastModified.ToString() + Environment.NewLine +
-                    Environment.NewLine +
-                    "Are you sure you want to proceed?", XNAMessageBoxButtons.YesNo);
-            msgBox.Show();
-            msgBox.YesClickedAction = DeleteMsgBox_YesClicked;
+            if (Keyboard.IsShiftHeldDown())
+            {
+                DeleteSave();
+            }
+            else
+            {
+                SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
+                var msgBox = new XNAMessageBox(WindowManager, "Delete Confirmation",
+                        "The following saved game will be deleted permanently:" + Environment.NewLine +
+                        Environment.NewLine +
+                        "Filename: " + sg.FileName + Environment.NewLine +
+                        "Saved game name: " + Renderer.GetSafeString(sg.GUIName, lbSaveGameList.FontIndex) + Environment.NewLine +
+                        "Date and time: " + sg.LastModified.ToString() + Environment.NewLine +
+                        Environment.NewLine +
+                        "Are you sure you want to proceed?" + Environment.NewLine + Environment.NewLine +
+                        "(You can hold Shift while clicking Delete to skip this confirmation dialog)."
+                        , XNAMessageBoxButtons.YesNo);
+                msgBox.Show();
+                msgBox.YesClickedAction = _ => DeleteSave();
+            }
         }
 
-        private void DeleteMsgBox_YesClicked(XNAMessageBox obj)
+        private void DeleteSave()
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
 
@@ -404,7 +413,13 @@ namespace DTAClient.DXGUI.Generic
             if (Directory.GetFiles(Path.GetDirectoryName(sg.FilePath)).Length == 0)
                 Directory.Delete(Path.GetDirectoryName(sg.FilePath));
 
+            int selectedIndex = lbSaveGameList.SelectedIndex;
+
             ListSaves();
+
+            // Select the next save in the list
+            if (lbSaveGameList.ItemCount > selectedIndex)
+                lbSaveGameList.SelectedIndex = selectedIndex;
         }
         
         private void GameProcessExited_Callback()

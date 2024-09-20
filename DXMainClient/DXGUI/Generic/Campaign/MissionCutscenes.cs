@@ -5949,7 +5949,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(5,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Not supporting either side would lead to a Communist victory and, in practice, give Nod control of the country, which is not a no-go for GDI.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Not supporting either side would lead to a Communist victory and, in practice, give Nod control of the country, which is a no-go for GDI.";
                     storyDisplay.AddSimpleStoryImage("Story/CR/CRB11/bg04.png", 3);
                 },
                 null,
@@ -11041,7 +11041,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(4,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "At war's end, despite the collapse of the USSR, European powers found little relief in their beleaguered colonies, and abandoned them either by choice or at the head of a gun.";
+                    storyDisplay.ConversationDisplay.ConversationText = "At war's end, despite the collapse of the USSR, European powers found little relief in their beleaguered colonies, and abandoned them either by choice or at the end of a gun.";
                     storyDisplay.AddSimpleStoryImage("Story/PTTP/PTTP4/slide4.png", 3);
                 },
                 null,

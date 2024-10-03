@@ -51,6 +51,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const int RANK_EASY = 1;
         private const int RANK_MEDIUM = 2;
         private const int RANK_HARD = 3;
+        private const int RANK_BRUTAL = 4;
 
         /// <summary>
         /// Creates a new instance of the game lobby base.
@@ -318,7 +319,17 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ChangeMap(GameMode, Map);
         }
 
-        private int GetRankIndexForCoopDifficultyLevel(int coopDifficultyLevel) => Math.Abs(2 - coopDifficultyLevel) + 1;
+        private int GetRankIndexForCoopDifficultyLevel(int coopDifficultyLevel) 
+        {
+            switch (coopDifficultyLevel)
+            {
+                case 0: return RANK_HARD;
+                case 1: return RANK_MEDIUM;
+                case 2: return RANK_EASY;
+                case 3: return RANK_BRUTAL;
+                default: return RANK_NONE;
+            }
+        } 
 
         private void ListMaps()
         {

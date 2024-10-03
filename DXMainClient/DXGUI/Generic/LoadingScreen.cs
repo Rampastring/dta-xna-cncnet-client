@@ -11,6 +11,7 @@ using DTAClient.DXGUI.Multiplayer.GameLobby;
 using DTAClient.Online;
 using DTAConfig;
 using Microsoft.Xna.Framework;
+using Rampastring.Tools;
 using Rampastring.XNAUI;
 using System.Threading.Tasks;
 using Updater;
@@ -183,7 +184,19 @@ namespace DTAClient.DXGUI.Generic
             if (updaterInitTask == null || updaterInitTask.Status == TaskStatus.RanToCompletion)
             {
                 if (mapLoadTask.Status == TaskStatus.RanToCompletion)
+                {
                     Finish();
+                }
+                else if (mapLoadTask.IsFaulted)
+                {
+                    if (mapLoadTask.Exception.InnerException != null)
+                    {
+                        Logger.Log("MapLoadTask failed, error: " + mapLoadTask.Exception.InnerException.Message);
+                        Logger.Log("Stacktrace: " + mapLoadTask.Exception.InnerException.StackTrace);
+                    }
+
+                    throw new ClientConfigurationException("Loading multiplayer map list failed! Check client log for details.");
+                }
             }
         }
 

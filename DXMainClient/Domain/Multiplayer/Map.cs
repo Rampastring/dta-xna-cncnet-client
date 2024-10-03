@@ -260,6 +260,12 @@ namespace DTAClient.Domain.Multiplayer
 
             var section = iniFile.GetSection(BaseFilePath);
 
+            if (section == null)
+            {
+                Logger.Log(nameof(Map) + "." + nameof(PreParse) + ": Unable to find section for map " + BaseFilePath);
+                return false;
+            }
+
             Name = section.GetStringValue("Description", "Unnamed map");
             Author = section.GetStringValue("Author", "Unknown author");
             GameModes = section.GetStringValue("GameModes", "Default").Split(',');

@@ -577,6 +577,11 @@ namespace DTAConfig
         /// </summary>
         struct Hotkey
         {
+            // https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+            private const int VK_SHIFT_ANY = 16;
+            private const int VK_CTRL_ANY = 17;
+            private const int VK_ALT_ANY = 18;
+
             /// <summary>
             /// Creates a new hotkey by decoding a Tiberian Sun / Red Alert 2
             /// encoded key value.
@@ -630,7 +635,15 @@ namespace DTAConfig
                     str += "ALT+";
 
                 if (Key == Keys.None)
+                {
+                    if (str.Length > 0)
+                    {
+                        // We are solely using a modifier key
+                        return GetKeyDisplayString((Keys)GetVirtualKeyFromModifier());
+                    }
+
                     return str;
+                }
 
                 return str + GetKeyDisplayString(Key);
             }
@@ -640,7 +653,30 @@ namespace DTAConfig
             /// </summary>
             public int GetTSEncoded()
             {
+                if (Key == Keys.None && (int)Modifier > 0)
+                {
+                    // This prevents using multiple modifier keys together without a non-modifier key,
+                    // but as far as I can tell, that's impossible at the Windows USER component level when these
+                    // "either side" modifier keys are used
+                    return GetVirtualKeyFromModifier();
+                }
+
                 return ((int)Modifier << 8) + (int)Key;
+            }
+
+            private int GetVirtualKeyFromModifier()
+            {
+                if (Modifier == KeyModifiers.None)
+                    return 0;
+
+                if (Modifier.HasFlag(KeyModifiers.Shift))
+                    return VK_SHIFT_ANY;
+                else if (Modifier.HasFlag(KeyModifiers.Ctrl))
+                    return VK_CTRL_ANY;
+                else if (Modifier.HasFlag(KeyModifiers.Alt))
+                    return VK_ALT_ANY;
+
+                return 0;
             }
 
             public override bool Equals(object obj)
@@ -688,6 +724,12 @@ namespace DTAConfig
                         return "8";
                     case Keys.D9:
                         return "9";
+                    case (Keys)VK_SHIFT_ANY:
+                        return "SHIFT";
+                    case (Keys)VK_CTRL_ANY:
+                        return "CTRL";
+                    case (Keys)VK_ALT_ANY:
+                        return "ALT";
                     default:
                         return key.ToString();
                 }

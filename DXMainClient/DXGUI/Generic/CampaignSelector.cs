@@ -779,7 +779,7 @@ namespace DTAClient.DXGUI.Generic
                     globalVariableValues[i].Enable();
                 }
 
-                int preconditionsHeaderY = mission.UsedGlobalVariables.Length >= MAX_GLOBAL_COUNT ? globalVariableNames[0].Y :
+                int preconditionsHeaderY = mission.UsedGlobalVariables.Length > MAX_GLOBAL_COUNT ? globalVariableNames[0].Y :
                     globalVariableNames[mission.UsedGlobalVariables.Length - 1].Y;
                 preconditionsHeaderY -= UIDesignConstants.CONTROL_VERTICAL_MARGIN * 4;
                 lblPreconditionsHeader.Y = preconditionsHeaderY;

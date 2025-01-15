@@ -1019,7 +1019,7 @@ namespace DTAClient.DXGUI.Generic
             discordHandler?.UpdatePresence(missionToLaunch.GUIName, difficultyName, missionToLaunch.IconPath, true);
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
-            GameProcessLogic.StartGameProcess(new GameSessionManager(
+            var gameSessionManager = new GameSessionManager(
                 new GameSessionInfo(GameSessionType.SINGLEPLAYER,
                 DateTime.Now.Ticks,
                 missionToLaunch.InternalName,
@@ -1027,7 +1027,10 @@ namespace DTAClient.DXGUI.Generic
                 TrackbarValueToDiffRank(),
                 globalFlagInfo,
                 isCheater),
-                WindowManager.AddCallback));
+                WindowManager.AddCallback);
+
+            gameSessionManager.StartSession(false);
+            GameProcessLogic.StartGameProcess(gameSessionManager);
 
             storyDisplay.Finished -= LaunchMission_PostStoryDisplay;
         }

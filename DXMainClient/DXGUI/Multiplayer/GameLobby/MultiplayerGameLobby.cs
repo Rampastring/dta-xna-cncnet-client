@@ -100,10 +100,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected List<ChatBoxCommand> chatBoxCommands;
 
-        private FileSystemWatcher fsw;
-
-        private bool gameSaved = false;
-
         protected MapLoader MapLoader;
 
         /// <summary>
@@ -172,15 +168,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             sndGetReadySound = new EnhancedSoundEffect("getready.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyGetReadyCooldown);
             sndReturnSound = new EnhancedSoundEffect("return.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyReturnCooldown);
 
-            if (MultiplayerSaveGameManager.AreSavedGamesAvailable())
+            if (!MultiplayerSaveGameManager.AreSavedGamesAvailable())
             {
-                fsw = new FileSystemWatcher(ProgramConstants.GamePath + "Saved Games", "*.NET");
-                fsw.Created += fsw_Created;
-                fsw.Changed += fsw_Created;
-                fsw.EnableRaisingEvents = false;
-            }
-            else
                 Logger.Log("MultiplayerGameLobby: Saved games are not available!");
+            }
         }
 
         /// <summary>
@@ -193,46 +184,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             LoadDefaultMap();
         }
 
-        private void fsw_Created(object sender, FileSystemEventArgs e)
-        {
-            AddCallback(new Action<FileSystemEventArgs>(FSWEvent), e);
-        }
-
-        private void FSWEvent(FileSystemEventArgs e)
-        {
-            Logger.Log("FSW Event: " + e.FullPath);
-
-            if (Path.GetFileName(e.FullPath) == "SAVEGAME.NET")
-            {
-                if (!gameSaved)
-                {
-                    bool success = MultiplayerSaveGameManager.InitSavedGames();
-
-                    if (!success)
-                        return;
-                }
-
-                gameSaved = true;
-
-                MultiplayerSaveGameManager.RenameSavedGame();
-            }
-        }
-
-        protected override void StartGame()
-        {
-            if (fsw != null)
-                fsw.EnableRaisingEvents = true;
-
-            base.StartGame();
-        }
-
         protected override void GameProcessExited()
         {
-            gameSaved = false;
-
-            if (fsw != null)
-                fsw.EnableRaisingEvents = false;
-
             base.GameProcessExited();
 
             if (IsHost)

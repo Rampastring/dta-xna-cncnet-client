@@ -175,7 +175,29 @@ namespace DTAClient.Domain.Singleplayer
                 return;
             }
 
-            IniFile spScoreIni = new IniFile();
+            // Read existing file as a base
+            string filePath = ProgramConstants.GamePath + SP_SCORE_FILE;
+
+            IniFile spScoreIni;
+            string data = File.ReadAllText(filePath, Encoding.UTF8);
+
+            if (data.Length > 0 && data.StartsWith("["))
+            {
+                // We're dealing with raw INI data (before obfuscation)
+                spScoreIni = new IniFile(filePath);
+            }
+            else
+            {
+                // We're dealing with base64-encoded data (unless it's just corrupted, but let's hope it's not)
+
+                byte[] decoded = Convert.FromBase64String(data);
+
+                using (var memoryStream = new MemoryStream(decoded))
+                {
+                    spScoreIni = new IniFile(memoryStream, Encoding.UTF8);
+                }
+            }
+
             spScoreIni.Encoding = Encoding.UTF8;
 
             foreach (var mission in missions)

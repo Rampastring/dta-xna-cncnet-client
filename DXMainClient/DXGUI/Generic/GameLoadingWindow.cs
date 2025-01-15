@@ -281,7 +281,7 @@ namespace DTAClient.DXGUI.Generic
             Logger.Log("Loading saved game " + sg.FilePath);
 
             var gameSessionInfo = new GameSessionManager(sg.SessionInfo, WindowManager.AddCallback);
-            gameSessionInfo.StartSession(); // Starting the session copies the saved games for this session to the main saved games directory
+            gameSessionInfo.StartSession(true); // Starting the session copies the saved games for this session to the main saved games directory
 
             bool writeNewSpawnIni = true;
 

@@ -317,7 +317,7 @@ namespace DTAClient.DXGUI.Multiplayer
             }
 
             var gameSessionInfo = new GameSessionManager(new GameSessionInfo(GameSessionType.MULTIPLAYER, meta.UniqueId), WindowManager.AddCallback);
-            gameSessionInfo.StartSession();
+            gameSessionInfo.StartSession(true);
             GameProcessLogic.GameProcessExited += SharedUILogic_GameProcessExited;
             GameProcessLogic.StartGameProcess(gameSessionInfo);
 

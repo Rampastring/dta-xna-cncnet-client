@@ -142,9 +142,11 @@ namespace DTAClient.DXGUI
             {
                 XNAMessageBox.Show(WindowManager, "INI preprocessing wasn't completed",
                     "INI preprocessing failed before launching the previous game session." + Environment.NewLine + Environment.NewLine +
-                    "If everything worked properly, you can ignore this message. If you had" +
-                    "technical issues with the game (crashes, desyncs, etc.), this might be" +
-                    "the reason. Please contact DTA authors for support if the problem continues.");
+                    "If everything worked properly, you can ignore this message. If you had" + Environment.NewLine +
+                    "technical issues with the game (crashes, desyncs, etc.), this might be" + Environment.NewLine +
+                    "the reason." + Environment.NewLine + Environment.NewLine +
+                    "Please try launching the game again. If the problem persists," + Environment.NewLine +
+                    "please contact the DTA authors for support.");
             }
         }
 

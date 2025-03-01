@@ -175,30 +175,42 @@ namespace DTAClient.Domain.Singleplayer
                 return;
             }
 
-            // Read existing file as a base
             string filePath = ProgramConstants.GamePath + SP_SCORE_FILE;
 
             IniFile spScoreIni;
-            string data = File.ReadAllText(filePath, Encoding.UTF8);
 
-            if (data.Length > 0 && data.StartsWith("["))
+            if (File.Exists(filePath))
             {
-                // We're dealing with raw INI data (before obfuscation)
-                spScoreIni = new IniFile(filePath);
+                // Read existing file as a base
+
+                string data = File.ReadAllText(filePath, Encoding.UTF8);
+
+                if (data.Length > 0 && data.StartsWith("["))
+                {
+                    // We're dealing with raw INI data (before obfuscation)
+                    Logger.Log("Previous score file found - parsing it as raw INI.");
+                    spScoreIni = new IniFile(filePath, Encoding.UTF8);
+                }
+                else
+                {
+                    // We're dealing with base64-encoded data (unless it's just corrupted, but let's hope it's not)
+                    Logger.Log("Previous score file found - parsing it as obfuscated data.");
+
+                    byte[] decoded = Convert.FromBase64String(data);
+
+                    using (var memoryStream = new MemoryStream(decoded))
+                    {
+                        spScoreIni = new IniFile(memoryStream, Encoding.UTF8);
+                    }
+                }
             }
             else
             {
-                // We're dealing with base64-encoded data (unless it's just corrupted, but let's hope it's not)
+                Logger.Log("No previous score file exists. Creating new one.");
 
-                byte[] decoded = Convert.FromBase64String(data);
-
-                using (var memoryStream = new MemoryStream(decoded))
-                {
-                    spScoreIni = new IniFile(memoryStream, Encoding.UTF8);
-                }
+                // No score file exists - create new one
+                spScoreIni = new IniFile(filePath, Encoding.UTF8);
             }
-
-            spScoreIni.Encoding = Encoding.UTF8;
 
             foreach (var mission in missions)
             {
@@ -233,7 +245,11 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 
+            Logger.Log("Mission data assigned - writing score file, step #1.");
+
             spScoreIni.WriteIniFile(ProgramConstants.GamePath + SP_SCORE_FILE);
+
+            Logger.Log("Mission data assigned - writing score file, step #2.");
 
             string fullINIText = File.ReadAllText(ProgramConstants.GamePath + SP_SCORE_FILE, spScoreIni.Encoding);
             byte[] bytes = spScoreIni.Encoding.GetBytes(fullINIText);

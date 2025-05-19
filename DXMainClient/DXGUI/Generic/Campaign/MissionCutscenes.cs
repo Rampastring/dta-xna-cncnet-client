@@ -6227,7 +6227,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(2,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "You may well have the support your need, considering your reputation as a skilled commander.";
+                    storyDisplay.ConversationDisplay.ConversationText = "You may well have the support you need, considering your reputation as a skilled commander.";
                 },
                 null,
                 storyDisplay => HideAllStoryImagesWithSound(storyDisplay, country1),

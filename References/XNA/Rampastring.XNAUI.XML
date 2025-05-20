@@ -679,6 +679,11 @@
             The color of the text box background.
             </summary>
         </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.SelectionColor">
+            <summary>
+            The color of the selection rectangle drawn behind selected text.
+            </summary>
+        </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.FontIndex">
             <summary>
             The index of the spritefont that this textbox uses.
@@ -699,6 +704,31 @@
             The input character index inside the textbox text.
             </summary>
         </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.SelectionStartPosition">
+            <summary>
+            Start position of current text selection. -1 for none.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.SelectionEndPosition">
+            <summary>
+            End position of current text selection. -1 for none.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.SelectionLength">
+            <summary>
+            Calculates and returns the length of the currently selected piece of text.
+            </summary>
+        </member>
+        <member name="M:Rampastring.XNAUI.XNAControls.XNATextBox.IsValidSelection">
+            <summary>
+            Checks whether the current text selection is valid.
+            </summary>
+        </member>
+        <member name="M:Rampastring.XNAUI.XNAControls.XNATextBox.UnselectText">
+            <summary>
+            Unselects current text selection.
+            </summary>
+        </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.TextStartPosition">
             <summary>
             The start character index of the visible part of the text string.
@@ -707,6 +737,11 @@
         <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.TextEndPosition">
             <summary>
             The end character index of the visible part of the text string.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.IMEDisabled">
+            <summary>
+            Can be set to disable IME (Input Method Editor) support for this control.
             </summary>
         </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.PreviousControl">
@@ -2188,6 +2223,16 @@
         <member name="T:Rampastring.XNAUI.Input.RKeyboard">
             <summary>
             A class for handling the keyboard.
+            </summary>
+        </member>
+        <member name="E:Rampastring.XNAUI.Input.RKeyboard.OnKeyPressed">
+            <summary>
+            Triggered when a key has been pressed, iow. pressed down and then released.
+            </summary>
+        </member>
+        <member name="E:Rampastring.XNAUI.Input.RKeyboard.OnKeyDown">
+            <summary>
+            Triggered when a key has been first pressed down.
             </summary>
         </member>
         <member name="T:Rampastring.XNAUI.Properties.Resources">

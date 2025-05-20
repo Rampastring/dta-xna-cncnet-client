@@ -90,6 +90,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             BonusInfoPanel.X = Width;
             BonusInfoPanel.Y = GetCursorPoint().Y;
+
+            var windowRect = BonusInfoPanel.GetWindowRectangle();
+            if (windowRect.Bottom > WindowManager.RenderResolutionY)
+                BonusInfoPanel.Y -= windowRect.Bottom - WindowManager.RenderResolutionY;
+
             BonusInfoPanel.Enable();
         }
 

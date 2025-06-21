@@ -7,6 +7,8 @@ namespace ClientCore
 {
     public class UserINISettings
     {
+        private const int LATEST_SETTINGS_VERSION = 1;
+
         private static UserINISettings _instance;
 
         public static UserINISettings Instance
@@ -110,6 +112,35 @@ namespace ClientCore
             ForceLowestDetailLevel = new BoolSetting(iniFile, VIDEO, "ForceLowestDetailLevel", false);
             MinimizeWindowsOnGameStart = new BoolSetting(iniFile, OPTIONS, "MinimizeWindowsOnGameStart", true);
             AutoRemoveUnderscoresFromName = new BoolSetting(iniFile, OPTIONS, "AutoRemoveUnderscoresFromName", true);
+            SettingsVersion = new IntSetting(iniFile, "Meta", nameof(SettingsVersion), 0);
+
+            SettingsVersionFixes();
+        }
+
+        private void SettingsVersionFixes()
+        {
+            bool rewrite = false;
+            if (SettingsVersion < 1)
+            {
+                StretchMovies.Value = true;
+                rewrite = true;
+            }
+
+            SettingsVersion.Value = LATEST_SETTINGS_VERSION;
+
+            if (rewrite)
+            {
+                Logger.Log("Refreshing settings INI after applying new defaults.");
+
+                try
+                {
+                    SettingsIni.WriteIniFile();
+                } 
+                catch (Exception ex)
+                {
+                    Logger.Log("Failed to write settings INI. Exception message: " + ex.Message);
+                }
+            }
         }
 
         public IniFile SettingsIni { get; private set; }
@@ -216,6 +247,8 @@ namespace ClientCore
         public BoolSetting MinimizeWindowsOnGameStart { get; private set; }
 
         public BoolSetting AutoRemoveUnderscoresFromName { get; private set; }
+
+        public IntSetting SettingsVersion { get; private set; }
 
         public bool IsGameFollowed(string gameName)
         {

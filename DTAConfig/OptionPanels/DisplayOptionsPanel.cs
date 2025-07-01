@@ -9,11 +9,20 @@ using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
 namespace DTAConfig.OptionPanels
 {
+    enum GameDisplayMode
+    {
+        BorderlessWindowed = 0,
+        NativeFullscreen = 1,
+        Windowed = 2,
+        Count
+    }
+
     class DisplayOptionsPanel : XNAOptionsPanel
     {
         private const int DRAG_DISTANCE_DEFAULT = 4;
@@ -25,11 +34,11 @@ namespace DTAConfig.OptionPanels
         {
         }
 
+        private XNAClientDropDown ddDisplayMode;
         private XNAClientDropDown ddIngameResolution;
+        private XNAClientDropDown ddScaleFactor;
         private XNAClientDropDown ddDetailLevel;
         private XNAClientDropDown ddRenderer;
-        private XNAClientCheckBox chkWindowedMode;
-        private XNAClientCheckBox chkBorderlessWindowedMode;
         private XNAClientCheckBox chkBackBufferInVRAM;
         private XNAClientCheckBox chkStretchMovies;
         private XNAClientCheckBox chkClassicMessageListPosition;
@@ -38,6 +47,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientDropDown ddClientTheme;
 
         private List<DirectDrawWrapper> renderers;
+        private List<ScreenResolution> resolutions;
 
         private string defaultRenderer;
         private DirectDrawWrapper selectedRenderer = null;
@@ -59,32 +69,69 @@ namespace DTAConfig.OptionPanels
 
             Name = "DisplayOptionsPanel";
 
+            var clientConfig = ClientConfiguration.Instance;
+
+            var lblDisplayMode = new XNALabel(WindowManager);
+            lblDisplayMode.Name = nameof(lblDisplayMode);
+            lblDisplayMode.X = 12;
+            lblDisplayMode.Y = 14;
+            lblDisplayMode.Text = "Display Mode:";
+            AddChild(lblDisplayMode);
+
+            ddDisplayMode = new XNAClientDropDown(WindowManager);
+            ddDisplayMode.Name = nameof(ddDisplayMode);
+            ddDisplayMode.X = 124;
+            ddDisplayMode.Y = lblDisplayMode.Y - 2;
+            ddDisplayMode.Width = 120;
+            ddDisplayMode.Height = 19;
+            AddChild(ddDisplayMode);
+            ddDisplayMode.AddItem("Borderless Windowed");
+            ddDisplayMode.AddItem("Native Fullscreen");
+            ddDisplayMode.AddItem("Windowed");
+            ddDisplayMode.ToolTip.Text = "Defines how the in-game window is displayed." + Environment.NewLine + Environment.NewLine +
+                "Borderless Windowed is recommended for most systems," + Environment.NewLine + "" +
+                "but older systems might have higher performance on Native Fullscreen.";
+
             var lblIngameResolution = new XNALabel(WindowManager);
             lblIngameResolution.Name = "lblIngameResolution";
-            lblIngameResolution.ClientRectangle = new Rectangle(12, 14, 0, 0);
+            lblIngameResolution.ClientRectangle = new Rectangle(lblDisplayMode.X, ddDisplayMode.Bottom + 16, 0, 0);
             lblIngameResolution.Text = "In-Game Resolution:";
 
             ddIngameResolution = new XNAClientDropDown(WindowManager);
             ddIngameResolution.Name = "ddIngameResolution";
             ddIngameResolution.ClientRectangle = new Rectangle(
                 lblIngameResolution.Right + 12,
-                lblIngameResolution.Y - 2, 120, 19);
+                lblIngameResolution.Y - 2, ddDisplayMode.Width, ddDisplayMode.Height);
+            ddIngameResolution.SelectedIndexChanged += (s, e) => RefreshScaleFactors();
 
-            var clientConfig = ClientConfiguration.Instance;
-
-            var resolutions = GetResolutions(clientConfig.MinimumIngameWidth, 
+            resolutions = GetResolutions(clientConfig.MinimumIngameWidth, 
                 clientConfig.MinimumIngameHeight,
                 clientConfig.MaximumIngameWidth, clientConfig.MaximumIngameHeight);
 
             resolutions.Sort();
 
             foreach (var res in resolutions)
-                ddIngameResolution.AddItem(res.ToString());
+                ddIngameResolution.AddItem(new XNADropDownItem() { Text = res.ToString(), Tag = res });
+
+            var lblScaleFactor = new XNALabel(WindowManager);
+            lblScaleFactor.Name = nameof(lblScaleFactor);
+            lblScaleFactor.X = lblDisplayMode.X;
+            lblScaleFactor.Y = ddIngameResolution.Bottom + 16;
+            lblScaleFactor.Text = "Scale Factor:";
+            AddChild(lblScaleFactor);
+
+            ddScaleFactor = new XNAClientDropDown(WindowManager);
+            ddScaleFactor.Name = nameof(ddScaleFactor);
+            ddScaleFactor.X = ddDisplayMode.X;
+            ddScaleFactor.Y = lblScaleFactor.Y - 2;
+            ddScaleFactor.Width = ddDisplayMode.Width;
+            ddScaleFactor.Height = ddDisplayMode.Height;
+            AddChild(ddScaleFactor);
 
             var lblDetailLevel = new XNALabel(WindowManager);
             lblDetailLevel.Name = "lblDetailLevel";
             lblDetailLevel.ClientRectangle = new Rectangle(lblIngameResolution.X,
-                ddIngameResolution.Bottom + 16, 0, 0);
+                ddScaleFactor.Bottom + 16, 0, 0);
             lblDetailLevel.Text = "Detail Level:";
 
             ddDetailLevel = new XNAClientDropDown(WindowManager);
@@ -98,7 +145,7 @@ namespace DTAConfig.OptionPanels
             ddDetailLevel.AddItem("Medium");
             ddDetailLevel.AddItem("High");
 
-            var  lblRenderer = new XNALabel(WindowManager);
+            var lblRenderer = new XNALabel(WindowManager);
             lblRenderer.Name = "lblRenderer";
             lblRenderer.ClientRectangle = new Rectangle(lblDetailLevel.X,
                 ddDetailLevel.Bottom + 16, 0, 0);
@@ -111,6 +158,7 @@ namespace DTAConfig.OptionPanels
                 lblRenderer.Y - 2,
                 ddDetailLevel.Width,
                 ddDetailLevel.Height);
+            ddRenderer.SelectedIndexChanged += (s, e) => RefreshScaleFactors();
 
             GetRenderers();
 
@@ -128,34 +176,11 @@ namespace DTAConfig.OptionPanels
                 }
             }
 
-            //ddRenderer.AddItem("Default");
-            //ddRenderer.AddItem("IE-DDRAW");
-            //ddRenderer.AddItem("TS-DDRAW");
-            //ddRenderer.AddItem("DDWrapper");
-            //ddRenderer.AddItem("DxWnd");
-            //if (ClientConfiguration.Instance.GetOperatingSystemVersion() == OSVersion.WINXP)
-            //    ddRenderer.AddItem("Software");
-
-            chkWindowedMode = new XNAClientCheckBox(WindowManager);
-            chkWindowedMode.Name = "chkWindowedMode";
-            chkWindowedMode.ClientRectangle = new Rectangle(lblDetailLevel.X,
-                ddRenderer.Bottom + 16, 0, 0);
-            chkWindowedMode.Text = "Windowed Mode";
-            chkWindowedMode.CheckedChanged += ChkWindowedMode_CheckedChanged;
-
-            chkBorderlessWindowedMode = new XNAClientCheckBox(WindowManager);
-            chkBorderlessWindowedMode.Name = "chkBorderlessWindowedMode";
-            chkBorderlessWindowedMode.ClientRectangle = new Rectangle(
-                chkWindowedMode.X + 50,
-                chkWindowedMode.Bottom + 24, 0, 0);
-            chkBorderlessWindowedMode.Text = "Borderless Windowed Mode";
-            chkBorderlessWindowedMode.AllowChecking = false;
-
             chkBackBufferInVRAM = new XNAClientCheckBox(WindowManager);
             chkBackBufferInVRAM.Name = "chkBackBufferInVRAM";
             chkBackBufferInVRAM.ClientRectangle = new Rectangle(
                 lblDetailLevel.X,
-                chkBorderlessWindowedMode.Bottom + 28, 0, 0);
+                ddRenderer.Bottom + 12, 0, 0);
             chkBackBufferInVRAM.Text = "Back Buffer in Video Memory" + Environment.NewLine +
                 "(lower performance, but is" + Environment.NewLine + "necessary on some systems)";
 
@@ -163,14 +188,14 @@ namespace DTAConfig.OptionPanels
             chkStretchMovies.Name = "chkStretchMovies";
             chkStretchMovies.ClientRectangle = new Rectangle(
                 lblDetailLevel.X,
-                chkBackBufferInVRAM.Bottom + 28, 0, 0);
+                chkBackBufferInVRAM.Bottom + 24, 0, 0);
             chkStretchMovies.Text = "Stretch Movies";
 
             chkClassicMessageListPosition = new XNAClientCheckBox(WindowManager);
             chkClassicMessageListPosition.Name = "chkClassicMessageListPosition";
             chkClassicMessageListPosition.ClientRectangle = new Rectangle(
                 lblDetailLevel.X,
-                chkStretchMovies.Bottom + 28, 0, 0);
+                chkStretchMovies.Bottom + 24, 0, 0);
             chkClassicMessageListPosition.Text = "Classic Message List Position";
 
             var lblClientResolution = new XNALabel(WindowManager);
@@ -210,7 +235,7 @@ namespace DTAConfig.OptionPanels
             {
                 var item = new XNADropDownItem();
                 item.Text = res.ToString();
-                item.Tag = res.ToString();
+                item.Tag = res;
                 ddClientResolution.AddItem(item);
             }
 
@@ -231,7 +256,7 @@ namespace DTAConfig.OptionPanels
             chkBorderlessClient.Name = "chkBorderlessClient";
             chkBorderlessClient.ClientRectangle = new Rectangle(
                 lblClientResolution.X,
-                lblDetailLevel.Y, 0, 0);
+                lblScaleFactor.Y, 0, 0);
             chkBorderlessClient.Text = "Fullscreen Client";
             chkBorderlessClient.CheckedChanged += ChkBorderlessMenu_CheckedChanged;
             chkBorderlessClient.Checked = true;
@@ -240,70 +265,24 @@ namespace DTAConfig.OptionPanels
             lblClientTheme.Name = "lblClientTheme";
             lblClientTheme.ClientRectangle = new Rectangle(
                 lblClientResolution.X,
-                lblRenderer.Y, 0, 0);
+                lblIngameResolution.Y, 0, 0);
             lblClientTheme.Text = "Client Theme:";
 
             ddClientTheme = new XNAClientDropDown(WindowManager);
             ddClientTheme.Name = "ddClientTheme";
             ddClientTheme.ClientRectangle = new Rectangle(
                 ddClientResolution.X,
-                ddRenderer.Y,
+                ddIngameResolution.Y,
                 ddClientResolution.Width,
-                ddRenderer.Height);
+                ddIngameResolution.Height);
 
             int themeCount = ClientConfiguration.Instance.ThemeCount;
 
             for (int i = 0; i < themeCount; i++)
                 ddClientTheme.AddItem(ClientConfiguration.Instance.GetThemeInfoFromIndex(i)[0]);
 
-            lblCompatibilityFixes = new XNALabel(WindowManager);
-            lblCompatibilityFixes.Name = "lblCompatibilityFixes";
-            lblCompatibilityFixes.FontIndex = 1;
-            lblCompatibilityFixes.Text = "Compatibility Fixes (advanced):";
-            AddChild(lblCompatibilityFixes);
-            lblCompatibilityFixes.CenterOnParent();
-            lblCompatibilityFixes.Y = Height - 103;
+            AddCompatibilityFixControls();
 
-            lblGameCompatibilityFix = new XNALabel(WindowManager);
-            lblGameCompatibilityFix.Name = "lblGameCompatibilityFix";
-            lblGameCompatibilityFix.ClientRectangle = new Rectangle(132, 
-                lblCompatibilityFixes.Bottom + 20, 0, 0);
-            lblGameCompatibilityFix.Text = "DTA/TI/TS Compatibility Fix:";
-
-            btnGameCompatibilityFix = new XNAClientButton(WindowManager);
-            btnGameCompatibilityFix.Name = "btnGameCompatibilityFix";
-            btnGameCompatibilityFix.ClientRectangle = new Rectangle(
-                lblGameCompatibilityFix.Right + 20,
-                lblGameCompatibilityFix.Y - 4, 133, 23);
-            btnGameCompatibilityFix.FontIndex = 1;
-            btnGameCompatibilityFix.Text = "Enable";
-            btnGameCompatibilityFix.LeftClick += BtnGameCompatibilityFix_LeftClick;
-
-            lblMapEditorCompatibilityFix = new XNALabel(WindowManager);
-            lblMapEditorCompatibilityFix.Name = "lblMapEditorCompatibilityFix";
-            lblMapEditorCompatibilityFix.ClientRectangle = new Rectangle(
-                lblGameCompatibilityFix.X,
-                lblGameCompatibilityFix.Bottom + 20, 0, 0);
-            lblMapEditorCompatibilityFix.Text = "FinalSun Compatibility Fix:";
-
-            btnMapEditorCompatibilityFix = new XNAClientButton(WindowManager);
-            btnMapEditorCompatibilityFix.Name = "btnMapEditorCompatibilityFix";
-            btnMapEditorCompatibilityFix.ClientRectangle = new Rectangle(
-                btnGameCompatibilityFix.X,
-                lblMapEditorCompatibilityFix.Y - 4,
-                btnGameCompatibilityFix.Width,
-                btnGameCompatibilityFix.Height);
-            btnMapEditorCompatibilityFix.FontIndex = 1;
-            btnMapEditorCompatibilityFix.Text = "Enable";
-            btnMapEditorCompatibilityFix.LeftClick += BtnMapEditorCompatibilityFix_LeftClick;
-
-            AddChild(lblGameCompatibilityFix);
-            AddChild(btnGameCompatibilityFix);
-            AddChild(lblMapEditorCompatibilityFix);
-            AddChild(btnMapEditorCompatibilityFix);
-
-            AddChild(chkWindowedMode);
-            AddChild(chkBorderlessWindowedMode);
             AddChild(chkBackBufferInVRAM);
             AddChild(chkStretchMovies);
             AddChild(chkClassicMessageListPosition);
@@ -318,6 +297,75 @@ namespace DTAConfig.OptionPanels
             AddChild(ddDetailLevel);
             AddChild(lblIngameResolution);
             AddChild(ddIngameResolution);
+        }
+
+        private void RefreshScaleFactors()
+        {
+            double selectedScaleFactor = 1.0;
+
+            if (ddScaleFactor.SelectedItem != null)
+                selectedScaleFactor = (double)ddScaleFactor.SelectedItem.Tag;
+
+            ddScaleFactor.SelectedIndex = -1;
+            ddScaleFactor.Items.Clear();
+
+            // Check for error conditions. In case one exists, gray out the scaling option.
+            if (resolutions.Count <= 0 || ddIngameResolution.SelectedItem == null || 
+                ddRenderer.SelectedItem == null || !((DirectDrawWrapper)ddRenderer.SelectedItem.Tag).SupportsScaling)
+            {
+                ddScaleFactor.Items.Add(new XNADropDownItem() { Text = "", Tag = 1.0 });
+                ddScaleFactor.SelectedIndex = 0;
+                ddScaleFactor.InputEnabled = false;
+                return;
+            }
+
+            ddScaleFactor.InputEnabled = true;
+
+            int startResX;
+            int startResY;
+
+            var screenResolution = (ScreenResolution)ddIngameResolution.SelectedItem.Tag;
+            startResX = screenResolution.Width;
+            startResY = screenResolution.Height;
+
+            double recommendedScaleFactor = 0.0;
+            defaultScaleFactors.TryGetValue(new Point(startResX, startResY), out recommendedScaleFactor);
+
+            double scaleFactor = 1.0;
+            const double scaleFactorIncrease = 0.25;
+            int resX = startResX;
+            int resY = startResY;
+
+            // If the current scale factor is 1.0, invalidate it so the code below can select a better default.
+            if (selectedScaleFactor == 1.0)
+                selectedScaleFactor = 0.0;
+
+            while (resX >= ClientConfiguration.Instance.MinimumIngameWidth &&
+                resY >= ClientConfiguration.Instance.MinimumIngameHeight)
+            {
+                ddScaleFactor.AddItem(new XNADropDownItem()
+                { 
+                    Text = scaleFactor.ToString(CultureInfo.InvariantCulture) + "x" + (recommendedScaleFactor == scaleFactor ? " (Recommended)" : ""),
+                    Tag = scaleFactor
+                });
+
+                if (selectedScaleFactor == scaleFactor)
+                    ddScaleFactor.SelectedIndex = ddScaleFactor.Items.Count - 1;
+
+                scaleFactor += scaleFactorIncrease;
+                resX = (int)(startResX / scaleFactor);
+                resY = (int)(startResY / scaleFactor);
+            }
+
+            if (ddScaleFactor.SelectedIndex < 0)
+            {
+                int recommendedIndex = ddScaleFactor.Items.FindIndex(ddi => (double)ddi.Tag == recommendedScaleFactor);
+
+                if (recommendedIndex > -1)
+                    ddScaleFactor.SelectedIndex = recommendedIndex;
+                else
+                    ddScaleFactor.SelectedIndex = 0;
+            }
         }
 
         /// <summary>
@@ -381,24 +429,24 @@ namespace DTAConfig.OptionPanels
 		}
 
         /// <summary>
-        /// Asks the user whether they want to install the DTA/TI/TS compatibility fix.
+        /// Loads settings.
         /// </summary>
         public void PostInit()
         {
             Load();
 
-            if (!GameCompatFixInstalled && !GameCompatFixDeclined)
-            {
-                string defaultGame = ClientConfiguration.Instance.LocalGame;
-
-                var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "New Compatibility Fix",
-                    "A performance-enhancing compatibility fix for modern Windows versions" + Environment.NewLine +
-                    "has been included in this version of " + defaultGame + ". Enabling it requires" + Environment.NewLine +
-                    "administrative priveleges. Would you like to install the compatibility fix?" + Environment.NewLine + Environment.NewLine + 
-                    "You'll always be able to install or uninstall the compatibility fix later from the options menu.");
-                messageBox.YesClickedAction = MessageBox_YesClicked;
-                messageBox.NoClickedAction = MessageBox_NoClicked;
-            }
+            // if (!GameCompatFixInstalled && !GameCompatFixDeclined)
+            // {
+            //     string defaultGame = ClientConfiguration.Instance.LocalGame;
+            // 
+            //     var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "New Compatibility Fix",
+            //         "A performance-enhancing compatibility fix for modern Windows versions" + Environment.NewLine +
+            //         "has been included in this version of " + defaultGame + ". Enabling it requires" + Environment.NewLine +
+            //         "administrative priveleges. Would you like to install the compatibility fix?" + Environment.NewLine + Environment.NewLine + 
+            //         "You'll always be able to install or uninstall the compatibility fix later from the options menu.");
+            //     messageBox.YesClickedAction = MessageBox_YesClicked;
+            //     messageBox.NoClickedAction = MessageBox_NoClicked;
+            // }
         }
 
         private void MessageBox_NoClicked(XNAMessageBox messageBox)
@@ -549,10 +597,9 @@ namespace DTAConfig.OptionPanels
             if (chkBorderlessClient.Checked)
             {
                 ddClientResolution.AllowDropDown = false;
-                string nativeRes = Screen.PrimaryScreen.Bounds.Width +
-                    "x" + Screen.PrimaryScreen.Bounds.Height;
+                ScreenResolution nativeRes = new ScreenResolution(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
 
-                int nativeResIndex = ddClientResolution.Items.FindIndex(i => (string)i.Tag == nativeRes);
+                int nativeResIndex = ddClientResolution.Items.FindIndex(i => (ScreenResolution)i.Tag == nativeRes);
                 if (nativeResIndex > -1)
                     ddClientResolution.SelectedIndex = nativeResIndex;
             }
@@ -568,18 +615,6 @@ namespace DTAConfig.OptionPanels
             }
         }
 
-        private void ChkWindowedMode_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkWindowedMode.Checked)
-            {
-                chkBorderlessWindowedMode.AllowChecking = true;
-                return;
-            }
-
-            chkBorderlessWindowedMode.AllowChecking = false;
-            chkBorderlessWindowedMode.Checked = false;
-        }
-
         /// <summary>
         /// Loads the user's preferred renderer.
         /// </summary>
@@ -591,31 +626,31 @@ namespace DTAConfig.OptionPanels
             if (index < 0 && selectedRenderer.Hidden)
             {
                 ddRenderer.AddItem(new XNADropDownItem()
-            {
-                        Text = selectedRenderer.UIName,
-                        Tag = selectedRenderer
-                    });
+                {
+                    Text = selectedRenderer.UIName,
+                    Tag = selectedRenderer
+                });
                 index = ddRenderer.Items.Count - 1;
             }
 
             ddRenderer.SelectedIndex = index;
         }
 
-        private static Dictionary<Point, Point> defaultResolutions = new Dictionary<Point, Point>() 
+        private static Dictionary<Point, double> defaultScaleFactors = new Dictionary<Point, double>()
         {
-            { new Point(640, 480), new Point(640, 480) },
-            { new Point(800, 600), new Point(800, 600) },
-            { new Point(1024, 768), new Point(800, 600) },
-            { new Point(1280, 720), new Point(720, 480) },
-            { new Point(1280, 1024), new Point(1024, 768) },
-            { new Point(1366, 768), new Point(1366, 768) },
-            { new Point(1440, 900), new Point(1280, 720) },
-            { new Point(1600, 900), new Point(1280, 720) },
-            { new Point(1650, 1080), new Point(1280, 720) },
-            { new Point(1920, 1080), new Point(1280, 720) },
-            { new Point(2560, 1080), new Point(1280, 720) },
-            { new Point(2560, 1440), new Point(1280, 720) },
-            { new Point(3840, 2160), new Point(1280, 720) }
+            { new Point(640, 480), 1.0 },
+            { new Point(800, 600), 1.0 },
+            { new Point(1024, 768), 1.25 },
+            { new Point(1280, 720), 1.5 },
+            { new Point(1280, 1024), 1.25 },
+            { new Point(1366, 768), 1.0 },
+            { new Point(1440, 900), 1.25 },
+            { new Point(1600, 900), 1.25 },
+            { new Point(1650, 1080), 1.5 },
+            { new Point(1920, 1080), 1.5 },
+            { new Point(2560, 1080), 2.0 },
+            { new Point(2560, 1440), 2.0 },
+            { new Point(3840, 2160), 3.0 }
         };
 
         public override void Load()
@@ -624,32 +659,51 @@ namespace DTAConfig.OptionPanels
 
             LoadRenderer();
             ddDetailLevel.SelectedIndex = IniSettings.DetailLevel;
+            string displayModeString = IniSettings.DisplayMode;
+            if (Enum.TryParse(displayModeString, true, out GameDisplayMode gameDisplayMode))
+            {
+                ddDisplayMode.SelectedIndex = (int)gameDisplayMode;
+            }
+            else
+            {
+                ddDisplayMode.SelectedIndex = 0;
+            }
 
-            int width = IniSettings.IngameScreenWidth.Value;
-            int height = IniSettings.IngameScreenHeight.Value;
+            int width = IniSettings.UnscaledScreenWidth.Value;
+            int height = IniSettings.UnscaledScreenHeight.Value;
 
             if (width < 0 || height < 0)
             {
                 Point desktopSize = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-
-                if (defaultResolutions.TryGetValue(desktopSize, out Point defaultResolution))
-                {
-                    width = defaultResolution.X;
-                    height = defaultResolution.Y;
-                }
-                else
-                {
-                    // Fallback
-                    width = 1024;
-                    height = 768;
-                }
+                width = desktopSize.X;
+                height = desktopSize.Y;
             }
 
-            string currentRes = width + "x" + height;
+            ScreenResolution unscaledIngameResolution = new ScreenResolution(width, height);
 
-            int index = ddIngameResolution.Items.FindIndex(i => i.Text == currentRes);
+            int index = ddIngameResolution.Items.FindIndex(ddi => ((ScreenResolution)ddi.Tag).Equals(unscaledIngameResolution));
 
             ddIngameResolution.SelectedIndex = index;
+
+            // In case the desktop resolution was not available in our resolution list, default to the highest resolution.
+            if (ddIngameResolution.SelectedIndex < 0 && !IniSettings.IsCustomResolution)
+                ddIngameResolution.SelectedIndex = ddIngameResolution.Items.Count - 1;
+
+            RefreshScaleFactors();
+            double scaleFactor = IniSettings.ScaleFactor;
+            ddScaleFactor.SelectedIndex = ddScaleFactor.Items.FindIndex(ddi => (double)ddi.Tag == scaleFactor);
+            if (ddScaleFactor.SelectedIndex < 0 && IniSettings.ScaleFactor == double.MinValue && !IniSettings.IsCustomResolution)
+            {
+                // No scale factor currently specified, try to find default
+                if (defaultScaleFactors.TryGetValue(new Point(width, height), out scaleFactor))
+                {
+                    ddScaleFactor.SelectedIndex = ddScaleFactor.Items.FindIndex(ddi => (double)ddi.Tag == scaleFactor);
+                }
+
+                // If no scale factor was found for this resolution, just apply 1.0
+                if (ddScaleFactor.SelectedIndex == -1 && ddScaleFactor.Items.Count > 0)
+                    ddScaleFactor.SelectedIndex = 0;
+            }
 
             // Wonder what this "Win8CompatMode" actually does..
             // Disabling it used to be TS-DDRAW only, but it was never enabled after 
@@ -657,39 +711,9 @@ namespace DTAConfig.OptionPanels
             // disabled anyway
             IniSettings.Win8CompatMode.Value = "No";
 
-            var renderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
+            var currentClientRes = new ScreenResolution(IniSettings.ClientResolutionX.Value, IniSettings.ClientResolutionY.Value);
 
-            if (renderer.UsesCustomWindowedOption())
-            {
-                // For renderers that have their own windowed mode implementation
-                // enabled through their own config INI file
-                // (for example DxWnd and CnC-DDRAW)
-
-                IniFile rendererSettingsIni = new IniFile(ProgramConstants.GamePath + renderer.ConfigFileName);
-
-                chkWindowedMode.Checked = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
-                    renderer.WindowedModeKey, false);
-
-                if (!string.IsNullOrEmpty(renderer.BorderlessWindowedModeKey))
-                {
-                    bool setting = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
-                        renderer.BorderlessWindowedModeKey, false);
-                    chkBorderlessWindowedMode.Checked = renderer.IsBorderlessWindowedModeKeyReversed ? !setting : setting;
-                }
-                else
-                {
-                    chkBorderlessWindowedMode.Checked = IniSettings.BorderlessWindowedMode;
-                }
-            }
-            else
-            {
-                chkWindowedMode.Checked = IniSettings.WindowedMode;
-                chkBorderlessWindowedMode.Checked = IniSettings.BorderlessWindowedMode;
-            }
-
-            string currentClientRes = IniSettings.ClientResolutionX.Value + "x" + IniSettings.ClientResolutionY.Value;
-
-            int clientResIndex = ddClientResolution.Items.FindIndex(i => (string)i.Tag == currentClientRes);
+            int clientResIndex = ddClientResolution.Items.FindIndex(i => ((ScreenResolution)i.Tag).Equals(currentClientRes));
 
             ddClientResolution.SelectedIndex = clientResIndex > -1 ? clientResIndex : 0;
 
@@ -702,6 +726,55 @@ namespace DTAConfig.OptionPanels
             chkBackBufferInVRAM.Checked = !IniSettings.BackBufferInVRAM;
             chkStretchMovies.Checked = IniSettings.StretchMovies;
             chkClassicMessageListPosition.Checked = IniSettings.ClassicMessageListPosition;
+        }
+
+        private void AddCompatibilityFixControls()
+        {
+            lblCompatibilityFixes = new XNALabel(WindowManager);
+            lblCompatibilityFixes.Name = "lblCompatibilityFixes";
+            lblCompatibilityFixes.FontIndex = 1;
+            lblCompatibilityFixes.Text = "Compatibility Fixes (advanced):";
+            AddChild(lblCompatibilityFixes);
+            lblCompatibilityFixes.CenterOnParent();
+            lblCompatibilityFixes.Y = Height - 103;
+
+            lblGameCompatibilityFix = new XNALabel(WindowManager);
+            lblGameCompatibilityFix.Name = "lblGameCompatibilityFix";
+            lblGameCompatibilityFix.ClientRectangle = new Rectangle(132,
+                lblCompatibilityFixes.Bottom + 20, 0, 0);
+            lblGameCompatibilityFix.Text = "DTA/TI/TS Compatibility Fix:";
+
+            btnGameCompatibilityFix = new XNAClientButton(WindowManager);
+            btnGameCompatibilityFix.Name = "btnGameCompatibilityFix";
+            btnGameCompatibilityFix.ClientRectangle = new Rectangle(
+                lblGameCompatibilityFix.Right + 20,
+                lblGameCompatibilityFix.Y - 4, 133, 23);
+            btnGameCompatibilityFix.FontIndex = 1;
+            btnGameCompatibilityFix.Text = "Enable";
+            btnGameCompatibilityFix.LeftClick += BtnGameCompatibilityFix_LeftClick;
+
+            lblMapEditorCompatibilityFix = new XNALabel(WindowManager);
+            lblMapEditorCompatibilityFix.Name = "lblMapEditorCompatibilityFix";
+            lblMapEditorCompatibilityFix.ClientRectangle = new Rectangle(
+                lblGameCompatibilityFix.X,
+                lblGameCompatibilityFix.Bottom + 20, 0, 0);
+            lblMapEditorCompatibilityFix.Text = "FinalSun Compatibility Fix:";
+
+            btnMapEditorCompatibilityFix = new XNAClientButton(WindowManager);
+            btnMapEditorCompatibilityFix.Name = "btnMapEditorCompatibilityFix";
+            btnMapEditorCompatibilityFix.ClientRectangle = new Rectangle(
+                btnGameCompatibilityFix.X,
+                lblMapEditorCompatibilityFix.Y - 4,
+                btnGameCompatibilityFix.Width,
+                btnGameCompatibilityFix.Height);
+            btnMapEditorCompatibilityFix.FontIndex = 1;
+            btnMapEditorCompatibilityFix.Text = "Enable";
+            btnMapEditorCompatibilityFix.LeftClick += BtnMapEditorCompatibilityFix_LeftClick;
+
+            AddChild(lblGameCompatibilityFix);
+            AddChild(btnGameCompatibilityFix);
+            AddChild(lblMapEditorCompatibilityFix);
+            AddChild(btnMapEditorCompatibilityFix);
 
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Tiberian Sun Client");
 
@@ -714,7 +787,6 @@ namespace DTAConfig.OptionPanels
             if (tsCompatFixString == "Yes")
             {
                 GameCompatFixInstalled = true;
-                btnGameCompatibilityFix.Text = "Disable";
             }
 
             object fsCompatFixValue = regKey.GetValue("FSCompatFixInstalled", "No");
@@ -723,22 +795,22 @@ namespace DTAConfig.OptionPanels
             if (fsCompatFixString == "Yes")
             {
                 FinalSunCompatFixInstalled = true;
-                btnMapEditorCompatibilityFix.Text = "Disable";
             }
 
-            object tsCompatFixDeclinedValue = regKey.GetValue("TSCompatFixDeclined", "No");
-
-            if (((string)tsCompatFixDeclinedValue) == "Yes")
+            // These compatibility fixes from 2015 are no longer necessary on modern systems.
+            // They are only offered for uninstallation; if they are not installed, hide them.
+            if (!FinalSunCompatFixInstalled)
             {
-                GameCompatFixDeclined = true;
+                lblMapEditorCompatibilityFix.Disable();
+                btnMapEditorCompatibilityFix.Disable();
+
+                if (!GameCompatFixInstalled)
+                {
+                    lblGameCompatibilityFix.Disable();
+                    btnGameCompatibilityFix.Disable();
+                    lblCompatibilityFixes.Disable();
+                }
             }
-
-            //object fsCompatFixDeclinedValue = regKey.GetValue("FSCompatFixDeclined", "No");
-
-            //if (((string)fsCompatFixDeclinedValue) == "Yes")
-            //{
-            //    FinalSunCompatFixDeclined = true;
-            //}
         }
 
         public override bool Save()
@@ -748,49 +820,18 @@ namespace DTAConfig.OptionPanels
             bool restartRequired = false;
 
             IniSettings.DetailLevel.Value = ddDetailLevel.SelectedIndex;
+            IniSettings.DisplayMode.Value = ((GameDisplayMode)ddDisplayMode.SelectedIndex).ToString();
 
-            if (ddIngameResolution.SelectedItem != null)
-            {
-                string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
+            SaveIngameResolutionAndRenderer();
 
-                int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
+            ScreenResolution clientResolution = (ScreenResolution)ddClientResolution.SelectedItem.Tag;
 
-                IniSettings.IngameScreenWidth.Value = ingameRes[0];
-                IniSettings.IngameScreenHeight.Value = ingameRes[1];
-
-                // Calculate drag selection distance, scale it with resolution width
-                int dragDistance = ingameRes[0] / ORIGINAL_RESOLUTION_WIDTH * DRAG_DISTANCE_DEFAULT;
-                IniSettings.DragDistance.Value = dragDistance;
-
-                File.Delete(ProgramConstants.GamePath + "Language.dll");
-
-                if (ingameRes[0] >= 1024 && ingameRes[1] >= 720)
-                    File.Copy(ProgramConstants.GamePath + "Resources/language_1024x720.dll", ProgramConstants.GamePath + "Language.dll");
-                else if (ingameRes[0] >= 800 && ingameRes[1] >= 600)
-                    File.Copy(ProgramConstants.GamePath + "Resources/language_800x600.dll", ProgramConstants.GamePath + "Language.dll");
-                else
-                    File.Copy(ProgramConstants.GamePath + "Resources/language_640x480.dll", ProgramConstants.GamePath + "Language.dll");
-            }
-
-            DirectDrawWrapper originalRenderer = selectedRenderer;
-            selectedRenderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
-
-            IniSettings.WindowedMode.Value = chkWindowedMode.Checked &&
-                !selectedRenderer.UsesCustomWindowedOption();
-
-            IniSettings.BorderlessWindowedMode.Value = chkBorderlessWindowedMode.Checked &&
-                string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey);
-
-            string[] clientResolution = ((string)ddClientResolution.SelectedItem.Tag).Split('x');
-
-            int[] clientRes = new int[2] { int.Parse(clientResolution[0]), int.Parse(clientResolution[1]) };
-
-            if (clientRes[0] != IniSettings.ClientResolutionX.Value ||
-                clientRes[1] != IniSettings.ClientResolutionY.Value)
+            if (clientResolution.Width != IniSettings.ClientResolutionX.Value ||
+                clientResolution.Height != IniSettings.ClientResolutionY.Value)
                 restartRequired = true;
 
-            IniSettings.ClientResolutionX.Value = clientRes[0];
-            IniSettings.ClientResolutionY.Value = clientRes[1];
+            IniSettings.ClientResolutionX.Value = clientResolution.Width;
+            IniSettings.ClientResolutionY.Value = clientResolution.Height;
 
             if (IniSettings.BorderlessWindowedClient.Value != chkBorderlessClient.Checked)
                 restartRequired = true;
@@ -806,44 +847,113 @@ namespace DTAConfig.OptionPanels
             IniSettings.StretchMovies.Value = chkStretchMovies.Checked;
             IniSettings.ClassicMessageListPosition.Value = chkClassicMessageListPosition.Checked;
 
-            if (selectedRenderer != originalRenderer || 
+            return restartRequired;
+        }
+
+        private void SaveIngameResolutionAndRenderer()
+        {
+            DirectDrawWrapper originalRenderer = selectedRenderer;
+            selectedRenderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
+
+            if (selectedRenderer != originalRenderer ||
                 !File.Exists(ProgramConstants.GamePath + selectedRenderer.ConfigFileName))
             {
+                // User changed the renderer - clean up original renderer configuration files
                 foreach (var renderer in renderers)
                 {
                     if (renderer != selectedRenderer)
                         renderer.Clean();
                 }
             }
-            
+
             selectedRenderer.Apply();
 
-            GameProcessLogic.UseQres = selectedRenderer.UseQres;
-            GameProcessLogic.SingleCoreAffinity = selectedRenderer.SingleCoreAffinity;
-
-            SaveRendererConfigFile();
-
-            IniSettings.Renderer.Value = selectedRenderer.InternalName;
-
-            return restartRequired;
-        }
-
-        private void SaveRendererConfigFile()
-        {
             IniFile rendererSettingsIni = null;
+
+            if (!string.IsNullOrWhiteSpace(selectedRenderer.ConfigFileName))
+                rendererSettingsIni = new IniFile(ProgramConstants.GamePath + selectedRenderer.ConfigFileName);
 
             bool writeRendererSettings = false;
 
-            if (selectedRenderer.UsesCustomWindowedOption())
+            // If the user has manually set the custom resolution flag in the settings INI,
+            // it tells us that they absolutely don't want the client to do anything regarding
+            // resolution. In that case, skip.
+            if (!UserINISettings.Instance.IsCustomResolution && ddIngameResolution.SelectedItem != null)
             {
-                rendererSettingsIni = new IniFile(ProgramConstants.GamePath + selectedRenderer.ConfigFileName);
+                ScreenResolution unscaledIngameResolution = (ScreenResolution)ddIngameResolution.SelectedItem.Tag;
+
+                IniSettings.UnscaledScreenWidth.Value = unscaledIngameResolution.Width;
+                IniSettings.UnscaledScreenHeight.Value = unscaledIngameResolution.Height;
+
+                int scaledWidth = unscaledIngameResolution.Width;
+                int scaledHeight = unscaledIngameResolution.Height;
+
+                if (rendererSettingsIni != null && selectedRenderer.SupportsScaling && ddScaleFactor.SelectedItem != null)
+                {
+                    // This renderer support scaling - write scaling options to the renderer configuration file
+                    double scaleFactor = (double)ddScaleFactor.SelectedItem.Tag;
+                    scaledWidth = (int)(unscaledIngameResolution.Width / scaleFactor);
+                    scaledHeight = (int)(unscaledIngameResolution.Height / scaleFactor);
+                    IniSettings.ScaleFactor.Value = scaleFactor;
+
+                    writeRendererSettings = true;
+
+                    rendererSettingsIni.SetIntValue(selectedRenderer.ScalingSection, selectedRenderer.ScaledWidthKey, unscaledIngameResolution.Width);
+                    rendererSettingsIni.SetIntValue(selectedRenderer.ScalingSection, selectedRenderer.ScaledHeightKey, unscaledIngameResolution.Height);
+
+                    if (Math.Truncate(scaleFactor) == scaleFactor)
+                    {
+                        // Enable sharp-scaling
+                        rendererSettingsIni.SetStringValue(selectedRenderer.SharpScalingConfigValue.Section,
+                            selectedRenderer.SharpScalingConfigValue.Key,
+                            selectedRenderer.SharpScalingConfigValue.Value);
+                    }
+                    else
+                    {
+                        // Disable sharp-scaling
+                        rendererSettingsIni.SetStringValue(selectedRenderer.NonSharpScalingConfigValue.Section,
+                            selectedRenderer.NonSharpScalingConfigValue.Key,
+                            selectedRenderer.NonSharpScalingConfigValue.Value);
+                    }
+                }
+                else
+                {
+                    IniSettings.ScaleFactor.ClearValue();
+                }
+
+                IniSettings.ScaledScreenWidth.Value = scaledWidth;
+                IniSettings.ScaledScreenHeight.Value = scaledHeight;
+
+                // Calculate drag selection distance, scale it with resolution width
+                int dragDistance = scaledWidth / ORIGINAL_RESOLUTION_WIDTH * DRAG_DISTANCE_DEFAULT;
+                IniSettings.DragDistance.Value = dragDistance;
+
+                if (scaledWidth >= 1024 && scaledHeight >= 720)
+                    File.Copy(ProgramConstants.GamePath + "Resources/language_1024x720.dll", ProgramConstants.GamePath + "Language.dll", true);
+                else if (scaledWidth >= 800 && scaledHeight >= 600)
+                    File.Copy(ProgramConstants.GamePath + "Resources/language_800x600.dll", ProgramConstants.GamePath + "Language.dll", true);
+                else
+                    File.Copy(ProgramConstants.GamePath + "Resources/language_640x480.dll", ProgramConstants.GamePath + "Language.dll", true);
+            }
+
+            // Save display mode settings
+            bool windowed = ddDisplayMode.SelectedIndex == (int)(GameDisplayMode.BorderlessWindowed) || ddDisplayMode.SelectedIndex == (int)(GameDisplayMode.Windowed);
+            bool borderless = ddDisplayMode.SelectedIndex == (int)(GameDisplayMode.BorderlessWindowed);
+
+            if (rendererSettingsIni != null && selectedRenderer.UsesCustomWindowedOption())
+            {
+                // Disable original game windowed mode setting to avoid it interfering with the renderer
+                IniSettings.WindowedMode.Value = false;
 
                 rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
-                    selectedRenderer.WindowedModeKey, chkWindowedMode.Checked);
+                    selectedRenderer.WindowedModeKey, windowed);
 
                 if (!string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey))
                 {
-                    bool borderlessModeIniValue = chkBorderlessWindowedMode.Checked;
+                    // Disable original game borderless windowed mode setting to avoid it interfering with the renderer
+                    IniSettings.BorderlessWindowedMode.Value = false;
+
+                    bool borderlessModeIniValue = borderless;
                     if (selectedRenderer.IsBorderlessWindowedModeKeyReversed)
                         borderlessModeIniValue = !borderlessModeIniValue;
 
@@ -853,14 +963,14 @@ namespace DTAConfig.OptionPanels
 
                 writeRendererSettings = true;
             }
+            else
+            {
+                IniSettings.WindowedMode.Value = windowed;
+                IniSettings.BorderlessWindowedMode.Value = borderless;
+            }
 
             if (selectedRenderer.ForcedConfigValues.Count > 0)
             {
-                if (rendererSettingsIni == null)
-                {
-                    rendererSettingsIni = new IniFile(ProgramConstants.GamePath + selectedRenderer.ConfigFileName);
-                }
-
                 foreach (var configValue in selectedRenderer.ForcedConfigValues)
                 {
                     rendererSettingsIni.SetStringValue(configValue.Section, configValue.Key, configValue.Value);
@@ -871,6 +981,11 @@ namespace DTAConfig.OptionPanels
 
             if (writeRendererSettings)
                 rendererSettingsIni.WriteIniFile();
+
+            GameProcessLogic.UseQres = selectedRenderer.UseQres;
+            GameProcessLogic.SingleCoreAffinity = selectedRenderer.SingleCoreAffinity;
+
+            IniSettings.Renderer.Value = selectedRenderer.InternalName;
         }
 
         private List<ScreenResolution> GetResolutions(int minWidth, int minHeight, int maxWidth, int maxHeight)

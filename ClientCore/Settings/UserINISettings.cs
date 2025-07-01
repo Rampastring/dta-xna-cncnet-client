@@ -7,7 +7,7 @@ namespace ClientCore
 {
     public class UserINISettings
     {
-        private const int LATEST_SETTINGS_VERSION = 1;
+        private const int LATEST_SETTINGS_VERSION = 2;
 
         private static UserINISettings _instance;
 
@@ -48,8 +48,13 @@ namespace ClientCore
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
             Renderer = new StringSetting(iniFile, "Compatibility", "Renderer", string.Empty);
 
-            IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", -1);
-            IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", -1);
+            DisplayMode = new StringSetting(iniFile, VIDEO, nameof(DisplayMode), string.Empty);
+            UnscaledScreenWidth = new IntSetting(iniFile, VIDEO, nameof(UnscaledScreenWidth), -1);
+            UnscaledScreenHeight = new IntSetting(iniFile, VIDEO, nameof(UnscaledScreenHeight), -1);
+            ScaleFactor = new DoubleSetting(iniFile, VIDEO, nameof(ScaleFactor), double.MinValue);
+            ScaledScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", -1);
+            ScaledScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", -1);
+            IsCustomResolution = new BoolSetting(iniFile, VIDEO, nameof(IsCustomResolution), false);
             StretchMovies = new BoolSetting(iniFile, VIDEO, "StretchMovies", true);
             WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
             BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);
@@ -126,6 +131,12 @@ namespace ClientCore
                 rewrite = true;
             }
 
+            if (SettingsVersion < 2)
+            {
+                IsCustomResolution.Value = false;
+                rewrite = true;
+            }
+
             SettingsVersion.Value = LATEST_SETTINGS_VERSION;
 
             if (rewrite)
@@ -151,8 +162,13 @@ namespace ClientCore
         /* VIDEO */
         /*********/
 
-        public IntSetting IngameScreenWidth { get; private set; }
-        public IntSetting IngameScreenHeight { get; private set; }
+        public StringSetting DisplayMode { get; private set; }
+        public IntSetting UnscaledScreenWidth { get; private set; }
+        public IntSetting UnscaledScreenHeight { get; private set; }
+        public DoubleSetting ScaleFactor { get; private set; }
+        public IntSetting ScaledScreenWidth { get; private set; }
+        public IntSetting ScaledScreenHeight { get; private set; }
+        public BoolSetting IsCustomResolution { get; private set; }
         public BoolSetting StretchMovies { get; private set; }
         public StringSetting ClientTheme { get; private set; }
         public IntSetting DetailLevel { get; private set; }

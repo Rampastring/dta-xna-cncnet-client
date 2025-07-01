@@ -20,6 +20,22 @@ namespace DTAConfig
             Key = key;
             Value = value;
         }
+
+        public static bool TryParse(string str, out DirectDrawWrapperConfigValue directDrawWrapperConfigValue)
+        {
+            var valueSplit = str.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (valueSplit.Length > 2)
+            {
+                // In case the value contains commas, join elements back together after first two
+                var configKeyValue = string.Join(",", valueSplit.Skip(2));
+                directDrawWrapperConfigValue = new DirectDrawWrapperConfigValue(valueSplit[0], valueSplit[1], configKeyValue);
+                return true;
+            }
+
+            directDrawWrapperConfigValue = new DirectDrawWrapperConfigValue(string.Empty, string.Empty, string.Empty);
+            return false;
+        }
     }
 
     /// <summary>
@@ -73,10 +89,18 @@ namespace DTAConfig
 
         public bool Hidden { get; private set; }
 
-		/// <summary>
-		/// Many ddraw wrappers need qres.dat to set the desktop to 16 bit mode
-		/// </summary>
-		public bool UseQres { get; private set; } = true;
+        public bool SupportsScaling { get; private set; }
+        public string ScalingSection { get; private set; }
+        public string ScaledWidthKey { get; private set; }
+        public string ScaledHeightKey { get; private set; }
+        public bool SupportsSharpScaling { get; private set; }
+        public DirectDrawWrapperConfigValue SharpScalingConfigValue { get; private set; }
+        public DirectDrawWrapperConfigValue NonSharpScalingConfigValue { get; private set; }
+
+        /// <summary>
+        /// Many ddraw wrappers need qres.dat to set the desktop to 16 bit mode
+        /// </summary>
+        public bool UseQres { get; private set; } = false;
 
         /// <summary>
         /// If set to false, the client won't set single-core affinity
@@ -131,12 +155,42 @@ namespace DTAConfig
                     $" {InternalName} but WindowedModeSection= is not!");
             }
 
-            Hidden = section.GetBooleanValue("Hidden", false);
+            Hidden = section.GetBooleanValue("Hidden", Hidden);
             UseQres = section.GetBooleanValue("UseQres", UseQres);
             SingleCoreAffinity = section.GetBooleanValue("SingleCoreAffinity", SingleCoreAffinity);
             ddrawDLLPath = section.GetStringValue("DLLName", string.Empty);
             ConfigFileName = section.GetStringValue("ConfigFileName", string.Empty);
             resConfigFileName = section.GetStringValue("ResConfigFileName", ConfigFileName);
+
+            SupportsScaling = section.GetBooleanValue(nameof(SupportsScaling), SupportsScaling);
+            if (SupportsScaling)
+            {
+                ScalingSection = section.GetStringValue(nameof(ScalingSection), string.Empty);
+                ScaledWidthKey = section.GetStringValue(nameof(ScaledWidthKey), string.Empty);
+                ScaledHeightKey = section.GetStringValue(nameof(ScaledHeightKey), string.Empty);
+
+                SupportsSharpScaling = section.GetBooleanValue(nameof(SupportsSharpScaling), SupportsSharpScaling);
+
+                string sharpScalingConfigValueString = section.GetStringValue(nameof(SharpScalingConfigValue), string.Empty);
+                if (DirectDrawWrapperConfigValue.TryParse(sharpScalingConfigValueString, out var sharpScalingConfigValue))
+                {
+                    SharpScalingConfigValue = sharpScalingConfigValue;
+                }
+                else
+                {
+                    Logger.Log($"DirectDrawWrapper: Incorrect {nameof(SharpScalingConfigValue)} in renderer {InternalName}!");
+                }
+
+                string nonSharpScalingConfigValueString = section.GetStringValue(nameof(NonSharpScalingConfigValue), string.Empty);
+                if (DirectDrawWrapperConfigValue.TryParse(nonSharpScalingConfigValueString, out var nonSharpScalingConfigValue))
+                {
+                    NonSharpScalingConfigValue = nonSharpScalingConfigValue;
+                }
+                else
+                {
+                    Logger.Log($"DirectDrawWrapper: Incorrect {nameof(NonSharpScalingConfigValue)} in renderer {InternalName}!");
+                }
+            }
 
             filesToCopy = section.GetStringValue("AdditionalFiles", string.Empty).Split(
                 new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -172,13 +226,11 @@ namespace DTAConfig
                 if (section.KeyExists(keyName))
                 {
                     string keyValue = section.GetStringValue(keyName, string.Empty);
-                    var valueSplit = keyValue.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    bool success = DirectDrawWrapperConfigValue.TryParse(keyValue, out var configValue);
 
-                    if (valueSplit.Length > 2)
+                    if (success)
                     {
-                        // In case the value contains commas, join elements back together after first two
-                        var configKeyValue = string.Join(",", valueSplit.Skip(2));
-                        ForcedConfigValues.Add(new DirectDrawWrapperConfigValue(valueSplit[0], valueSplit[1], configKeyValue));
+                        ForcedConfigValues.Add(configValue);
                     }
                     else
                     {
@@ -215,8 +267,9 @@ namespace DTAConfig
                     ProgramConstants.GamePath + "ddraw.dll", true);
             }
             else
+            {
                 File.Delete(ProgramConstants.GamePath + "ddraw.dll");
-
+            }
 
             if (!string.IsNullOrEmpty(ConfigFileName) && !string.IsNullOrEmpty(resConfigFileName)
                 && !File.Exists(ProgramConstants.GamePath + ConfigFileName)) // Do not overwrite settings

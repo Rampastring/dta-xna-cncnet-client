@@ -26,7 +26,7 @@ namespace ClientCore
 
         private static string GetResolutionLabel()
         {
-            int resHeight = UserINISettings.Instance.IngameScreenHeight;
+            int resHeight = UserINISettings.Instance.ScaledScreenHeight;
             if (resHeight < 480)
                 return "400";
             else if (resHeight < 600)

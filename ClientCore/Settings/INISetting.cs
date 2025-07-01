@@ -47,6 +47,12 @@ namespace ClientCore.Settings
                 Set(DefaultValue);
         }
 
+        public void ClearValue()
+        {
+            if (IniFile.SectionExists(IniSection))
+                IniFile.GetSection(IniSection).RemoveKey(IniKey);
+        }
+
         protected abstract T Get();
 
         protected abstract void Set(T value);

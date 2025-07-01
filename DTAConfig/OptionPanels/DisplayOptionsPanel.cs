@@ -733,10 +733,10 @@ namespace DTAConfig.OptionPanels
             lblCompatibilityFixes = new XNALabel(WindowManager);
             lblCompatibilityFixes.Name = "lblCompatibilityFixes";
             lblCompatibilityFixes.FontIndex = 1;
-            lblCompatibilityFixes.Text = "Compatibility Fixes (advanced):";
+            lblCompatibilityFixes.Text = "Legacy Compatibility Fixes:";
             AddChild(lblCompatibilityFixes);
             lblCompatibilityFixes.CenterOnParent();
-            lblCompatibilityFixes.Y = Height - 103;
+            lblCompatibilityFixes.Y = Height - 97;
 
             lblGameCompatibilityFix = new XNALabel(WindowManager);
             lblGameCompatibilityFix.Name = "lblGameCompatibilityFix";
@@ -787,6 +787,7 @@ namespace DTAConfig.OptionPanels
             if (tsCompatFixString == "Yes")
             {
                 GameCompatFixInstalled = true;
+                btnGameCompatibilityFix.Text = "Disable";
             }
 
             object fsCompatFixValue = regKey.GetValue("FSCompatFixInstalled", "No");
@@ -795,6 +796,7 @@ namespace DTAConfig.OptionPanels
             if (fsCompatFixString == "Yes")
             {
                 FinalSunCompatFixInstalled = true;
+                btnMapEditorCompatibilityFix.Text = "Disable";
             }
 
             // These compatibility fixes from 2015 are no longer necessary on modern systems.

@@ -91,6 +91,7 @@ namespace DTAConfig.OptionPanels
             ddDisplayMode.ToolTip.Text = "Defines how the in-game window is displayed." + Environment.NewLine + Environment.NewLine +
                 "Borderless Windowed is recommended for most systems," + Environment.NewLine + "" +
                 "but older systems might have higher performance on Native Fullscreen.";
+            ddDisplayMode.SelectedIndexChanged += (s, e) => RefreshScaleFactors(false);
 
             var lblIngameResolution = new XNALabel(WindowManager);
             lblIngameResolution.Name = "lblIngameResolution";
@@ -299,7 +300,7 @@ namespace DTAConfig.OptionPanels
             AddChild(ddIngameResolution);
         }
 
-        private void RefreshScaleFactors()
+        private void RefreshScaleFactors(bool applyRecommendedFactor = true)
         {
             double selectedScaleFactor = 1.0;
 
@@ -309,17 +310,32 @@ namespace DTAConfig.OptionPanels
             ddScaleFactor.SelectedIndex = -1;
             ddScaleFactor.Items.Clear();
 
+            DirectDrawWrapper renderer = null;
+            if (ddRenderer.SelectedItem != null)
+                renderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
+
             // Check for error conditions. In case one exists, gray out the scaling option.
-            if (resolutions.Count <= 0 || ddIngameResolution.SelectedItem == null || 
-                ddRenderer.SelectedItem == null || !((DirectDrawWrapper)ddRenderer.SelectedItem.Tag).SupportsScaling)
+            if (resolutions.Count <= 0 || ddIngameResolution.SelectedItem == null ||
+                ddRenderer.SelectedItem == null || !renderer.SupportsScaling ||
+                (ddDisplayMode.SelectedIndex == (int)GameDisplayMode.Windowed && renderer.NoWindowedModeScaling) ||
+                (ddDisplayMode.SelectedIndex == (int)GameDisplayMode.BorderlessWindowed && renderer.NoBorderlessModeScaling))
             {
-                ddScaleFactor.Items.Add(new XNADropDownItem() { Text = "", Tag = 1.0 });
+                if (renderer != null && ddDisplayMode.SelectedIndex == (int)GameDisplayMode.Windowed && renderer.NoWindowedModeScaling)
+                    ddScaleFactor.ToolTip.Text = "The selected renderer does not support scaling in windowed mode.";
+                else
+                    ddScaleFactor.ToolTip.Text = "The selected renderer does not support scaling.";
+
+                ddScaleFactor.Items.Add(new XNADropDownItem() { Text = "1.0x", Tag = 1.0 });
                 ddScaleFactor.SelectedIndex = 0;
-                ddScaleFactor.InputEnabled = false;
+                ddScaleFactor.AllowDropDown = false;
                 return;
             }
 
-            ddScaleFactor.InputEnabled = true;
+            ddScaleFactor.ToolTip.Text = "Can be used to zoom the game view." + Environment.NewLine + Environment.NewLine + 
+                "If you select an integer-scale factor (such as 2x or 3x)," + Environment.NewLine + 
+                "the game is integer-scaled for crisp graphics if supported by the selected renderer.";
+
+            ddScaleFactor.AllowDropDown = true;
 
             int startResX;
             int startResY;
@@ -337,7 +353,7 @@ namespace DTAConfig.OptionPanels
             int resY = startResY;
 
             // If the current scale factor is 1.0, invalidate it so the code below can select a better default.
-            if (selectedScaleFactor == 1.0)
+            if (applyRecommendedFactor && selectedScaleFactor == 1.0)
                 selectedScaleFactor = 0.0;
 
             while (resX >= ClientConfiguration.Instance.MinimumIngameWidth &&
@@ -937,6 +953,14 @@ namespace DTAConfig.OptionPanels
                 IniSettings.ScaledScreenWidth.Value = scaledWidth;
                 IniSettings.ScaledScreenHeight.Value = scaledHeight;
 
+                if (rendererSettingsIni != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(selectedRenderer.GameResolutionKey))
+                    {
+                        rendererSettingsIni.SetStringValue(selectedRenderer.ScalingSection, selectedRenderer.GameResolutionKey, $"{scaledWidth}x{scaledHeight}");
+                    }
+                }
+
                 // Calculate drag selection distance, scale it with resolution width
                 int dragDistance = scaledWidth / ORIGINAL_RESOLUTION_WIDTH * DRAG_DISTANCE_DEFAULT;
                 IniSettings.DragDistance.Value = dragDistance;
@@ -953,33 +977,137 @@ namespace DTAConfig.OptionPanels
             bool windowed = ddDisplayMode.SelectedIndex == (int)(GameDisplayMode.BorderlessWindowed) || ddDisplayMode.SelectedIndex == (int)(GameDisplayMode.Windowed);
             bool borderless = ddDisplayMode.SelectedIndex == (int)(GameDisplayMode.BorderlessWindowed);
 
-            if (rendererSettingsIni != null && selectedRenderer.UsesCustomWindowedOption())
+            if (rendererSettingsIni != null)
             {
-                // Disable original game windowed mode setting to avoid it interfering with the renderer
-                IniSettings.WindowedMode.Value = false;
-
-                rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
-                    selectedRenderer.WindowedModeKey, windowed);
-
-                if (!string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey))
+                // Unfortunately, due to differences between renderers (mainly DDrawCompat being weird),
+                // we have to handle all 3 display mode cases separately.
+                if (windowed && !borderless)
                 {
-                    // Disable original game borderless windowed mode setting to avoid it interfering with the renderer
+                    // Windowed mode (with borders)
+
+                    if (selectedRenderer.UsesCustomWindowedOption())
+                    {
+                        rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
+                            selectedRenderer.WindowedModeKey, windowed);
+                    }
+                    else
+                    {
+                        IniSettings.WindowedMode.Value = windowed;
+                        IniSettings.BorderlessWindowedMode.Value = false;
+                    }
+
+                    IniSettings.BorderlessWindowedMode.Value = false;
+                    if (!string.IsNullOrWhiteSpace(selectedRenderer.BorderlessWindowedModeKey))
+                    {
+                        bool borderlessModeIniValue = borderless;
+                        if (selectedRenderer.IsBorderlessWindowedModeKeyReversed)
+                            borderlessModeIniValue = !borderlessModeIniValue;
+
+                        rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
+                            selectedRenderer.BorderlessWindowedModeKey, borderlessModeIniValue);
+                    }
+
+                    if (selectedRenderer.BorderlessModeKeyValue != null)
+                    {
+                        var section = rendererSettingsIni.GetSection(selectedRenderer.BorderlessModeKeyValue.Value.Section);
+                        if (section != null)
+                            section.RemoveKey(selectedRenderer.BorderlessModeKeyValue.Value.Key);
+                    }
+
+                    if (selectedRenderer.FullscreenModeKeyValue != null)
+                    {
+                        var section = rendererSettingsIni.GetSection(selectedRenderer.FullscreenModeKeyValue.Value.Section);
+                        if (section != null)
+                            section.RemoveKey(selectedRenderer.FullscreenModeKeyValue.Value.Key);
+                    }
+                }
+                else if (borderless)
+                {
+                    // Borderless mode
+
+                    if (selectedRenderer.UsesCustomWindowedOption())
+                    {
+                        rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
+                            selectedRenderer.WindowedModeKey, windowed);
+
+                        if (!string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey))
+                        {
+                            bool borderlessModeIniValue = borderless;
+                            if (selectedRenderer.IsBorderlessWindowedModeKeyReversed)
+                                borderlessModeIniValue = !borderlessModeIniValue;
+
+                            rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
+                                selectedRenderer.BorderlessWindowedModeKey, borderlessModeIniValue);
+
+                            IniSettings.BorderlessWindowedMode.Value = false;
+                        }
+                        else
+                        {
+                            IniSettings.BorderlessWindowedMode.Value = true;
+                        }
+
+                        // Disable game windowed mode option so it does not interfere with the renderer
+                        IniSettings.WindowedMode.Value = false;
+                    }
+                    else if (selectedRenderer.HandlesWindowedOnlyInBorderlessMode)
+                    {
+                        IniSettings.WindowedMode.Value = false;
+                        IniSettings.BorderlessWindowedMode.Value = false;
+                    }
+                    else
+                    {
+                        IniSettings.WindowedMode.Value = true;
+                        IniSettings.BorderlessWindowedMode.Value = true;
+                    }
+
+                    if (selectedRenderer.FullscreenModeKeyValue != null)
+                    {
+                        var section = rendererSettingsIni.GetSection(selectedRenderer.FullscreenModeKeyValue.Value.Section);
+                        if (section != null)
+                            section.RemoveKey(selectedRenderer.FullscreenModeKeyValue.Value.Key);
+                    }
+
+                    if (selectedRenderer.BorderlessModeKeyValue != null)
+                    {
+                        rendererSettingsIni.SetStringValue(selectedRenderer.BorderlessModeKeyValue.Value.Section,
+                            selectedRenderer.BorderlessModeKeyValue.Value.Key,
+                            selectedRenderer.BorderlessModeKeyValue.Value.Value);
+                    }
+                }
+                else
+                {
+                    // Fullscreen mode
+
+                    if (selectedRenderer.BorderlessModeKeyValue != null)
+                    {
+                        var section = rendererSettingsIni.GetSection(selectedRenderer.BorderlessModeKeyValue.Value.Section);
+                        if (section != null)
+                            section.RemoveKey(selectedRenderer.BorderlessModeKeyValue.Value.Key);
+                    }
+
+                    if (selectedRenderer.FullscreenModeKeyValue != null)
+                    {
+                        rendererSettingsIni.SetStringValue(selectedRenderer.FullscreenModeKeyValue.Value.Section,
+                            selectedRenderer.FullscreenModeKeyValue.Value.Key,
+                            selectedRenderer.FullscreenModeKeyValue.Value.Value);
+                    }
+
+                    IniSettings.WindowedMode.Value = false;
                     IniSettings.BorderlessWindowedMode.Value = false;
 
-                    bool borderlessModeIniValue = borderless;
-                    if (selectedRenderer.IsBorderlessWindowedModeKeyReversed)
-                        borderlessModeIniValue = !borderlessModeIniValue;
+                    if (selectedRenderer.UsesCustomWindowedOption())
+                    {
+                        rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
+                            selectedRenderer.WindowedModeKey, false);
 
-                    rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
-                        selectedRenderer.BorderlessWindowedModeKey, borderlessModeIniValue);
+                        if (!string.IsNullOrWhiteSpace(selectedRenderer.BorderlessWindowedModeKey))
+                        {
+                            rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection, selectedRenderer.BorderlessWindowedModeKey, false);
+                        }
+                    }
                 }
 
                 writeRendererSettings = true;
-            }
-            else
-            {
-                IniSettings.WindowedMode.Value = windowed;
-                IniSettings.BorderlessWindowedMode.Value = borderless;
             }
 
             if (selectedRenderer.ForcedConfigValues.Count > 0)

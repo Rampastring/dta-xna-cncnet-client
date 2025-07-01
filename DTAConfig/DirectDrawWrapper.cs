@@ -82,11 +82,24 @@ namespace DTAConfig
         public string BorderlessWindowedModeKey { get; private set; }
 
         /// <summary>
+        /// Determines whether this renderer enables borderless windowed mode
+        /// through its own configuration INI file instead of the game settings INI file,
+        /// EVEN when it does not enable regular windowed mode through its configuration INI file.
+        ///
+        /// (looking at you, DDrawCompat)
+        /// </summary>
+        public bool HandlesWindowedOnlyInBorderlessMode { get; private set; }
+
+        /// <summary>
         /// If set, borderless mode is enabled if the setting is "false"
         /// and disabled if the setting is "true".
         /// </summary>
         public bool IsBorderlessWindowedModeKeyReversed { get; private set; }
 
+        /// <summary>
+        /// If set, the renderer will not be listed in the user interface's
+        /// list of renderers unless it is the user's currently selected renderer.
+        /// </summary>
         public bool Hidden { get; private set; }
 
         public bool SupportsScaling { get; private set; }
@@ -94,9 +107,14 @@ namespace DTAConfig
         public string ScaledWidthKey { get; private set; }
         public string ScaledHeightKey { get; private set; }
         public string ScaledResolutionKey { get; private set; }
+        public string GameResolutionKey { get; private set; } // DDrawCompat needs this
         public bool SupportsSharpScaling { get; private set; }
         public DirectDrawWrapperConfigValue SharpScalingConfigValue { get; private set; }
         public DirectDrawWrapperConfigValue NonSharpScalingConfigValue { get; private set; }
+        public DirectDrawWrapperConfigValue? BorderlessModeKeyValue { get; private set; }
+        public DirectDrawWrapperConfigValue? FullscreenModeKeyValue { get; private set; }
+        public bool NoWindowedModeScaling { get; private set; }
+        public bool NoBorderlessModeScaling { get; private set; }
 
         /// <summary>
         /// Many ddraw wrappers need qres.dat to set the desktop to 16 bit mode
@@ -146,6 +164,7 @@ namespace DTAConfig
             WindowedModeSection = section.GetStringValue("WindowedModeSection", WindowedModeSection);
             WindowedModeKey = section.GetStringValue("WindowedModeKey", WindowedModeKey);
             BorderlessWindowedModeKey = section.GetStringValue("BorderlessWindowedModeKey", BorderlessWindowedModeKey);
+            HandlesWindowedOnlyInBorderlessMode = section.GetBooleanValue(nameof(HandlesWindowedOnlyInBorderlessMode), HandlesWindowedOnlyInBorderlessMode);
             IsBorderlessWindowedModeKeyReversed = section.GetBooleanValue("IsBorderlessWindowedModeKeyReversed",
                 IsBorderlessWindowedModeKeyReversed);
 
@@ -170,27 +189,45 @@ namespace DTAConfig
                 ScaledWidthKey = section.GetStringValue(nameof(ScaledWidthKey), string.Empty);
                 ScaledHeightKey = section.GetStringValue(nameof(ScaledHeightKey), string.Empty);
                 ScaledResolutionKey = section.GetStringValue(nameof(ScaledResolutionKey), string.Empty);
+                GameResolutionKey = section.GetStringValue(nameof(GameResolutionKey), string.Empty);
+                NoWindowedModeScaling = section.GetBooleanValue(nameof(NoWindowedModeScaling), NoWindowedModeScaling);
+                NoBorderlessModeScaling = section.GetBooleanValue(nameof(NoBorderlessModeScaling), NoBorderlessModeScaling);
 
                 SupportsSharpScaling = section.GetBooleanValue(nameof(SupportsSharpScaling), SupportsSharpScaling);
 
-                string sharpScalingConfigValueString = section.GetStringValue(nameof(SharpScalingConfigValue), string.Empty);
-                if (DirectDrawWrapperConfigValue.TryParse(sharpScalingConfigValueString, out var sharpScalingConfigValue))
+                if (SupportsSharpScaling)
                 {
-                    SharpScalingConfigValue = sharpScalingConfigValue;
-                }
-                else
-                {
-                    Logger.Log($"DirectDrawWrapper: Incorrect {nameof(SharpScalingConfigValue)} in renderer {InternalName}!");
+                    string sharpScalingConfigValueString = section.GetStringValue(nameof(SharpScalingConfigValue), string.Empty);
+                    if (DirectDrawWrapperConfigValue.TryParse(sharpScalingConfigValueString, out var sharpScalingConfigValue))
+                    {
+                        SharpScalingConfigValue = sharpScalingConfigValue;
+                    }
+                    else
+                    {
+                        Logger.Log($"DirectDrawWrapper: Incorrect {nameof(SharpScalingConfigValue)} in renderer {InternalName}!");
+                    }
+
+                    string nonSharpScalingConfigValueString = section.GetStringValue(nameof(NonSharpScalingConfigValue), string.Empty);
+                    if (DirectDrawWrapperConfigValue.TryParse(nonSharpScalingConfigValueString, out var nonSharpScalingConfigValue))
+                    {
+                        NonSharpScalingConfigValue = nonSharpScalingConfigValue;
+                    }
+                    else
+                    {
+                        Logger.Log($"DirectDrawWrapper: Incorrect {nameof(NonSharpScalingConfigValue)} in renderer {InternalName}!");
+                    }
                 }
 
-                string nonSharpScalingConfigValueString = section.GetStringValue(nameof(NonSharpScalingConfigValue), string.Empty);
-                if (DirectDrawWrapperConfigValue.TryParse(nonSharpScalingConfigValueString, out var nonSharpScalingConfigValue))
+                string borderlessModeKeyValueString = section.GetStringValue(nameof(BorderlessModeKeyValue), string.Empty);
+                if (DirectDrawWrapperConfigValue.TryParse(borderlessModeKeyValueString, out var borderlessModeKeyValue))
                 {
-                    NonSharpScalingConfigValue = nonSharpScalingConfigValue;
+                    BorderlessModeKeyValue = borderlessModeKeyValue;
                 }
-                else
+
+                string fullscreenModeKeyValueString = section.GetStringValue(nameof(FullscreenModeKeyValue), string.Empty);
+                if (DirectDrawWrapperConfigValue.TryParse(fullscreenModeKeyValueString, out var fullscreenModeKeyValue))
                 {
-                    Logger.Log($"DirectDrawWrapper: Incorrect {nameof(NonSharpScalingConfigValue)} in renderer {InternalName}!");
+                    FullscreenModeKeyValue = fullscreenModeKeyValue;
                 }
             }
 

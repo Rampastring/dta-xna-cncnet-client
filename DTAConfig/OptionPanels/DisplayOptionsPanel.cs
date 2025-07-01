@@ -898,22 +898,33 @@ namespace DTAConfig.OptionPanels
 
                     writeRendererSettings = true;
 
-                    rendererSettingsIni.SetIntValue(selectedRenderer.ScalingSection, selectedRenderer.ScaledWidthKey, unscaledIngameResolution.Width);
-                    rendererSettingsIni.SetIntValue(selectedRenderer.ScalingSection, selectedRenderer.ScaledHeightKey, unscaledIngameResolution.Height);
-
-                    if (Math.Truncate(scaleFactor) == scaleFactor)
+                    if (!string.IsNullOrWhiteSpace(selectedRenderer.ScaledWidthKey) && !string.IsNullOrWhiteSpace(selectedRenderer.ScaledHeightKey))
                     {
-                        // Enable sharp-scaling
-                        rendererSettingsIni.SetStringValue(selectedRenderer.SharpScalingConfigValue.Section,
-                            selectedRenderer.SharpScalingConfigValue.Key,
-                            selectedRenderer.SharpScalingConfigValue.Value);
+                        rendererSettingsIni.SetIntValue(selectedRenderer.ScalingSection, selectedRenderer.ScaledWidthKey, unscaledIngameResolution.Width);
+                        rendererSettingsIni.SetIntValue(selectedRenderer.ScalingSection, selectedRenderer.ScaledHeightKey, unscaledIngameResolution.Height);
                     }
-                    else
+
+                    if (!string.IsNullOrWhiteSpace(selectedRenderer.ScaledResolutionKey))
                     {
-                        // Disable sharp-scaling
-                        rendererSettingsIni.SetStringValue(selectedRenderer.NonSharpScalingConfigValue.Section,
-                            selectedRenderer.NonSharpScalingConfigValue.Key,
-                            selectedRenderer.NonSharpScalingConfigValue.Value);
+                        rendererSettingsIni.SetStringValue(selectedRenderer.ScalingSection, selectedRenderer.ScaledResolutionKey, $"{unscaledIngameResolution.Width}x{unscaledIngameResolution.Height}");
+                    }
+
+                    if (selectedRenderer.SupportsSharpScaling)
+                    {
+                        if (Math.Truncate(scaleFactor) == scaleFactor)
+                        {
+                            // Enable sharp-scaling
+                            rendererSettingsIni.SetStringValue(selectedRenderer.SharpScalingConfigValue.Section,
+                                selectedRenderer.SharpScalingConfigValue.Key,
+                                selectedRenderer.SharpScalingConfigValue.Value);
+                        }
+                        else
+                        {
+                            // Disable sharp-scaling
+                            rendererSettingsIni.SetStringValue(selectedRenderer.NonSharpScalingConfigValue.Section,
+                                selectedRenderer.NonSharpScalingConfigValue.Key,
+                                selectedRenderer.NonSharpScalingConfigValue.Value);
+                        }
                     }
                 }
                 else

@@ -93,6 +93,7 @@ namespace DTAConfig
         public string ScalingSection { get; private set; }
         public string ScaledWidthKey { get; private set; }
         public string ScaledHeightKey { get; private set; }
+        public string ScaledResolutionKey { get; private set; }
         public bool SupportsSharpScaling { get; private set; }
         public DirectDrawWrapperConfigValue SharpScalingConfigValue { get; private set; }
         public DirectDrawWrapperConfigValue NonSharpScalingConfigValue { get; private set; }
@@ -168,6 +169,7 @@ namespace DTAConfig
                 ScalingSection = section.GetStringValue(nameof(ScalingSection), string.Empty);
                 ScaledWidthKey = section.GetStringValue(nameof(ScaledWidthKey), string.Empty);
                 ScaledHeightKey = section.GetStringValue(nameof(ScaledHeightKey), string.Empty);
+                ScaledResolutionKey = section.GetStringValue(nameof(ScaledResolutionKey), string.Empty);
 
                 SupportsSharpScaling = section.GetBooleanValue(nameof(SupportsSharpScaling), SupportsSharpScaling);
 

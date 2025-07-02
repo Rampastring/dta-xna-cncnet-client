@@ -34,11 +34,11 @@ namespace DTAConfig.OptionPanels
         {
         }
 
+        private XNAClientDropDown ddRenderer;
         private XNAClientDropDown ddDisplayMode;
         private XNAClientDropDown ddIngameResolution;
         private XNAClientDropDown ddScaleFactor;
         private XNAClientDropDown ddDetailLevel;
-        private XNAClientDropDown ddRenderer;
         private XNAClientCheckBox chkBackBufferInVRAM;
         private XNAClientCheckBox chkStretchMovies;
         private XNAClientCheckBox chkClassicMessageListPosition;
@@ -71,19 +71,35 @@ namespace DTAConfig.OptionPanels
 
             var clientConfig = ClientConfiguration.Instance;
 
+            var lblRenderer = new XNALabel(WindowManager);
+            lblRenderer.Name = "lblRenderer";
+            lblRenderer.X = 12;
+            lblRenderer.Y = 14;
+            lblRenderer.Text = "Renderer:";
+            AddChild(lblRenderer);
+
+            ddRenderer = new XNAClientDropDown(WindowManager);
+            ddRenderer.Name = "ddRenderer";
+            ddRenderer.X = 124;
+            ddRenderer.Y = lblRenderer.Y - 2;
+            ddRenderer.Width = 134;
+            ddRenderer.Height = 19;
+            ddRenderer.SelectedIndexChanged += (s, e) => RefreshScaleFactors();
+            AddChild(ddRenderer);
+
             var lblDisplayMode = new XNALabel(WindowManager);
             lblDisplayMode.Name = nameof(lblDisplayMode);
-            lblDisplayMode.X = 12;
-            lblDisplayMode.Y = 14;
+            lblDisplayMode.X = lblRenderer.X;
+            lblDisplayMode.Y = ddRenderer.Bottom + 16;
             lblDisplayMode.Text = "Display Mode:";
             AddChild(lblDisplayMode);
 
             ddDisplayMode = new XNAClientDropDown(WindowManager);
             ddDisplayMode.Name = nameof(ddDisplayMode);
-            ddDisplayMode.X = 124;
+            ddDisplayMode.X = ddRenderer.X;
             ddDisplayMode.Y = lblDisplayMode.Y - 2;
-            ddDisplayMode.Width = 120;
-            ddDisplayMode.Height = 19;
+            ddDisplayMode.Width = ddRenderer.Width;
+            ddDisplayMode.Height = ddRenderer.Height;
             AddChild(ddDisplayMode);
             ddDisplayMode.AddItem("Borderless Windowed");
             ddDisplayMode.AddItem("Native Fullscreen");
@@ -95,14 +111,13 @@ namespace DTAConfig.OptionPanels
 
             var lblIngameResolution = new XNALabel(WindowManager);
             lblIngameResolution.Name = "lblIngameResolution";
-            lblIngameResolution.ClientRectangle = new Rectangle(lblDisplayMode.X, ddDisplayMode.Bottom + 16, 0, 0);
+            lblIngameResolution.ClientRectangle = new Rectangle(lblRenderer.X, ddDisplayMode.Bottom + 16, 0, 0);
             lblIngameResolution.Text = "In-Game Resolution:";
 
             ddIngameResolution = new XNAClientDropDown(WindowManager);
             ddIngameResolution.Name = "ddIngameResolution";
             ddIngameResolution.ClientRectangle = new Rectangle(
-                lblIngameResolution.Right + 12,
-                lblIngameResolution.Y - 2, ddDisplayMode.Width, ddDisplayMode.Height);
+                ddRenderer.X, lblIngameResolution.Y - 2, ddRenderer.Width, ddRenderer.Height);
             ddIngameResolution.SelectedIndexChanged += (s, e) => RefreshScaleFactors();
 
             resolutions = GetResolutions(clientConfig.MinimumIngameWidth, 
@@ -116,17 +131,17 @@ namespace DTAConfig.OptionPanels
 
             var lblScaleFactor = new XNALabel(WindowManager);
             lblScaleFactor.Name = nameof(lblScaleFactor);
-            lblScaleFactor.X = lblDisplayMode.X;
+            lblScaleFactor.X = lblRenderer.X;
             lblScaleFactor.Y = ddIngameResolution.Bottom + 16;
             lblScaleFactor.Text = "Scale Factor:";
             AddChild(lblScaleFactor);
 
             ddScaleFactor = new XNAClientDropDown(WindowManager);
             ddScaleFactor.Name = nameof(ddScaleFactor);
-            ddScaleFactor.X = ddDisplayMode.X;
+            ddScaleFactor.X = ddRenderer.X;
             ddScaleFactor.Y = lblScaleFactor.Y - 2;
-            ddScaleFactor.Width = ddDisplayMode.Width;
-            ddScaleFactor.Height = ddDisplayMode.Height;
+            ddScaleFactor.Width = ddRenderer.Width;
+            ddScaleFactor.Height = ddRenderer.Height;
             AddChild(ddScaleFactor);
 
             var lblDetailLevel = new XNALabel(WindowManager);
@@ -138,28 +153,13 @@ namespace DTAConfig.OptionPanels
             ddDetailLevel = new XNAClientDropDown(WindowManager);
             ddDetailLevel.Name = "ddDetailLevel";
             ddDetailLevel.ClientRectangle = new Rectangle(
-                ddIngameResolution.X,
+                ddRenderer.X,
                 lblDetailLevel.Y - 2,
-                ddIngameResolution.Width, 
-                ddIngameResolution.Height);
+                ddRenderer.Width, 
+                ddRenderer.Height);
             ddDetailLevel.AddItem("Low");
             ddDetailLevel.AddItem("Medium");
             ddDetailLevel.AddItem("High");
-
-            var lblRenderer = new XNALabel(WindowManager);
-            lblRenderer.Name = "lblRenderer";
-            lblRenderer.ClientRectangle = new Rectangle(lblDetailLevel.X,
-                ddDetailLevel.Bottom + 16, 0, 0);
-            lblRenderer.Text = "Renderer:";
-
-            ddRenderer = new XNAClientDropDown(WindowManager);
-            ddRenderer.Name = "ddRenderer";
-            ddRenderer.ClientRectangle = new Rectangle(
-                ddDetailLevel.X,
-                lblRenderer.Y - 2,
-                ddDetailLevel.Width,
-                ddDetailLevel.Height);
-            ddRenderer.SelectedIndexChanged += (s, e) => RefreshScaleFactors();
 
             GetRenderers();
 
@@ -181,7 +181,7 @@ namespace DTAConfig.OptionPanels
             chkBackBufferInVRAM.Name = "chkBackBufferInVRAM";
             chkBackBufferInVRAM.ClientRectangle = new Rectangle(
                 lblDetailLevel.X,
-                ddRenderer.Bottom + 12, 0, 0);
+                ddDetailLevel.Bottom + 12, 0, 0);
             chkBackBufferInVRAM.Text = "Back Buffer in Video Memory" + Environment.NewLine +
                 "(lower performance, but is" + Environment.NewLine + "necessary on some systems)";
 
@@ -211,7 +211,7 @@ namespace DTAConfig.OptionPanels
                 lblClientResolution.Right + 12,
                 lblClientResolution.Y - 2,
                 Width - (lblClientResolution.Right + 24),
-                ddIngameResolution.Height);
+                ddRenderer.Height);
             ddClientResolution.AllowDropDown = false;
             ddClientResolution.PreferredItemLabel = "(recommended)";
 
@@ -257,25 +257,24 @@ namespace DTAConfig.OptionPanels
             chkBorderlessClient.Name = "chkBorderlessClient";
             chkBorderlessClient.ClientRectangle = new Rectangle(
                 lblClientResolution.X,
-                lblScaleFactor.Y, 0, 0);
+                lblIngameResolution.Y, 0, 0);
             chkBorderlessClient.Text = "Fullscreen Client";
             chkBorderlessClient.CheckedChanged += ChkBorderlessMenu_CheckedChanged;
             chkBorderlessClient.Checked = true;
 
             var lblClientTheme = new XNALabel(WindowManager);
             lblClientTheme.Name = "lblClientTheme";
-            lblClientTheme.ClientRectangle = new Rectangle(
-                lblClientResolution.X,
-                lblIngameResolution.Y, 0, 0);
+            lblClientTheme.X = lblClientResolution.X;
+            lblClientTheme.Y = lblDisplayMode.Y;
             lblClientTheme.Text = "Client Theme:";
 
             ddClientTheme = new XNAClientDropDown(WindowManager);
             ddClientTheme.Name = "ddClientTheme";
             ddClientTheme.ClientRectangle = new Rectangle(
                 ddClientResolution.X,
-                ddIngameResolution.Y,
+                ddDisplayMode.Y,
                 ddClientResolution.Width,
-                ddIngameResolution.Height);
+                ddClientResolution.Height);
 
             int themeCount = ClientConfiguration.Instance.ThemeCount;
 
@@ -292,8 +291,6 @@ namespace DTAConfig.OptionPanels
             AddChild(ddClientTheme);
             AddChild(lblClientResolution);
             AddChild(ddClientResolution);
-            AddChild(lblRenderer);
-            AddChild(ddRenderer);
             AddChild(lblDetailLevel);
             AddChild(ddDetailLevel);
             AddChild(lblIngameResolution);

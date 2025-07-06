@@ -653,17 +653,24 @@ namespace DTAConfig.OptionPanels
         {
             { new Point(640, 480), 1.0 },
             { new Point(800, 600), 1.0 },
-            { new Point(1024, 768), 1.25 },
-            { new Point(1280, 720), 1.5 },
+            { new Point(800, 1280), 1.25 },
+            { new Point(1024, 768), 1.0 },
+            { new Point(1280, 720), 1.25 },
+            { new Point(1280, 800), 1.25 },
             { new Point(1280, 1024), 1.25 },
-            { new Point(1366, 768), 1.0 },
+            { new Point(1360, 768), 1.25 },
+            { new Point(1366, 768), 1.25 },
             { new Point(1440, 900), 1.25 },
             { new Point(1600, 900), 1.25 },
-            { new Point(1650, 1080), 1.5 },
+            { new Point(1680, 1050), 1.5 },
             { new Point(1920, 1080), 1.5 },
+            { new Point(1920, 1200), 1.5 },
             { new Point(2560, 1080), 2.0 },
             { new Point(2560, 1440), 2.0 },
-            { new Point(3840, 2160), 3.0 }
+            { new Point(2880, 1800), 3.0 },
+            { new Point(3440, 1440), 2.0 },
+            { new Point(3840, 2160), 3.0 },
+            { new Point(5120, 1440), 2.0 },
         };
 
         public override void Load()

@@ -51,6 +51,7 @@ namespace DTAClient.DXGUI
             AssetLoader.AssetSearchPaths.Add(ProgramConstants.GetResourcePath());
             AssetLoader.AssetSearchPaths.Add(ProgramConstants.GetBaseResourcePath());
             AssetLoader.AssetSearchPaths.Add(ProgramConstants.GamePath);
+            UISettings.ActiveSettings = new UISettings();
 
 #if !XNA && !WINDOWSGL
             // Try to create and load a texture to check for MonoGame 3.7.1 compatibility

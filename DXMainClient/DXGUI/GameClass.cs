@@ -25,6 +25,10 @@ namespace DTAClient.DXGUI
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.SynchronizeWithVerticalRetrace = false;
+
+            if (Screen.PrimaryScreen.Bounds.Width >= 3840)
+                graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
 #if !XNA
             graphics.HardwareModeSwitch = false;
 #endif

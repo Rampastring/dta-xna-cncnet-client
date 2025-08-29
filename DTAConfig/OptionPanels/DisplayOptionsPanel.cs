@@ -612,7 +612,7 @@ namespace DTAConfig.OptionPanels
                 ddClientResolution.AllowDropDown = false;
                 ScreenResolution nativeRes = new ScreenResolution(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
 
-                int nativeResIndex = ddClientResolution.Items.FindIndex(i => (ScreenResolution)i.Tag == nativeRes);
+                int nativeResIndex = ddClientResolution.Items.FindIndex(i => ((ScreenResolution)i.Tag).Equals(nativeRes));
                 if (nativeResIndex > -1)
                     ddClientResolution.SelectedIndex = nativeResIndex;
             }

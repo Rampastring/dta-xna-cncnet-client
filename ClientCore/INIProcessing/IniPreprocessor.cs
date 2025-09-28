@@ -17,6 +17,8 @@ namespace ClientCore.INIProcessing
     {
         public void ProcessIni(string sourceIniPath, string destinationIniPath)
         {
+            Logger.Log($"{nameof(IniPreprocessor)}: Processing " + Path.GetFileName(sourceIniPath));
+
             File.Delete(destinationIniPath);
 
             if (!File.Exists(sourceIniPath))
@@ -31,6 +33,7 @@ namespace ClientCore.INIProcessing
                               $"; generates this file based on its contents.";
 
             iniFile.WriteIniFile(destinationIniPath);
+            Logger.Log($"{nameof(IniPreprocessor)}: Finished processing " + Path.GetFileName(sourceIniPath));
         }
 
         /// <summary>

@@ -52,11 +52,12 @@ namespace ClientGUI
                 waitTimes++;
                 if (waitTimes > 10)
                 {
-                    Logger.Log("INI preprocessing not completed when launching game!");
+                    Logger.Log("INI preprocessing timed out (10 seconds) when launching game!");
 
                     INIPreprocessingFailed = true;
                     PreprocessorBackgroundTask.Instance.LogException();
                     PreprocessorBackgroundTask.Instance.LogState();
+                    break;
                 }
             }
 

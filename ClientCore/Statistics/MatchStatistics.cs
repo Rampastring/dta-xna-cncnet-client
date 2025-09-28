@@ -67,6 +67,12 @@ namespace ClientCore.Statistics
 
             string logFileName = LogFileFinder.GetLogFilePath();
 
+            if (string.IsNullOrWhiteSpace(logFileName))
+            {
+                Logger.Log("WARNING: Could not parse log file after game end because no suitable log file was found!");
+                return;
+            }
+
             var parser = new LogFileStatisticsParser(this, isLoadedGame);
             parser.ParseStats(gamePath, logFileName);
         }

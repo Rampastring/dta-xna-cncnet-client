@@ -174,6 +174,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected IniFile GameOptionsIni { get; private set; }
 
         private GameModeDescriptionPanel gameModeDescriptionPanel;
+        private AIDifficultyDescriptionPanel aiDifficultyDescriptionPanel;
+
         private ToolTip gameModeLabelTooltip;
 
         public bool IsGameOptionFlagEnabled(GameOptionFlags flagToCheck, GameOptionFlags flagsContainer)
@@ -198,7 +200,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 AssetLoader.LoadTexture("rankNormal.png"),
                 AssetLoader.LoadTexture("rankHard.png"),
                 AssetLoader.LoadTexture("rankBrutal.png"),
-                AssetLoader.LoadTexture("rankBrutal.png")
+                AssetLoader.LoadTexture("rankExtreme.png"),
+                AssetLoader.LoadTexture("rankExtreme.png")
             };
 
             MPColors = MultiplayerColor.LoadColors();
@@ -269,6 +272,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             gameModeDescriptionPanel.X = ddGameMode.Right;
             gameModeDescriptionPanel.Y = ddGameMode.Y;
             gameModeDescriptionPanel.Disable();
+
+            aiDifficultyDescriptionPanel = new AIDifficultyDescriptionPanel(WindowManager);
+            aiDifficultyDescriptionPanel.Name = nameof(aiDifficultyDescriptionPanel);
+            AddChild(aiDifficultyDescriptionPanel);
+            aiDifficultyDescriptionPanel.Disable();
 
             gameModeLabelTooltip = new ToolTip(WindowManager, lblGameMode);
         }
@@ -548,6 +556,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerName.AddItem(AILevelToName(2));
                 ddPlayerName.AddItem(AILevelToName(3));
                 ddPlayerName.AddItem(AILevelToName(4));
+                ddPlayerName.AddItem(AILevelToName(5));
                 ddPlayerName.AllowDropDown = true;
                 ddPlayerName.SelectedIndexChanged += CopyPlayerDataFromUI;
                 ddPlayerName.Tag = true;
@@ -1487,6 +1496,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerName.Items[2].Text = string.Empty;
                 ddPlayerName.Items[3].Text = "Kick";
                 ddPlayerName.Items[4].Text = "Ban";
+                ddPlayerName.Items[5].Text = string.Empty;
+                ddPlayerName.Items[6].Text = string.Empty;
+
                 ddPlayerName.SelectedIndex = 0;
                 ddPlayerName.AllowDropDown = false;
 
@@ -1524,6 +1536,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerName.Items[2].Text = AILevelToName(1);
                 ddPlayerName.Items[3].Text = AILevelToName(2);
                 ddPlayerName.Items[4].Text = AILevelToName(3);
+                ddPlayerName.Items[5].Text = AILevelToName(4);
+                ddPlayerName.Items[6].Text = AILevelToName(5);
                 ddPlayerName.SelectedIndex = aiInfo.AILevel + 1;
                 ddPlayerName.AllowDropDown = allowOptionsChange;
 
@@ -2104,11 +2118,47 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
         }
 
+        private void UpdateAIDifficultyDescriptionPanel()
+        {
+            bool isVisible = false;
+
+            for (int i = Players.Count(); i < MAX_PLAYER_COUNT; i++)
+            {
+                XNADropDown dd = ddPlayerNames[i];
+
+                if (dd.IsActive)
+                {
+                    if (dd.HoveredIndex > 0 && dd.DropDownState != DropDownState.CLOSED)
+                    {
+                        int difficultyIndex = dd.HoveredIndex - 1;
+                        string description = ProgramConstants.GetAILevelDescription(difficultyIndex);
+                        if (!string.IsNullOrEmpty(description))
+                        {
+                            isVisible = true;
+                            aiDifficultyDescriptionPanel.DifficultyIndex = difficultyIndex;
+                            aiDifficultyDescriptionPanel.Enable();
+                            var winrect = dd.GetWindowRectangle();
+                            aiDifficultyDescriptionPanel.Y = winrect.Y - this.Y + (dd.HoveredIndex * dd.ItemHeight + dd.DropDownOpenTexture.Height);
+                            aiDifficultyDescriptionPanel.X = winrect.Right - this.X;
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            if (!isVisible && aiDifficultyDescriptionPanel.Enabled)
+            {
+                aiDifficultyDescriptionPanel.Disable();
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             UpdateGameModeDescriptionPanel();
+            UpdateAIDifficultyDescriptionPanel();
         }
 
         protected abstract bool AllowPlayerOptionsChange();

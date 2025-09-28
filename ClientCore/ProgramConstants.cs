@@ -83,8 +83,10 @@ namespace ClientCore
         {
             switch (aiLevel)
             {
-                case 4:
+                case 5:
                     return "Ultimate AI";
+                case 4:
+                    return "Extreme AI";
                 case 3:
                     return "Brutal AI";
                 case 2:
@@ -93,6 +95,33 @@ namespace ClientCore
                     return "Medium AI";
                 case 0:
                     return "Easy AI";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        public static string GetAILevelDescription(int aiLevel)
+        {
+            switch (aiLevel)
+            {
+                case 5:
+                    return "Ultimate AI. Has full intelligence and aggressiveness, and massive bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                        "For top-tier DTA players who want a challenge despite an imbalanced map or team setup, like 2 players vs 1 AI.";
+                case 4:
+                    return "Extreme AI. Has full intelligence and aggressiveness, and significant bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                        "For top-tier DTA players.";
+                case 3:
+                    return "Brutal AI. Has full intelligence and aggressiveness, and a little bit of bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                        "For experienced DTA players who seek a tough challenge.";
+                case 2:
+                    return "Hard AI. Has full intelligence and aggressiveness." + Environment.NewLine + Environment.NewLine +
+                        "For experienced C&C players who seek a reasonable challenge.";
+                case 1:
+                    return "Medium AI. Has limited intelligence and aggressiveness, and a slight penalty to build speed." + Environment.NewLine + Environment.NewLine +
+                        "For players with some previous C&C or RTS experience, or skilled players who want a casual match.";
+                case 0:
+                    return "Easy AI. Has reduced intelligence and aggressiveness, and a large penalty to build speed." + Environment.NewLine + Environment.NewLine +
+                        "For new players who are new to Command & Conquer or RTS games.";
                 default:
                     return string.Empty;
             }

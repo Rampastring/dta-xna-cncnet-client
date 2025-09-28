@@ -447,6 +447,12 @@ namespace DTAClient.Domain.Singleplayer
 
             string logFileName = LogFileFinder.GetLogFilePath();
 
+            if (string.IsNullOrWhiteSpace(logFileName))
+            {
+                Logger.Log("WARNING: Could not parse log file after game end because no suitable log file was found!");
+                return;
+            }
+
             if (!File.Exists(ProgramConstants.GamePath + logFileName))
             {
                 Logger.Log("WARNING: Could not parse log file after game end because the log file was not found!");

@@ -308,6 +308,7 @@
     <Compile Include="DXGUI\Generic\ExtrasWindow.cs" />
     <Compile Include="DXGUI\GameClass.cs" />
     <Compile Include="DXGUI\Multiplayer\GameLoadingLobbyBase.cs" />
+    <Compile Include="DXGUI\Multiplayer\GameLobby\AIDifficultyDescriptionPanel.cs" />
     <Compile Include="DXGUI\Multiplayer\GameLobby\ChatBoxCommand.cs" />
     <Compile Include="DXGUI\Multiplayer\GameLobby\CnCNetGameLobby.cs" />
     <Compile Include="DXGUI\Multiplayer\GameLobby\CommandHandlers\CommandHandlerBase.cs" />

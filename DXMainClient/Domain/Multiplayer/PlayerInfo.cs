@@ -47,19 +47,21 @@ namespace DTAClient.Domain.Multiplayer
         /// <summary>
         /// The difficulty level of an AI player for in-client purposes.
         /// Logical increasing scale, like in the vanilla Tiberian Sun UI.
-        /// 4 = Ultimate, 3 = Brutal, 2 = Hard, 1 = Medium, 0 = Easy.
+        /// 5 = Ultimate, 4 = Extreme, 3 = Brutal, 2 = Hard, 1 = Medium, 0 = Easy.
         /// </summary>
         public int AILevel { get; set; }
 
         /// <summary>
         /// Returns the level of the AI for the [HouseHandicaps] section in spawn.ini.
-        /// 4 = Ultimate, 3 = Brutal, 2 = Easy, 1 = Medium, 0 = Hard.
+        /// 5 = Ultimate, 4 = Extreme, 3 = Brutal, 2 = Easy, 1 = Medium, 0 = Hard.
         /// Yes, it's weird due to TS engine limitations.
         /// </summary>
         public int GetHouseHandicapAILevel()
         {
             switch (AILevel)
             {
+                case 5:
+                    return 5;
                 case 4:
                     return 4;
                 case 3:

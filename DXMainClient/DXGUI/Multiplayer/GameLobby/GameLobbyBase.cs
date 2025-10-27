@@ -53,6 +53,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const int RANK_HARD = 3;
         private const int RANK_BRUTAL = 4;
 
+        protected const int AI_DIFFICULTY_LEVEL_COUNT = 7;
+
         /// <summary>
         /// Creates a new instance of the game lobby base.
         /// </summary>
@@ -201,7 +203,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 AssetLoader.LoadTexture("rankHard.png"),
                 AssetLoader.LoadTexture("rankBrutal.png"),
                 AssetLoader.LoadTexture("rankExtreme.png"),
-                AssetLoader.LoadTexture("rankExtreme.png")
+                AssetLoader.LoadTexture("rankUltimate.png"),
+                AssetLoader.LoadTexture("rankUltimate.png"),
             };
 
             MPColors = MultiplayerColor.LoadColors();
@@ -551,12 +554,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     locationY + (DROP_DOWN_HEIGHT + playerOptionVecticalMargin) * i,
                     playerNameWidth, DROP_DOWN_HEIGHT);
                 ddPlayerName.AddItem(string.Empty);
-                ddPlayerName.AddItem(AILevelToName(0));
-                ddPlayerName.AddItem(AILevelToName(1));
-                ddPlayerName.AddItem(AILevelToName(2));
-                ddPlayerName.AddItem(AILevelToName(3));
-                ddPlayerName.AddItem(AILevelToName(4));
-                ddPlayerName.AddItem(AILevelToName(5));
+                for (int diffIndex = 0; diffIndex < AI_DIFFICULTY_LEVEL_COUNT; diffIndex++)
+                    ddPlayerName.AddItem(AILevelToName(diffIndex));
                 ddPlayerName.AllowDropDown = true;
                 ddPlayerName.SelectedIndexChanged += CopyPlayerDataFromUI;
                 ddPlayerName.Tag = true;
@@ -1492,12 +1491,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 XNADropDown ddPlayerName = ddPlayerNames[pId];
                 ddPlayerName.Items[0].Text = pInfo.Name;
-                ddPlayerName.Items[1].Text = string.Empty;
-                ddPlayerName.Items[2].Text = string.Empty;
+                for (int i = 1; i < ddPlayerName.Items.Count; i++)
+                {
+                    ddPlayerName.Items[i].Text = string.Empty;
+                    ddPlayerName.Items[i].Selectable = false;
+                }
+
                 ddPlayerName.Items[3].Text = "Kick";
+                ddPlayerName.Items[3].Selectable = true;
                 ddPlayerName.Items[4].Text = "Ban";
-                ddPlayerName.Items[5].Text = string.Empty;
-                ddPlayerName.Items[6].Text = string.Empty;
+                ddPlayerName.Items[4].Selectable = true;
 
                 ddPlayerName.SelectedIndex = 0;
                 ddPlayerName.AllowDropDown = false;
@@ -1532,12 +1535,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 XNADropDown ddPlayerName = ddPlayerNames[index];
                 ddPlayerName.Items[0].Text = "-";
-                ddPlayerName.Items[1].Text = AILevelToName(0);
-                ddPlayerName.Items[2].Text = AILevelToName(1);
-                ddPlayerName.Items[3].Text = AILevelToName(2);
-                ddPlayerName.Items[4].Text = AILevelToName(3);
-                ddPlayerName.Items[5].Text = AILevelToName(4);
-                ddPlayerName.Items[6].Text = AILevelToName(5);
+                for (int i = 0; i < AI_DIFFICULTY_LEVEL_COUNT; i++)
+                {
+                    ddPlayerName.Items[i + 1].Text = AILevelToName(i);
+                    ddPlayerName.Items[i + 1].Selectable = true;
+                }
                 ddPlayerName.SelectedIndex = aiInfo.AILevel + 1;
                 ddPlayerName.AllowDropDown = allowOptionsChange;
 
@@ -1565,10 +1567,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 XNADropDown ddPlayerName = ddPlayerNames[ddIndex];
                 ddPlayerName.AllowDropDown = false;
                 ddPlayerName.Items[0].Text = string.Empty;
-                ddPlayerName.Items[1].Text = AILevelToName(0);
-                ddPlayerName.Items[2].Text = AILevelToName(1);
-                ddPlayerName.Items[3].Text = AILevelToName(2);
-                ddPlayerName.Items[4].Text = AILevelToName(3);
+                for (int i = 0; i < AI_DIFFICULTY_LEVEL_COUNT; i++)
+                {
+                    ddPlayerName.Items[i + 1].Text = AILevelToName(i);
+                    ddPlayerName.Items[i + 1].Selectable = true;
+                }
                 ddPlayerName.SelectedIndex = 0;
 
                 ddPlayerSides[ddIndex].SelectedIndex = -1;

@@ -850,6 +850,9 @@ namespace DTAClient.DXGUI.Generic
             int numMediumAIs = 0;
             int numHardAIs = 0;
             int numBrutalAIs = 0;
+            int numExtremeAIs = 0;
+            int numUltimateAIs = 0;
+            int numImpossibleAIs = 0;
 
             foreach (int gameIndex in listedGameIndexes)
             {
@@ -903,8 +906,14 @@ namespace DTAClient.DXGUI.Generic
                                     numMediumAIs++;
                                 else if (ps.AILevel == 2)
                                     numHardAIs++;
-                                else
+                                else if (ps.AILevel == 3)
                                     numBrutalAIs++;
+                                else if (ps.AILevel == 4)
+                                    numExtremeAIs++;
+                                else if (ps.AILevel == 5)
+                                    numUltimateAIs++;
+                                else
+                                    numImpossibleAIs++;
                             }
                         }
                     }
@@ -966,14 +975,35 @@ namespace DTAClient.DXGUI.Generic
             lblTotalScoreValue.Text = totalScore.ToString();
             lblFavouriteSideValue.Text = sides[GetHighestIndex(sideGameCounts)];
 
-            if (numEasyAIs >= numMediumAIs && numEasyAIs >= numHardAIs && numEasyAIs >= numBrutalAIs)
-                lblAverageAILevelValue.Text = "Easy";
-            else if (numMediumAIs >= numEasyAIs && numMediumAIs >= numHardAIs && numMediumAIs >= numBrutalAIs)
-                lblAverageAILevelValue.Text = "Medium";
-            else if (numHardAIs >= numEasyAIs && numHardAIs >= numMediumAIs && numHardAIs >= numBrutalAIs)
-                lblAverageAILevelValue.Text = "Hard";
-            else
-                lblAverageAILevelValue.Text = "Brutal";
+            int[] aiPlayerNumbers = new int[]
+            {
+                numEasyAIs,
+                numMediumAIs,
+                numHardAIs,
+                numBrutalAIs,
+                numExtremeAIs,
+                numUltimateAIs,
+                numImpossibleAIs
+            };
+
+            int total = aiPlayerNumbers.Aggregate((prev, curr) => prev + curr);
+
+            if (total <= 0)
+                lblAverageAILevelValue.Text = "None";
+            else if (aiPlayerNumbers.All(n => n <= numEasyAIs))
+                lblAverageAILevelValue.Text = ProgramConstants.GetAILevelName(0);
+            else if (aiPlayerNumbers.All(n => n <= numMediumAIs))
+                lblAverageAILevelValue.Text = ProgramConstants.GetAILevelName(1);
+            else if (aiPlayerNumbers.All(n => n <= numHardAIs))
+                lblAverageAILevelValue.Text = ProgramConstants.GetAILevelName(2);
+            else if (aiPlayerNumbers.All(n => n <= numBrutalAIs))
+                lblAverageAILevelValue.Text = ProgramConstants.GetAILevelName(3);
+            else if (aiPlayerNumbers.All(n => n <= numExtremeAIs))
+                lblAverageAILevelValue.Text = ProgramConstants.GetAILevelName(4);
+            else if (aiPlayerNumbers.All(n => n <= numUltimateAIs))
+                lblAverageAILevelValue.Text = ProgramConstants.GetAILevelName(5);
+            else if (aiPlayerNumbers.All(n => n <= numImpossibleAIs))
+                lblAverageAILevelValue.Text = ProgramConstants.GetAILevelName(6);
         }
 
         private PlayerStatistics FindLocalPlayer(MatchStatistics ms)

@@ -13,7 +13,7 @@ namespace ClientCore.Statistics
         private const string SCORE_FILE_PATH = "Client/dscore.dat";
         private const string OLD_SCORE_FILE_PATH = "dscore.dat";
 
-        private const int AI_LEVEL_MAX = 3;
+        private const int AI_LEVEL_MAX = 7;
 
         private static StatisticsManager _instance;
 

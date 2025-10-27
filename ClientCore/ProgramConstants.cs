@@ -83,6 +83,8 @@ namespace ClientCore
         {
             switch (aiLevel)
             {
+                case 6:
+                    return "Impossible AI";
                 case 5:
                     return "Ultimate AI";
                 case 4:
@@ -104,24 +106,27 @@ namespace ClientCore
         {
             switch (aiLevel)
             {
-                case 5:
-                    return "Ultimate AI. Has full intelligence and aggressiveness, and massive bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                case 6:
+                    return "Impossible AI. Has full intelligence and aggressiveness, and massive bonus income and build speed." + Environment.NewLine + Environment.NewLine +
                         "For top-tier DTA players who want a challenge despite an imbalanced map or team setup, like 2 players vs 1 AI.";
+                case 5:
+                    return "Ultimate AI. Has full intelligence and aggressiveness, and high bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                        "For top-tier DTA players.";
                 case 4:
                     return "Extreme AI. Has full intelligence and aggressiveness, and significant bonus income and build speed." + Environment.NewLine + Environment.NewLine +
-                        "For top-tier DTA players.";
+                        "For highly experienced DTA players.";
                 case 3:
-                    return "Brutal AI. Has full intelligence and aggressiveness, and a little bit of bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                    return "Brutal AI. Has full intelligence and aggressiveness, and slight bonus income." + Environment.NewLine + Environment.NewLine +
                         "For experienced DTA players who seek a tough challenge.";
                 case 2:
-                    return "Hard AI. Has full intelligence and aggressiveness." + Environment.NewLine + Environment.NewLine +
-                        "For experienced C&C players who seek a reasonable challenge.";
+                    return "Hard AI. Has full intelligence and aggressiveness, and no penalties or bonuses relative to human players." + Environment.NewLine + Environment.NewLine +
+                        "For moderately experienced players who seek a reasonable challenge.";
                 case 1:
-                    return "Medium AI. Has limited intelligence and aggressiveness, and a slight penalty to build speed." + Environment.NewLine + Environment.NewLine +
-                        "For players with some previous C&C or RTS experience, or skilled players who want a casual match.";
+                    return "Medium AI. Has slighly reduced intelligence and aggressiveness, and a slight penalty to build speed." + Environment.NewLine + Environment.NewLine +
+                        "For players with some previous C&C or RTS experience, or experienced players who want a casual match.";
                 case 0:
-                    return "Easy AI. Has reduced intelligence and aggressiveness, and a large penalty to build speed." + Environment.NewLine + Environment.NewLine +
-                        "For new players who are new to Command & Conquer or RTS games.";
+                    return "Easy AI. Has highly reduced intelligence and aggressiveness, and a high penalty to build speed." + Environment.NewLine + Environment.NewLine +
+                        "For players who are new to Command & Conquer or RTS games.";
                 default:
                     return string.Empty;
             }

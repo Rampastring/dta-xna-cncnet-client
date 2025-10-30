@@ -84,13 +84,13 @@ namespace ClientCore
             switch (aiLevel)
             {
                 case 6:
-                    return "Impossible AI";
-                case 5:
                     return "Ultimate AI";
-                case 4:
+                case 5:
                     return "Extreme AI";
-                case 3:
+                case 4:
                     return "Brutal AI";
+                case 3:
+                    return "Very Hard AI";
                 case 2:
                     return "Hard AI";
                 case 1:
@@ -107,16 +107,16 @@ namespace ClientCore
             switch (aiLevel)
             {
                 case 6:
-                    return "Impossible AI. Has full intelligence and aggressiveness, and massive bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                    return "Ultimate AI. Has full intelligence and aggressiveness, and massive bonus income and build speed." + Environment.NewLine + Environment.NewLine +
                         "For top-tier DTA players who want a challenge despite an imbalanced map or team setup, like 2 players vs 1 AI.";
                 case 5:
-                    return "Ultimate AI. Has full intelligence and aggressiveness, and high bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                    return "Extreme AI. Has full intelligence and aggressiveness, and high bonus income and build speed." + Environment.NewLine + Environment.NewLine +
                         "For top-tier DTA players.";
                 case 4:
-                    return "Extreme AI. Has full intelligence and aggressiveness, and significant bonus income and build speed." + Environment.NewLine + Environment.NewLine +
+                    return "Brutal AI. Has full intelligence and aggressiveness, and significant bonus income and build speed." + Environment.NewLine + Environment.NewLine +
                         "For highly experienced DTA players.";
                 case 3:
-                    return "Brutal AI. Has full intelligence and aggressiveness, and slight bonus income." + Environment.NewLine + Environment.NewLine +
+                    return "Very Hard AI. Has full intelligence and aggressiveness, and slight bonus income." + Environment.NewLine + Environment.NewLine +
                         "For experienced DTA players who seek a tough challenge.";
                 case 2:
                     return "Hard AI. Has full intelligence and aggressiveness, and no penalties or bonuses relative to human players." + Environment.NewLine + Environment.NewLine +

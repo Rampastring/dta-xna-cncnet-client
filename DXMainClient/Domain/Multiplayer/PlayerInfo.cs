@@ -58,14 +58,11 @@ namespace DTAClient.Domain.Multiplayer
         /// </summary>
         public int GetHouseHandicapAILevel()
         {
+            if (AILevel >= 3)
+                return AILevel;
+
             switch (AILevel)
             {
-                case 5:
-                    return 5;
-                case 4:
-                    return 4;
-                case 3:
-                    return 3;
                 case 2:
                     return 0;
                 case 1:

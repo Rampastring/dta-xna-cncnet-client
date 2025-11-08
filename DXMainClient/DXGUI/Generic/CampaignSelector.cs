@@ -11,6 +11,7 @@ using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Updater;
 
 namespace DTAClient.DXGUI.Generic
@@ -735,10 +736,28 @@ namespace DTAClient.DXGUI.Generic
                     globalVariableNames[i].Text = global.UIName;
                     globalVariableNames[i].TextColor = UISettings.ActiveSettings.TextColor;
                     globalVariableNames[i].Enable();
-                    globalVariableToolTips[i].Text = global.ToolTip;
+                    globalVariableToolTips[i].Text = global.ToolTip ?? string.Empty;
 
                     bool disabledSelectable = global.IsDisabledUnlocked || global.DisableOptionFreeUnlock;
                     bool enabledSelectable = global.IsEnabledUnlocked;
+
+                    if (!enabledSelectable && !string.IsNullOrWhiteSpace(global.UnlockEnabledStateFromScenario))
+                    {
+                        var unlockMission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == global.UnlockEnabledStateFromScenario);
+                        if (unlockMission != null && unlockMission.Rank != DifficultyRank.NONE)
+                        {
+                            enabledSelectable = true;
+                        }
+                    }
+
+                    if (!disabledSelectable && !string.IsNullOrWhiteSpace(global.UnlockDisabledStateFromScenario))
+                    {
+                        var unlockMission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == global.UnlockDisabledStateFromScenario);
+                        if (unlockMission != null && unlockMission.Rank != DifficultyRank.NONE)
+                        {
+                            disabledSelectable = true;
+                        }
+                    }
 
                     if (disabledSelectable)
                     {
@@ -797,6 +816,16 @@ namespace DTAClient.DXGUI.Generic
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
             var mission = lbCampaignList.SelectedItem.Tag as Mission;
+
+            if (!File.Exists(ProgramConstants.GamePath + mission.Scenario))
+            {
+                XNAMessageBox.Show(WindowManager,
+                    "Scenario Not Found",
+                    $"The scenario file for the mission {mission.Scenario} was not found!" + Environment.NewLine + Environment.NewLine +
+                    "The scenario cannot be launched.");
+
+                return;
+            }
 
             if (IsPreconditionCombinationInvalid(mission))
             {

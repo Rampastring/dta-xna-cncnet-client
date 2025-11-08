@@ -46,7 +46,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             lbBonusList.X = 12;
             lbBonusList.Y = lblDescription.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             lbBonusList.Width = Width - (lbBonusList.X * 2);
-            lbBonusList.Height = 350;
+            lbBonusList.Height = 365;
             AddChild(lbBonusList);
             lbBonusList.SelectedIndexChanged += LbBonusList_SelectedIndexChanged;
             lbBonusList.HoveredIndexChanged += LbBonusList_HoveredIndexChanged;

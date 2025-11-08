@@ -61,7 +61,7 @@ namespace DTAClient.Domain.Singleplayer
         public List<Bonus> Bonuses { get; } = new List<Bonus>()
         {
             new Bonus("Armor", "Armor", "M_CR2", "Your units and buildings have 10% more HP.", "Some extra armor would've been helpful when trying to survive against those Gatling tanks.", new Difficulty() { Armor = 1.1 } ),
-            new Bonus("Speed", "Speed", "M_CR3", "Your units move 12% faster.", "More speed would've allowed us to reinforce that base quicker.", new Difficulty() { Groundspeed = 1.008, Airspeed = 1.12 } ),
+            new Bonus("Speed", "Speed", "M_CR3", "Your units move 15% faster.", "More speed would've allowed us to reinforce that base quicker.", new Difficulty() { Groundspeed = 1.035, Airspeed = 1.15 } ),
             new Bonus("Cost", "Cost", "M_CR4", "Your units and buildings cost 8% less.", "A more efficient unit production process would've helped with limited resources.", new Difficulty() { Cost = 0.92 } ),
             new Bonus("Build Time", "BuildTime", "M_CR5", "Your units and buildings build 10% faster.", "Every second counts when setting up a defensive line or preparing to quickly rush your opponent.", new Difficulty() { BuildTime = 0.91 } ),
             new Bonus("Rate of Fire", "RoF", "M_CR6", "Your units and defenses take 10% less time to reload after firing.", "Shooting faster is universally useful.", new Difficulty() { ROF = .819 } ),
@@ -69,7 +69,7 @@ namespace DTAClient.Domain.Singleplayer
             new Bonus("Turtle", "Turtle", "M_CRA10", "Your units and buildings have 10% more HP and build 10% faster. Rate of fire is 10% slower.", "For most effective defending, you want to build defenses faster AND have them last longer! Rate of fire is not as important.", new Difficulty() { Armor = 1.10, BuildTime = 0.91, ROF = 1.001 } ),
             new Bonus("Infiltrator", "Infiltrator", "M_CRA12", "Your units and buildings have 10% more HP and deal 10% more damage. Everything costs 14% more.", "Training skilled infiltrators is expensive, but worth it for critical missions.", new Difficulty() { Armor = 1.10, Firepower = 1.10, Cost = 1.14 } ),
             new Bonus("Generalist", "Generalist", "M_CRA14", "All objects have 2% more HP, move 2% faster, cost 2% less, build 2% faster, reload 2% faster, and deal 2% more damage", "You were just following orders. Unimaginative, but still a learning experience.", 
-                new Difficulty() { Armor = 1.02, Groundspeed = 1.02, Airspeed = 1.02, Cost = 0.98, BuildTime = 0.98, ROF = 0.8918, Firepower = 1.02 } ),
+                new Difficulty() { Armor = 1.02, Groundspeed = 0.918, Airspeed = 1.02, Cost = 0.98, BuildTime = 0.98, ROF = 0.8918, Firepower = 1.02 } ),
             new Bonus("Hit and Run", "HitAndRun", "M_CRB10", "Your units move 12% faster and your units and buildings deal 10% more damage. Rate of fire is 12% slower.", "More speed and more damage with a hit would've allowed some intense kiting with those Tank Destroyers.", new Difficulty() { Groundspeed = 1.008, Airspeed = 1.12, Firepower = 1.1, ROF = 1.0192 } ),
             new Bonus("Entrencher", "Entrencher", "M_CRB12", "Your units and buildings have 10% more HP and cost 10% less. Your units move 12% slower.", "Once you establish yourself on a shoreline, you don't allow yourself to get pushed back into the water.", new Difficulty() { Armor = 1.10, Cost = 0.90, Groundspeed = .792 } ),
             new Bonus("Nimble", "Nimble", "M_CRB13", "Your units are 24% faster. Your units and buildings have 10% less HP.", "More mobility would have helped with catching those quick Nod units. And due to their lightness, we can beat them even with less armor.", new Difficulty() { Armor = 0.9, Groundspeed = 1.116, Airspeed = 1.24 } ),
@@ -82,6 +82,8 @@ namespace DTAClient.Domain.Singleplayer
             new Bonus("Rapid Fire", "RapidFire", "M_CRC15", "Your units and defenses take 25% less time to reload after firing. Your units and buildings are 12% more expensive and deal 5% less damage per shot.", "Our machine guns were already effective, but it wouldn't have hurt to fire even faster to counter those GDI Grenadier waves.", new Difficulty() { ROF = 0.6825, Cost=1.12, Firepower=0.95 } ),
             new Bonus("Rapid Response", "RapidResponse", "M_CRC15", "Your units are 12% faster, and your units and buildings take 10% less time to build. Everything costs 10% more.", "We found ourselves flanked pretty often. More speed and faster production would have helped in those situations.", new Difficulty() { Groundspeed=1.008, BuildTime=0.9, Cost=1.1 } ),
             new Bonus("Destroyer", "Destroyer", "M_CRC16", "Your units take 10% less time to reload after firing and deal 10% more damage. Everything costs 10% more.", "You've established a reputation as a terrifying opponent. Let them know fear.", new Difficulty() { ROF=.819, Firepower=1.1, Cost=1.1 } ),
+            new Bonus("Propagandist", "Propagandist", "M_CREXT", "Your units and buildings cost 25% less. Your units and buildings have 5% less HP and deal 5% less damage.", "Your victories have earned fame far and wide. Who wouldn't want to die for such a successful army? You certainly wouldn't have difficulty with recruitment.", new Difficulty() { Cost=0.75, Firepower=0.95, Armor=0.95 } ),
+            new Bonus("Flexible", "Flexible", "M_CREXT", "Your units and buildings cost 12% less. Your units are 15% faster. Your units and buildings have 10% less HP.", "When unsure what goals to pursue, speed and savings keep the options open for exploiting any opportunity.", new Difficulty() { Cost=0.88, Groundspeed=1.035, Airspeed=1.15, Armor=0.9 }),
         };
 
         public List<CampaignGlobalVariable> GlobalVariables { get; } = new List<CampaignGlobalVariable>();
@@ -341,6 +343,20 @@ namespace DTAClient.Domain.Singleplayer
 
             string difficultyName = mission.GetNameForDifficultyRankStylized(selectedDifficultyLevel);
 
+            int forcedSide = -1;
+            string forcedSideName = null;
+            if (globalFlagInfo != null)
+            {
+                foreach (var kvp in globalFlagInfo)
+                {
+                    if (kvp.Value && GlobalVariables[kvp.Key].EnabledStateForcedSide > -1)
+                    {
+                        forcedSide = GlobalVariables[kvp.Key].EnabledStateForcedSide;
+                        forcedSideName = GlobalVariables[kvp.Key].EnabledStateForcedSideName;
+                    }
+                }
+            }
+
             Logger.Log("Writing spawner settings and map file for a singleplayer session.");
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
             using (StreamWriter swriter = new StreamWriter(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS))
@@ -360,14 +376,16 @@ namespace DTAClient.Domain.Singleplayer
                 swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
                 swriter.WriteLine("Firestorm=" + mission.RequiredAddon);
 
+                int side = forcedSide > -1 ? forcedSide : mission.Side;
+
                 if (!string.IsNullOrWhiteSpace(mission.LoadingScreenPath))
                     swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.LoadingScreenPath));
                 else
-                    swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.Side));
+                    swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(side));
 
                 swriter.WriteLine("IsSinglePlayer=Yes");
                 swriter.WriteLine("SidebarHack=" + ClientConfiguration.Instance.SidebarHack);
-                swriter.WriteLine("Side=" + mission.Side);
+                swriter.WriteLine("Side=" + side);
                 swriter.WriteLine("BuildOffAlly=" + mission.BuildOffAlly);
                 swriter.WriteLine("DifficultyName=" + difficultyName);
                 if (UserINISettings.Instance.EnableSPAutoSave)
@@ -426,6 +444,20 @@ namespace DTAClient.Domain.Singleplayer
                 // Force values of EndOfGame and SkipScore as our progression tracking currently relies on them
                 mapIni.SetBooleanValue("Basic", "EndOfGame", true);
                 mapIni.SetBooleanValue("Basic", "SkipScore", false);
+
+                // This is rather ugly, but it works
+                if (forcedSide > -1)
+                {
+                    string playerHouseSectionName = mapIni.GetStringValue("Basic", "Player", string.Empty);
+                    if (!string.IsNullOrWhiteSpace(playerHouseSectionName))
+                    {
+                        mapIni.SetIntValue(playerHouseSectionName, "ActsLike", forcedSide);
+
+                        if (forcedSideName != null)
+                            mapIni.SetStringValue(playerHouseSectionName, "Side", forcedSideName);
+                    }
+                }
+
                 mapIni.WriteIniFile(ProgramConstants.GamePath + "spawnmap.ini");
             }
         }

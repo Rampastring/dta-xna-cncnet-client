@@ -76,6 +76,26 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public bool EnabledThroughPreviousScenario { get; set; }
 
+        /// <summary>
+        /// If not null, specifies a scenario which unlocks this global's "enabled" state when the scenario has been completed.
+        /// </summary>
+        public string UnlockEnabledStateFromScenario { get; set; }
+
+        /// <summary>
+        /// If not null, specifies a scenario which unlocks this global's "disabled" state when the scenario has been completed.
+        /// </summary>
+        public string UnlockDisabledStateFromScenario { get; set; }
+
+        /// <summary>
+        /// If above 0, setting this global to the "Enabled" state forces the player's Side to the specific value.
+        /// </summary>
+        public int EnabledStateForcedSide { get; set; } = -1;
+
+        /// <summary>
+        /// If <see cref="EnabledStateForcedSide"/> is above 0, this defines the name of the side that the player's house should be set to belong into.
+        /// </summary>
+        public string EnabledStateForcedSideName { get; set; }
+
         public void InitFromIniSection(IniSection iniSection)
         {
             UIName = iniSection.GetStringValue(nameof(UIName), UIName);
@@ -84,6 +104,11 @@ namespace DTAClient.Domain.Singleplayer
             DisableOptionFreeUnlock = iniSection.GetBooleanValue(nameof(DisableOptionFreeUnlock), DisableOptionFreeUnlock);
             HideIfNotEnabledUnlocked = iniSection.GetBooleanValue(nameof(HideIfNotEnabledUnlocked), HideIfNotEnabledUnlocked);
             ToolTip = iniSection.GetStringValue(nameof(ToolTip), ToolTip);
+
+            UnlockEnabledStateFromScenario = iniSection.GetStringValue(nameof(UnlockEnabledStateFromScenario), UnlockEnabledStateFromScenario);
+            UnlockDisabledStateFromScenario = iniSection.GetStringValue(nameof(UnlockDisabledStateFromScenario), UnlockDisabledStateFromScenario);
+            EnabledStateForcedSide = iniSection.GetIntValue(nameof(EnabledStateForcedSide), EnabledStateForcedSide);
+            EnabledStateForcedSideName = iniSection.GetStringValue(nameof(EnabledStateForcedSideName), EnabledStateForcedSideName);
         }
     }
 }

@@ -57,6 +57,9 @@
         CRC16,
         CRC16Victory,
 
+        CREXT,
+        CRENDEXT,
+
         PTTP1,
         PTTP2,
         PTTP3,

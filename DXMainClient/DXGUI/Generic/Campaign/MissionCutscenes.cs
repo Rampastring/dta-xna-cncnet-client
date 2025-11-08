@@ -226,6 +226,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 case Cutscene.CRC16Victory:
                     return CRC16Victory();
 
+                case Cutscene.CREXT:
+                    return CRExtraMission();
+                case Cutscene.CRENDEXT:
+                    return CRExtraVictory();
+
                 /* PTTP */
                 case Cutscene.PTTP1:
                     return PTTP1();
@@ -551,31 +556,40 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                // if (!extraBeat)
-                // {
-                //     if (extraUnlocked)
-                //     {
-                //         phases.Add(new Phase(lastPhaseID + 5,
-                //             storyDisplay =>
-                //             {
-                //                 storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
-                //             },
-                //             null,
-                //             null,
-                //             null));
-                //     }
-                //     else
-                //     {
-                //         phases.Add(new Phase(lastPhaseID + 5,
-                //             storyDisplay =>
-                //             {
-                //                 storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
-                //             },
-                //             null,
-                //             null,
-                //             null));
-                //     }
-                // }
+                if (!extraBeat)
+                {
+                    if (extraUnlocked)
+                    {
+                        phases.Add(new Phase(lastPhaseID + 5,
+                            storyDisplay =>
+                            {
+                                storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
+                            },
+                            null,
+                            null,
+                            null));
+                    }
+                    else
+                    {
+                        phases.Add(new Phase(lastPhaseID + 5,
+                            storyDisplay =>
+                            {
+                                storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
+                            },
+                            null,
+                            null,
+                            null));
+
+                        phases.Add(new Phase(lastPhaseID + 6,
+                            storyDisplay =>
+                            {
+                                storyDisplay.ConversationDisplay.ConversationText = "Was there something important to capture that you missed...?";
+                            },
+                            null,
+                            null,
+                            null));
+                    }
+                }
 
                 return;
             }
@@ -602,6 +616,50 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null));
 
                 return;
+            }
+
+            if (!extraBeat)
+            {
+                if (extraUnlocked)
+                {
+                    phases.Add(new Phase(lastPhaseID + 1,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "Congratulations on beating Route A!";
+                        },
+                        null,
+                        null,
+                        null));
+
+                    phases.Add(new Phase(lastPhaseID + 2,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "There is still the bonus mission left as a challenge...";
+                        },
+                        null,
+                        null,
+                        null));
+                }
+                else
+                {
+                    phases.Add(new Phase(lastPhaseID + 1,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "Congratulations on beating Route A!";
+                        },
+                        null,
+                        null,
+                        null));
+
+                    phases.Add(new Phase(lastPhaseID + 2,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "It appears you did not unlock the bonus mission. Was there something important to capture that you missed...?";
+                        },
+                        null,
+                        null,
+                        null));
+                }
             }
 
             phases.Add(new Phase(lastPhaseID + 1,
@@ -676,31 +734,31 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                // if (!extraBeat)
-                // {
-                //     if (extraUnlocked)
-                //     {
-                //         phases.Add(new Phase(lastPhaseID + 5,
-                //             storyDisplay =>
-                //             {
-                //                 storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
-                //             },
-                //             null,
-                //             null,
-                //             null));
-                //     }
-                //     else
-                //     {
-                //         phases.Add(new Phase(lastPhaseID + 5,
-                //             storyDisplay =>
-                //             {
-                //                 storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
-                //             },
-                //             null,
-                //             null,
-                //             null));
-                //     }
-                // }
+                if (!extraBeat)
+                {
+                    if (extraUnlocked)
+                    {
+                        phases.Add(new Phase(lastPhaseID + 5,
+                            storyDisplay =>
+                            {
+                                storyDisplay.ConversationDisplay.ConversationText = "There is also the bonus mission to play.";
+                            },
+                            null,
+                            null,
+                            null));
+                    }
+                    else
+                    {
+                        phases.Add(new Phase(lastPhaseID + 5,
+                            storyDisplay =>
+                            {
+                                storyDisplay.ConversationDisplay.ConversationText = "There would also be the bonus mission to play. But it appears you have missed the optional objective for unlocking it.";
+                            },
+                            null,
+                            null,
+                            null));
+                    }
+                }
 
                 return;
             }
@@ -729,6 +787,50 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 return;
             }
 
+            if (!extraBeat)
+            {
+                if (extraUnlocked)
+                {
+                    phases.Add(new Phase(lastPhaseID + 1,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "Congratulations on beating Route B!";
+                        },
+                        null,
+                        null,
+                        null));
+
+                    phases.Add(new Phase(lastPhaseID + 2,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "There is still the bonus mission left as a challenge...";
+                        },
+                        null,
+                        null,
+                        null));
+                }
+                else
+                {
+                    phases.Add(new Phase(lastPhaseID + 1,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "Congratulations on beating Route B!";
+                        },
+                        null,
+                        null,
+                        null));
+
+                    phases.Add(new Phase(lastPhaseID + 2,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "It appears you did not unlock the bonus mission. Was there something important to capture that you missed...?";
+                        },
+                        null,
+                        null,
+                        null));
+                }
+            }
+
             phases.Add(new Phase(lastPhaseID + 1,
                 storyDisplay =>
                 {
@@ -737,6 +839,446 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null,
                 null));
+        }
+
+        private void AddPostRouteCHintPhases(List<Phase> phases)
+        {
+            int lastPhaseID = phases[phases.Count - 1].ID;
+
+            bool aRouteUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRA9" && m.IsUnlocked);
+            bool aRouteBeat = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRA14" && m.Rank > DifficultyRank.NONE);
+            bool bRouteUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRB9" && m.IsUnlocked);
+            bool bRouteBeat = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CRB17" && m.Rank > DifficultyRank.NONE);
+            bool extraUnlocked = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CREXT" && m.IsUnlocked);
+            bool extraBeat = CampaignHandler.Instance.Missions.Exists(m => m.InternalName == "M_CREXT" && m.Rank > DifficultyRank.NONE);
+
+            if (!aRouteBeat || !bRouteBeat || !extraBeat)
+            {
+                phases.Add(new Phase(lastPhaseID + 1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Congratulations on completing Route C.";
+                        storyDisplay.ConversationDisplay.TextColor = Color.Red;
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(lastPhaseID + 2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "You have carved yourself a piece of the world through blood.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                if (!aRouteBeat)
+                {
+                    if (!bRouteBeat)
+                    {
+                        phases.Add(new Phase(lastPhaseID + 3,
+                            storyDisplay =>
+                            {
+                                storyDisplay.ConversationDisplay.ConversationText = "Will you be able to get to Route A and Route B? Return to more usual kind of warfare...";
+                                storyDisplay.ConversationDisplay.TextColor = Color.White;
+                            },
+                            null,
+                            null,
+                            null));
+                    }
+                    else
+                    {
+                        phases.Add(new Phase(lastPhaseID + 3,
+                            storyDisplay =>
+                            {
+                                storyDisplay.ConversationDisplay.ConversationText = "Will you be able to get to Route A? Return to more usual kind of warfare...";
+                                storyDisplay.ConversationDisplay.TextColor = Color.White;
+                            },
+                            null,
+                            null,
+                            null));
+                    }
+                }
+                else if (!bRouteBeat)
+                {
+                    phases.Add(new Phase(lastPhaseID + 3,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "Will you be able to get to Route B? Reject the genocide and return to more usual kind of warfare...";
+                            storyDisplay.ConversationDisplay.TextColor = Color.White;
+                        },
+                        null,
+                        null,
+                        null));
+                }
+
+                return;
+            }
+
+            if (!extraBeat)
+            {
+                phases.Add(new Phase(lastPhaseID + 3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "There is still the bonus mission left as a challenge.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                if (!extraUnlocked)
+                {
+                    phases.Add(new Phase(lastPhaseID + 1,
+                        storyDisplay =>
+                        {
+                            storyDisplay.ConversationDisplay.ConversationText = "But you haven't unlocked it yet.";
+                        },
+                        null,
+                        null,
+                        null));
+                }
+
+                return;
+            }
+
+            phases.Add(new Phase(lastPhaseID + 1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Congratulations on beating all routes of Covert Revolt!";
+                },
+                null,
+                null,
+                null));
+        }
+
+        private List<Phase> CRExtraVictory()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    storyDisplay.ConversationDisplay.ConversationText = "Congratulations for completing the Covert Revolt Bonus Mission!";
+                    storyDisplay.ConversationDisplay.TextColor = Color.White;
+                    TryPlaySong(raintro);
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(2,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Your success and the fighting style of the \"Pink Menace\" Nod unit has inspired the command.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(3,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "You have unlocked two more Bonuses!";
+                },
+                null,
+                null,
+                null));
+
+
+            var crc14 = CampaignHandler.Instance.Missions.Find(m => m.InternalName == "M_CRC14");
+            var crc15 = CampaignHandler.Instance.Missions.Find(m => m.InternalName == "M_CRC15");
+
+            if (crc14 != null && crc15 != null && crc14.Rank == DifficultyRank.BRUTAL && crc15.Rank == DifficultyRank.BRUTAL)
+            {
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Maybe they could help complete Ultimate difficulty in Route C...?";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "...wait. You've done that already.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Nevermind then.";
+                    },
+                    null,
+                    null,
+                    null));
+            }
+
+            return phases;
+        }
+
+        private List<Phase> CRExtraMission()
+        {
+            var phases = new List<Phase>();
+
+            var usingGDIEquipmentVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_CR_USING_GDI_EQUIPMENT_IN_EXTRA");
+
+            if (usingGDIEquipmentVariable != null && usingGDIEquipmentVariable.EnabledThroughPreviousScenario)
+            {
+                phases.Add(new Phase(1,
+                storyDisplay =>
+                {
+                    storyDisplay.AddSimpleStoryImage("Story/CR/gdilogo.png", 1, 0f).AlphaRate = 2.5f;
+                    storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                    storyDisplay.ConversationDisplay.IsCentered = true;
+                    newtarg1.Play();
+                    TryPlaySong(chrg226m);
+
+                    MediaPlayer.IsRepeating = true;
+                    MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                },
+                null,
+                null,
+                null));
+
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.IsCentered = false;
+                        storyDisplay.ConversationDisplay.ConversationText = "Greetings.";
+                        storyDisplay.ConversationDisplay.TextColor = Color.Yellow;
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg04.png", 2, 0f);
+                        beepy3.Play();
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "With the data you brought us from the Nod radar facility, we have discovered where Nod took our MCV and other technology.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg05.png", 3, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                        storyDisplay.RemoveStoryImageById(1);
+                    },
+                    null,
+                    null,
+                    storyDisplay => storyDisplay.RemoveStoryImageById(2)));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Nod has brought them to an archipelago.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg02.png", 4, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                        AddTDDisplay(storyDisplay, 50);
+                    },
+                    null,
+                    null,
+                    storyDisplay => storyDisplay.RemoveStoryImageById(3)));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "The area is controlled by a special unit of Nod that they call the \"Pink Menace\".";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg06.png", 5, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                        AddTDDisplayImage(storyDisplay, "Story/CR/CREXT/pinkmenace.png", 51);
+                    },
+                    null,
+                    null,
+                    storyDisplay => storyDisplay.RemoveStoryImageById(4)));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "We don't know whether the name holds any significance, but they are known for performing surgical strikes, often utilizing stolen technology and advanced weaponry.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg03.png", 6, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                    },
+                    null,
+                    null,
+                    storyDisplay => storyDisplay.RemoveStoryImageById(5)));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "You will make a direct landing there and take out all of Nod's production facilities along with the technology they took from us.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg03.png", 7, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                        AddTDDisplayImage(storyDisplay, "Story/CR/CREXT/shore.png", 52);
+                    },
+                    null,
+                    null,
+                    storyDisplay => { storyDisplay.RemoveStoryImageById(6); storyDisplay.RemoveStoryImageById(51); }));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Our intelligence estimates the archipelago's defenses to be light, but Nod has surprised us before. Don't take it too easy.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg02.png", 8, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                        storyDisplay.FindStoryImageById(52).AlphaRate = crTDdisplayImageDisappearAlphaRate;
+                    },
+                    null,
+                    null,
+                    storyDisplay => storyDisplay.RemoveStoryImageById(7)));
+
+                phases.Add(new Phase(9,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Good luck.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CRB12/bg07.png", 9, 0f).AlphaRate = FACE_ANIM_ALPHA_RATE;
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CREXT/crtitle_pink.png", 11, 1.0f).DrawOrder = -11;
+                        storyDisplay.FindStoryImageById(50).AlphaRate = -crRAdisplayAlphaRate;
+                        beepy2.Play();
+                    },
+                    storyDisplay => storyDisplay.RemoveStoryImageById(8),
+                    storyDisplay => { storyDisplay.RemoveStoryImageById(52); storyDisplay.RemoveStoryImageById(50); },
+                    storyDisplay => { storyDisplay.FindStoryImageById(9).AlphaRate = -2.0f; toney4.Play(); }));
+
+                phases.Add(new Phase(10,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.TextColor = Color.White;
+                        storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                        storyDisplay.ConversationDisplay.IsCentered = true;
+                    },
+                    null,
+                    null,
+                    null));
+            }
+            else
+            {
+                phases.Add(new Phase(0,
+                    storyDisplay =>
+                    {
+                        storyDisplay.AddSimpleStoryImage("Story/CR/coatofarms.png", 0, 0f).AlphaRate = 2.5f;
+                        storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                        storyDisplay.ConversationDisplay.IsCentered = true;
+                        country4.Play();
+
+                        TryPlaySong(vector1a);
+                        MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * CONVERSATION_MUSIC_VOLUME_MODIFIER;
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(1,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.IsCentered = false;
+                        storyDisplay.ConversationDisplay.ConversationText = "Commander. The data you brought from the radar has resulted in a breakthrough.";
+                        storyDisplay.ConversationDisplay.TextColor = Color.Turquoise;
+                        storyDisplay.AddSimpleStoryImage(crOfficeBgPath, 1, 0f);
+                        country1.Play();
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(2,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "GDI, with the help of our intelligence, has tracked down where Nod took the MCVs they stole from us and GDI.";
+                        storyDisplay.RemoveStoryImageById(0);
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(3,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Nod has brought them to a nearby archipelago.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(4,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "It's outside of our borders, but GDI is requesting our assistance in clearing the area, in exchange for more assistance in the reconstruction of our country.";
+                    },
+                    null,
+                    null,
+                    storyDisplay => AddRADisplay(storyDisplay, 2)));
+
+                phases.Add(new Phase(5,
+                    storyDisplay =>
+                    {
+                        AddRADisplayImage(storyDisplay, "Story/CR/CREXT/shore.png", 3);
+                        storyDisplay.ConversationDisplay.ConversationText = "You will be making a direct landing there. We have already prepared an Enforcer alongside other elite troops for the task.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(6,
+                    storyDisplay =>
+                    {
+                        AddRADisplayImage(storyDisplay, "Story/CR/CREXT/pinkmenace.png", 4);
+                        storyDisplay.ConversationDisplay.ConversationText = "The archipelago is controlled by a special unit of Nod that they themselves call the \"Pink Menace\".";
+                    },
+                    null,
+                    null,
+                    storyDisplay => storyDisplay.RemoveStoryImageById(3)));
+
+                phases.Add(new Phase(7,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Sounds ridiculous, doesn't it?";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(8,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Moreover, GDI intelligence is telling us that while Nod has spent considerable time and resources to reverse-engineer our technology, the garrison in the area is light.";
+                    },
+                    null,
+                    null,
+                    null));
+
+                phases.Add(new Phase(9,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Maybe they'll even surrender once your forces hit the shore.";
+                    },
+                    storyDisplay => { storyDisplay.FindStoryImageById(4).AlphaRate = -2.0f; bleep12.Play(); },
+                    storyDisplay => storyDisplay.RemoveStoryImageById(4),
+                    null));
+
+                phases.Add(new Phase(10,
+                    storyDisplay =>
+                    {
+                        storyDisplay.ConversationDisplay.ConversationText = "Anyway, you have achieved victories from worse positions by now. I'm sure you'll come back victorious once again.";
+                        storyDisplay.AddSimpleStoryImage("Story/CR/CREXT/crtitle_pink.png", 11, 1.0f).DrawOrder = -11;
+                    },
+                    storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -crRAdisplayAlphaRate; bleep17.Play(); },
+                    null,
+                    null));
+
+                phases.Add(new Phase(11,
+                    storyDisplay =>
+                    {
+                        storyDisplay.FindStoryImageById(1).AlphaRate = -2.0f;
+                        toney4.Play();
+                        storyDisplay.ConversationDisplay.TextColor = Color.White;
+                        storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                        storyDisplay.ConversationDisplay.IsCentered = true;
+                    },
+                    null,
+                    null,
+                    storyDisplay => { storyDisplay.RemoveStoryImageById(1); }));
+            }
+
+            return phases;
         }
 
         private List<Phase> CRC16Victory()
@@ -1027,6 +1569,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
             AddCreditPhases(phases, new Color(128, 0, 0));
+            AddPostRouteCHintPhases(phases);
 
             return phases;
         }

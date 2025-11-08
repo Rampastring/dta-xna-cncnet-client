@@ -229,7 +229,7 @@ namespace ClientCore
             if (!Directory.Exists(ProgramConstants.GamePath + SavedGamesDirectory))
                 Directory.CreateDirectory(ProgramConstants.GamePath + SavedGamesDirectory);
 
-            string[] saveFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*.SAV");
+            string[] saveFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*.SAV", SearchOption.TopDirectoryOnly);
 
             GameSessionInfo previousSessionInfo = GameSessionInfo.ParseFromFile(ProgramConstants.GamePath + LastSessionFilePath);
 
@@ -284,6 +284,7 @@ namespace ClientCore
                         string metaFileDestination = Path.ChangeExtension(destination, SavedGameMetaExtension);
                         File.Delete(metaFileDestination);
                         meta.WriteToFile(metaFileDestination, Path.GetFileName(save));
+                        File.Delete(metaFilePath);
                     }
                     catch (IOException ex)
                     {
@@ -319,7 +320,7 @@ namespace ClientCore
                 }
             }
 
-            string[] mpSaveFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*.NET");
+            string[] mpSaveFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*.NET", SearchOption.TopDirectoryOnly);
             string mpSaveDirPath = ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY;
             Directory.CreateDirectory(mpSaveDirPath);
             foreach (string save in mpSaveFiles)
@@ -382,6 +383,21 @@ namespace ClientCore
                 {
                     Logger.Log($"{ MultiplayerSaveGameManager.SPAWN_INI_NAME } already exists in MULTIPLAYER saves directory (how??). Deleting the oprhan file in the main saved games directory instead.");
                     File.Delete(spawnSGIniPath);
+                }
+            }
+
+            // If there are lone metadata files in the folder after the above processes, delete them.
+            string[] metaFiles = Directory.GetFiles(ProgramConstants.GamePath + SavedGamesDirectory, "*" + SavedGameMetaExtension, SearchOption.TopDirectoryOnly);
+
+            foreach (string path in metaFiles)
+            {
+                try
+                {
+                    File.Delete(path);
+                }
+                catch (IOException ex)
+                {
+                    Logger.Log("FAILED to delete save file metadata! Returned exception message: " + ex.Message);
                 }
             }
         }
@@ -477,12 +493,16 @@ namespace ClientCore
 
                                 Logger.Log("Moving metadata file " + metaFilePath.Substring(ProgramConstants.GamePath.Length));
 
-                                File.Move(metaFilePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(metaFilePath));
+                                string metaFilePathDest = ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(metaFilePath);
+                                File.Delete(metaFilePathDest);
+                                File.Move(metaFilePath, metaFilePathDest);
                             }
 
                             Logger.Log("Moving save " + savePath.Substring(ProgramConstants.GamePath.Length));
 
-                            File.Move(savePath, ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(savePath));
+                            string savePathDest = ProgramConstants.GamePath + SavedGamesDirectory + "/" + Path.GetFileName(savePath);
+                            File.Delete(savePathDest);
+                            File.Move(savePath, savePathDest);
                         }
                     }
                     catch (IOException ex)

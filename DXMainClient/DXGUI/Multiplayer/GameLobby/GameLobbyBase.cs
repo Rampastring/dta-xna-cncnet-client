@@ -51,9 +51,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const int RANK_EASY = 1;
         private const int RANK_MEDIUM = 2;
         private const int RANK_HARD = 3;
-        private const int RANK_BRUTAL = 4;
-
-        protected const int AI_DIFFICULTY_LEVEL_COUNT = 7;
+        private const int RANK_VERY_HARD = 4;
+        private const int RANK_BRUTAL = 5;
+        private const int RANK_EXTREME = 6;
+        private const int RANK_ULTIMATE = 7;
 
         /// <summary>
         /// Creates a new instance of the game lobby base.
@@ -201,9 +202,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 AssetLoader.LoadTexture("rankEasy.png"),
                 AssetLoader.LoadTexture("rankNormal.png"),
                 AssetLoader.LoadTexture("rankHard.png"),
+                AssetLoader.LoadTexture("rankVeryHard.png"),
                 AssetLoader.LoadTexture("rankBrutal.png"),
                 AssetLoader.LoadTexture("rankExtreme.png"),
-                AssetLoader.LoadTexture("rankUltimate.png"),
                 AssetLoader.LoadTexture("rankUltimate.png"),
             };
 
@@ -334,10 +335,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             switch (coopDifficultyLevel)
             {
-                case 0: return RANK_HARD;
-                case 1: return RANK_MEDIUM;
+                case 0: return RANK_BRUTAL;
+                case 1: return RANK_HARD;
                 case 2: return RANK_EASY;
-                case 3: return RANK_BRUTAL;
+                case 3: return RANK_EXTREME;
+                case 4: return RANK_ULTIMATE;
                 default: return RANK_NONE;
             }
         } 
@@ -554,7 +556,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     locationY + (DROP_DOWN_HEIGHT + playerOptionVecticalMargin) * i,
                     playerNameWidth, DROP_DOWN_HEIGHT);
                 ddPlayerName.AddItem(string.Empty);
-                for (int diffIndex = 0; diffIndex < AI_DIFFICULTY_LEVEL_COUNT; diffIndex++)
+                for (int diffIndex = 0; diffIndex < ProgramConstants.AI_LEVEL_COUNT; diffIndex++)
                     ddPlayerName.AddItem(AILevelToName(diffIndex));
                 ddPlayerName.AllowDropDown = true;
                 ddPlayerName.SelectedIndexChanged += CopyPlayerDataFromUI;
@@ -1535,7 +1537,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 XNADropDown ddPlayerName = ddPlayerNames[index];
                 ddPlayerName.Items[0].Text = "-";
-                for (int i = 0; i < AI_DIFFICULTY_LEVEL_COUNT; i++)
+                for (int i = 0; i < ProgramConstants.AI_LEVEL_COUNT; i++)
                 {
                     ddPlayerName.Items[i + 1].Text = AILevelToName(i);
                     ddPlayerName.Items[i + 1].Selectable = true;
@@ -1567,7 +1569,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 XNADropDown ddPlayerName = ddPlayerNames[ddIndex];
                 ddPlayerName.AllowDropDown = false;
                 ddPlayerName.Items[0].Text = string.Empty;
-                for (int i = 0; i < AI_DIFFICULTY_LEVEL_COUNT; i++)
+                for (int i = 0; i < ProgramConstants.AI_LEVEL_COUNT; i++)
                 {
                     ddPlayerName.Items[i + 1].Text = AILevelToName(i);
                     ddPlayerName.Items[i + 1].Selectable = true;
@@ -1860,7 +1862,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             // These variables are used by both the skirmish and multiplayer code paths
             int[] teamMemberCounts = new int[5];
-            int lowestEnemyAILevel = 3;
+            int lowestEnemyAILevel = ProgramConstants.AI_LEVEL_COUNT;
             int highestAllyAILevel = 0;
 
             foreach (PlayerInfo aiPlayer in AIPlayers)

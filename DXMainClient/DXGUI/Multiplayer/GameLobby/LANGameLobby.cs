@@ -915,7 +915,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
 
                 bool isAi = aiLevel > -1;
-                if (aiLevel >= AI_DIFFICULTY_LEVEL_COUNT)
+                if (aiLevel >= ProgramConstants.AI_LEVEL_COUNT)
                 {
                     Logger.Log($"Invalid AI level value for player in LAN player options broadcast message: {aiLevel}");
                     return;

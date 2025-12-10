@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
+using System;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -14,9 +15,15 @@ namespace DTAClient.DXGUI.Generic
         public const float LifetimeInSeconds = 5.0f;
         public const float DisappearingRate = 0.1f;
 
-        public MissionCompletionNotification(WindowManager windowManager) : base(windowManager)
+        public MissionCompletionNotification(WindowManager windowManager, Texture2D[] rankTextures) : base(windowManager)
         {
             DrawMode = ControlDrawMode.UNIQUE_RENDER_TARGET;
+            this.rankTextures = rankTextures ?? throw new ArgumentNullException(nameof(rankTextures));
+
+            if (rankTextures.Length != 4)
+            {
+                throw new ArgumentException(nameof(MissionCompletionNotification) + ": RankTextures needs to have a length of 4!");
+            }
         }
 
         private XNAPanel starIconPanel;

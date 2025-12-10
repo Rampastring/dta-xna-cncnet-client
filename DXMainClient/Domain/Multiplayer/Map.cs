@@ -431,8 +431,8 @@ namespace DTAClient.Domain.Multiplayer
                 iniFile.AddSection("Basic");
                 iniFile.AddSection("Map");
                 iniFile.AddSection("Waypoints");
-                iniFile.AddSection("Preview");
-                iniFile.AddSection("PreviewPack");
+                // iniFile.AddSection("Preview");
+                // iniFile.AddSection("PreviewPack");
                 iniFile.AddSection("ForcedOptions");
                 iniFile.AddSection("ForcedSpawnIniOptions");
                 iniFile.AddSection("Structures");

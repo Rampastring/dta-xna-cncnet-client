@@ -19,14 +19,16 @@ namespace DTAClient.Domain.Singleplayer
         public bool DestroyWalls { get; set; } = true;
         public bool ContentScan { get; set; } = true;
 
-        public void WriteToFile(IniFile iniFile)
+        public void WriteToFile(IniFile iniFile, bool moveSectionToFirst = true)
         {
             var section = iniFile.GetSection(ININame);
             if (section ==  null)
             {
                 section = new IniSection(ININame);
                 iniFile.AddSection(section);
-                iniFile.MoveSectionToFirst(ININame);
+
+                if (moveSectionToFirst)
+                    iniFile.MoveSectionToFirst(ININame);
             }
             
             section.SetDoubleValue(nameof(Groundspeed), Groundspeed);
@@ -41,6 +43,22 @@ namespace DTAClient.Domain.Singleplayer
             section.SetBooleanValue(nameof(BuildSlowdown), BuildSlowdown);
             section.SetBooleanValue(nameof(DestroyWalls), DestroyWalls);
             section.SetBooleanValue(nameof(ContentScan), ContentScan);
+        }
+
+        public void ReadFromIniSection(IniSection iniSection)
+        {
+            Groundspeed = iniSection.GetDoubleValue(nameof(Groundspeed), Groundspeed);
+            Airspeed = iniSection.GetDoubleValue(nameof(Airspeed), Airspeed);
+            BuildTime = iniSection.GetDoubleValue(nameof(BuildTime), BuildTime);
+            Armor = iniSection.GetDoubleValue(nameof(Armor), Armor);
+            ROF = iniSection.GetDoubleValue(nameof(ROF), ROF);
+            Cost = iniSection.GetDoubleValue(nameof(Cost), Cost);
+            Firepower = iniSection.GetDoubleValue(nameof(Firepower), Firepower);
+            RepairDelay = iniSection.GetDoubleValue(nameof(RepairDelay), RepairDelay);
+            BuildDelay = iniSection.GetDoubleValue(nameof(BuildDelay), BuildDelay);
+            BuildSlowdown = iniSection.GetBooleanValue(nameof(BuildSlowdown), BuildSlowdown);
+            DestroyWalls = iniSection.GetBooleanValue(nameof(DestroyWalls), DestroyWalls);
+            ContentScan = iniSection.GetBooleanValue(nameof(ContentScan), ContentScan);
         }
     }
 }

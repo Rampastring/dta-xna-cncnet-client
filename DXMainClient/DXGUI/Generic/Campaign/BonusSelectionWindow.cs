@@ -38,7 +38,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             lblDescription.Y = lblHeader.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
             lblDescription.Text = "Bonuses are modifiers that allow you to customize your" + Environment.NewLine + 
                 "tactics for the mission." + Environment.NewLine + Environment.NewLine +
-                "Play Covert Revolt missions to unlock more bonuses!";
+                "Progress through the campaign to unlock more bonuses!";
             AddChild(lblDescription);
 
             lbBonusList = new XNAListBox(WindowManager);
@@ -109,14 +109,15 @@ namespace DTAClient.DXGUI.Generic.Campaign
             SelectedBonus = (Bonus)lbBonusList.SelectedItem.Tag;
         }
 
-        public void Open()
+        public void Open(string campaignId)
         {
             Enable();
 
             lbBonusList.Clear();
             lbBonusList.AddItem("No Bonus");
 
-            CampaignHandler.Instance.Bonuses.FindAll(t => t.Unlocked).ForEach(t => lbBonusList.AddItem(new XNAListBoxItem() { Text = t.UIName, Tag = t }));
+            CampaignHandler.Instance.Bonuses.FindAll(t => (t.UnlockFromMission == null || t.Unlocked) && t.CampaignID == campaignId)
+                .ForEach(t => lbBonusList.AddItem(new XNAListBoxItem() { Text = t.UIName, Tag = t }));
         }
 
         private void BtnSelect_LeftClick(object sender, EventArgs e)

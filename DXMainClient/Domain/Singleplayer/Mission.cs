@@ -37,7 +37,7 @@ namespace DTAClient.Domain.Singleplayer
             WarnOnHardWithoutMediumPlayed = iniSection.GetBooleanValue(nameof(WarnOnHardWithoutMediumPlayed), WarnOnHardWithoutMediumPlayed);
             PlayerAlwaysOnNormalDifficulty = iniSection.GetBooleanValue(nameof(PlayerAlwaysOnNormalDifficulty), false);
             MusicRecommended = iniSection.GetBooleanValue(nameof(MusicRecommended), MusicRecommended);
-            AllowBonuses = iniSection.GetBooleanValue(nameof(AllowBonuses), AllowBonuses);
+            BonusCampaignID = iniSection.GetStringValue(nameof(BonusCampaignID), BonusCampaignID);
             HasExtendedDifficulty = iniSection.GetBooleanValue(nameof(HasExtendedDifficulty), HasExtendedDifficulty);
 
             if (Enum.TryParse(iniSection.GetStringValue(nameof(StartCutscene), Cutscene.None.ToString()), out Cutscene startCutscene))
@@ -63,7 +63,6 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 
-            CampaignInternalName = iniSection.GetStringValue(nameof(CampaignInternalName), null);
             RequiresUnlocking = iniSection.GetBooleanValue(nameof(RequiresUnlocking), isCampaignMission);
             UnlockMissions = iniSection.GetStringValue(nameof(UnlockMissions), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             UsedGlobalVariables = iniSection.GetStringValue(nameof(UsedGlobalVariables), string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -82,6 +81,20 @@ namespace DTAClient.Domain.Singleplayer
                 if (conditionalMissionUnlock != null)
                     ConditionalMissionUnlocks.Add(conditionalMissionUnlock);
 
+                i++;
+            }
+
+            // Parse global-specific INI values
+            i = 0;
+            while (true)
+            {
+                string globalValueKey = "GlobalSpecificINIValue" + i;
+                if (!iniSection.KeyExists(globalValueKey))
+                    break;
+
+                string value = iniSection.GetStringValue(globalValueKey, null);
+                var globalSpecificIniValue = GlobalSpecificINIValue.FromString(value);
+                GlobalSpecificINIValues.Add(globalSpecificIniValue);
                 i++;
             }
 
@@ -108,8 +121,6 @@ namespace DTAClient.Domain.Singleplayer
 
         public bool MusicRecommended { get; }
 
-        public bool AllowBonuses { get; }
-
         public bool HasExtendedDifficulty { get; }
 
         public string[] DifficultyLabels { get; }
@@ -133,9 +144,9 @@ namespace DTAClient.Domain.Singleplayer
         public bool WarnOnHardWithoutMediumPlayed { get; } = false;
 
         /// <summary>
-        /// If not null, this is not a mission but a dummy entry for a campaign.
+        /// Determines which bonuses, if any, are available in this campaign.
         /// </summary>
-        public string CampaignInternalName { get; }
+        public string BonusCampaignID { get; }
 
         /// <summary>
         /// Is this a mission that is unlocked by playing other missions?
@@ -178,6 +189,12 @@ namespace DTAClient.Domain.Singleplayer
         /// the mission if all of the globals specified in this array are enabled.
         /// </summary>
         public string[] InvalidGlobalCombination { get; private set; }
+
+        /// <summary>
+        /// List of INI values that the client should write to the map file when
+        /// specific global variables are enabled.
+        /// </summary>
+        public List<GlobalSpecificINIValue> GlobalSpecificINIValues { get; } = new List<GlobalSpecificINIValue>(0);
 
 
         private int DifficultyRankToIndex(DifficultyRank rank)

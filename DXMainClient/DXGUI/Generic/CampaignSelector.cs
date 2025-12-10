@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Updater;
 
 namespace DTAClient.DXGUI.Generic
@@ -26,7 +27,21 @@ namespace DTAClient.DXGUI.Generic
         {
         }
 
-        private Texture2D[] rankTextures;
+        public Texture2D[] RankTextures;
+
+        public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
+        {
+            base.ParseAttributeFromINI(iniFile, key, value);
+
+            if (key == "RankTextures")
+            {
+                if (RankTextures != null)
+                    RankTextures = null;
+
+                string[] textureFilenames = value.Split(',');
+                RankTextures = textureFilenames.Select(s => AssetLoader.LoadTexture(s)).ToArray();
+            }
+        }
 
         public override void Initialize()
         {
@@ -34,12 +49,12 @@ namespace DTAClient.DXGUI.Generic
 
             base.Initialize();
 
-            rankTextures = new Texture2D[]
+            RankTextures = new Texture2D[]
             {
                 AssetLoader.LoadTexture("rankEasy.png"),
-                AssetLoader.LoadTexture("rankNormal.png"),
                 AssetLoader.LoadTexture("rankHard.png"),
                 AssetLoader.LoadTexture("rankBrutal.png"),
+                AssetLoader.LoadTexture("rankExtreme.png"),
             };
 
             EnableScrollbar = true;
@@ -50,13 +65,13 @@ namespace DTAClient.DXGUI.Generic
             switch (rank)
             {
                 case DifficultyRank.BRUTAL:
-                    return rankTextures[3];
+                    return RankTextures[3];
                 case DifficultyRank.HARD:
-                    return rankTextures[2];
+                    return RankTextures[2];
                 case DifficultyRank.NORMAL:
-                    return rankTextures[1];
+                    return RankTextures[1];
                 case DifficultyRank.EASY:
-                    return rankTextures[0];
+                    return RankTextures[0];
                 case DifficultyRank.NONE:
                 default:
                     return null;
@@ -166,7 +181,6 @@ namespace DTAClient.DXGUI.Generic
         private const int DEFAULT_WIDTH = 720;
         private const int DEFAULT_HEIGHT = 700;
 
-        private static readonly string[] DifficultyNames = new string[] { "Easy", "Medium", "Hard" };
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
         public event EventHandler MusicOptions;
@@ -179,7 +193,7 @@ namespace DTAClient.DXGUI.Generic
 
         private DiscordHandler discordHandler;
 
-        private XNAListBox lbCampaignList;
+        private BattleListBox lbCampaignList;
         private XNAClientButton btnLaunch;
         private XNAPanel panelPreview;
         private MissionDescriptionBox tbMissionDescription;
@@ -210,6 +224,7 @@ namespace DTAClient.DXGUI.Generic
             "INI/Base/Art.ini",
             "INI/Base/Rules.ini",
             "INI/Base/Enhance.ini",
+            "INI/CampaignBonuses.ini",
             "INI/Map Code/Difficulty Hard.ini",
             "INI/Map Code/Difficulty Medium.ini",
             "INI/Map Code/Difficulty Easy.ini"
@@ -437,7 +452,7 @@ namespace DTAClient.DXGUI.Generic
 
             EnabledChanged += CampaignSelector_EnabledChanged;
 
-            missionCompletionNotification = new MissionCompletionNotification(WindowManager);
+            missionCompletionNotification = new MissionCompletionNotification(WindowManager, lbCampaignList.RankTextures);
             missionCompletionNotification.DrawOrder = 9999;
             missionCompletionNotification.UpdateOrder = 9999;
             WindowManager.AddAndInitializeControl(missionCompletionNotification);
@@ -463,9 +478,18 @@ namespace DTAClient.DXGUI.Generic
             bonusSelectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
         }
 
+        private Mission GetSelectedMission()
+        {
+            return lbCampaignList.SelectedItem != null ? lbCampaignList.SelectedItem.Tag as Mission : null;
+        }
+
         private void BtnBonus_LeftClick(object sender, EventArgs e)
         {
-            bonusSelectionWindow.Open();
+            var mission = GetSelectedMission();
+            if (mission != null)
+            {
+                bonusSelectionWindow.Open(mission.BonusCampaignID);
+            }
         }
 
         private void CampaignHandler_MissionCompleted(object sender, MissionCompletionEventArgs e)
@@ -634,7 +658,7 @@ namespace DTAClient.DXGUI.Generic
 
             hasMissionBeenSelected = true;
 
-            if (mission.AllowBonuses)
+            if (mission.BonusCampaignID != null)
             {
                 lblBonus.Enable();
                 btnBonus.Enable();
@@ -996,7 +1020,7 @@ namespace DTAClient.DXGUI.Generic
             }
 
             bonusDifficulty = null;
-            if (missionToLaunch.AllowBonuses && bonusSelectionWindow.SelectedBonus != null)
+            if (missionToLaunch.BonusCampaignID != null && bonusSelectionWindow.SelectedBonus != null)
                 bonusDifficulty = bonusSelectionWindow.SelectedBonus.Difficulty;
 
             ((MainMenuDarkeningPanel)Parent).Hide();
@@ -1096,7 +1120,7 @@ namespace DTAClient.DXGUI.Generic
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
                 }
-                else if (string.IsNullOrEmpty(mission.Scenario) && string.IsNullOrWhiteSpace(mission.CampaignInternalName))
+                else if (string.IsNullOrEmpty(mission.Scenario))
                 {
                     if (!string.IsNullOrEmpty(mission.HeaderFor))
                     {

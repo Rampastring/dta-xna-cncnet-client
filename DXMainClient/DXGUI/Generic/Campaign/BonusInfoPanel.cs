@@ -83,11 +83,16 @@ namespace DTAClient.DXGUI.Generic.Campaign
             var mission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == bonus.UnlockFromMission);
             if (mission != null)
             {
+                lblUnlockedFrom.Enable();
                 unlockMissionName = mission.GUIName;
+                lblUnlockedFrom.Text = "Unlocked from:" + Environment.NewLine + Renderer.FixText(unlockMissionName, lblUnlockedFrom.FontIndex, maxTextWidth).Text;
+                Height = lblUnlockedFrom.Bottom + UIDesignConstants.EMPTY_SPACE_BOTTOM;
             }
-            
-            lblUnlockedFrom.Text = "Unlocked from:" + Environment.NewLine + Renderer.FixText(unlockMissionName, lblUnlockedFrom.FontIndex, maxTextWidth).Text;
-            Height = lblUnlockedFrom.Bottom + UIDesignConstants.EMPTY_SPACE_BOTTOM;
+            else
+            {
+                lblUnlockedFrom.Disable();
+                Height = lblBonusLore.Bottom + UIDesignConstants.EMPTY_SPACE_BOTTOM;
+            }
         }
     }
 }

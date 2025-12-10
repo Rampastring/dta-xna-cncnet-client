@@ -447,45 +447,6 @@ namespace DTAConfig.OptionPanels
         public void PostInit()
         {
             Load();
-
-            // if (!GameCompatFixInstalled && !GameCompatFixDeclined)
-            // {
-            //     string defaultGame = ClientConfiguration.Instance.LocalGame;
-            // 
-            //     var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "New Compatibility Fix",
-            //         "A performance-enhancing compatibility fix for modern Windows versions" + Environment.NewLine +
-            //         "has been included in this version of " + defaultGame + ". Enabling it requires" + Environment.NewLine +
-            //         "administrative priveleges. Would you like to install the compatibility fix?" + Environment.NewLine + Environment.NewLine + 
-            //         "You'll always be able to install or uninstall the compatibility fix later from the options menu.");
-            //     messageBox.YesClickedAction = MessageBox_YesClicked;
-            //     messageBox.NoClickedAction = MessageBox_NoClicked;
-            // }
-        }
-
-        private void MessageBox_NoClicked(XNAMessageBox messageBox)
-        {
-            // Set compatibility fix declined flag in registry
-            try
-            {
-                RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Tiberian Sun Client");
-
-                try
-                {
-                    regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
-                    regKey = regKey.CreateSubKey("Tiberian Sun Client");
-                    regKey.SetValue("TSCompatFixDeclined", "Yes");
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("Setting TSCompatFixDeclined failed! Returned error: " + ex.Message);
-                }
-            }
-            catch { }
-        }
-
-        private void MessageBox_YesClicked(XNAMessageBox messageBox)
-        {
-            BtnGameCompatibilityFix_LeftClick(messageBox, EventArgs.Empty);
         }
 
         private void BtnGameCompatibilityFix_LeftClick(object sender, EventArgs e)
@@ -519,31 +480,6 @@ namespace DTAConfig.OptionPanels
 
                 return;
             }
-
-            try
-            {
-                Process sdbinst = Process.Start("sdbinst.exe", "-q \"" + ProgramConstants.GamePath + "Resources/compatfix.sdb\"");
-
-                sdbinst.WaitForExit();
-
-                Logger.Log("DTA/TI/TS Compatibility Fix succesfully installed.");
-                XNAMessageBox.Show(WindowManager, "Compatibility Fix Installed",
-                    "The DTA/TI/TS Compatibility Fix has been succesfully installed.");
-
-                RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
-                regKey = regKey.CreateSubKey("Tiberian Sun Client");
-                regKey.SetValue("TSCompatFixInstalled", "Yes");
-
-                btnGameCompatibilityFix.Text = "Disable";
-
-                GameCompatFixInstalled = true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Installing DTA/TI/TS Compatibility Fix failed. Error message: " + ex.Message);
-                XNAMessageBox.Show(WindowManager, "Installing Compatibility Fix Failed",
-                    "Installing DTA/TI/TS Compatibility Fix failed. Error message: " + ex.Message);
-            }
         }
 
         private void BtnMapEditorCompatibilityFix_LeftClick(object sender, EventArgs e)
@@ -576,32 +512,6 @@ namespace DTAConfig.OptionPanels
                 }
 
                 return;
-            }
-
-
-            try
-            {
-                Process sdbinst = Process.Start("sdbinst.exe", "-q \"" + ProgramConstants.GamePath + "Resources/FSCompatFix.sdb\"");
-
-                sdbinst.WaitForExit();
-
-                RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
-                regKey = regKey.CreateSubKey("Tiberian Sun Client");
-                regKey.SetValue("FSCompatFixInstalled", "Yes");
-
-                btnMapEditorCompatibilityFix.Text = "Disable";
-
-                Logger.Log("FinalSun Compatibility Fix succesfully installed.");
-                XNAMessageBox.Show(WindowManager, "Compatibility Fix Installed",
-                    "The FinalSun Compatibility Fix has been succesfully installed.");
-
-                FinalSunCompatFixInstalled = true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Installing FinalSun Compatibility Fix failed. Error message: " + ex.Message);
-                XNAMessageBox.Show(WindowManager, "Installing Compatibility Fix Failed",
-                    "Installing FinalSun Compatibility Fix failed. Error message: " + ex.Message);
             }
         }
 

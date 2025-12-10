@@ -532,6 +532,35 @@ namespace DTAClient.DXGUI.Generic
             }
         }
 
+        private void CheckForTooManySaves()
+        {
+            const int threshold = 200;
+
+            if (innerPanel.GameLoadingWindow.FoundSaveFileCount <= threshold)
+            {
+                return;
+            }
+
+            if (UserINISettings.Instance.ExcessiveSavesPromptDismissed)
+            {
+                return;
+            }
+
+            var messageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Excessive Saves Detected",
+                $"You have {innerPanel.GameLoadingWindow.FoundSaveFileCount} saved games. This slows down the client's startup." + Environment.NewLine + Environment.NewLine +
+                "It is recommended you delete some saved games, either through the \"Load Game\" window," + Environment.NewLine +
+                "or manually in the \"Saved Games\" sub-directory inside DTA's installation directory.", 142);
+
+            messageBox.btnYes.Text = "OK";
+            messageBox.btnNo.Text = "Don't show again";
+
+            messageBox.NoClickedAction = _ => 
+            {
+                UserINISettings.Instance.ExcessiveSavesPromptDismissed.Value = true;
+                UserINISettings.Instance.SaveSettings();
+            };
+        }
+
         private void SharedUILogic_GameProcessStarted() => MusicOff();
 
         private void WindowManager_GameClosing(object sender, EventArgs e) => Clean();
@@ -603,6 +632,7 @@ namespace DTAClient.DXGUI.Generic
             CheckForbiddenFiles();
             CheckIfFirstRunOrBeforeHotkeyConfig();
             CheckIfViniferaDependenciesPresent();
+            CheckForTooManySaves();
         }
 
         #region Updating / versioning system

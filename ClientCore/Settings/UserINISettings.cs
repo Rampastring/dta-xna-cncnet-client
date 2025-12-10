@@ -107,6 +107,7 @@ namespace ClientCore
             PrivacyPolicyAccepted = new BoolSetting(iniFile, OPTIONS, "PrivacyPolicyAccepted", false);
             IsFirstRun = new BoolSetting(iniFile, OPTIONS, "IsFirstRun", true);
             NewSidebarHotkeysPromptShown = new BoolSetting(iniFile, OPTIONS, nameof(NewSidebarHotkeysPromptShown), false);
+            ExcessiveSavesPromptDismissed = new BoolSetting(iniFile, OPTIONS, nameof(ExcessiveSavesPromptDismissed), false);
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             ClientDifficulty = new IntSetting(iniFile, OPTIONS, "ClientDifficulty", 1);
@@ -245,6 +246,7 @@ namespace ClientCore
         public BoolSetting PrivacyPolicyAccepted { get; private set; }
         public BoolSetting IsFirstRun { get; private set; }
         public BoolSetting NewSidebarHotkeysPromptShown { get; private set; }
+        public BoolSetting ExcessiveSavesPromptDismissed { get; private set; }
         public BoolSetting CustomComponentsDenied { get; private set; }
 
         public IntSetting Difficulty { get; private set; }

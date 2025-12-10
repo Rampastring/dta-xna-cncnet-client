@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -39,6 +40,8 @@ namespace DTAClient.DXGUI.Generic
         private XNALabel lblGlobalFlagsValue;
 
         private List<SavedGame> savedGames = new List<SavedGame>();
+
+        public int FoundSaveFileCount { get; private set; } = -1;
 
         public override void Initialize()
         {
@@ -481,6 +484,9 @@ namespace DTAClient.DXGUI.Generic
                     sg.LastModified.ToString() };
                 lbSaveGameList.AddItem(item, true);
             }
+
+            if (FoundSaveFileCount < 0)
+                FoundSaveFileCount = savedGames.Count;
         }
 
         private void ParseSaveGame(string filePath, long uniqueSessionId)

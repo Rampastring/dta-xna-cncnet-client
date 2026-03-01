@@ -444,6 +444,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             gameLobby.GameLeft += GameLobby_GameLeft;
             gameLoadingLobby.GameLeft += GameLoadingLobby_GameLeft;
+            gameLobby.SwitchToGameLoadingLobby += GameLobby_SwitchToGameLoadingLobby;
+            gameLoadingLobby.SwitchToGameLobby += GameLoadingLobby_SwitchToGameLobby;
 
             UserINISettings.Instance.SettingsSaved += Instance_SettingsSaved;
 
@@ -609,6 +611,22 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             pmWindow.ClearInviteChannelInfo();
         }
 
+        private void GameLobby_SwitchToGameLoadingLobby(object sender, SwitchLobbyEventArgs e)
+        {
+            gameLobby.DetachFromChannel();
+            gameLoadingLobby.SetUpFromGameLobby(e.Channel, e.IsHost, e.Tunnel, e.HostName,
+                e.PlayerLimit, e.CurrentPassword, e.NewPassword, e.IsCustomPassword);
+            // isInGameRoom remains true - we are still in a game room
+        }
+
+        private void GameLoadingLobby_SwitchToGameLobby(object sender, SwitchLobbyEventArgs e)
+        {
+            gameLoadingLobby.DetachFromChannel();
+            gameLobby.SetUpFromGameLoadingLobby(e.Channel, e.IsHost, e.Tunnel, e.HostName,
+                e.PlayerLimit, e.CurrentPassword, e.NewPassword, e.IsCustomPassword);
+            // isInGameRoom remains true - we are still in a game room
+        }
+
         private void SetLogOutButtonText()
         {
             if (isInGameRoom)
@@ -642,6 +660,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             return null;
         }
+
+
         /// <summary>
         /// Checks if the user can join a game.
         /// Returns null if the user can, otherwise returns an error message
@@ -659,8 +679,6 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         /// <summary>
         /// Returns an error message if game is not join-able, otherwise null.
         /// </summary>
-        /// <param name="hg"></param>
-        /// <returns></returns>
         private string GetJoinGameError(HostedCnCNetGame hg)
         {
             if (hg.Game.InternalName.ToUpper() != localGameID.ToUpper())
@@ -726,8 +744,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             {
                 if (!hg.IsLoadedGame)
                 {
-                    password = Utilities.CalculateSHA1ForString
-                        (hg.ChannelName + hg.RoomName).Substring(0, 10);
+                    password = Helpers.AutogenerateChannelPassword(hg.ChannelName, hg.RoomName);
                 }
                 else
                 {
@@ -979,6 +996,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
         private void ConnectionManager_Disconnected(object sender, EventArgs e)
         {
+            isJoiningGame = false;
+
             btnNewGame.AllowClick = false;
             btnJoinGame.AllowClick = false;
             ddCurrentChannel.AllowDropDown = false;

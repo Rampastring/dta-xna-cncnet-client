@@ -5,6 +5,7 @@ using DTAClient.Domain;
 using DTAClient.Domain.Multiplayer;
 using DTAClient.Domain.Multiplayer.CnCNet;
 using DTAClient.DXGUI.Generic;
+using DTAClient.DXGUI.Multiplayer.GameLobby;
 using DTAClient.DXGUI.Multiplayer.GameLobby.CommandHandlers;
 using DTAClient.Online;
 using DTAClient.Online.EventArguments;
@@ -36,6 +37,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         private const string START_GAME_CTCP_COMMAND = "START";
         private const string PLAYER_READY_CTCP_COMMAND = "READY";
         private const string CHANGE_TUNNEL_SERVER_MESSAGE = "CHTNL";
+        private const string SWITCH_TO_GAME_LOBBY_MESSAGE = "NEWGAME";
 
         public CnCNetGameLoadingLobby(WindowManager windowManager, TopBar topBar,
             CnCNetManager connectionManager, TunnelHandler tunnelHandler,
@@ -58,9 +60,14 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 new NoParamCommandHandler(INVALID_SAVED_GAME_INDEX_CTCP_COMMAND, HandleInvalidSaveIndexCommand),
                 new StringCommandHandler(START_GAME_CTCP_COMMAND, HandleStartGameCommand),
                 new IntCommandHandler(PLAYER_READY_CTCP_COMMAND, HandlePlayerReadyRequest),
-                new StringCommandHandler(CHANGE_TUNNEL_SERVER_MESSAGE, HandleTunnelServerChangeMessage)
+                new StringCommandHandler(CHANGE_TUNNEL_SERVER_MESSAGE, HandleTunnelServerChangeMessage),
+                new NoParamCommandHandler(SWITCH_TO_GAME_LOBBY_MESSAGE, HandleSwitchToGameLobbyMessage)
             };
         }
+
+        public bool IsInGameRoom => channel != null;
+
+        public event EventHandler<SwitchLobbyEventArgs> SwitchToGameLobby;
 
         private CommandHandlerBase[] ctcpCommandHandlers;
 
@@ -91,6 +98,11 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         private DarkeningPanel dp;
 
         private TopBar topBar;
+
+        private int playerLimit;
+
+        private string cncnetGameLobbyPassword;
+        private bool cncnetGameLobbyPasswordIsCustom;
         
         public override void Initialize()
         {
@@ -132,6 +144,10 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             gameBroadcastTimer.TimeElapsed += GameBroadcastTimer_TimeElapsed;
 
             WindowManager.AddAndInitializeControl(gameBroadcastTimer);
+
+            AddChatBoxCommand(new ChatBoxCommand("NEWGAME",
+                "Switch to regular game lobby (game host only)",
+                true, (s) => InitiateSwitchToGameLobby()));
         }
 
         private void BtnChangeTunnel_LeftClick(object sender, EventArgs e) => ShowTunnelSelectionWindow("Select tunnel server:");
@@ -160,9 +176,86 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             tunnelHandler.CurrentTunnel = tunnel;
             tunnelHandler.CurrentTunnelPinged += TunnelHandler_CurrentTunnelPinged;
 
+            cncnetGameLobbyPassword = null;
+            cncnetGameLobbyPasswordIsCustom = false;
+
             started = false;
 
             Refresh(isHost);
+        }
+
+        /// <summary>
+        /// Sets up the lobby from an existing game lobby channel (channel handoff).
+        /// The channel is already joined and has users present.
+        /// </summary>
+        public void SetUpFromGameLobby(Channel channel, bool isHost, CnCNetTunnel tunnel, string hostName,
+            int playerLimit, string cncnetGameLobbyPassword, string newPassword, bool cncnetGameLobbyPasswordIsCustom)
+        {
+            this.channel = channel;
+            this.hostName = hostName;
+            this.playerLimit = playerLimit;
+            this.cncnetGameLobbyPassword = cncnetGameLobbyPassword;
+            this.cncnetGameLobbyPasswordIsCustom = cncnetGameLobbyPasswordIsCustom;
+
+            channel.MessageAdded += Channel_MessageAdded;
+            channel.UserAdded += Channel_UserAdded;
+            channel.UserLeft += Channel_UserLeft;
+            channel.UserQuitIRC += Channel_UserQuitIRC;
+            channel.CTCPReceived += Channel_CTCPReceived;
+
+            tunnelHandler.CurrentTunnel = tunnel;
+            tunnelHandler.CurrentTunnelPinged += TunnelHandler_CurrentTunnelPinged;
+
+            started = false;
+
+            Refresh(isHost);
+
+            // Populate Players from the existing channel user list
+            channel.Users.DoForAllUsers(user =>
+            {
+                PlayerInfo pInfo = new PlayerInfo();
+                pInfo.Name = user.IRCUser.Name;
+                Players.Add(pInfo);
+            });
+
+            CopyPlayerDataToUI();
+
+            // Perform OnJoined-equivalent actions for the already-joined channel
+            FileHashCalculator fhc = new FileHashCalculator();
+            fhc.CalculateHashes(gameModes);
+
+            if (isHost)
+            {
+                gameFilesHash = fhc.GetCompleteHash();
+
+                // We assume the game lobby has already changed the channel password to match the game ID in spawnSG.ini
+                channel.Password = newPassword;
+                SetChannelModes(cncnetGameLobbyPassword);
+
+                gameBroadcastTimer.Enabled = true;
+                gameBroadcastTimer.Start();
+                gameBroadcastTimer.SetTime(TimeSpan.FromSeconds(INITIAL_GAME_BROADCAST_DELAY));
+
+                BroadcastOptions();
+            }
+            else
+            {
+                channel.SendCTCPMessage(FILE_HASH_CTCP_COMMAND + " " + fhc.GetCompleteHash(),
+                    QueuedMessageType.SYSTEM_MESSAGE, 10);
+
+                channel.SendCTCPMessage(TUNNEL_PING_CTCP_COMMAND + " " + tunnelHandler.CurrentTunnel.PingInMs,
+                    QueuedMessageType.SYSTEM_MESSAGE, 10);
+
+                if (tunnelHandler.CurrentTunnel.PingInMs < 0)
+                    AddNotice(ProgramConstants.PLAYERNAME + " - unknown ping to tunnel server.");
+                else
+                    AddNotice(ProgramConstants.PLAYERNAME + " - ping to tunnel server: " + tunnelHandler.CurrentTunnel.PingInMs + " ms");
+            }
+
+            topBar.AddPrimarySwitchable(this);
+            topBar.SwitchToPrimary();
+            WindowManager.SelectedControl = tbChatInput;
+            UpdateDiscordPresence(true);
         }
 
         private void TunnelHandler_CurrentTunnelPinged(object sender, EventArgs e)
@@ -181,38 +274,50 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         }
 
         /// <summary>
-        /// Clears event subscriptions and leaves the channel.
+        /// Detaches the lobby from the current IRC channel without leaving it.
+        /// Used when handing off the channel to the game lobby.
         /// </summary>
-        public void Clear()
+        public void DetachFromChannel()
         {
             gameBroadcastTimer.Enabled = false;
 
             if (channel != null)
             {
-                // TODO leave channel only if we've joined the channel
-                channel.Leave();
-
                 channel.MessageAdded -= Channel_MessageAdded;
                 channel.UserAdded -= Channel_UserAdded;
                 channel.UserLeft -= Channel_UserLeft;
                 channel.UserQuitIRC -= Channel_UserQuitIRC;
                 channel.CTCPReceived -= Channel_CTCPReceived;
-
-                connectionManager.RemoveChannel(channel);
             }
 
             if (Enabled)
             {
-                Enabled = false;
-                Visible = false;
-
-                base.LeaveGame();
+                Disable();
             }
 
-            tunnelHandler.CurrentTunnel = null;
+            // Do not null tunnelHandler.CurrentTunnel - the game lobby needs it
             tunnelHandler.CurrentTunnelPinged -= TunnelHandler_CurrentTunnelPinged;
 
             topBar.RemovePrimarySwitchable(this);
+        }
+
+        /// <summary>
+        /// Clears event subscriptions and leaves the channel.
+        /// </summary>
+        public void Clear()
+        {
+            DetachFromChannel();
+
+            if (channel != null)
+            {
+                channel.Leave();
+                connectionManager.RemoveChannel(channel);
+            }
+
+            tunnelHandler.CurrentTunnel = null;
+
+            if (IsInGameRoom)
+                base.LeaveGame();
         }
 
         private void Channel_CTCPReceived(object sender, ChannelCTCPEventArgs e)
@@ -236,10 +341,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             if (IsHost)
             {
-                connectionManager.SendCustomMessage(new QueuedMessage(
-                    string.Format("MODE {0} +klnNs {1} {2}", channel.ChannelName,
-                    channel.Password, SGPlayers.Count),
-                    QueuedMessageType.SYSTEM_MESSAGE, 50));
+                SetChannelModes(null);
 
                 connectionManager.SendCustomMessage(new QueuedMessage(
                     string.Format("TOPIC {0} :{1}", channel.ChannelName,
@@ -268,6 +370,25 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             topBar.SwitchToPrimary();
             WindowManager.SelectedControl = tbChatInput;
             UpdateDiscordPresence(true);
+        }
+
+        private void SetChannelModes(string oldPassword)
+        {
+            if (!IsHost)
+                throw new Exception("Cannot set channel modes when not the host.");
+
+            if (oldPassword != null && channel.Password != oldPassword)
+            {
+                // GameSurge requires that we remove our old password first
+                connectionManager.SendCustomMessage(new QueuedMessage(
+                    string.Format("MODE {0} -k {1}", channel.ChannelName, oldPassword),
+                    QueuedMessageType.SYSTEM_MESSAGE, 51));
+            }
+
+            connectionManager.SendCustomMessage(new QueuedMessage(
+                string.Format("MODE {0} +klnNs {1} {2}", channel.ChannelName,
+                channel.Password, SGPlayers.Count),
+                QueuedMessageType.SYSTEM_MESSAGE, 50));
         }
 
         private void Channel_UserAdded(object sender, ChannelUserEventArgs e)
@@ -499,6 +620,15 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             }
 
             CopyPlayerDataToUI();
+
+            // If the local player is not in the host's player list, leave the lobby
+            if (Players.Find(p => p.Name == ProgramConstants.PLAYERNAME) == null)
+            {
+                Logger.Log("HandleGameOptionsMessage: Local player not found in game host's player list! Leaving the game loading lobby.");
+                connectionManager.MainChannel.AddMessage(new ChatMessage(
+                    Color.Yellow, "You are not part of the saved game. Left the game lobby."));
+                Clear();
+            }
         }
 
         private void HandleInvalidSaveIndexCommand(string sender)
@@ -600,6 +730,35 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             tunnelHandler.CurrentTunnel = tunnel;
             AddNotice($"The game host has changed the tunnel server to: {tunnel.Name}");
             //UpdatePing();
+        }
+
+        #endregion
+
+        #region Game lobby switch
+
+        private void InitiateSwitchToGameLobby()
+        {
+            AddNotice("Switching to game lobby...");
+            channel.SendCTCPMessage(SWITCH_TO_GAME_LOBBY_MESSAGE, QueuedMessageType.SYSTEM_MESSAGE, 12);
+
+            SwitchToGameLobby?.Invoke(this, new SwitchLobbyEventArgs(
+                channel, hostName, tunnelHandler.CurrentTunnel, true,
+                playerLimit, channel.Password, cncnetGameLobbyPassword, cncnetGameLobbyPasswordIsCustom));
+        }
+
+        private void HandleSwitchToGameLobbyMessage(string sender)
+        {
+            if (sender != hostName)
+                return;
+
+            if (IsHost)
+                return;
+
+            AddNotice("The game host is switching to the regular game lobby...");
+
+            SwitchToGameLobby?.Invoke(this, new SwitchLobbyEventArgs(
+                channel, hostName, tunnelHandler.CurrentTunnel, false,
+                playerLimit, channel.Password, cncnetGameLobbyPassword, cncnetGameLobbyPasswordIsCustom));
         }
 
         #endregion

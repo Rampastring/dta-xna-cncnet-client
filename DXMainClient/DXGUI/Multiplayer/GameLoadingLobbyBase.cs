@@ -3,6 +3,7 @@ using ClientCore.Statistics;
 using ClientGUI;
 using DTAClient.Domain;
 using DTAClient.Domain.Multiplayer;
+using DTAClient.DXGUI.Multiplayer.GameLobby;
 using Microsoft.Xna.Framework;
 using Rampastring.Tools;
 using Rampastring.XNAUI;
@@ -10,6 +11,7 @@ using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace DTAClient.DXGUI.Multiplayer
 {
@@ -63,6 +65,8 @@ namespace DTAClient.DXGUI.Multiplayer
         protected XNAClientButton btnLeaveGame;
 
         private List<MultiplayerColor> MPColors = new List<MultiplayerColor>();
+
+        protected List<ChatBoxCommand> chatBoxCommands = new List<ChatBoxCommand>();
 
         private string loadedGameID;
 
@@ -366,6 +370,11 @@ namespace DTAClient.DXGUI.Multiplayer
         protected abstract void AddNotice(string message, Color color);
 
         /// <summary>
+        /// Allows derived classes to add their own chat box commands.
+        /// </summary>
+        protected void AddChatBoxCommand(ChatBoxCommand command) => chatBoxCommands.Add(command);
+
+        /// <summary>
         /// Refreshes the UI  based on the latest saved game
         /// and information in the saved spawn.ini file, as well
         /// as information on whether the local player is the host of the game.
@@ -481,6 +490,53 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             if (string.IsNullOrEmpty(tbChatInput.Text))
                 return;
+
+            if (tbChatInput.Text.StartsWith("/"))
+            {
+                string text = tbChatInput.Text;
+                string command;
+                string parameters;
+
+                int spaceIndex = text.IndexOf(' ');
+
+                if (spaceIndex == -1)
+                {
+                    command = text.Substring(1).ToUpper();
+                    parameters = string.Empty;
+                }
+                else
+                {
+                    command = text.Substring(1, spaceIndex - 1);
+                    parameters = text.Substring(spaceIndex + 1);
+                }
+
+                tbChatInput.Text = string.Empty;
+
+                foreach (var chatBoxCommand in chatBoxCommands)
+                {
+                    if (command.ToUpper() == chatBoxCommand.Command)
+                    {
+                        if (!IsHost && chatBoxCommand.HostOnly)
+                        {
+                            AddNotice(string.Format("/{0} is for game hosts only.", chatBoxCommand.Command));
+                            return;
+                        }
+
+                        chatBoxCommand.Action(parameters);
+                        return;
+                    }
+                }
+
+                StringBuilder sb = new StringBuilder("To use a command, start your message with /<command>. Possible chat box commands: ");
+                foreach (var chatBoxCommand in chatBoxCommands)
+                {
+                    sb.Append(Environment.NewLine);
+                    sb.Append(Environment.NewLine);
+                    sb.Append($"{chatBoxCommand.Command}: {chatBoxCommand.Description}");
+                }
+                XNAMessageBox.Show(WindowManager, "Chat Box Command Help", sb.ToString());
+                return;
+            }
 
             SendChatMessage(tbChatInput.Text);
             tbChatInput.Text = string.Empty;

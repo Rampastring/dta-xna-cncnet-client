@@ -71,7 +71,7 @@ namespace DTAClient.Online
 
         public bool IsChatChannel { get; }
 
-        public string Password { get; private set; }
+        public string Password { get; set; }
 
         private readonly Connection connection;
 

@@ -310,6 +310,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 OnGameOptionChanged();
                 BroadcastPlayerOptions();
+
+                if (Players.Count < playerLimit)
+                    UnlockGame(true);
             }
             else
             {
@@ -1751,6 +1754,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 spawnSGIni.GetStringValue("Settings", "GameID", string.Empty)).Substring(0, 10);
 
             AddNotice("Switching to saved game loading lobby...");
+            LockGame();
+
             channel.SendCTCPMessage(SWITCH_TO_LOAD_GAME_MESSAGE, QueuedMessageType.SYSTEM_MESSAGE, 10);
 
             string oldPassword = channel.Password;

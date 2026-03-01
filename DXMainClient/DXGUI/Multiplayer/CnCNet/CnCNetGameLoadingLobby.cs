@@ -353,6 +353,10 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 gameBroadcastTimer.Enabled = true;
                 gameBroadcastTimer.Start();
                 gameBroadcastTimer.SetTime(TimeSpan.FromSeconds(INITIAL_GAME_BROADCAST_DELAY));
+
+                // Unlock the game room
+                connectionManager.SendCustomMessage(new QueuedMessage(
+                    string.Format("MODE {0} -i", channel.ChannelName), QueuedMessageType.INSTANT_MESSAGE, -1));
             }
             else
             {
@@ -739,6 +743,11 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         private void InitiateSwitchToGameLobby()
         {
             AddNotice("Switching to game lobby...");
+
+            // Lock the game room
+            connectionManager.SendCustomMessage(new QueuedMessage(
+                string.Format("MODE {0} +i", channel.ChannelName), QueuedMessageType.INSTANT_MESSAGE, -1));
+
             channel.SendCTCPMessage(SWITCH_TO_GAME_LOBBY_MESSAGE, QueuedMessageType.SYSTEM_MESSAGE, 12);
 
             SwitchToGameLobby?.Invoke(this, new SwitchLobbyEventArgs(

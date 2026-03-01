@@ -37,7 +37,9 @@ namespace DTAClient.DXGUI.Multiplayer
         /// </summary>
         protected List<PlayerInfo> Players = new List<PlayerInfo>();
 
-        protected bool IsHost = false;
+        protected bool IsHost { get; set; } = false;
+
+        protected bool MatchCompleted { get; set; } = false;
 
         protected DiscordHandler discordHandler;
 
@@ -263,6 +265,8 @@ namespace DTAClient.DXGUI.Multiplayer
 
         protected void LoadGame()
         {
+            MatchCompleted = false;
+
             File.Delete(ProgramConstants.GamePath + "spawn.ini");
 
             File.Copy(ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI, ProgramConstants.GamePath + "spawn.ini");
@@ -351,6 +355,13 @@ namespace DTAClient.DXGUI.Multiplayer
                 matchStatistics.LengthInSeconds = newLength;
 
                 StatisticsManager.Instance.SaveDatabase();
+
+                if (matchStatistics.SawCompletion)
+                {
+                    var player = matchStatistics.Players.Find(ps => ps.Name == ProgramConstants.PLAYERNAME);
+                    if (player != null && player.Won)
+                        MatchCompleted = true;
+                }
             }
             else
             {

@@ -1,5 +1,6 @@
 using ClientCore;
 using ClientCore.CnCNet5;
+using ClientCore.Statistics;
 using ClientGUI;
 using DTAClient.Domain;
 using DTAClient.Domain.Multiplayer;
@@ -312,6 +313,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             {
                 channel.Leave();
                 connectionManager.RemoveChannel(channel);
+                channel = null;
             }
 
             tunnelHandler.CurrentTunnel = null;
@@ -819,7 +821,9 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         {
             base.HandleGameProcessExited();
 
-            Clear();
+            // We might not be in the game room anymore if the host exited before us
+            if (MatchCompleted && IsInGameRoom)
+                Clear();
         }
 
         protected override void LeaveGame() => Clear();

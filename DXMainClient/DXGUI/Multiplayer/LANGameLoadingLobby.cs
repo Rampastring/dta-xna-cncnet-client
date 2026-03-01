@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 
@@ -65,6 +66,8 @@ namespace DTAClient.DXGUI.Multiplayer
 
         public event EventHandler<LobbyNotificationEventArgs> LobbyNotification;
         public event EventHandler<GameBroadcastEventArgs> GameBroadcast;
+
+        public bool IsInGameRoom => client != null && client.Connected;
 
         private TcpListener listener;
         private TcpClient client;
@@ -684,7 +687,9 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             base.HandleGameProcessExited();
 
-            LeaveGame();
+            // We might not be in the game room anymore if the host exited before us
+            if (MatchCompleted && IsInGameRoom)
+                LeaveGame();
         }
 
         protected override void UpdateDiscordPresence(bool resetTimer = false)

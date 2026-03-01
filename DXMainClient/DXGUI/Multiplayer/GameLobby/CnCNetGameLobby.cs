@@ -1703,39 +1703,32 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         #region Saved game loading lobby switch
 
-        /// <summary>
-        /// Initiates switching from the game lobby to the game loading lobby.
-        /// Only the game host can perform this action.
-        /// </summary>
-        private void InitiateSwitchToLoadingLobby()
+        private string CheckErrorForSwitchingToGameLoadingLobby(out IniFile spawnSGIni)
         {
+            spawnSGIni = null;
             string spawnSGPath = ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI;
 
             if (!File.Exists(spawnSGPath))
             {
-                AddNotice("No saved multiplayer game data found (spawnSG.ini does not exist).");
-                return;
+                return "No saved multiplayer game data found!";
             }
 
             if (MultiplayerSaveGameManager.GetSaveGameCount() == 0)
             {
-                AddNotice("No multiplayer saved games available.");
-                return;
+                return "No multiplayer saved games available.";
             }
 
-            IniFile spawnSGIni = new IniFile(spawnSGPath);
+            spawnSGIni = new IniFile(spawnSGPath);
 
             if (!spawnSGIni.GetBooleanValue("Settings", "Host", false))
             {
-                AddNotice("You were not the host of the saved multiplayer game.");
-                return;
+                return "You were not the host of the saved multiplayer game.";
             }
 
             string localPlayerName = spawnSGIni.GetStringValue("Settings", "Name", string.Empty);
             if (localPlayerName != ProgramConstants.PLAYERNAME)
             {
-                AddNotice("The saved multiplayer game was created with a different host name: " + localPlayerName);
-                return;
+                return "The saved multiplayer game was created with a different host name: " + localPlayerName;
             }
 
             List<string> savedGamePlayerNames = GetSavedGamePlayerNames(spawnSGIni);
@@ -1744,10 +1737,24 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 if (!savedGamePlayerNames.Contains(player.Name))
                 {
-                    AddNotice("Cannot switch to saved game loading: player " + player.Name +
-                        " is not in the saved game.");
-                    return;
+                    return "Cannot switch to saved game loading: player " + player.Name + " is not in the saved game.";
                 }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Initiates switching from the game lobby to the game loading lobby.
+        /// Only the game host can perform this action.
+        /// </summary>
+        private void InitiateSwitchToLoadingLobby()
+        {
+            string error = CheckErrorForSwitchingToGameLoadingLobby(out IniFile spawnSGIni);
+            if (error != null)
+            {
+                AddNotice(error);
+                return;
             }
 
             string newPassword = Utilities.CalculateSHA1ForString(
@@ -1796,18 +1803,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (IsHost)
                 return;
 
-            string spawnSGPath = ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI;
-
-            if (!File.Exists(spawnSGPath))
+            string error = CheckErrorForSwitchingToGameLoadingLobby(out IniFile spawnSGIni);
+            if (error != null)
             {
-                connectionManager.MainChannel.AddMessage(new ChatMessage(Color.Yellow, "The game host switched to the game loading lobby, but you are not part of the saved game!"));
+                connectionManager.MainChannel.AddMessage(new ChatMessage(Color.Yellow, "The game host switched to the game loading lobby, but an error was encountered: " + error));
                 LeaveGameLobby();
                 return;
             }
 
             AddNotice("The game host is switching to saved game loading lobby...");
-
-            IniFile spawnSGIni = new IniFile(spawnSGPath);
 
             string newPassword = Utilities.CalculateSHA1ForString(
                 spawnSGIni.GetStringValue("Settings", "GameID", string.Empty)).Substring(0, 10);

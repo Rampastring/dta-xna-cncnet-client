@@ -265,11 +265,14 @@
     <Compile Include="Domain\Singleplayer\Bonus.cs" />
     <Compile Include="Domain\StatisticsSender.cs" />
     <Compile Include="DXGUI\Generic\Campaign\ConversationDisplay.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\CovertRevoltCutscenes.cs" />
     <Compile Include="DXGUI\Generic\Campaign\Cutscene.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\CutsceneResources.cs" />
     <Compile Include="DXGUI\Generic\Campaign\HeaderDisplay.cs" />
     <Compile Include="DXGUI\Generic\Campaign\MissionCutscenes.cs" />
     <Compile Include="DXGUI\Generic\Campaign\Phase.cs" />
     <Compile Include="DXGUI\Generic\Campaign\PhaseState.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\PowerToThePeopleCutscenes.cs" />
     <Compile Include="DXGUI\Generic\Campaign\StoryDisplay.cs" />
     <Compile Include="DXGUI\Generic\Campaign\StoryImage.cs" />
     <Compile Include="DXGUI\Generic\Campaign\BonusInfoPanel.cs" />

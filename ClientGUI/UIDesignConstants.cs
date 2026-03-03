@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ClientGUI
+﻿namespace ClientGUI
 {
     /// <summary>
     /// Contains constants used in user interface design.
@@ -18,6 +12,7 @@ namespace ClientGUI
         public const int CONTROL_VERTICAL_MARGIN = 6;
         public const int CONTROL_HORIZONTAL_MARGIN = 6;
 
+        public const int REGULAR_FONT_INDEX = 0;
         public const int BOLD_FONT_INDEX = 1;
 
         public const int BUTTON_HEIGHT = 23;

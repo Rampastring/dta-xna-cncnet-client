@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ClientGUI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Rampastring.XNAUI;
@@ -26,6 +27,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
         void Finish();
 
         ConversationDisplay ConversationDisplay { get; }
+
+        HeaderDisplay HeaderDisplay { get; }
     }
 
     public class StoryDisplay : XNAControl, IStoryDisplay
@@ -37,6 +40,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private const float SkipGraphicAlphaRate = 5.0f;
         private const float InitialSkipTextVisibilitySeconds = 5.0f;
         private const float InitialSkipGraphicAlpha = SkipGraphicAlphaRate * InitialSkipTextVisibilitySeconds;
+        private const int DefaultHeaderWidth = 150;
 
         public StoryDisplay(WindowManager windowManager) : base(windowManager)
         {
@@ -54,6 +58,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
         public PhaseState PhaseState;
 
         public ConversationDisplay ConversationDisplay { get; private set; }
+
+        public HeaderDisplay HeaderDisplay { get; private set; }
 
 
         private MissionCutscenes cutscenes;
@@ -95,6 +101,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
             ClearStoryImages();
             ConversationDisplay.ConversationText = string.Empty;
             ConversationDisplay.IsCentered = false;
+
+            HeaderDisplay.TextColor = Color.White;
+            HeaderDisplay.Text = string.Empty;
+            HeaderDisplay.IsCentered = true;
+            HeaderDisplay.Width = DefaultHeaderWidth;
+
             cutsceneStarted = false;
             isFadingOutMusic = false;
 
@@ -234,6 +246,19 @@ namespace DTAClient.DXGUI.Generic.Campaign
             ConversationDisplay.DrawOrder = 99999;
             ConversationDisplay.UpdateOrder = 99999;
             AddChild(ConversationDisplay);
+
+            HeaderDisplay = new HeaderDisplay(WindowManager);
+            HeaderDisplay.Name = nameof(HeaderDisplay);
+            HeaderDisplay.BackgroundTexture = AssetLoader.CreateTexture(Color.Black * 0.5f, 2, 2);
+            HeaderDisplay.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
+            HeaderDisplay.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            HeaderDisplay.Scaling = 2;
+            HeaderDisplay.Width = DefaultHeaderWidth;
+            HeaderDisplay.Height = 30;
+            HeaderDisplay.Y = ConversationDisplay.Y - HeaderDisplay.ScaledHeight;
+            HeaderDisplay.DrawOrder = ConversationDisplay.DrawOrder;
+            HeaderDisplay.UpdateOrder = ConversationDisplay.UpdateOrder;
+            AddChild(HeaderDisplay);
 
             base.Initialize();
             Disable();

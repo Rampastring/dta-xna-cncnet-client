@@ -266,6 +266,7 @@
     <Compile Include="Domain\StatisticsSender.cs" />
     <Compile Include="DXGUI\Generic\Campaign\ConversationDisplay.cs" />
     <Compile Include="DXGUI\Generic\Campaign\Cutscene.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\HeaderDisplay.cs" />
     <Compile Include="DXGUI\Generic\Campaign\MissionCutscenes.cs" />
     <Compile Include="DXGUI\Generic\Campaign\Phase.cs" />
     <Compile Include="DXGUI\Generic\Campaign\PhaseState.cs" />

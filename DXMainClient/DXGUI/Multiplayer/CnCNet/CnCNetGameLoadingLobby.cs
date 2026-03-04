@@ -289,6 +289,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 channel.UserLeft -= Channel_UserLeft;
                 channel.UserQuitIRC -= Channel_UserQuitIRC;
                 channel.CTCPReceived -= Channel_CTCPReceived;
+                channel = null;
             }
 
             if (Enabled)
@@ -307,18 +308,19 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         /// </summary>
         public void Clear()
         {
+            // Preserve channel reference because DetachFromChannel nulls it
+            Channel _channel = channel;
             DetachFromChannel();
 
-            if (channel != null)
+            if (_channel != null)
             {
-                channel.Leave();
-                connectionManager.RemoveChannel(channel);
-                channel = null;
+                _channel.Leave();
+                connectionManager.RemoveChannel(_channel);
             }
 
             tunnelHandler.CurrentTunnel = null;
 
-            if (IsInGameRoom)
+            if (_channel != null)
                 base.LeaveGame();
         }
 

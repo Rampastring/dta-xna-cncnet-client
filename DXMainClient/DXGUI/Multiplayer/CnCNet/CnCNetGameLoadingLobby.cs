@@ -397,6 +397,9 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 string.Format("MODE {0} +klnNs {1} {2}", channel.ChannelName,
                 channel.Password, SGPlayers.Count),
                 QueuedMessageType.SYSTEM_MESSAGE, 50));
+
+            connectionManager.SendCustomMessage(new QueuedMessage(
+                string.Format("MODE {0} -i", channel.ChannelName), QueuedMessageType.SYSTEM_MESSAGE, 20));
         }
 
         private void Channel_UserAdded(object sender, ChannelUserEventArgs e)

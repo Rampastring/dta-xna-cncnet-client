@@ -833,7 +833,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         private void GameChannel_InvalidPasswordEntered_LoadedGame(object sender, EventArgs e)
         {
             var channel = (Channel)sender;
-            connectionManager.MainChannel.AddMessage(new ChatMessage(Color.White, "Failed to join game loading lobby. Internal error: invalid channel password"));
+            connectionManager.MainChannel.AddMessage(new ChatMessage(Color.White, "Failed to join game loading lobby. Make sure you were present in the saved game. If the game host just switched between lobbies, please try again."));
             ClearGameChannelEvents(channel);
         }
 

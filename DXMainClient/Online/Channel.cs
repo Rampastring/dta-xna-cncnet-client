@@ -163,6 +163,11 @@ namespace DTAClient.Online
         {
             if (users.Remove(userName))
             {
+                if (userName == ProgramConstants.PLAYERNAME)
+                {
+                    users.Clear();
+                }
+
                 if (notifyOnUserListChange)
                 {
                     AddMessage(new ChatMessage(userName + " has left from " + UIName + "."));
@@ -176,6 +181,11 @@ namespace DTAClient.Online
         {
             if (users.Remove(userName))
             {
+                if (userName == ProgramConstants.PLAYERNAME)
+                {
+                    users.Clear();
+                }
+
                 if (notifyOnUserListChange)
                 {
                     AddMessage(new ChatMessage(userName + " has quit from CnCNet."));

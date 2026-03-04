@@ -455,10 +455,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public override void Clear()
         {
+            Channel _channel = channel;
             DetachFromChannel();
 
-            if (channel != null)
-                connectionManager.RemoveChannel(channel);
+            if (_channel != null)
+            {
+                if (_channel.Users.Find(ProgramConstants.PLAYERNAME) != null)
+                    _channel.Leave();
+
+                connectionManager.RemoveChannel(_channel);
+            }
 
             tunnelHandler.CurrentTunnel = null;
 
@@ -474,7 +480,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
 
             Clear();
-            channel.Leave();
         }
 
         /// <summary>
@@ -500,6 +505,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 {
                     channel.ChannelModesChanged -= Channel_ChannelModesChanged;
                 }
+
+                channel = null;
             }
 
             CustomComponentHandler.Instance.CustomComponentModified -= CustomComponentHandler_CustomComponentModified;
@@ -1720,7 +1727,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             spawnSGIni = new IniFile(spawnSGPath);
 
-            if (!spawnSGIni.GetBooleanValue("Settings", "Host", false))
+            if (IsHost && !spawnSGIni.GetBooleanValue("Settings", "Host", false))
             {
                 return "You were not the host of the saved multiplayer game.";
             }

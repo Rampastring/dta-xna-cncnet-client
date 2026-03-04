@@ -773,7 +773,6 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             {
                 gameLoadingLobby.SetUp(false, hg.TunnelServer, gameChannel, hg.HostName);
                 gameChannel.UserAdded += GameLoadingChannel_UserAdded;
-                //gameChannel.MessageAdded += GameLoadingChannel_MessageAdded;
                 gameChannel.InvalidPasswordEntered += GameChannel_InvalidPasswordEntered_LoadedGame;
             }
             else
@@ -781,10 +780,11 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 gameLobby.SetUp(gameChannel, false, hg.MaxPlayers, hg.TunnelServer, hg.HostName, hg.Passworded);
                 gameChannel.UserAdded += GameChannel_UserAdded;
                 gameChannel.InvalidPasswordEntered += GameChannel_InvalidPasswordEntered_NewGame;
-                gameChannel.InviteOnlyErrorOnJoin += GameChannel_InviteOnlyErrorOnJoin;
-                gameChannel.ChannelFull += GameChannel_ChannelFull;
-                gameChannel.TargetChangeTooFast += GameChannel_TargetChangeTooFast;
             }
+
+            gameChannel.ChannelFull += GameChannel_ChannelFull;
+            gameChannel.InviteOnlyErrorOnJoin += GameChannel_InviteOnlyErrorOnJoin;
+            gameChannel.TargetChangeTooFast += GameChannel_TargetChangeTooFast;
 
             connectionManager.SendCustomMessage(new QueuedMessage("JOIN " + hg.ChannelName + " " + password,
                 QueuedMessageType.INSTANT_MESSAGE, 0));
@@ -830,6 +830,13 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             ClearGameJoinAttempt((Channel)sender);
         }
 
+        private void GameChannel_InvalidPasswordEntered_LoadedGame(object sender, EventArgs e)
+        {
+            var channel = (Channel)sender;
+            connectionManager.MainChannel.AddMessage(new ChatMessage(Color.White, "Failed to join game loading lobby. Internal error: invalid channel password"));
+            ClearGameChannelEvents(channel);
+        }
+
         private void GameChannel_UserAdded(object sender, Online.ChannelUserEventArgs e)
         {
             Channel gameChannel = (Channel)sender;
@@ -843,16 +850,36 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             }
         }
 
+        private void GameLoadingChannel_UserAdded(object sender, ChannelUserEventArgs e)
+        {
+            Channel gameLoadingChannel = (Channel)sender;
+
+            if (e.User.IRCUser.Name == ProgramConstants.PLAYERNAME)
+            {
+                ClearGameChannelEvents(gameLoadingChannel);
+                gameLoadingLobby.OnJoined();
+                isInGameRoom = true;
+                SetLogOutButtonText();
+            }
+        }
+
         private void ClearGameJoinAttempt(Channel channel)
         {
             ClearGameChannelEvents(channel);
             gameLobby.Clear();
+            gameLoadingLobby.Clear();
         }
 
+        /// <summary>
+        /// Clears on-join-attempt event subscriptions from a channel.
+        /// Shared between game lobby and game loading lobby join functionality.
+        /// </summary>
         private void ClearGameChannelEvents(Channel channel)
         {
             channel.UserAdded -= GameChannel_UserAdded;
+            channel.UserAdded -= GameLoadingChannel_UserAdded;
             channel.InvalidPasswordEntered -= GameChannel_InvalidPasswordEntered_NewGame;
+            channel.InvalidPasswordEntered -= GameChannel_InvalidPasswordEntered_LoadedGame;
             channel.InviteOnlyErrorOnJoin -= GameChannel_InviteOnlyErrorOnJoin;
             channel.ChannelFull -= GameChannel_ChannelFull;
             channel.TargetChangeTooFast -= GameChannel_TargetChangeTooFast;
@@ -924,30 +951,6 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             // update the friends window so it can enable the Invite option
             pmWindow.SetInviteChannelInfo(channelName, e.GameRoomName, string.IsNullOrEmpty(e.Password) ? string.Empty : e.Password);
-        }
-
-        private void GameChannel_InvalidPasswordEntered_LoadedGame(object sender, EventArgs e)
-        {
-            var channel = (Channel)sender;
-            channel.UserAdded -= GameLoadingChannel_UserAdded;
-            channel.InvalidPasswordEntered -= GameChannel_InvalidPasswordEntered_LoadedGame;
-            gameLoadingLobby.Clear();
-            isJoiningGame = false;
-        }
-
-        private void GameLoadingChannel_UserAdded(object sender, ChannelUserEventArgs e)
-        {
-            Channel gameLoadingChannel = (Channel)sender;
-
-            if (e.User.IRCUser.Name == ProgramConstants.PLAYERNAME)
-            {
-                gameLoadingChannel.UserAdded -= GameLoadingChannel_UserAdded;
-                gameLoadingChannel.InvalidPasswordEntered -= GameChannel_InvalidPasswordEntered_LoadedGame;
-
-                gameLoadingLobby.OnJoined();
-                isInGameRoom = true;
-                isJoiningGame = false;
-            }
         }
 
         /// <summary>

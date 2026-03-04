@@ -368,6 +368,11 @@ namespace DTAClient.DXGUI.Multiplayer
                 Logger.Log("GameLoadingLobbyBase: Match statistics not found for unique game ID " + uniqueGameId);
             }
 
+            if (!MatchCompleted)
+            {
+                RefreshSavedGames();
+            }
+
             UpdateDiscordPresence(true);
         }
 
@@ -397,7 +402,6 @@ namespace DTAClient.DXGUI.Multiplayer
 
             SGPlayers.Clear();
             Players.Clear();
-            ddSavedGame.Items.Clear();
             lbChatMessages.Clear();
             lbChatMessages.TopIndex = 0;
 
@@ -445,6 +449,16 @@ namespace DTAClient.DXGUI.Multiplayer
                 lblPlayerNames[i].Visible = false;
             }
 
+            RefreshSavedGames();
+
+            CopyPlayerDataToUI();
+            isSettingUp = false;
+        }
+
+        private void RefreshSavedGames()
+        {
+            ddSavedGame.Items.Clear();
+
             List<string> timestamps = MultiplayerSaveGameManager.GetSaveGameTimestamps();
             timestamps.Reverse(); // Most recent saved game first
 
@@ -452,9 +466,6 @@ namespace DTAClient.DXGUI.Multiplayer
 
             if (ddSavedGame.Items.Count > 0)
                 ddSavedGame.SelectedIndex = 0;
-
-            CopyPlayerDataToUI();
-            isSettingUp = false;
         }
 
         protected void CopyPlayerDataToUI()

@@ -79,6 +79,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         private TunnelHandler tunnelHandler;
         private TunnelSelectionWindow tunnelSelectionWindow;
         private XNAClientButton btnChangeTunnel;
+        private XNAClientButton btnSwitchLobby;
 
         private Channel channel;
 
@@ -132,11 +133,21 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             btnChangeTunnel = new XNAClientButton(WindowManager);
             btnChangeTunnel.Name = nameof(btnChangeTunnel);
-            btnChangeTunnel.ClientRectangle = new Rectangle(btnLeaveGame.Right - btnLeaveGame.Width - 145,
+            btnChangeTunnel.ClientRectangle = new Rectangle(btnLeaveGame.X - 145,
                 btnLeaveGame.Y, 133, 23);
             btnChangeTunnel.Text = "Change Tunnel";
             btnChangeTunnel.LeftClick += BtnChangeTunnel_LeftClick;
             AddChild(btnChangeTunnel);
+
+            btnSwitchLobby = new XNAClientButton(WindowManager);
+            btnSwitchLobby.Name = nameof(btnSwitchLobby);
+            btnSwitchLobby.ClientRectangle = new Rectangle(btnChangeTunnel.X - UIDesignConstants.BUTTON_WIDTH_133 - UIDesignConstants.EMPTY_SPACE_SIDES_NEW,
+                btnChangeTunnel.Y,
+                UIDesignConstants.BUTTON_WIDTH_133,
+                UIDesignConstants.BUTTON_HEIGHT);
+            btnSwitchLobby.Text = "New Game";
+            btnSwitchLobby.LeftClick += BtnSwitchLobby_LeftClick;
+            AddChild(btnSwitchLobby);
 
             gameBroadcastTimer = new XNATimerControl(WindowManager);
             gameBroadcastTimer.AutoReset = true;
@@ -150,6 +161,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 "Switch to regular game lobby (game host only)",
                 true, (s) => InitiateSwitchToGameLobby()));
         }
+
+        private void BtnSwitchLobby_LeftClick(object sender, EventArgs e) => InitiateSwitchToGameLobby();
 
         private void BtnChangeTunnel_LeftClick(object sender, EventArgs e) => ShowTunnelSelectionWindow("Select tunnel server:");
 

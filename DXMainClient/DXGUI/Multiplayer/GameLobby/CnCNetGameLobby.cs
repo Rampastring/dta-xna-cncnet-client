@@ -107,6 +107,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private TunnelHandler tunnelHandler;
         private TunnelSelectionWindow tunnelSelectionWindow;
         private XNAClientButton btnChangeTunnel;
+        private XNAClientButton btnSwitchLobby;
 
         private Channel channel;
         private CnCNetManager connectionManager;
@@ -155,6 +156,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             btnChangeTunnel = FindChild<XNAClientButton>(nameof(btnChangeTunnel));
             btnChangeTunnel.LeftClick += BtnChangeTunnel_LeftClick;
 
+            btnSwitchLobby = FindChild<XNAClientButton>(nameof(btnSwitchLobby));
+            if (btnSwitchLobby != null)
+                btnSwitchLobby.LeftClick += BtnSwitchLobby_LeftClick;
+
             gameBroadcastTimer = new XNATimerControl(WindowManager);
             gameBroadcastTimer.AutoReset = true;
             gameBroadcastTimer.Interval = TimeSpan.FromSeconds(GAME_BROADCAST_INTERVAL);
@@ -178,6 +183,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             PostInitialize();
         }
+
+        private void BtnSwitchLobby_LeftClick(object sender, EventArgs e) => InitiateSwitchToLoadingLobby();
 
         private void BtnChangeTunnel_LeftClick(object sender, EventArgs e) => ShowTunnelSelectionWindow("Select tunnel server:");
 
@@ -207,12 +214,18 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 RandomSeed = new Random().Next();
                 RefreshMapSelectionUI();
                 btnChangeTunnel.Enable();
+
+                if (btnSwitchLobby != null)
+                    btnSwitchLobby.Enable();
             }
             else
             {
                 channel.ChannelModesChanged += Channel_ChannelModesChanged;
                 AIPlayers.Clear();
                 btnChangeTunnel.Disable();
+
+                if (btnSwitchLobby != null)
+                    btnSwitchLobby.Disable();
             }
 
             tunnelHandler.CurrentTunnel = tunnel;
@@ -257,6 +270,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 RandomSeed = new Random().Next();
                 RefreshMapSelectionUI();
                 btnChangeTunnel.Enable();
+                if (btnSwitchLobby != null)
+                    btnSwitchLobby.Enable();
 
                 while (Players.Count + AIPlayers.Count > MAX_PLAYER_COUNT)
                 {
@@ -268,6 +283,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 channel.ChannelModesChanged += Channel_ChannelModesChanged;
                 AIPlayers.Clear();
                 btnChangeTunnel.Disable();
+                if (btnSwitchLobby != null)
+                    btnSwitchLobby.Disable();
             }
 
             tunnelHandler.CurrentTunnel = tunnel;
@@ -1757,6 +1774,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         private void InitiateSwitchToLoadingLobby()
         {
+            if (!IsHost)
+                return;
+
             string error = CheckErrorForSwitchingToGameLoadingLobby(out IniFile spawnSGIni);
             if (error != null)
             {

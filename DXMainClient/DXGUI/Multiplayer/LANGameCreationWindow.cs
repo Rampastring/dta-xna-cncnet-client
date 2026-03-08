@@ -50,7 +50,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             btnNewGame = new XNAButton(WindowManager);
             btnNewGame.Name = "btnNewGame";
-            btnNewGame.ClientRectangle = new Rectangle(12, 42, 133, 23);
+            btnNewGame.ClientRectangle = new Rectangle(UIDesignConstants.EMPTY_SPACE_SIDES_NEW, 42, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnNewGame.IdleTexture = AssetLoader.LoadTexture("133pxbtn.png");
             btnNewGame.HoverTexture = AssetLoader.LoadTexture("133pxbtn_c.png");
             btnNewGame.FontIndex = 1;
@@ -60,8 +60,8 @@ namespace DTAClient.DXGUI.Multiplayer
 
             btnLoadGame = new XNAButton(WindowManager);
             btnLoadGame.Name = "btnLoadGame";
-            btnLoadGame.ClientRectangle = new Rectangle(btnNewGame.Right + 12,
-                btnNewGame.Y, 133, 23);
+            btnLoadGame.ClientRectangle = new Rectangle(btnNewGame.Right + UIDesignConstants.EMPTY_SPACE_SIDES_NEW,
+                btnNewGame.Y, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnLoadGame.IdleTexture = btnNewGame.IdleTexture;
             btnLoadGame.HoverTexture = btnNewGame.HoverTexture;
             btnLoadGame.FontIndex = 1;
@@ -71,8 +71,8 @@ namespace DTAClient.DXGUI.Multiplayer
 
             btnCancel = new XNAButton(WindowManager);
             btnCancel.Name = "btnCancel";
-            btnCancel.ClientRectangle = new Rectangle(btnLoadGame.Right + 12,
-                btnNewGame.Y, 133, 23);
+            btnCancel.ClientRectangle = new Rectangle(btnLoadGame.Right + UIDesignConstants.EMPTY_SPACE_SIDES_NEW,
+                btnNewGame.Y, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnCancel.IdleTexture = btnNewGame.IdleTexture;
             btnCancel.HoverTexture = btnNewGame.HoverTexture;
             btnCancel.FontIndex = 1;

@@ -41,20 +41,20 @@ namespace DTAClient.DXGUI.Generic
             imagePanel.Name = "imagePanel";
             imagePanel.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             imagePanel.ClientRectangle = new Rectangle(lblDescription.X,
-                lblDescription.Bottom + 12, Width - 24,
+                lblDescription.Bottom + UIDesignConstants.EMPTY_SPACE_TOP_NEW, Width - 24,
                 Height - (lblDescription.Bottom + 59));
             imagePanel.BackgroundTexture = AssetLoader.LoadTextureUncached("cheater.png");
 
             var btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             btnCancel.ClientRectangle = new Rectangle(Width - 104,
-                Height - 35, 92, 23);
+                Height - UIDesignConstants.BUTTON_HEIGHT - UIDesignConstants.EMPTY_SPACE_BOTTOM_NEW, UIDesignConstants.BUTTON_WIDTH_92, UIDesignConstants.BUTTON_HEIGHT);
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnCancel_LeftClick;
 
             var btnYes = new XNAClientButton(WindowManager);
             btnYes.Name = "btnYes";
-            btnYes.ClientRectangle = new Rectangle(12, btnCancel.Y,
+            btnYes.ClientRectangle = new Rectangle(UIDesignConstants.EMPTY_SPACE_SIDES_NEW, btnCancel.Y,
                 btnCancel.Width, btnCancel.Height);
             btnYes.Text = "Yes";
             btnYes.LeftClick += BtnYes_LeftClick;

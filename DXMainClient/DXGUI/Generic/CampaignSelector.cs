@@ -266,7 +266,7 @@ namespace DTAClient.DXGUI.Generic
 
             btnLaunch = new XNAClientButton(WindowManager);
             btnLaunch.Name = nameof(btnLaunch);
-            btnLaunch.ClientRectangle = new Rectangle(lbCampaignList.Right + (UIDesignConstants.CONTROL_HORIZONTAL_MARGIN * 2), Height - 35, 160, 23);
+            btnLaunch.ClientRectangle = new Rectangle(lbCampaignList.Right + (UIDesignConstants.CONTROL_HORIZONTAL_MARGIN * 2), Height - UIDesignConstants.BUTTON_HEIGHT - UIDesignConstants.EMPTY_SPACE_BOTTOM_NEW, UIDesignConstants.BUTTON_WIDTH_160, UIDesignConstants.BUTTON_HEIGHT);
             btnLaunch.Text = "Launch";
             btnLaunch.AllowClick = false;
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
@@ -274,7 +274,7 @@ namespace DTAClient.DXGUI.Generic
             var btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             btnCancel.ClientRectangle = new Rectangle(Width - 172,
-                btnLaunch.Y, 160, 23);
+                btnLaunch.Y, UIDesignConstants.BUTTON_WIDTH_160, UIDesignConstants.BUTTON_HEIGHT);
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnCancel_LeftClick;
 

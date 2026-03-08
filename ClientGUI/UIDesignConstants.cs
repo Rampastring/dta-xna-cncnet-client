@@ -10,6 +10,8 @@
         public const int EMPTY_SPACE_BOTTOM = 6;
 
         public const int EMPTY_SPACE_SIDES_NEW = 12;
+        public const int EMPTY_SPACE_TOP_NEW = 12;
+        public const int EMPTY_SPACE_BOTTOM_NEW = 12;
 
         public const int CONTROL_VERTICAL_MARGIN = 6;
         public const int CONTROL_HORIZONTAL_MARGIN = 6;
@@ -20,6 +22,7 @@
         public const int BUTTON_HEIGHT = 23;
         public const int BUTTON_WIDTH_92 = 92;
         public const int BUTTON_WIDTH_133 = 133;
+        public const int BUTTON_WIDTH_160 = 160;
 
         public const int CUTSCENE_DESIGN_RES_X = 1280;
         public const int CUTSCENE_DESIGN_RES_Y = 720;

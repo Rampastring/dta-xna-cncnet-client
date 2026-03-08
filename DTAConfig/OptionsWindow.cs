@@ -55,13 +55,13 @@ namespace DTAConfig
             var btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             btnCancel.ClientRectangle = new Rectangle(Width - 104,
-                Height - 35, 92, 23);
+                Height - UIDesignConstants.BUTTON_HEIGHT - UIDesignConstants.EMPTY_SPACE_BOTTOM_NEW, UIDesignConstants.BUTTON_WIDTH_92, UIDesignConstants.BUTTON_HEIGHT);
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnBack_LeftClick;
 
             var btnSave = new XNAClientButton(WindowManager);
             btnSave.Name = "btnSave";
-            btnSave.ClientRectangle = new Rectangle(12, btnCancel.Y, 92, 23);
+            btnSave.ClientRectangle = new Rectangle(UIDesignConstants.EMPTY_SPACE_SIDES_NEW, btnCancel.Y, UIDesignConstants.BUTTON_WIDTH_92, UIDesignConstants.BUTTON_HEIGHT);
             btnSave.Text = "Save";
             btnSave.LeftClick += BtnSave_LeftClick;
 

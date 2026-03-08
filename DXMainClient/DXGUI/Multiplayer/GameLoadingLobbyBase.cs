@@ -85,11 +85,11 @@ namespace DTAClient.DXGUI.Multiplayer
 
             lblDescription = new XNALabel(WindowManager);
             lblDescription.Name = nameof(lblDescription);
-            lblDescription.ClientRectangle = new Rectangle(12, 12, 0, 0);
+            lblDescription.ClientRectangle = new Rectangle(UIDesignConstants.EMPTY_SPACE_SIDES_NEW, UIDesignConstants.EMPTY_SPACE_TOP_NEW, 0, 0);
             lblDescription.Text = "Wait for all players to join and get ready, then click Load Game to load the saved multiplayer game.";
 
             panelPlayers = new XNAPanel(WindowManager);
-            panelPlayers.ClientRectangle = new Rectangle(12, 32, 373, 125);
+            panelPlayers.ClientRectangle = new Rectangle(UIDesignConstants.EMPTY_SPACE_SIDES_NEW, 32, 373, 125);
             panelPlayers.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
             panelPlayers.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
@@ -115,7 +115,7 @@ namespace DTAClient.DXGUI.Multiplayer
             lblMapName = new XNALabel(WindowManager);
             lblMapName.Name = nameof(lblMapName);
             lblMapName.FontIndex = 1;
-            lblMapName.ClientRectangle = new Rectangle(panelPlayers.Right + 12,
+            lblMapName.ClientRectangle = new Rectangle(panelPlayers.Right + UIDesignConstants.EMPTY_SPACE_SIDES_NEW,
                 panelPlayers.Y, 0, 0);
             lblMapName.Text = "MAP:";
 
@@ -149,16 +149,16 @@ namespace DTAClient.DXGUI.Multiplayer
             ddSavedGame.Name = nameof(ddSavedGame);
             ddSavedGame.ClientRectangle = new Rectangle(lblSavedGameTime.X,
                 panelPlayers.Bottom - 21,
-                Width - lblSavedGameTime.X - 12, 21);
+                Width - lblSavedGameTime.X - UIDesignConstants.EMPTY_SPACE_SIDES_NEW, 21);
             ddSavedGame.SelectedIndexChanged += DdSavedGame_SelectedIndexChanged;
 
             lbChatMessages = new ChatListBox(WindowManager);
             lbChatMessages.Name = nameof(lbChatMessages);
             lbChatMessages.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
             lbChatMessages.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            lbChatMessages.ClientRectangle = new Rectangle(12, panelPlayers.Bottom + 12,
+            lbChatMessages.ClientRectangle = new Rectangle(UIDesignConstants.EMPTY_SPACE_SIDES_NEW, panelPlayers.Bottom + UIDesignConstants.EMPTY_SPACE_TOP_NEW,
                 Width - 24,
-                Height - panelPlayers.Bottom - 12 - 29 - 34);
+                Height - panelPlayers.Bottom - UIDesignConstants.EMPTY_SPACE_TOP_NEW - 29 - 34);
 
             tbChatInput = new XNATextBox(WindowManager);
             tbChatInput.Name = nameof(tbChatInput);
@@ -170,14 +170,14 @@ namespace DTAClient.DXGUI.Multiplayer
             btnLoadGame = new XNAClientButton(WindowManager);
             btnLoadGame.Name = nameof(btnLoadGame);
             btnLoadGame.ClientRectangle = new Rectangle(lbChatMessages.X,
-                tbChatInput.Bottom + 6, 133, 23);
+                tbChatInput.Bottom + 6, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnLoadGame.Text = "Load Game";
             btnLoadGame.LeftClick += BtnLoadGame_LeftClick;
 
             btnLeaveGame = new XNAClientButton(WindowManager);
             btnLeaveGame.Name = nameof(btnLeaveGame);
             btnLeaveGame.ClientRectangle = new Rectangle(Width - 145,
-                btnLoadGame.Y, 133, 23);
+                btnLoadGame.Y, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnLeaveGame.Text = "Leave Game";
             btnLeaveGame.LeftClick += BtnLeaveGame_LeftClick;
 

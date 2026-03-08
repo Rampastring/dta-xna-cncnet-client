@@ -1,5 +1,6 @@
 ﻿using ClientGUI;
 using DTAClient.Domain.Singleplayer;
+using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
@@ -43,6 +44,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             lbBonusList = new XNAListBox(WindowManager);
             lbBonusList.Name = nameof(lbBonusList);
+            lbBonusList.BackgroundTexture = AssetLoader.CreateTexture(Color.Black * 0.5f, 2, 2);
+            lbBonusList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             lbBonusList.X = 12;
             lbBonusList.Y = lblDescription.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             lbBonusList.Width = Width - (lbBonusList.X * 2);

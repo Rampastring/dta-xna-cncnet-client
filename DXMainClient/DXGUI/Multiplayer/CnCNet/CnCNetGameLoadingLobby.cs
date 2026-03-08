@@ -280,9 +280,15 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         public override void Refresh(bool isHost)
         {
             if (isHost)
+            {
                 btnChangeTunnel.Enable();
+                btnSwitchLobby.Enable();
+            }
             else
+            {
                 btnChangeTunnel.Disable();
+                btnSwitchLobby.Disable();
+            }
 
             base.Refresh(isHost);
         }

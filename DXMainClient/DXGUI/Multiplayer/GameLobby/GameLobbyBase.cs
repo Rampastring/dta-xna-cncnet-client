@@ -56,6 +56,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const int RANK_EXTREME = 6;
         private const int RANK_ULTIMATE = 7;
 
+        protected const string TD_FMVS_CUSTOM_COMPONENT = "FMVs";
+        protected const string RA_FMVS_CUSTOM_COMPONENT = "RAFMVs";
+
         /// <summary>
         /// Creates a new instance of the game lobby base.
         /// </summary>
@@ -2054,12 +2057,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             return true;
         }
 
-        protected string GetFMVsHash()
+        protected string GetFMVsHash(string customComponentName)
         {
             if (ClientConfiguration.Instance.ModMode)
                 return string.Empty;
 
-            var fmvsCustomComponent = CUpdater.CustomComponents.ToList().Find(cc => cc.ININame == "FMVs");
+            var fmvsCustomComponent = CUpdater.CustomComponents.ToList().Find(cc => cc.ININame == customComponentName);
             if (fmvsCustomComponent == null)
                 return string.Empty;
 
@@ -2078,23 +2081,70 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             return value.Substring(0, MaxLength);
         }
 
+        protected string GetFMVsComponentUIName(string customComponentName)
+        {
+            var fmvsCustomComponent = CUpdater.CustomComponents.ToList().Find(cc => cc.ININame == customComponentName);
+            if (fmvsCustomComponent == null)
+                return "Unknown";
+
+            return fmvsCustomComponent.GUIName;
+        }
+
+        protected string GetFMVsComponentInternalName()
+        {
+            int index = 0;
+            if (Map != null)
+                index = Map.CutscenesCustomComponentName == TD_FMVS_CUSTOM_COMPONENT ? 0 : 1;
+
+            return index == 0 ? TD_FMVS_CUSTOM_COMPONENT : RA_FMVS_CUSTOM_COMPONENT;
+        }
+
+        protected bool IsFMVsInstallStateOK()
+        {
+            if (Map == null)
+                return false;
+
+            var checkBox = CheckBoxes.Find(chk => chk.DependsOnCustomComponent == TD_FMVS_CUSTOM_COMPONENT);
+            if (checkBox == null || !checkBox.Checked)
+                return true;
+
+            if (string.IsNullOrWhiteSpace(Map.CutscenesCustomComponentName))
+                return true;
+
+            // The check box is checked and the map depends on an FMV. Make sure that the game host has the FMV installed.
+            int index = Map.CutscenesCustomComponentName == TD_FMVS_CUSTOM_COMPONENT ? 0 : 1;
+            string hostHash = Players[0].FMVHashes[index];
+            if (string.IsNullOrWhiteSpace(hostHash))
+                return false;
+
+            return true;
+        }
+
         /// <summary>
         /// Checks whether there is an in-game videos game option in the game lobby.
         /// If there is, checks that it is allowed to be enabled (all players
         /// have the same FMV custom component hash).
         /// </summary>
-        protected bool IsFMVGameOptionStateOK()
+        protected bool IsFMVSyncStateOK()
         {
-            var checkBox = CheckBoxes.Find(chk => chk.DependsOnCustomComponent == "FMVs");
+            if (Map == null)
+                return false;
+
+            var checkBox = CheckBoxes.Find(chk => chk.DependsOnCustomComponent == TD_FMVS_CUSTOM_COMPONENT);
             if (checkBox == null || !checkBox.Checked)
                 return true;
 
-            // The check box is checked, make sure that all players have the same FMV hash
-            string hostHash = Players[0].FMVHash;
+            if (string.IsNullOrWhiteSpace(Map.CutscenesCustomComponentName))
+                return true;
+
+            // The check box is checked and the map depends on an FMV. Make sure that all players have the same FMV hash.
+            // Note: this is absolutely a hack
+            int index = Map.CutscenesCustomComponentName == TD_FMVS_CUSTOM_COMPONENT ? 0 : 1;
+            string hostHash = Players[0].FMVHashes[index];
             if (string.IsNullOrWhiteSpace(hostHash))
                 return false;
 
-            if (Players.Exists(p => p.FMVHash != hostHash))
+            if (Players.Exists(p => p.FMVHashes[index] != hostHash))
                 return false;
 
             return true;

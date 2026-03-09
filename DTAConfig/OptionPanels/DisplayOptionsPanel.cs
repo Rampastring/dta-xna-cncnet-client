@@ -60,7 +60,6 @@ namespace DTAConfig.OptionPanels
 
         private bool GameCompatFixInstalled = false;
         private bool FinalSunCompatFixInstalled = false;
-        private bool GameCompatFixDeclined = false;
 
 
         public override void Initialize()

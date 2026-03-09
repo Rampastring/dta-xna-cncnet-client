@@ -42,7 +42,7 @@ namespace DTAClient.Domain.Multiplayer
 
         public int Ping { get; set; } = -1;
 
-        public string FMVHash { get; set; } = string.Empty;
+        public string[] FMVHashes { get; set; } = new string[2];
 
         /// <summary>
         /// The difficulty level of an AI player for in-client purposes.

@@ -202,6 +202,13 @@ namespace DTAClient.Domain.Multiplayer
         public string ExtraININame { get; private set; }
 
         /// <summary>
+        /// Name of custom component required for this mission's movies.
+        /// Used to verify that the required custom component is installed
+        /// prior to game launch if the in-game videos option is enabled.
+        /// </summary>
+        public string CutscenesCustomComponentName { get; private set; }
+
+        /// <summary>
         /// The game modes that the map is listed for.
         /// </summary>
         public string[] GameModes;
@@ -488,6 +495,7 @@ namespace DTAClient.Domain.Multiplayer
                 HumanPlayersOnly = basicSection.GetBooleanValue("HumanPlayersOnly", false);
                 ForceRandomStartLocations = basicSection.GetBooleanValue("ForceRandomStartLocations", false);
                 ForceNoTeams = basicSection.GetBooleanValue("ForceNoTeams", false);
+                CutscenesCustomComponentName = basicSection.GetStringValue(nameof(CutscenesCustomComponentName), null);
 
                 if (string.IsNullOrWhiteSpace(PreviewPath))
                     PreviewPath = Path.ChangeExtension(path.Substring(ProgramConstants.GamePath.Length), ".png");

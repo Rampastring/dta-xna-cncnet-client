@@ -14,6 +14,7 @@ using ClientGUI;
 using System.Text;
 using DTAClient.Domain;
 using Microsoft.Xna.Framework.Graphics;
+using Updater;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -798,7 +799,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
-            if (!IsFMVGameOptionStateOK())
+            if (!IsFMVsInstallStateOK())
+            {
+                FMVNotInstalledNotification();
+                return;
+            }
+
+            if (!IsFMVSyncStateOK())
             {
                 FMVHashMismatchNotification();
                 return;
@@ -855,8 +862,18 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected virtual void FMVHashMismatchNotification()
         {
-            AddNotice("You are unable to play with ingame videos enabled because one or more players do not have the latest version of the \"Ingame videos\" custom component installed.", Color.Yellow);
-            AddNotice("To play, please disable the game option for in-game videos.", Color.Yellow);
+            string name = GetFMVsComponentUIName(GetFMVsComponentInternalName());
+
+            AddNotice($"You are unable to play with ingame videos enabled because one or more players do not have the latest version of the \"{name}\" custom component installed.", Color.Yellow);
+            AddNotice("To play, please disable the game option for in-game videos, or have all players update the custom component to the latest version.", Color.Yellow);
+        }
+
+        protected virtual void FMVNotInstalledNotification()
+        {
+            string name = GetFMVsComponentUIName(GetFMVsComponentInternalName());
+
+            AddNotice($"You are unable to play with ingame videos enabled because you do not have the \"{name}\" custom component installed.", Color.Yellow);
+            AddNotice("To play, please disable the game option for in-game videos, or install the component through Options -> Components", Color.Yellow);
         }
 
         public virtual void Clear()

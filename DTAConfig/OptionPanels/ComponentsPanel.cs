@@ -56,18 +56,26 @@ namespace DTAConfig.OptionPanels
                 var btn = new XNAClientButton(WindowManager);
                 btn.Name = "btn" + c.ININame;
                 btn.ClientRectangle = new Rectangle(Width - 145,
-                    12 + componentIndex * 35, 133, 23);
+                    12 + componentIndex * 50, 133, 23);
                 btn.Text = buttonText;
                 btn.Tag = c;
                 btn.LeftClick += Btn_LeftClick;
+                AddChild(btn);
 
                 var lbl = new XNALabel(WindowManager);
                 lbl.Name = "lbl" + c.ININame;
                 lbl.ClientRectangle = new Rectangle(12, btn.Y + 2, 0, 0);
+                lbl.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
                 lbl.Text = c.GUIName;
-
-                AddChild(btn);
                 AddChild(lbl);
+
+                var descriptionLbl = new XNALabel(WindowManager);
+                descriptionLbl.Name = "descriptionLbl" + c.ININame;
+                descriptionLbl.X = lbl.X;
+                descriptionLbl.Y = lbl.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+                descriptionLbl.TextColor = UISettings.ActiveSettings.SubtleTextColor;
+                descriptionLbl.Text = c.Description;
+                AddChild(descriptionLbl);
 
                 installationButtons.Add(btn);
 
@@ -92,7 +100,7 @@ namespace DTAConfig.OptionPanels
                     buttonText = "Uninstall";
                     buttonEnabled = true;
 
-                    if (c.LocalIdentifier != c.RemoteIdentifier)
+                    if (c.LocalIdentifier != c.RemoteIdentifier && c.RemoteIdentifier != null)
                         buttonText = "Update (" + GetSizeString(c.RemoteSize) + ")";
                 }
                 else
@@ -149,11 +157,11 @@ namespace DTAConfig.OptionPanels
             else
             {
                 var msgBox = new XNAMessageBox(WindowManager, "Confirmation Required",
-                    "To enable " + cc.GUIName + " the Client will download the necessary files to your game directory." +
+                    "To enable " + cc.GUIName + ", the Client will download the necessary files to your game directory." +
                     Environment.NewLine + Environment.NewLine +
-                    "This will take an additional " + GetSizeString(cc.RemoteSize) + " of disk space, and the download may last" +
+                    "This will take an additional " + GetSizeString(cc.RemoteSize) + " of disk space, and the download may take" +
                     Environment.NewLine +
-                    "from a few minutes to multiple hours depending on your Internet connection speed." +
+                    "some time depending on your Internet connection speed." +
                     Environment.NewLine + Environment.NewLine +
                     "You will not be able to play during the download. Do you want to continue?", XNAMessageBoxButtons.YesNo);
                 msgBox.Tag = btn;

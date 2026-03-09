@@ -1,8 +1,9 @@
 using ClientCore;
 using ClientCore.CnCNet5;
 using ClientGUI;
-using DTAClient.Domain.Multiplayer;
 using DTAClient.Domain;
+using DTAClient.Domain.Multiplayer;
+using DTAClient.Domain.Multiplayer.CnCNet;
 using DTAClient.DXGUI.Generic;
 using DTAClient.DXGUI.Multiplayer.CnCNet;
 using DTAClient.DXGUI.Multiplayer.GameLobby.CommandHandlers;
@@ -17,7 +18,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DTAClient.Domain.Multiplayer.CnCNet;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -40,6 +40,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const string DICE_ROLL_MESSAGE = "DR";
         private const string CHANGE_TUNNEL_SERVER_MESSAGE = "CHTNL";
         private const string FMVS_HASH_MESSAGE = "CCHSH";
+        private const string FMVS_NOT_INSTALLED_NOTIFICATION = "FMVSNO";
         private const string FMV_HASH_MISMATCH_NOTIFICATION = "CCHSHMM";
         private const string SWITCH_TO_LOAD_GAME_MESSAGE = "LOADGAME";
 
@@ -65,6 +66,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 new NotificationHandler("GETREADY", HandleNotification, GetReadyNotification),
                 new NotificationHandler("INSFSPLRS", HandleNotification, InsufficientPlayersNotification),
                 new NotificationHandler("TMPLRS", HandleNotification, TooManyPlayersNotification),
+                new NotificationHandler(FMVS_NOT_INSTALLED_NOTIFICATION, HandleNotification, FMVNotInstalledNotification),
                 new NotificationHandler(FMV_HASH_MISMATCH_NOTIFICATION, HandleNotification, FMVHashMismatchNotification),
                 new NotificationHandler("CLRS", HandleNotification, SharedColorsNotification),
                 new NotificationHandler("SLOC", HandleNotification, SharedStartingLocationNotification),
@@ -107,7 +109,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private TunnelHandler tunnelHandler;
         private TunnelSelectionWindow tunnelSelectionWindow;
         private XNAClientButton btnChangeTunnel;
-        private XNAClientButton btnSwitchLobby;
+        private XNAClientButton btnLoadGame;
 
         private Channel channel;
         private CnCNetManager connectionManager;
@@ -156,9 +158,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             btnChangeTunnel = FindChild<XNAClientButton>(nameof(btnChangeTunnel));
             btnChangeTunnel.LeftClick += BtnChangeTunnel_LeftClick;
 
-            btnSwitchLobby = FindChild<XNAClientButton>(nameof(btnSwitchLobby));
-            if (btnSwitchLobby != null)
-                btnSwitchLobby.LeftClick += BtnSwitchLobby_LeftClick;
+            btnLoadGame = FindChild<XNAClientButton>(nameof(btnLoadGame), true);
+            if (btnLoadGame != null)
+                btnLoadGame.LeftClick += BtnSwitchLobby_LeftClick;
 
             gameBroadcastTimer = new XNATimerControl(WindowManager);
             gameBroadcastTimer.AutoReset = true;
@@ -215,8 +217,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 RefreshMapSelectionUI();
                 btnChangeTunnel.Enable();
 
-                if (btnSwitchLobby != null)
-                    btnSwitchLobby.Enable();
+                if (btnLoadGame != null)
+                    btnLoadGame.Enable();
             }
             else
             {
@@ -224,8 +226,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 AIPlayers.Clear();
                 btnChangeTunnel.Disable();
 
-                if (btnSwitchLobby != null)
-                    btnSwitchLobby.Disable();
+                if (btnLoadGame != null)
+                    btnLoadGame.Disable();
             }
 
             tunnelHandler.CurrentTunnel = tunnel;
@@ -270,8 +272,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 RandomSeed = new Random().Next();
                 RefreshMapSelectionUI();
                 btnChangeTunnel.Enable();
-                if (btnSwitchLobby != null)
-                    btnSwitchLobby.Enable();
+                if (btnLoadGame != null)
+                    btnLoadGame.Enable();
 
                 while (Players.Count + AIPlayers.Count > MAX_PLAYER_COUNT)
                 {
@@ -283,8 +285,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 channel.ChannelModesChanged += Channel_ChannelModesChanged;
                 AIPlayers.Clear();
                 btnChangeTunnel.Disable();
-                if (btnSwitchLobby != null)
-                    btnSwitchLobby.Disable();
+                if (btnLoadGame != null)
+                    btnLoadGame.Disable();
             }
 
             tunnelHandler.CurrentTunnel = tunnel;
@@ -347,10 +349,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void CustomComponentHandler_CustomComponentModified(object sender, CustomComponentModifiedEventArgs e)
         {
-            if (e.CustomComponentName == "FMVs")
+            if (e.CustomComponentName == TD_FMVS_CUSTOM_COMPONENT || e.CustomComponentName == RA_FMVS_CUSTOM_COMPONENT)
             {
                 if (IsHost)
-                    Players[0].FMVHash = GetFMVsHash();
+                    Players[0].FMVHashes[0] = GetFMVsHash(e.CustomComponentName);
                 else
                     UpdateFMVsHash();
             }
@@ -428,13 +430,19 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void UpdateFMVsHash()
         {
-            channel.SendCTCPMessage(FMVS_HASH_MESSAGE + " " + GetFMVsHash(), QueuedMessageType.SYSTEM_MESSAGE, 10);
-            string fmvHash = GetFMVsHash();
+            string tdFmvsHash = GetFMVsHash("FMVs");
+            string raFmvsHash = GetFMVsHash("RAFMVs");
 
             PlayerInfo pInfo = Players.Find(p => p.Name.Equals(ProgramConstants.PLAYERNAME));
             if (pInfo != null)
             {
-                pInfo.FMVHash = fmvHash;
+                pInfo.FMVHashes[0] = tdFmvsHash;
+                pInfo.FMVHashes[1] = raFmvsHash;
+            }
+
+            if (!IsHost || Players.Count > 1)
+            {
+                channel.SendCTCPMessage(FMVS_HASH_MESSAGE + " " + tdFmvsHash + "," + raFmvsHash, QueuedMessageType.SYSTEM_MESSAGE, 10);
             }
         }
 
@@ -683,7 +691,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
             else
             {
-                Players[0].FMVHash = GetFMVsHash();
+                UpdateFMVsHash();
                 Players[0].Ready = true;
                 CopyPlayerDataToUI();
             }
@@ -1511,6 +1519,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 channel.SendCTCPMessage(FMV_HASH_MISMATCH_NOTIFICATION, QueuedMessageType.GAME_NOTIFICATION_MESSAGE, 0);
         }
 
+        protected override void FMVNotInstalledNotification()
+        {
+            base.FMVNotInstalledNotification();
+
+            if (IsHost)
+                channel.SendCTCPMessage(FMVS_NOT_INSTALLED_NOTIFICATION, QueuedMessageType.GAME_NOTIFICATION_MESSAGE, 0);
+        }
+
         protected override void SharedColorsNotification()
         {
             base.SharedColorsNotification();
@@ -1573,12 +1589,22 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
         }
 
-        private void HandleFMVHashMessage(string sender, string fmvHash)
+        private void HandleFMVHashMessage(string sender, string hashString)
         {
+            string[] parts = hashString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length != 2)
+            {
+                Logger.Log("Invalid FMV state message received from " + sender + ": " + hashString);
+                AddNotice("Invalid FMV state message received from " + sender, Color.Yellow);
+                return;
+            }
+
             PlayerInfo pInfo = Players.Find(p => p.Name.Equals(sender));
             if (pInfo != null)
             {
-                pInfo.FMVHash = fmvHash;
+                pInfo.FMVHashes[0] = parts[0];
+                pInfo.FMVHashes[1] = parts[1];
             }
         }
 

@@ -158,10 +158,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void CustomComponentHandler_CustomComponentModified(object sender, CustomComponentModifiedEventArgs e)
         {
-            if (e.CustomComponentName == "FMVs")
+            if (e.CustomComponentName == TD_FMVS_CUSTOM_COMPONENT || e.CustomComponentName == RA_FMVS_CUSTOM_COMPONENT)
             {
                 if (IsHost)
-                    Players[0].FMVHash = GetFMVsHash();
+                    Players[0].FMVHashes[0] = GetFMVsHash(e.CustomComponentName);
                 else
                     SendFMVHash();
             }
@@ -178,7 +178,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void SendFMVHash()
         {
-            SendMessageToHost(FMV_HASH_COMMAND + " " + GetFMVsHash());
+            SendMessageToHost(FMV_HASH_COMMAND + " " + GetFMVsHash(TD_FMVS_CUSTOM_COMPONENT) + "," + GetFMVsHash(RA_FMVS_CUSTOM_COMPONENT));
         }
 
         #region Server code
@@ -289,7 +289,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (IsHost && Players.Count == 1)
             {
                 Players[0].Ready = true;
-                Players[0].FMVHash = GetFMVsHash();
+                Players[0].FMVHashes[0] = GetFMVsHash(TD_FMVS_CUSTOM_COMPONENT);
+                Players[0].FMVHashes[1] = GetFMVsHash(RA_FMVS_CUSTOM_COMPONENT);
             }
 
             lpInfo.MessageReceived += LpInfo_MessageReceived;
@@ -1114,10 +1115,23 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             pInfo.Verified = true;
         }
 
-        private void HandleFMVHashCommand(string sender, string fmvHash)
+        private void HandleFMVHashCommand(string sender, string hashString)
         {
+            string[] parts = hashString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length != 2)
+            {
+                Logger.Log("Invalid FMV state message received from " + sender + ": " + hashString);
+                AddNotice("Invalid FMV state message received from " + sender, Color.Yellow);
+                return;
+            }
+
             PlayerInfo pInfo = Players.Find(p => p.Name == sender);
-            pInfo.FMVHash = fmvHash;
+            if (pInfo != null)
+            {
+                pInfo.FMVHashes[0] = parts[0];
+                pInfo.FMVHashes[1] = parts[1];
+            }
         }
 
         private void Client_HandleDiceRoll(string data)

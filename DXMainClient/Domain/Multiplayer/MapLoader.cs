@@ -14,7 +14,7 @@ namespace DTAClient.Domain.Multiplayer
         public const string MAP_FILE_EXTENSION = ".map";
         private const string CUSTOM_MAPS_DIRECTORY = "Maps/Custom";
 
-        private const int MAP_CACHE_VERSION = 8;
+        private const int MAP_CACHE_VERSION = 9;
 
         /// <summary>
         /// List of game modes.

@@ -353,7 +353,8 @@ namespace DTAClient.Domain.Multiplayer
                 HumanPlayersOnly = section.GetBooleanValue("HumanPlayersOnly", false);
                 ForceRandomStartLocations = section.GetBooleanValue("ForceRandomStartLocations", false);
                 ForceNoTeams = section.GetBooleanValue("ForceNoTeams", false);
-                
+                CutscenesCustomComponentName = section.GetStringValue(nameof(CutscenesCustomComponentName), null);
+
                 string bases = section.GetStringValue("Bases", string.Empty);
                 if (!string.IsNullOrEmpty(bases))
                 {
@@ -869,6 +870,10 @@ namespace DTAClient.Domain.Multiplayer
             section.SetBooleanValue("HumanPlayersOnly", HumanPlayersOnly);
             section.SetBooleanValue("ForceRandomStartLocations", ForceRandomStartLocations);
             section.SetBooleanValue("ForceNoTeams", ForceNoTeams);
+
+            if (!string.IsNullOrWhiteSpace(CutscenesCustomComponentName))
+                section.SetStringValue(nameof(CutscenesCustomComponentName), CutscenesCustomComponentName);
+
             if (!string.IsNullOrWhiteSpace(ExtraININame))
                 section.SetStringValue("ExtraININame", ExtraININame);
             section.SetStringValue("GameModes", string.Join(",", GameModes));

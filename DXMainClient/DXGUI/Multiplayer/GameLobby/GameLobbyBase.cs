@@ -2081,22 +2081,26 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             return value.Substring(0, MaxLength);
         }
 
-        protected string GetFMVsComponentUIName(string customComponentName)
+        protected string GetFMVsComponentUIName()
         {
-            var fmvsCustomComponent = CUpdater.CustomComponents.ToList().Find(cc => cc.ININame == customComponentName);
+            if (Map == null)
+                return "Unknown";
+
+            var fmvsCustomComponent = CUpdater.CustomComponents.ToList().Find(cc => cc.ININame == Map.CutscenesCustomComponentName);
             if (fmvsCustomComponent == null)
                 return "Unknown";
 
             return fmvsCustomComponent.GUIName;
         }
 
-        protected string GetFMVsComponentInternalName()
+        protected int GetFMVsComponentIndex(string customComponentName = null)
         {
-            int index = 0;
-            if (Map != null)
-                index = Map.CutscenesCustomComponentName == TD_FMVS_CUSTOM_COMPONENT ? 0 : 1;
+            if (customComponentName == TD_FMVS_CUSTOM_COMPONENT)
+                return 0;
+            else if (customComponentName == RA_FMVS_CUSTOM_COMPONENT)
+                return 1;
 
-            return index == 0 ? TD_FMVS_CUSTOM_COMPONENT : RA_FMVS_CUSTOM_COMPONENT;
+            return -1;
         }
 
         protected bool IsFMVsInstallStateOK()

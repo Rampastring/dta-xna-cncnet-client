@@ -352,7 +352,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (e.CustomComponentName == TD_FMVS_CUSTOM_COMPONENT || e.CustomComponentName == RA_FMVS_CUSTOM_COMPONENT)
             {
                 if (IsHost)
-                    Players[0].FMVHashes[0] = GetFMVsHash(e.CustomComponentName);
+                    Players[0].FMVHashes[GetFMVsComponentIndex(e.CustomComponentName)] = GetFMVsHash(e.CustomComponentName);
                 else
                     UpdateFMVsHash();
             }
@@ -430,8 +430,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void UpdateFMVsHash()
         {
-            string tdFmvsHash = GetFMVsHash("FMVs");
-            string raFmvsHash = GetFMVsHash("RAFMVs");
+            string tdFmvsHash = GetFMVsHash(TD_FMVS_CUSTOM_COMPONENT);
+            string raFmvsHash = GetFMVsHash(RA_FMVS_CUSTOM_COMPONENT);
 
             PlayerInfo pInfo = Players.Find(p => p.Name.Equals(ProgramConstants.PLAYERNAME));
             if (pInfo != null)

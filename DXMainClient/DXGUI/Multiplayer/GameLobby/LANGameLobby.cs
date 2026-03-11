@@ -161,7 +161,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (e.CustomComponentName == TD_FMVS_CUSTOM_COMPONENT || e.CustomComponentName == RA_FMVS_CUSTOM_COMPONENT)
             {
                 if (IsHost)
-                    Players[0].FMVHashes[0] = GetFMVsHash(e.CustomComponentName);
+                    Players[0].FMVHashes[GetFMVsComponentIndex(e.CustomComponentName)] = GetFMVsHash(e.CustomComponentName);
                 else
                     SendFMVHash();
             }

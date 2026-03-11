@@ -862,7 +862,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected virtual void FMVHashMismatchNotification()
         {
-            string name = GetFMVsComponentUIName(GetFMVsComponentInternalName());
+            string name = GetFMVsComponentUIName();
 
             AddNotice($"You are unable to play with in-game videos enabled because one or more players do not have the latest version of the \"{name}\" custom component installed.", Color.Yellow);
             AddNotice("To play, please disable the game option for in-game videos, or have all players update the custom component to the latest version.", Color.Yellow);
@@ -870,7 +870,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected virtual void FMVNotInstalledNotification()
         {
-            string name = GetFMVsComponentUIName(GetFMVsComponentInternalName());
+            string name = GetFMVsComponentUIName();
 
             AddNotice($"You are unable to play with in-game videos enabled because you do not have the \"{name}\" custom component installed.", Color.Yellow);
             AddNotice("To play, please disable the game option for in-game videos, or install the component through Options -> Components", Color.Yellow);

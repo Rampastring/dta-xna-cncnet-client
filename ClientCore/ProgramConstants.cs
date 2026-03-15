@@ -25,7 +25,7 @@ namespace ClientCore
         public const int AI_LEVEL_COUNT = 7;
         public const int EASY_AI_INDEX = 0;
 
-        public const string CNCNET_PROTOCOL_REVISION = "R8";
+        public const string CNCNET_PROTOCOL_REVISION = "DA";
         public const string LAN_PROTOCOL_REVISION = "RL5";
         public const int LAN_PORT = 1234;
         public const int LAN_INGAME_PORT = 1234;

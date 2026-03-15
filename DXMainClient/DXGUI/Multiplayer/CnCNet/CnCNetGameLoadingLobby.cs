@@ -914,6 +914,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             PlayerInfo player = Players.Find(p => p.Name == ProgramConstants.PLAYERNAME);
             if (player == null)
                 return;
+
             string currentState = ProgramConstants.IsInGame ? "In Game" : "In Lobby";
 
             discordHandler.UpdatePresence(

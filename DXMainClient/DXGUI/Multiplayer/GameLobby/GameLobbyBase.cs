@@ -58,6 +58,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected const string TD_FMVS_CUSTOM_COMPONENT = "FMVs";
         protected const string RA_FMVS_CUSTOM_COMPONENT = "RAFMVs";
+        protected const string EmptyHashValue = "0";
 
         /// <summary>
         /// Creates a new instance of the game lobby base.
@@ -2060,20 +2061,20 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected string GetFMVsHash(string customComponentName)
         {
             if (ClientConfiguration.Instance.ModMode)
-                return string.Empty;
+                return EmptyHashValue;
 
             var fmvsCustomComponent = CUpdater.CustomComponents.ToList().Find(cc => cc.ININame == customComponentName);
             if (fmvsCustomComponent == null)
-                return string.Empty;
+                return EmptyHashValue;
 
             if (!File.Exists(ProgramConstants.GamePath + fmvsCustomComponent.LocalPath))
-                return string.Empty;
+                return EmptyHashValue;
 
             const int MaxLength = 8;
 
             string value = fmvsCustomComponent.LocalIdentifier;
             if (string.IsNullOrWhiteSpace(value))
-                return string.Empty;
+                return EmptyHashValue;
 
             if (value.Length < MaxLength)
                 return value;
@@ -2118,7 +2119,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             // The check box is checked and the map depends on an FMV. Make sure that the game host has the FMV installed.
             int index = Map.CutscenesCustomComponentName == TD_FMVS_CUSTOM_COMPONENT ? 0 : 1;
             string hostHash = Players[0].FMVHashes[index];
-            if (string.IsNullOrWhiteSpace(hostHash))
+            if (string.IsNullOrWhiteSpace(hostHash) || hostHash == EmptyHashValue)
                 return false;
 
             return true;

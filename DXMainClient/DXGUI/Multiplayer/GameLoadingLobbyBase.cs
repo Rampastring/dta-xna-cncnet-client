@@ -70,8 +70,6 @@ namespace DTAClient.DXGUI.Multiplayer
 
         protected List<ChatBoxCommand> chatBoxCommands = new List<ChatBoxCommand>();
 
-        private string loadedGameID;
-
         private bool isSettingUp = false;
 
         private int uniqueGameId = 0;
@@ -410,7 +408,6 @@ namespace DTAClient.DXGUI.Multiplayer
 
             IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI);
 
-            loadedGameID = spawnSGIni.GetStringValue("Settings", "GameID", "0");
             lblMapNameValue.Text = spawnSGIni.GetStringValue("Settings", "UIMapName", string.Empty);
             lblGameModeValue.Text = spawnSGIni.GetStringValue("Settings", "UIGameMode", string.Empty);
 
@@ -487,7 +484,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
                 playerLabel.RemapColor = sgPlayer.ColorIndex > -1 ? MPColors[sgPlayer.ColorIndex].XnaColor
                     : Color.White;
-                playerLabel.Text = pInfo.Ready ? sgPlayer.Name : sgPlayer.Name + " (Not Ready)";
+                playerLabel.Text = i == 0 || pInfo.Ready ? sgPlayer.Name : sgPlayer.Name + " (Not Ready)";
             }
         }
 

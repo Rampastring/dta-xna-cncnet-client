@@ -39,6 +39,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         private const string PLAYER_READY_CTCP_COMMAND = "READY";
         private const string CHANGE_TUNNEL_SERVER_MESSAGE = "CHTNL";
         private const string SWITCH_TO_GAME_LOBBY_MESSAGE = "NEWGAME";
+        private const string RETURN_MESSAGE = "RETURN";
 
         public CnCNetGameLoadingLobby(WindowManager windowManager, TopBar topBar,
             CnCNetManager connectionManager, TunnelHandler tunnelHandler,
@@ -62,7 +63,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 new StringCommandHandler(START_GAME_CTCP_COMMAND, HandleStartGameCommand),
                 new IntCommandHandler(PLAYER_READY_CTCP_COMMAND, HandlePlayerReadyRequest),
                 new StringCommandHandler(CHANGE_TUNNEL_SERVER_MESSAGE, HandleTunnelServerChangeMessage),
-                new NoParamCommandHandler(SWITCH_TO_GAME_LOBBY_MESSAGE, HandleSwitchToGameLobbyMessage)
+                new NoParamCommandHandler(SWITCH_TO_GAME_LOBBY_MESSAGE, HandleSwitchToGameLobbyMessage),
+                new NoParamCommandHandler(RETURN_MESSAGE, HandleReturnMessage),
             };
         }
 
@@ -242,7 +244,6 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             {
                 gameFilesHash = fhc.GetCompleteHash();
 
-                // We assume the game lobby has already changed the channel password to match the game ID in spawnSG.ini
                 channel.Password = newPassword;
                 SetChannelModes(cncnetGameLobbyPassword);
 
@@ -796,6 +797,18 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 playerLimit, channel.Password, cncnetGameLobbyPassword, cncnetGameLobbyPasswordIsCustom));
         }
 
+        private void HandleReturnMessage(string sender)
+        {
+            AddNotice(sender + " has returned from the game.");
+
+            PlayerInfo pInfo = Players.Find(p => p.Name == sender);
+
+            if (pInfo != null)
+                pInfo.IsInGame = false;
+
+            sndReturnSound.Play();
+        }
+
         #endregion
 
         protected override void HostStartGame()
@@ -846,8 +859,18 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             base.HandleGameProcessExited();
 
             // We might not be in the game room anymore if the host exited before us
-            if (MatchCompleted && IsInGameRoom)
-                Clear();
+            if (IsInGameRoom)
+            {
+                if (!MatchCompleted)
+                {
+                    channel.SendCTCPMessage(RETURN_MESSAGE, QueuedMessageType.SYSTEM_MESSAGE, 20);
+                    HandleReturnMessage(ProgramConstants.PLAYERNAME);
+                }
+                else
+                {
+                    Clear();
+                }
+            }
         }
 
         protected override void LeaveGame() => Clear();

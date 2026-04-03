@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 
@@ -30,6 +29,7 @@ namespace DTAClient.DXGUI.Multiplayer
         private const string PLAYER_QUIT_COMMAND = "QUIT";
         private const string PLAYER_JOIN_COMMAND = "JOIN";
         private const string FILE_HASH_COMMAND = "FHASH";
+        private const string RETURN_COMMAND = "RETURN";
 
         public LANGameLoadingLobby(WindowManager windowManager,
             List<GameMode> gameModes, LANColor[] chatColors, DiscordHandler discordHandler) : base(windowManager, discordHandler)
@@ -45,6 +45,7 @@ namespace DTAClient.DXGUI.Multiplayer
                 new ServerStringCommandHandler(CHAT_COMMAND, Server_HandleChatMessage),
                 new ServerStringCommandHandler(FILE_HASH_COMMAND, Server_HandleFileHashMessage),
                 new ServerNoParamCommandHandler(READY_STATUS_COMMAND, Server_HandleReadyRequest),
+                new ServerNoParamCommandHandler(RETURN_COMMAND, Server_HandleReturnMessage),
             };
 
             playerCommandHandlers = new LANClientCommandHandler[]
@@ -52,7 +53,8 @@ namespace DTAClient.DXGUI.Multiplayer
                 new ClientStringCommandHandler(CHAT_COMMAND, Client_HandleChatMessage),
                 new ClientStringCommandHandler(OPTIONS_COMMAND, Client_HandleOptionsMessage),
                 new ClientNoParamCommandHandler(GAME_LAUNCH_COMMAND, Client_HandleStartCommand),
-                new ClientNoParamCommandHandler(ProgramConstants.LAN_PING_COMMAND, Client_HandlePingCommand)
+                new ClientNoParamCommandHandler(ProgramConstants.LAN_PING_COMMAND, Client_HandlePingCommand),
+                new ClientStringCommandHandler(RETURN_COMMAND, Client_HandleReturnMessage),
             };
 
             WindowManager.GameClosing += WindowManager_GameClosing;
@@ -494,6 +496,11 @@ namespace DTAClient.DXGUI.Multiplayer
             }
         }
 
+        private void Server_HandleReturnMessage(LANPlayerInfo info)
+        {
+            BroadcastMessage(RETURN_COMMAND + " " + info.Name);
+        }
+
         #endregion
 
         #region Client's command handlers
@@ -570,6 +577,18 @@ namespace DTAClient.DXGUI.Multiplayer
         private void Client_HandlePingCommand()
         {
             SendMessageToHost(ProgramConstants.LAN_PING_COMMAND);
+        }
+
+        private void Client_HandleReturnMessage(string player)
+        {
+            AddNotice(player + " has returned from the game.");
+
+            PlayerInfo pInfo = Players.Find(p => p.Name == player);
+
+            if (pInfo != null)
+                pInfo.IsInGame = false;
+
+            sndReturnSound.Play();
         }
 
         #endregion
@@ -688,8 +707,17 @@ namespace DTAClient.DXGUI.Multiplayer
             base.HandleGameProcessExited();
 
             // We might not be in the game room anymore if the host exited before us
-            if (MatchCompleted && IsInGameRoom)
-                LeaveGame();
+            if (IsInGameRoom)
+            {
+                if (!MatchCompleted)
+                {
+                    SendMessageToHost(RETURN_COMMAND);
+                }
+                else
+                {
+                    Clear();
+                }
+            }
         }
 
         protected override void UpdateDiscordPresence(bool resetTimer = false)

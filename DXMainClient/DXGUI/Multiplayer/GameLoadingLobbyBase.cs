@@ -52,6 +52,7 @@ namespace DTAClient.DXGUI.Multiplayer
         protected EnhancedSoundEffect sndJoinSound;
         protected EnhancedSoundEffect sndLeaveSound;
         protected EnhancedSoundEffect sndMessageSound;
+        protected EnhancedSoundEffect sndReturnSound;
 
         protected XNALabel lblDescription;
         protected XNAPanel panelPlayers;
@@ -196,6 +197,7 @@ namespace DTAClient.DXGUI.Multiplayer
             sndLeaveSound = new EnhancedSoundEffect("leavegame.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyLeaveCooldown);
             sndMessageSound = new EnhancedSoundEffect("message.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundMessageCooldown);
             sndGetReadySound = new EnhancedSoundEffect("getready.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyGetReadyCooldown);
+            sndReturnSound = new EnhancedSoundEffect("return.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyReturnCooldown);
 
             MPColors = MultiplayerColor.LoadColors();
 

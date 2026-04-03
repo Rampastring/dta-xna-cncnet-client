@@ -337,6 +337,10 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             GameProcessLogic.GameProcessExited -= SharedUILogic_GameProcessExited;
 
+            ClearReadyStatuses();
+            CopyPlayerDataToUI();
+            BroadcastOptions();
+
             var matchStatistics = StatisticsManager.Instance.GetMatchWithGameID(uniqueGameId);
 
             if (matchStatistics != null)
@@ -490,18 +494,27 @@ namespace DTAClient.DXGUI.Multiplayer
 
         protected virtual string GetIPAddressForPlayer(PlayerInfo pInfo) => "0.0.0.0";
 
+        protected void ClearReadyStatuses()
+        {
+            for (int i = 1; i < Players.Count; i++)
+            {
+                if (!Players[i].AutoReady)
+                    Players[i].Ready = false;
+            }
+        }
+
         private void DdSavedGame_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!IsHost)
                 return;
 
-            for (int i = 1; i < Players.Count; i++)
-                Players[i].Ready = false;
+            ClearReadyStatuses();
 
             CopyPlayerDataToUI();
 
             if (!isSettingUp)
                 BroadcastOptions();
+
             UpdateDiscordPresence();
         }
 

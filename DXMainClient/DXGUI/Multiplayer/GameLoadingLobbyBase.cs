@@ -339,7 +339,6 @@ namespace DTAClient.DXGUI.Multiplayer
 
             ClearReadyStatuses();
             CopyPlayerDataToUI();
-            BroadcastOptions();
 
             var matchStatistics = StatisticsManager.Instance.GetMatchWithGameID(uniqueGameId);
 
@@ -372,6 +371,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             if (!MatchCompleted)
             {
+                BroadcastOptions();
                 RefreshSavedGames();
             }
 
@@ -463,7 +463,10 @@ namespace DTAClient.DXGUI.Multiplayer
             List<string> timestamps = MultiplayerSaveGameManager.GetSaveGameTimestamps();
             timestamps.Reverse(); // Most recent saved game first
 
-            timestamps.ForEach(ts => ddSavedGame.AddItem(ts));
+            for (int i = 0; i < timestamps.Count; i++)
+            {
+                ddSavedGame.AddItem($"Save #{(i + 1)}: {timestamps[i]}");
+            }
 
             if (ddSavedGame.Items.Count > 0)
                 ddSavedGame.SelectedIndex = 0;

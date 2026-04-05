@@ -938,6 +938,9 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             if (player == null)
                 return;
 
+            if (channel == null)
+                return;
+
             string currentState = ProgramConstants.IsInGame ? "In Game" : "In Lobby";
 
             discordHandler.UpdatePresence(

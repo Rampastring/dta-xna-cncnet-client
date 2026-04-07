@@ -58,6 +58,9 @@ namespace DTAClient
 
             Task.Factory.StartNew(MigrateOldLogFiles);
 
+            // Start INI file preprocessor
+            PreprocessorBackgroundTask.Instance.Run();
+
             if (Directory.Exists(ProgramConstants.GamePath + "Updater"))
             {
                 Logger.Log("Attempting to delete temporary updater directory.");
@@ -101,7 +104,7 @@ namespace DTAClient
                 }
             }
 
-            FinalSunSettings.WriteFinalSunIni();
+            FinalSunSettings.WriteFinalSunIniAsync();
 
             GameSessionManager.CheckForSavesInMainSaveDirectory();
 
@@ -109,11 +112,7 @@ namespace DTAClient
 
             ClientConfiguration.Instance.RefreshSettings();
 
-            // Start INI file preprocessor
-            PreprocessorBackgroundTask.Instance.Run();
-
-            GameClass gameClass = new GameClass();
-            gameClass.Run();
+            new GameClass().Run();
         }
 
         /// <summary>

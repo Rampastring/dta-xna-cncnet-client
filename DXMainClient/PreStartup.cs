@@ -73,24 +73,6 @@ namespace DTAClient
 
             UserINISettings.Initialize(ClientConfiguration.Instance.SettingsIniName);
 
-            // Delete obsolete files from old target project versions
-
-            File.Delete(ProgramConstants.GamePath + "mainclient.log");
-            File.Delete(ProgramConstants.GamePath + "launchupdt.dat");
-            try
-            {
-                File.Delete(ProgramConstants.GamePath + "wsock32.dll");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Deleting wsock32.dll failed! Please close any " +
-                    "applications that could be using the file, and then start the client again."
-                    + Environment.NewLine + Environment.NewLine +
-                    "Message: " + ex.Message,
-                    "CnCNet Client");
-                Environment.Exit(0);
-            }
-
             Application.EnableVisualStyles();
 
             new Startup().Execute();

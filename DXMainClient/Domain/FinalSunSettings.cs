@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Rampastring.Tools;
 using ClientCore;
+using System.Threading.Tasks;
 
 namespace DTAClient.Domain
 {
@@ -9,7 +10,12 @@ namespace DTAClient.Domain
         /// <summary>
         /// Checks for the existence of the FinalSun settings file and writes it if it doesn't exist.
         /// </summary>
-        public static void WriteFinalSunIni()
+        public static void WriteFinalSunIniAsync()
+        {
+            Task.Run(DoWriteFinalSunIni);
+        }
+
+        private static void DoWriteFinalSunIni()
         {
             // the encoding of the FinalSun/FinalAlert ini file should be ANSI instead of UTF-8. Otherwise, the map editor will not work in a non-ASCII path. Be sure to use .NET Framework instead of .NET Core as the latter doesn't support ANSI. Also, ANSI doesn't mean a specific codepage, it means the default non-Unicode codepage which can be changed from Control Panel.
             try
@@ -25,7 +31,7 @@ namespace DTAClient.Domain
                     iniFile.FileName = ProgramConstants.GamePath + finalSunIniPath;
                     iniFile.Encoding = System.Text.Encoding.Default;
                     iniFile.Parse();
-                    
+
                     iniFile.SetStringValue("FinalSun", "Language", "English");
                     iniFile.SetStringValue("FinalSun", "FileSearchLikeTS", "yes");
                     iniFile.SetStringValue("TS", "Exe", ProgramConstants.GamePath.Replace('/', '\\'));

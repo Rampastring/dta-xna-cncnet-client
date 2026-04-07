@@ -23,6 +23,8 @@ namespace DTAClient.DXGUI
     {
         public GameClass()
         {
+            Logger.Log("Constructing GameClass.");
+
             graphics = new GraphicsDeviceManager(this);
             graphics.SynchronizeWithVerticalRetrace = false;
 
@@ -61,8 +63,8 @@ namespace DTAClient.DXGUI
             // Try to create and load a texture to check for MonoGame 3.7.1 compatibility
             try
             {
-                Texture2D texture = new Texture2D(GraphicsDevice, 100, 100, false, SurfaceFormat.Color);
-                Color[] colorArray = new Color[100 * 100];
+                Texture2D texture = new Texture2D(GraphicsDevice, 10, 10, false, SurfaceFormat.Color);
+                Color[] colorArray = new Color[10 * 10];
                 texture.SetData(colorArray);
 
                 UISettings.ActiveSettings.CheckBoxClearTexture = AssetLoader.LoadTextureUncached("checkBoxClear.png");

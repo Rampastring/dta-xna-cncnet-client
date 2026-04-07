@@ -31,72 +31,6 @@ namespace ClientCore.CnCNet5
                     RegistryInstallPath = "HKCU\\Software\\TheDawnOfTheTiberiumAge",
                     UIName = "Dawn of the Tiberium Age",
                     Texture = AssetLoader.TextureFromImage(Resources.dtaicon)
-                },
-
-                new CnCNetGame()
-                {
-                    ChatChannel = "#cncnet-ti",
-                    ClientExecutableName = "TI_Launcher.exe",
-                    GameBroadcastChannel = "#cncnet-ti-games",
-                    InternalName = "ti",
-                    RegistryInstallPath = "HKCU\\Software\\TwistedInsurrection",
-                    UIName = "Twisted Insurrection",
-                    Texture = AssetLoader.TextureFromImage(Resources.tiicon)
-                },
-
-                new CnCNetGame()
-                {
-                    ChatChannel = "#cncnet-ts",
-                    ClientExecutableName = "TiberianSun.exe",
-                    GameBroadcastChannel = "#cncnet-ts-games",
-                    InternalName = "ts",
-                    RegistryInstallPath = "HKLM\\Software\\Westwood\\Tiberian Sun",
-                    UIName = "Tiberian Sun",
-                    Texture = AssetLoader.TextureFromImage(Resources.tsicon)
-                },
-
-                new CnCNetGame()
-                {
-                    ChatChannel = "#cncnet-mo",
-                    ClientExecutableName = "MentalOmegaClient.exe",
-                    GameBroadcastChannel = "#cncnet-mo-games",
-                    InternalName = "mo",
-                    RegistryInstallPath = "HKCU\\Software\\MentalOmega",
-                    UIName = "Mental Omega",
-                    Texture = AssetLoader.TextureFromImage(Resources.moicon)
-                },
-
-                new CnCNetGame()
-                {
-                    ChatChannel = "#cncnet-yr",
-                    ClientExecutableName = "CnCNetClientYR.exe",
-                    GameBroadcastChannel = "#cncnet-yr-games",
-                    InternalName = "yr",
-                    RegistryInstallPath = "HKLM\\Software\\Westwood\\Yuri's Revenge",
-                    UIName = "Yuri's Revenge",
-                    Texture = AssetLoader.TextureFromImage(Resources.yricon)
-                },
-
-                new CnCNetGame()
-                {
-                    ChatChannel = "#redres-lobby",
-                    ClientExecutableName = "RRLauncher.exe",
-                    GameBroadcastChannel = "#redres-games",
-                    InternalName = "rr",
-                    RegistryInstallPath = "HKML\\Software\\RedResurrection",
-                    UIName = "YR Red-Resurrection",
-                    Texture = AssetLoader.TextureFromImage(Resources.rricon)
-                },
-
-                new CnCNetGame()
-                {
-                    ChatChannel = "#cncreloaded",
-                    ClientExecutableName = "CnCReloadedClient.exe",
-                    GameBroadcastChannel = "#cncreloaded-games",
-                    InternalName = "cncr",
-                    RegistryInstallPath = "HKCU\\Software\\CnCReloaded",
-                    UIName = "C&C: Reloaded",
-                    Texture = AssetLoader.TextureFromImage(Resources.cncricon)
                 }
             };
 
@@ -137,6 +71,78 @@ namespace ClientCore.CnCNet5
                     UIName = "Dune 2000",
                     Supported = false,
                     Texture = AssetLoader.TextureFromImage(Resources.unknownicon)
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-ti",
+                    ClientExecutableName = "TI_Launcher.exe",
+                    GameBroadcastChannel = "#cncnet-ti-games",
+                    InternalName = "ti",
+                    RegistryInstallPath = "HKCU\\Software\\TwistedInsurrection",
+                    UIName = "Twisted Insurrection",
+                    Texture = AssetLoader.TextureFromImage(Resources.tiicon),
+                    Supported = false,
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-ts",
+                    ClientExecutableName = "TiberianSun.exe",
+                    GameBroadcastChannel = "#cncnet-ts-games",
+                    InternalName = "ts",
+                    RegistryInstallPath = "HKLM\\Software\\Westwood\\Tiberian Sun",
+                    UIName = "Tiberian Sun",
+                    Texture = AssetLoader.TextureFromImage(Resources.tsicon),
+                    Supported = false,
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-mo",
+                    ClientExecutableName = "MentalOmegaClient.exe",
+                    GameBroadcastChannel = "#cncnet-mo-games",
+                    InternalName = "mo",
+                    RegistryInstallPath = "HKCU\\Software\\MentalOmega",
+                    UIName = "Mental Omega",
+                    Texture = AssetLoader.TextureFromImage(Resources.moicon),
+                    Supported = false,
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-yr",
+                    ClientExecutableName = "CnCNetClientYR.exe",
+                    GameBroadcastChannel = "#cncnet-yr-games",
+                    InternalName = "yr",
+                    RegistryInstallPath = "HKLM\\Software\\Westwood\\Yuri's Revenge",
+                    UIName = "Yuri's Revenge",
+                    Texture = AssetLoader.TextureFromImage(Resources.yricon),
+                    Supported = false,
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#redres-lobby",
+                    ClientExecutableName = "RRLauncher.exe",
+                    GameBroadcastChannel = "#redres-games",
+                    InternalName = "rr",
+                    RegistryInstallPath = "HKML\\Software\\RedResurrection",
+                    UIName = "YR Red-Resurrection",
+                    Texture = AssetLoader.TextureFromImage(Resources.rricon),
+                    Supported = false,
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncreloaded",
+                    ClientExecutableName = "CnCReloadedClient.exe",
+                    GameBroadcastChannel = "#cncreloaded-games",
+                    InternalName = "cncr",
+                    RegistryInstallPath = "HKCU\\Software\\CnCReloaded",
+                    UIName = "C&C: Reloaded",
+                    Texture = AssetLoader.TextureFromImage(Resources.cncricon),
+                    Supported = false,
                 }
             };
 

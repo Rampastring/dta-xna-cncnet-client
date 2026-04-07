@@ -6,6 +6,7 @@ using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DTAConfig.OptionPanels
 {
@@ -33,6 +34,7 @@ namespace DTAConfig.OptionPanels
         GameCollection gameCollection;
 
         List<XNAClientCheckBox> followedGameChks = new List<XNAClientCheckBox>();
+        List<XNAPanel> followedGamePanels = new List<XNAPanel>();
 
         public override void Initialize()
         {
@@ -52,9 +54,7 @@ namespace DTAConfig.OptionPanels
             chkWriteInstallPathToRegistry.ClientRectangle = new Rectangle(
                 chkPingUnofficialTunnels.X,
                 chkPingUnofficialTunnels.Bottom + 12, 0, 0);
-            chkWriteInstallPathToRegistry.Text = "Write game installation path to Windows" + Environment.NewLine +
-                "Registry (makes it possible to join" + Environment.NewLine +
-                 "other games' game rooms on CnCNet)";
+            chkWriteInstallPathToRegistry.Text = "Write game path to Windows Registry";
 
             AddChild(chkWriteInstallPathToRegistry);
 
@@ -177,11 +177,20 @@ namespace DTAConfig.OptionPanels
                 chkCount++;
 
                 AddChild(panel);
+                followedGamePanels.Add(panel);
+
                 AddChild(chkBox);
                 followedGameChks.Add(chkBox);
 
                 if (chkBox.Right > nextColumnXOffset)
                     nextColumnXOffset = chkBox.Right;
+            }
+
+            if (gameCollection.GameList.Count(g => g.AllowsViewingGames()) < 2)
+            {
+                followedGameChks.ForEach(chk => chk.Disable());
+                followedGamePanels.ForEach(pnl => pnl.Disable());
+                lblFollowedGames.Disable();
             }
         }
 

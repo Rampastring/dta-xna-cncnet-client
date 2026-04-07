@@ -52,6 +52,7 @@ namespace ClientCore
         public void RefreshSettings()
         {
             DTACnCNetClient_ini = new IniFile(ProgramConstants.GetResourcePath() + CLIENT_SETTINGS);
+            Logger.Log("Reloaded " + CLIENT_SETTINGS);
         }
 
         #region Client settings

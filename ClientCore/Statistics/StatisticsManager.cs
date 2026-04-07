@@ -115,134 +115,61 @@ namespace ClientCore.Statistics
 
         private void ReadDatabase(string filePath, int version)
         {
-            // TODO split this function with the MatchStatistics and PlayerStatistics classes
-
             try
             {
-                using (FileStream fs = File.OpenRead(filePath))
+                using (var memoryStream = new MemoryStream(File.ReadAllBytes(filePath)))
+                using (var reader = new BinaryReader(memoryStream))
                 {
-                    fs.Position = 4; // Skip version
-                    byte[] readBuffer = new byte[128];
-                    fs.Read(readBuffer, 0, 4); // First 4 bytes following the version mean the amount of games
-                    int gameCount = BitConverter.ToInt32(readBuffer, 0);
+                    memoryStream.Position = 4; // Skip version
+                    int gameCount = reader.ReadInt32();
+
+                    Statistics.Capacity = Math.Max(Statistics.Capacity, Statistics.Count + gameCount);
+
+                    int mapNameLength = version > 3 ? 128 : 64;
 
                     for (int i = 0; i < gameCount; i++)
                     {
                         MatchStatistics ms = new MatchStatistics();
 
-                        // First 4 bytes of game info is the length in seconds
-                        fs.Read(readBuffer, 0, 4);
-                        int lengthInSeconds = BitConverter.ToInt32(readBuffer, 0);
-                        ms.LengthInSeconds = lengthInSeconds;
-                        // Next 8 are the game version
-                        fs.Read(readBuffer, 0, 8);
-                        ms.GameVersion = System.Text.Encoding.ASCII.GetString(readBuffer, 0, 8);
-                        // Then comes the date and time, also 8 bytes
-                        fs.Read(readBuffer, 0, 8);
-                        long dateData = BitConverter.ToInt64(readBuffer, 0);
-                        ms.DateAndTime = DateTime.FromBinary(dateData);
-                        // Then one byte for SawCompletion
-                        fs.Read(readBuffer, 0, 1);
-                        ms.SawCompletion = Convert.ToBoolean(readBuffer[0]);
-                        // Then 1 byte for the amount of players
-                        fs.Read(readBuffer, 0, 1);
-                        int playerCount = readBuffer[0];
+                        ms.LengthInSeconds = reader.ReadInt32();
+                        ms.GameVersion = Encoding.ASCII.GetString(reader.ReadBytes(8));
+                        ms.DateAndTime = DateTime.FromBinary(reader.ReadInt64());
+                        ms.SawCompletion = reader.ReadBoolean();
+                        int playerCount = reader.ReadByte();
+
                         if (version > 0)
-                        {
-                            // 4 bytes for average FPS
-                            fs.Read(readBuffer, 0, 4);
-                            ms.AverageFPS = BitConverter.ToInt32(readBuffer, 0);
-                        }
+                            ms.AverageFPS = reader.ReadInt32();
 
-                        int mapNameLength = 64;
-
-                        if (version > 3)
-                        {
-                            mapNameLength = 128;
-                        }
-
-                        // Map name, 64 or 128 bytes of Unicode depending on version
-                        fs.Read(readBuffer, 0, mapNameLength);
-                        ms.MapName = Encoding.Unicode.GetString(readBuffer).Replace("\0", "");
-
-                        // Game mode, 64 bytes
-                        fs.Read(readBuffer, 0, 64);
-                        ms.GameMode = Encoding.Unicode.GetString(readBuffer, 0, 64).Replace("\0", "");
+                        ms.MapName = DecodeNullTerminatedUnicode(reader.ReadBytes(mapNameLength));
+                        ms.GameMode = DecodeNullTerminatedUnicode(reader.ReadBytes(64));
 
                         if (version > 2)
-                        {
-                            // Unique game ID, 32 bytes (int32)
-                            fs.Read(readBuffer, 0, 4);
-                            ms.GameID = BitConverter.ToInt32(readBuffer, 0);
-                        }
+                            ms.GameID = reader.ReadInt32();
 
                         if (version > 5)
-                        {
-                            fs.Read(readBuffer, 0, 1);
-                            ms.IsValidForStar = Convert.ToBoolean(readBuffer[0]);
-                        }
+                            ms.IsValidForStar = reader.ReadBoolean();
 
-                        // Player info comes right after the general match info
                         for (int j = 0; j < playerCount; j++)
                         {
                             PlayerStatistics ps = new PlayerStatistics();
 
-                            if (version > 4)
-                            {
-                                // Economy is shared for the Built stat in YR
-                                fs.Read(readBuffer, 0, 4);
-                                ps.Economy = BitConverter.ToInt32(readBuffer, 0);
-                            }
-                            else
-                            {
-                                // Economy is between 0 and 100 in old versions, so it takes only one byte
-                                fs.Read(readBuffer, 0, 1);
-                                ps.Economy = readBuffer[0];
-                            }
+                            ps.Economy = version > 4 ? reader.ReadInt32() : (int)reader.ReadByte();
+                            ps.IsAI = reader.ReadBoolean();
+                            ps.IsLocalPlayer = reader.ReadBoolean();
+                            ps.Kills = reader.ReadInt32();
+                            ps.Losses = reader.ReadInt32();
+                            ps.Name = DecodeNullTerminatedUnicode(reader.ReadBytes(32));
+                            ps.SawEnd = reader.ReadBoolean();
+                            ps.Score = reader.ReadInt32();
+                            ps.Side = reader.ReadByte();
+                            ps.Team = reader.ReadByte();
 
-                            // IsAI is a bool, so obviously one byte
-                            fs.Read(readBuffer, 0, 1);
-                            ps.IsAI = Convert.ToBoolean(readBuffer[0]);
-                            // IsLocalPlayer is also a bool
-                            fs.Read(readBuffer, 0, 1);
-                            ps.IsLocalPlayer = Convert.ToBoolean(readBuffer[0]);
-                            // Kills take 4 bytes
-                            fs.Read(readBuffer, 0, 4);
-                            ps.Kills = BitConverter.ToInt32(readBuffer, 0);
-                            // Losses also take 4 bytes
-                            fs.Read(readBuffer, 0, 4);
-                            ps.Losses = BitConverter.ToInt32(readBuffer, 0);
-                            // 32 bytes for the name
-                            fs.Read(readBuffer, 0, 32);
-                            ps.Name = System.Text.Encoding.Unicode.GetString(readBuffer, 0, 32);
-                            ps.Name = ps.Name.Replace("\0", String.Empty);
-                            // 1 byte for SawEnd
-                            fs.Read(readBuffer, 0, 1);
-                            ps.SawEnd = Convert.ToBoolean(readBuffer[0]);
-                            // 4 bytes for Score
-                            fs.Read(readBuffer, 0, 4);
-                            ps.Score = BitConverter.ToInt32(readBuffer, 0);
-                            // 1 byte for Side
-                            fs.Read(readBuffer, 0, 1);
-                            ps.Side = readBuffer[0];
-                            // 1 byte for Team
-                            fs.Read(readBuffer, 0, 1);
-                            ps.Team = readBuffer[0];
                             if (version > 2)
-                            {
-                                // 1 byte for Color
-                                fs.Read(readBuffer, 0, 1);
-                                ps.Color = readBuffer[0];
-                            }
-                            // 1 byte for WasSpectator
-                            fs.Read(readBuffer, 0, 1);
-                            ps.WasSpectator = Convert.ToBoolean(readBuffer[0]);
-                            // 1 byte for Won
-                            fs.Read(readBuffer, 0, 1);
-                            ps.Won = Convert.ToBoolean(readBuffer[0]);
-                            // 1 byte for AI level
-                            fs.Read(readBuffer, 0, 1);
-                            ps.AILevel = readBuffer[0];
+                                ps.Color = reader.ReadByte();
+
+                            ps.WasSpectator = reader.ReadBoolean();
+                            ps.Won = reader.ReadBoolean();
+                            ps.AILevel = reader.ReadByte();
 
                             ms.AddPlayer(ps);
 
@@ -261,6 +188,13 @@ namespace ClientCore.Statistics
             {
                 Logger.Log("Reading the statistics file failed! Message: " + ex.Message);
             }
+        }
+
+        private static string DecodeNullTerminatedUnicode(byte[] bytes)
+        {
+            string decoded = Encoding.Unicode.GetString(bytes);
+            int nullIndex = decoded.IndexOf('\0');
+            return nullIndex >= 0 ? decoded.Substring(0, nullIndex) : decoded;
         }
 
         public void PurgeStats()

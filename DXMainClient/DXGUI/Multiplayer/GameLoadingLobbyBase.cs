@@ -463,12 +463,13 @@ namespace DTAClient.DXGUI.Multiplayer
             ddSavedGame.Items.Clear();
 
             List<string> timestamps = MultiplayerSaveGameManager.GetSaveGameTimestamps();
-            timestamps.Reverse(); // Most recent saved game first
-
             for (int i = 0; i < timestamps.Count; i++)
             {
-                ddSavedGame.AddItem($"Save #{(i + 1)}: {timestamps[i]}");
+                timestamps[i] = $"Save #{(i + 1)}: {timestamps[i]}";
             }
+
+            timestamps.Reverse(); // Most recent saved game first
+            timestamps.ForEach(ddSavedGame.AddItem);
 
             if (ddSavedGame.Items.Count > 0)
                 ddSavedGame.SelectedIndex = 0;

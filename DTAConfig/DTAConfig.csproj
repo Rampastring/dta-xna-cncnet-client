@@ -148,7 +148,6 @@
     <Compile Include="OptionsGUICreator.cs" />
     <Compile Include="OptionsWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DirectDrawWrapper.cs" />
     <Compile Include="OptionPanels\UpdaterOptionsPanel.cs" />
     <Compile Include="OptionPanels\XNAOptionsPanel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

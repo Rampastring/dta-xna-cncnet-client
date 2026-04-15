@@ -20,9 +20,6 @@ namespace ClientGUI
 
         public static event Action GameProcessExited;
 
-        public static bool UseQres { get; set; }
-        public static bool SingleCoreAffinity { get; set; }
-
         public static GameSessionManager GameSessionManager { get; private set; }
 
         public static bool INIPreprocessingFailed = false;
@@ -74,85 +71,45 @@ namespace ClientGUI
             {
                 string launcherExecutableName = ClientConfiguration.Instance.GameLauncherExecutableName;
                 if (string.IsNullOrEmpty(launcherExecutableName))
+                {
                     gameExecutableName = ClientConfiguration.Instance.GetGameExecutableName();
+                }
                 else
                 {
                     gameExecutableName = launcherExecutableName;
-                    additionalExecutableName = "\"" + ClientConfiguration.Instance.GetGameExecutableName() + "\" ";
+                    additionalExecutableName = ClientConfiguration.Instance.GetGameExecutableName();
                 }
             }
 
             string extraCommandLine = ClientConfiguration.Instance.ExtraExeCommandLineParameters;
 
-            File.Delete(ProgramConstants.GamePath + "DTA.LOG");
-            File.Delete(ProgramConstants.GamePath + "TI.LOG");
-            File.Delete(ProgramConstants.GamePath + "TS.LOG");
-
             GameProcessStarting?.Invoke();
-            
-            if (UserINISettings.Instance.WindowedMode && UseQres)
-			{
-                Logger.Log("Windowed mode is enabled - using QRes.");
-                Process QResProcess = new Process();
-                QResProcess.StartInfo.FileName = ProgramConstants.QRES_EXECUTABLE;
-                QResProcess.StartInfo.UseShellExecute = false;
-                if (!string.IsNullOrEmpty(extraCommandLine))
-                    QResProcess.StartInfo.Arguments = "c=16 /R " + "\"" + ProgramConstants.GamePath + gameExecutableName + "\" "  + additionalExecutableName + "-SPAWN " + extraCommandLine;
-                else
-                    QResProcess.StartInfo.Arguments = "c=16 /R " + "\"" + ProgramConstants.GamePath + gameExecutableName + "\" " + additionalExecutableName  + "-SPAWN";
-                QResProcess.EnableRaisingEvents = true;
-                QResProcess.Exited += new EventHandler(Process_Exited);
-                Logger.Log("Launch executable: " + QResProcess.StartInfo.FileName);
-                Logger.Log("Launch arguments: " + QResProcess.StartInfo.Arguments);
-                try
-                {
-                    QResProcess.Start();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("Error launching QRes: " + ex.Message);
-                    MessageBox.Show("Error launching " + ProgramConstants.QRES_EXECUTABLE + ". Please check that your anti-virus isn't blocking the CnCNet Client. " +
-                        "You can also try running the client as an administrator." + Environment.NewLine + Environment.NewLine + "You are unable to participate in this match." +
-                        Environment.NewLine + Environment.NewLine + "Returned error: " + ex.Message,
-                        "Error launching game", MessageBoxButtons.OK);
-                    Process_Exited(QResProcess, EventArgs.Empty);
-                    return;
-                }
 
-                if (Environment.ProcessorCount > 1 && SingleCoreAffinity)
-                    QResProcess.ProcessorAffinity = (IntPtr)2;
-            }
+            Process dtaProcess = new Process();
+            dtaProcess.StartInfo.FileName = gameExecutableName;
+            dtaProcess.StartInfo.UseShellExecute = false;
+            if (!string.IsNullOrEmpty(extraCommandLine))
+                dtaProcess.StartInfo.Arguments = additionalExecutableName + " " + extraCommandLine;
             else
+                dtaProcess.StartInfo.Arguments = additionalExecutableName;
+            dtaProcess.EnableRaisingEvents = true;
+            dtaProcess.Exited += new EventHandler(Process_Exited);
+            Logger.Log("Launch executable: " + dtaProcess.StartInfo.FileName);
+            Logger.Log("Launch arguments: " + dtaProcess.StartInfo.Arguments);
+            try
             {
-                Process DtaProcess = new Process();
-                DtaProcess.StartInfo.FileName = gameExecutableName;
-                DtaProcess.StartInfo.UseShellExecute = false;
-                if (!string.IsNullOrEmpty(extraCommandLine))
-                    DtaProcess.StartInfo.Arguments = " " + additionalExecutableName + "-SPAWN " + extraCommandLine;
-                else
-                    DtaProcess.StartInfo.Arguments = additionalExecutableName + "-SPAWN";
-                DtaProcess.EnableRaisingEvents = true;
-                DtaProcess.Exited += new EventHandler(Process_Exited);
-                Logger.Log("Launch executable: " + DtaProcess.StartInfo.FileName);
-                Logger.Log("Launch arguments: " + DtaProcess.StartInfo.Arguments);
-                try
-                {
-                    DtaProcess.Start();
-                    Logger.Log("GameProcessLogic: Process started.");
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("Error launching " + gameExecutableName + ": " + ex.Message);
-                    MessageBox.Show("Error launching " + gameExecutableName + ". Please check that your anti-virus isn't blocking the CnCNet Client. " +
-                        "You can also try running the client as an administrator." + Environment.NewLine + Environment.NewLine + "You are unable to participate in this match." + 
-                        Environment.NewLine + Environment.NewLine + "Returned error: " + ex.Message,
-                        "Error launching game", MessageBoxButtons.OK);
-                    Process_Exited(DtaProcess, EventArgs.Empty);
-                    return;
-                }
-
-                if (Environment.ProcessorCount > 1 && SingleCoreAffinity)
-                    DtaProcess.ProcessorAffinity = (IntPtr)2;
+                dtaProcess.Start();
+                Logger.Log("GameProcessLogic: Process started.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Error launching " + gameExecutableName + ": " + ex.Message);
+                MessageBox.Show("Error launching " + gameExecutableName + ". Please check that your anti-virus isn't blocking the CnCNet Client. " +
+                    "You can also try running the client as an administrator." + Environment.NewLine + Environment.NewLine + "You are unable to participate in this match." +
+                    Environment.NewLine + Environment.NewLine + "Returned error: " + ex.Message,
+                    "Error launching game", MessageBoxButtons.OK);
+                Process_Exited(dtaProcess, EventArgs.Empty);
+                return;
             }
 
             IsGameRunning = true;

@@ -41,12 +41,10 @@ namespace ClientCore
             const string OPTIONS = "Options";
             const string AUDIO = "Audio";
 
-            const string WINDOWED_MODE_KEY = "Video.Windowed";
             BackBufferInVRAM = new BoolSetting(iniFile, VIDEO, "UseGraphicsPatch", true);
 
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
-            Renderer = new StringSetting(iniFile, "Compatibility", "Renderer", string.Empty);
 
             DisplayMode = new StringSetting(iniFile, VIDEO, nameof(DisplayMode), string.Empty);
             UnscaledScreenWidth = new IntSetting(iniFile, VIDEO, nameof(UnscaledScreenWidth), -1);
@@ -56,8 +54,10 @@ namespace ClientCore
             ScaledScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", -1);
             IsCustomResolution = new BoolSetting(iniFile, VIDEO, nameof(IsCustomResolution), false);
             StretchMovies = new BoolSetting(iniFile, VIDEO, "StretchMovies", true);
-            WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
-            BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);
+            Windowed = new BoolSetting(iniFile, VIDEO, "Windowed", false);
+            VideoWindowed = new BoolSetting(iniFile, VIDEO, "Video.Windowed", false); // Required for ts-patches compatibility
+            WindowWidth = new IntSetting(iniFile, VIDEO, "WindowWidth", -1);
+            WindowHeight = new IntSetting(iniFile, VIDEO, "WindowHeight", -1);
             ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", Screen.PrimaryScreen.Bounds.Width);
             ClientResolutionY = new IntSetting(iniFile, VIDEO, "ClientResolutionY", Screen.PrimaryScreen.Bounds.Height);
             BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", true);
@@ -71,6 +71,7 @@ namespace ClientCore
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
             StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
             MessageSound = new BoolSetting(iniFile, AUDIO, "ChatMessageSound", true);
+            DisableScoreScreenAudio = new BoolSetting(iniFile, AUDIO, "DisableScoreScreenAudio", true);
 
             ScrollRate = new IntSetting(iniFile, OPTIONS, "ScrollRate", 3);
             TargetLines = new BoolSetting(iniFile, OPTIONS, "UnitActionLines", true);
@@ -173,9 +174,10 @@ namespace ClientCore
         public BoolSetting StretchMovies { get; private set; }
         public StringSetting ClientTheme { get; private set; }
         public IntSetting DetailLevel { get; private set; }
-        public StringSetting Renderer { get; private set; }
-        public BoolSetting WindowedMode { get; private set; }
-        public BoolSetting BorderlessWindowedMode { get; private set; }
+        public BoolSetting Windowed { get; private set; }
+        public BoolSetting VideoWindowed { get; private set; }
+        public IntSetting WindowWidth { get; private set; }
+        public IntSetting WindowHeight { get; private set; }
         public BoolSetting BackBufferInVRAM { get; private set; }
         public IntSetting ClientResolutionX { get; private set; }
         public IntSetting ClientResolutionY { get; private set; }
@@ -194,6 +196,7 @@ namespace ClientCore
         public BoolSetting PlayMainMenuMusic { get; private set; }
         public BoolSetting StopMusicOnMenu { get; private set; }
         public BoolSetting MessageSound { get; private set; }
+        public BoolSetting DisableScoreScreenAudio { get; private set; }
 
         /***********/
         /* OPTIONS */

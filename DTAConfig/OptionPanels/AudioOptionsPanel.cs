@@ -30,6 +30,7 @@ namespace DTAConfig.OptionPanels
 
         private XNAClientCheckBox chkMainMenuMusic;
         private XNAClientCheckBox chkStopMusicOnMenu;
+        private XNAClientCheckBox chkDisableScoreScreenAudio;
 
         public override void Initialize()
         {
@@ -155,6 +156,13 @@ namespace DTAConfig.OptionPanels
             chkMainMenuMusic.Text = "Main menu music";
             chkMainMenuMusic.CheckedChanged += ChkMainMenuMusic_CheckedChanged;
 
+            chkDisableScoreScreenAudio = new XNAClientCheckBox(WindowManager);
+            chkDisableScoreScreenAudio.Name = nameof(chkDisableScoreScreenAudio);
+            chkDisableScoreScreenAudio.X = Width / 2 + 100;
+            chkDisableScoreScreenAudio.Y = chkMainMenuMusic.Y;
+            chkDisableScoreScreenAudio.Text = "Disable Score Screen Audio";
+            chkDisableScoreScreenAudio.CheckedChanged += ChkDisableScoreScreenAudio_CheckedChanged;
+
             chkStopMusicOnMenu = new XNAClientCheckBox(WindowManager);
             chkStopMusicOnMenu.Name = "chkStopMusicOnMenu";
             chkStopMusicOnMenu.ClientRectangle = new Rectangle(
@@ -178,9 +186,22 @@ namespace DTAConfig.OptionPanels
             AddChild(trbClientVolume);
 
             AddChild(chkMainMenuMusic);
+            AddChild(chkDisableScoreScreenAudio);
             AddChild(chkStopMusicOnMenu);
 
             WindowManager.SoundPlayer.SetVolume(trbClientVolume.Value / 10.0f);
+        }
+
+        private void ChkDisableScoreScreenAudio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!chkDisableScoreScreenAudio.Checked)
+            {
+                XNAMessageBox.Show(WindowManager, "Audio Warning",
+                    Renderer.FixText("This version of DTA has a known issue where the score screen " +
+                    "can generate a loud 100%-volume corrupted noise on some systems after long game sessions." +
+                    Environment.NewLine + Environment.NewLine +
+                    "If you want to enable audio in the score screen, it is recommended that you test it without headphones, or play with the audio sliders at high levels (10 or close to it) to avoid ear damage.", 0, 400).Text);
+            }
         }
 
         private void ChkMainMenuMusic_CheckedChanged(object sender, EventArgs e)
@@ -224,6 +245,10 @@ namespace DTAConfig.OptionPanels
 
             chkMainMenuMusic.Checked = IniSettings.PlayMainMenuMusic;
             chkStopMusicOnMenu.Checked = IniSettings.StopMusicOnMenu;
+
+            chkDisableScoreScreenAudio.CheckedChanged -= ChkDisableScoreScreenAudio_CheckedChanged;
+            chkDisableScoreScreenAudio.Checked = IniSettings.DisableScoreScreenAudio;
+            chkDisableScoreScreenAudio.CheckedChanged += ChkDisableScoreScreenAudio_CheckedChanged;
         }
 
         public override bool Save()
@@ -240,6 +265,7 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.PlayMainMenuMusic.Value = chkMainMenuMusic.Checked;
             IniSettings.StopMusicOnMenu.Value = chkStopMusicOnMenu.Checked;
+            IniSettings.DisableScoreScreenAudio.Value = chkDisableScoreScreenAudio.Checked;
 
             return false;
         }

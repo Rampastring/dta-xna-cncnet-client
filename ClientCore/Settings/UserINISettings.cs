@@ -53,6 +53,7 @@ namespace ClientCore
             ScaledScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", -1);
             ScaledScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", -1);
             IsCustomResolution = new BoolSetting(iniFile, VIDEO, nameof(IsCustomResolution), false);
+            RendererDriver = new EnumSetting<ViniferaRenderer>(iniFile, VIDEO, nameof(RendererDriver), ViniferaRenderer.Auto);
             StretchMovies = new BoolSetting(iniFile, VIDEO, "StretchMovies", true);
             Windowed = new BoolSetting(iniFile, VIDEO, "Windowed", false);
             VideoWindowed = new BoolSetting(iniFile, VIDEO, "Video.Windowed", false); // Required for ts-patches compatibility
@@ -171,6 +172,7 @@ namespace ClientCore
         public IntSetting ScaledScreenWidth { get; private set; }
         public IntSetting ScaledScreenHeight { get; private set; }
         public BoolSetting IsCustomResolution { get; private set; }
+        public EnumSetting<ViniferaRenderer> RendererDriver { get; private set; }
         public BoolSetting StretchMovies { get; private set; }
         public StringSetting ClientTheme { get; private set; }
         public IntSetting DetailLevel { get; private set; }

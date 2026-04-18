@@ -145,6 +145,7 @@
     <Compile Include="OSVersion.cs" />
     <Compile Include="ProfanityFilter.cs" />
     <Compile Include="MultiplayerSaveGameManager.cs" />
+    <Compile Include="Settings\EnumSetting.cs" />
     <Compile Include="Settings\IIniSetting.cs" />
     <Compile Include="Settings\UserINISettings.cs" />
     <Compile Include="Settings\BoolSetting.cs" />
@@ -168,6 +169,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViniferaRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

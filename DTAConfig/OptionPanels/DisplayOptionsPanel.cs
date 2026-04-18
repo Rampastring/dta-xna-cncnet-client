@@ -23,6 +23,18 @@ namespace DTAConfig.OptionPanels
         Count
     }
 
+    struct ViniferaRendererInfo
+    {
+        public readonly ViniferaRenderer InternalType;
+        public readonly string UIName;
+
+        public ViniferaRendererInfo(ViniferaRenderer internalType, string uIName)
+        {
+            InternalType = internalType;
+            UIName = uIName;
+        }
+    }
+
     class DisplayOptionsPanel : XNAOptionsPanel
     {
         private const int DRAG_DISTANCE_DEFAULT = 4;
@@ -37,6 +49,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientDropDown ddDisplayMode;
         private XNAClientDropDown ddIngameResolution;
         private XNAClientDropDown ddScaleFactor;
+        private XNAClientDropDown ddRenderer;
         private XNAClientDropDown ddDetailLevel;
         private XNAClientCheckBox chkBackBufferInVRAM;
         private XNAClientCheckBox chkStretchMovies;
@@ -56,6 +69,15 @@ namespace DTAConfig.OptionPanels
         private bool GameCompatFixInstalled = false;
         private bool FinalSunCompatFixInstalled = false;
 
+        private List<ViniferaRendererInfo> viniferaRenderers = new List<ViniferaRendererInfo>()
+        {
+            new ViniferaRendererInfo(ViniferaRenderer.Auto, "Auto"),
+            new ViniferaRendererInfo(ViniferaRenderer.Direct3D, "DirectX 9"),
+            new ViniferaRendererInfo(ViniferaRenderer.Direct3D11, "DirectX 11"),
+            new ViniferaRendererInfo(ViniferaRenderer.Direct3D12, "DirectX 12"),
+            new ViniferaRendererInfo(ViniferaRenderer.OpenGL, "OpenGL"),
+            new ViniferaRendererInfo(ViniferaRenderer.Vulkan, "Vulkan"),
+        };
 
         public override void Initialize()
         {
@@ -119,10 +141,29 @@ namespace DTAConfig.OptionPanels
             ddScaleFactor.Height = ddDisplayMode.Height;
             AddChild(ddScaleFactor);
 
+            var lblRenderer = new XNALabel(WindowManager);
+            lblRenderer.Name = nameof(lblRenderer);
+            lblRenderer.X = lblDisplayMode.X;
+            lblRenderer.Y = ddScaleFactor.Bottom + 16;
+            lblRenderer.Text = "Renderer:";
+            AddChild(lblRenderer);
+
+            ddRenderer = new XNAClientDropDown(WindowManager);
+            ddRenderer.Name = nameof(ddRenderer);
+            ddRenderer.X = ddDisplayMode.X;
+            ddRenderer.Y = lblRenderer.Y - 2;
+            ddRenderer.Width = ddDisplayMode.Width;
+            ddRenderer.Height = ddDisplayMode.Height;
+            AddChild(ddRenderer);
+            for (int i = 0; i < viniferaRenderers.Count; i++)
+            {
+                ddRenderer.AddItem(new XNADropDownItem() { Text = viniferaRenderers[i].UIName, Tag = viniferaRenderers[i].InternalType });
+            }
+
             var lblDetailLevel = new XNALabel(WindowManager);
             lblDetailLevel.Name = "lblDetailLevel";
             lblDetailLevel.ClientRectangle = new Rectangle(lblIngameResolution.X,
-                ddScaleFactor.Bottom + 16, 0, 0);
+                ddRenderer.Bottom + 16, 0, 0);
             lblDetailLevel.Text = "Detail Level:";
 
             ddDetailLevel = new XNAClientDropDown(WindowManager);
@@ -517,6 +558,8 @@ namespace DTAConfig.OptionPanels
                     ddScaleFactor.SelectedIndex = 0;
             }
 
+            ddRenderer.SelectedIndex = (int)UserINISettings.Instance.RendererDriver.Value;
+
             // Wonder what this "Win8CompatMode" actually does..
             // Disabling it used to be TS-DDRAW only, but it was never enabled after 
             // you had tried TS-DDRAW once, so most players probably have it always
@@ -641,6 +684,8 @@ namespace DTAConfig.OptionPanels
             IniSettings.VideoWindowed.Value = IniSettings.Windowed.Value;
 
             SaveIngameResolutionAndRenderer(displayMode);
+
+            IniSettings.RendererDriver.Value = (ViniferaRenderer)ddRenderer.SelectedIndex;
 
             ScreenResolution clientResolution = (ScreenResolution)ddClientResolution.SelectedItem.Tag;
 

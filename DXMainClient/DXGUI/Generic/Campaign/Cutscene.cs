@@ -70,6 +70,24 @@
         PTTP8,
         PTTP8Victory,
         PTTP9,
-        PTTPEnd
+        PTTPEnd,
+
+        SE01,
+        SE02,
+        SE02End,
+        SE03,
+        SE04,
+        SE05,
+        SE05End,
+        SE06,
+        SE07,
+        SE08,
+        SE08End,
+        SE09,
+        SE09End,
+        SE10,
+        SE10End,
+        SE11,
+        SE11End
     }
 }

@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Media;
 using Rampastring.XNAUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTAClient.DXGUI.Generic.Campaign
 {
@@ -41,6 +36,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             tdmaptheme = AssetLoader.LoadSong("Story/Music/credits");
             stopthem = AssetLoader.LoadSong("Story/Music/stopthem");
             gloom = AssetLoader.LoadSong("Story/Music/gloom");
+            recon = AssetLoader.LoadSong("Story/Music/recn226m");
         }
 
         public readonly EnhancedSoundEffect beepy2;
@@ -72,5 +68,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
         public readonly Song tdmaptheme;
         public readonly Song stopthem;
         public readonly Song gloom;
+        public readonly Song recon;
     }
 }

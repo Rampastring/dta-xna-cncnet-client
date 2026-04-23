@@ -60,6 +60,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         private CovertRevoltCutscenes CreateCovertRevoltCutsceneContainer() => new CovertRevoltCutscenes(Assets, storyDisplay, this, windowManager);
         private PowerToThePeopleCutscenes CreatePowerToThePeopleCutsceneContainer() => new PowerToThePeopleCutscenes(Assets, storyDisplay, this, windowManager);
+        private ShadowExodusCutscenes CreateShadowExodusCutsceneContainer() => new ShadowExodusCutscenes(Assets, storyDisplay, this, windowManager);
 
         public List<Phase> GetPhases(Cutscene cutscene, IStoryDisplay storyDisplay, WindowManager windowManager)
         {
@@ -202,6 +203,42 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     return CreatePowerToThePeopleCutsceneContainer().PTTP9();
                 case Cutscene.PTTPEnd:
                     return CreatePowerToThePeopleCutsceneContainer().PTTPEnd();
+
+                /* SE */
+                case Cutscene.SE01:
+                    return CreateShadowExodusCutsceneContainer().SE01();
+                case Cutscene.SE02:
+                    return CreateShadowExodusCutsceneContainer().SE02();
+                case Cutscene.SE02End:
+                    return CreateShadowExodusCutsceneContainer().SE02End();
+                case Cutscene.SE03:
+                    return CreateShadowExodusCutsceneContainer().SE03();
+                case Cutscene.SE04:
+                    return CreateShadowExodusCutsceneContainer().SE04();
+                case Cutscene.SE05:
+                    return CreateShadowExodusCutsceneContainer().SE05();
+                case Cutscene.SE05End:
+                    return CreateShadowExodusCutsceneContainer().SE05End();
+                case Cutscene.SE06:
+                    return CreateShadowExodusCutsceneContainer().SE06();
+                case Cutscene.SE07:
+                    return CreateShadowExodusCutsceneContainer().SE07();
+                case Cutscene.SE08:
+                    return CreateShadowExodusCutsceneContainer().SE08();
+                case Cutscene.SE08End:
+                    return CreateShadowExodusCutsceneContainer().SE08End();
+                case Cutscene.SE09:
+                    return CreateShadowExodusCutsceneContainer().SE09();
+                case Cutscene.SE09End:
+                    return CreateShadowExodusCutsceneContainer().SE09End();
+                case Cutscene.SE10:
+                    return CreateShadowExodusCutsceneContainer().SE10();
+                case Cutscene.SE10End:
+                    return CreateShadowExodusCutsceneContainer().SE10End();
+                case Cutscene.SE11:
+                    return CreateShadowExodusCutsceneContainer().SE11();
+                case Cutscene.SE11End:
+                    return CreateShadowExodusCutsceneContainer().SE11End();
             }
 
             return null;

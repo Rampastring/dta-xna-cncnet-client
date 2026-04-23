@@ -273,6 +273,7 @@
     <Compile Include="DXGUI\Generic\Campaign\Phase.cs" />
     <Compile Include="DXGUI\Generic\Campaign\PhaseState.cs" />
     <Compile Include="DXGUI\Generic\Campaign\PowerToThePeopleCutscenes.cs" />
+    <Compile Include="DXGUI\Generic\Campaign\ShadowExodusCutscenes.cs" />
     <Compile Include="DXGUI\Generic\Campaign\StoryDisplay.cs" />
     <Compile Include="DXGUI\Generic\Campaign\StoryImage.cs" />
     <Compile Include="DXGUI\Generic\Campaign\BonusInfoPanel.cs" />

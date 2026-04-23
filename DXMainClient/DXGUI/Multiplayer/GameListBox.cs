@@ -74,7 +74,7 @@ namespace DTAClient.DXGUI.Multiplayer
         /// </summary>
         public void Refresh()
         {
-            Items.Clear();
+            Clear();
 
             if (GameMatchesFilter != null)
             {

@@ -486,22 +486,34 @@ namespace DTAConfig.OptionPanels
             { new Point(800, 600), 1.0 },
             { new Point(800, 1280), 1.25 },
             { new Point(1024, 768), 1.0 },
+            { new Point(1152, 864), 1.25 },
             { new Point(1280, 720), 1.25 },
+            { new Point(1280, 768), 1.25 },
             { new Point(1280, 800), 1.25 },
+            { new Point(1280, 960), 1.25 },
             { new Point(1280, 1024), 1.25 },
             { new Point(1360, 768), 1.25 },
             { new Point(1366, 768), 1.25 },
             { new Point(1440, 900), 1.25 },
+            { new Point(1440, 1050), 1.5 },
             { new Point(1600, 900), 1.25 },
+            { new Point(1600, 1200), 1.5 },
             { new Point(1680, 1050), 1.5 },
             { new Point(1920, 1080), 1.5 },
             { new Point(1920, 1200), 1.5 },
-            { new Point(2560, 1080), 2.0 },
+            { new Point(2048, 1080), 1.5 },
+            { new Point(2048, 1536), 2.0 },
+            { new Point(2560, 1080), 1.5 },
             { new Point(2560, 1440), 2.0 },
+            { new Point(2560, 1600), 2.0 },
             { new Point(2880, 1800), 3.0 },
             { new Point(3440, 1440), 2.0 },
             { new Point(3840, 2160), 3.0 },
             { new Point(5120, 1440), 2.0 },
+            { new Point(5120, 2160), 3.0 },
+            { new Point(5120, 2880), 4.0 },
+            { new Point(7680, 4320), 6.0 },
+            { new Point(8192, 4320), 6.0 },
         };
 
         public override void Load()
@@ -633,25 +645,25 @@ namespace DTAConfig.OptionPanels
 
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Tiberian Sun Client");
 
-            if (regKey == null)
-                return;
-
-            object tsCompatFixValue = regKey.GetValue("TSCompatFixInstalled", "No");
-            string tsCompatFixString = (string)tsCompatFixValue;
-
-            if (tsCompatFixString == "Yes")
+            if (regKey != null)
             {
-                GameCompatFixInstalled = true;
-                btnGameCompatibilityFix.Text = "Disable";
-            }
+                object tsCompatFixValue = regKey.GetValue("TSCompatFixInstalled", "No");
+                string tsCompatFixString = (string)tsCompatFixValue;
 
-            object fsCompatFixValue = regKey.GetValue("FSCompatFixInstalled", "No");
-            string fsCompatFixString = (string)fsCompatFixValue;
+                if (tsCompatFixString == "Yes")
+                {
+                    GameCompatFixInstalled = true;
+                    btnGameCompatibilityFix.Text = "Disable";
+                }
 
-            if (fsCompatFixString == "Yes")
-            {
-                FinalSunCompatFixInstalled = true;
-                btnMapEditorCompatibilityFix.Text = "Disable";
+                object fsCompatFixValue = regKey.GetValue("FSCompatFixInstalled", "No");
+                string fsCompatFixString = (string)fsCompatFixValue;
+
+                if (fsCompatFixString == "Yes")
+                {
+                    FinalSunCompatFixInstalled = true;
+                    btnMapEditorCompatibilityFix.Text = "Disable";
+                }
             }
 
             // These compatibility fixes from 2015 are no longer necessary on modern systems.

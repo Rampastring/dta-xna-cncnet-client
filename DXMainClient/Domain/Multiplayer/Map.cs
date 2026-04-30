@@ -255,6 +255,15 @@ namespace DTAClient.Domain.Multiplayer
 
         private List<KeyValuePair<string, string>> ForcedSpawnIniOptions = new List<KeyValuePair<string, string>>(0);
 
+        private static Dictionary<string, string> structuresToParse = new Dictionary<string, string>()
+        {
+            { "OILREFN", "oilrefn.png" },
+            { "STEX", "stex.png" },
+            { "HOSP", "hosp.png" },
+            { "CHOSP", "hosp.png" },
+            { "ARMORY", "armory.png" },
+            { "ARMORYB", "armory.png" }
+        };
 
         private readonly static object _locker = new object();
 
@@ -564,13 +573,14 @@ namespace DTAClient.Domain.Multiplayer
                     continue;
 
                 string id = parts[1];
-                if (id != "OILREFN" && id != "STEX")
+
+                if (!structuresToParse.TryGetValue(id, out string textureName))
                     continue;
 
                 int x = Conversions.IntFromString(parts[3], 0);
                 int y = Conversions.IntFromString(parts[4], 0);
 
-                extraTextures.Add(new ExtraMapPreviewTexture(id + ".png", new Point(x, y)));
+                extraTextures.Add(new ExtraMapPreviewTexture(textureName, new Point(x, y)));
             }
         }
 

@@ -12,21 +12,25 @@ namespace ClientGUI
     {
         public const float ALPHA_RATE = 0.6f;
 
-        public DarkeningPanel(WindowManager windowManager) : base(windowManager)
+        public DarkeningPanel(WindowManager windowManager, int opacity = 128) : base(windowManager)
         {
             DrawMode = ControlDrawMode.UNIQUE_RENDER_TARGET;
+            this.opacity = opacity;
         }
 
         public event EventHandler Hidden;
 
+        private int opacity;
+
         public override void Initialize()
         {
-            Name = "DarkeningPanel";
+            if (string.IsNullOrWhiteSpace(Name))
+                Name = nameof(DarkeningPanel);
 
             SetPositionAndSize();
 
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, opacity), 1, 1);
             DrawBorders = false;
 
             base.Initialize();
@@ -48,9 +52,8 @@ namespace ClientGUI
 
         public override void AddChild(XNAControl child)
         {
-            base.AddChild(child);
-
             child.VisibleChanged += Child_VisibleChanged;
+            base.AddChild(child);
         }
 
         private void Child_VisibleChanged(object sender, EventArgs e)

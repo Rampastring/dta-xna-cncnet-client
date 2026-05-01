@@ -461,11 +461,16 @@ namespace DTAClient.DXGUI.Generic
             CampaignHandler.Instance.MissionRankUpdated += CampaignHandler_MissionRankUpdated;
             CampaignHandler.Instance.MissionCompleted += CampaignHandler_MissionCompleted;
 
+            var storyDisplayDarkeningPanel = new DarkeningPanel(WindowManager, 255);
+            storyDisplayDarkeningPanel.Name = nameof(storyDisplayDarkeningPanel);
+            storyDisplayDarkeningPanel.DrawOrder = missionCompletionNotification.DrawOrder - 1;
+            storyDisplayDarkeningPanel.UpdateOrder = missionCompletionNotification.UpdateOrder - 1;
+            WindowManager.AddAndInitializeControl(storyDisplayDarkeningPanel);
+
             storyDisplay = new StoryDisplay(WindowManager);
             storyDisplay.Name = nameof(storyDisplay);
-            storyDisplay.DrawOrder = missionCompletionNotification.DrawOrder - 1;
-            storyDisplay.UpdateOrder = missionCompletionNotification.UpdateOrder - 1;
-            WindowManager.AddAndInitializeControl(storyDisplay);
+            storyDisplayDarkeningPanel.AddChild(storyDisplay);
+            storyDisplay.CenterOnParent();
 
             bonusSelectionWindow = new BonusSelectionWindow(WindowManager);
             dp = new DarkeningPanel(WindowManager);

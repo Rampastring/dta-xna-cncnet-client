@@ -231,8 +231,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
         public override void Initialize()
         {
             Name = nameof(StoryDisplay);
-            Width = WindowManager.RenderResolutionX;
-            Height = WindowManager.RenderResolutionY;
+            Width = Math.Min(WindowManager.RenderResolutionX, UIDesignConstants.CUTSCENE_DESIGN_RES_X);
+            Height = Math.Min(WindowManager.RenderResolutionY, UIDesignConstants.CUTSCENE_DESIGN_RES_Y);
 
             ConversationDisplay = new ConversationDisplay(WindowManager);
             ConversationDisplay.Name = nameof(ConversationDisplay);

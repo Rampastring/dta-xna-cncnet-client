@@ -138,6 +138,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IUserSetting.cs" />
     <Compile Include="OptionPanels\AudioOptionsPanel.cs" />
     <Compile Include="OptionPanels\CnCNetOptionsPanel.cs" />
     <Compile Include="OptionPanels\ComponentsPanel.cs" />
@@ -150,6 +151,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OptionPanels\UpdaterOptionsPanel.cs" />
     <Compile Include="OptionPanels\XNAOptionsPanel.cs" />
+    <Compile Include="SettingCheckBox.cs" />
+    <Compile Include="SettingCheckBoxBase.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

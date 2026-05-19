@@ -24,6 +24,7 @@ namespace DTAConfig.OptionPanels
 
         private static readonly OptionsGUICreator optionsGUICreator = new OptionsGUICreator();
 
+        private readonly List<IUserSetting> userSettings = new List<IUserSetting>();
         private List<FileSettingCheckBox> fileSettingCheckBoxes = new List<FileSettingCheckBox>();
 
         public override void Initialize()
@@ -61,6 +62,14 @@ namespace DTAConfig.OptionPanels
             }
         }
 
+        public override void AddChild(XNAControl child)
+        {
+            base.AddChild(child);
+
+            if (child is IUserSetting settingControl)
+                userSettings.Add(settingControl);
+        }
+
         protected UserINISettings IniSettings { get; private set; }
 
         /// <summary>
@@ -73,7 +82,11 @@ namespace DTAConfig.OptionPanels
             foreach (var checkBox in fileSettingCheckBoxes)
                 checkBox.Save();
 
-            return false;
+            bool restartRequired = false;
+            foreach (var setting in userSettings)
+                restartRequired = setting.Save() || restartRequired;
+
+            return restartRequired;
         }
 
         /// <summary>
@@ -83,6 +96,9 @@ namespace DTAConfig.OptionPanels
         {
             foreach (var checkBox in fileSettingCheckBoxes)
                 checkBox.Load();
+
+            foreach (var setting in userSettings)
+                setting.Load();
         }
 
         /// <summary>

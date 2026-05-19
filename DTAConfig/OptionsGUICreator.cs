@@ -1,8 +1,4 @@
 ﻿using ClientGUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DTAConfig
 {
@@ -15,6 +11,7 @@ namespace DTAConfig
         public OptionsGUICreator()
         {
             AddControl(typeof(FileSettingCheckBox));
+            AddControl(typeof(SettingCheckBox));
         }
     }
 }

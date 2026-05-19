@@ -273,6 +273,24 @@ namespace ClientCore
 
         public IntSetting SettingsVersion { get; private set; }
 
+        public void SetValue(string section, string key, string value)
+            => SettingsIni.SetStringValue(section, key, value);
+
+        public void SetValue(string section, string key, bool value)
+            => SettingsIni.SetBooleanValue(section, key, value);
+
+        public void SetValue(string section, string key, int value)
+            => SettingsIni.SetIntValue(section, key, value);
+
+        public string GetValue(string section, string key, string defaultValue)
+            => SettingsIni.GetStringValue(section, key, defaultValue);
+
+        public bool GetValue(string section, string key, bool defaultValue)
+            => SettingsIni.GetBooleanValue(section, key, defaultValue);
+
+        public int GetValue(string section, string key, int defaultValue)
+            => SettingsIni.GetIntValue(section, key, defaultValue);
+
         public bool IsGameFollowed(string gameName)
         {
             return SettingsIni.GetBooleanValue("Channels", gameName, false);

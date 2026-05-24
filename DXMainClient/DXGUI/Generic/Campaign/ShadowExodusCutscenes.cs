@@ -64,7 +64,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     cutsceneManager.TryPlaySong(assets.tdmaptheme);
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
-                
+
                     storyDisplay.ConversationDisplay.ConversationText = "* * * ACCESSING BROTHERHOOD ARCHIVES * * *";
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/LogoNod.png", 1);
@@ -685,7 +685,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     cutsceneManager.TryPlaySong(assets.recon);
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
-                
+
                     storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
                     storyDisplay.ConversationDisplay.IsCentered = true;
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/LogoNod.png", 1);
@@ -1292,7 +1292,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(28,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "One notable contingent is carrying a large quantity of critical supplies and equipment, and must be protected from GDI's jack-booted thugs.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Luckily, there's at least one stockpile of critical supplies and equipment that has so far evaded the clutches of GDI's jack-booted thugs.";
                 },
                 null,
                 null,
@@ -1302,7 +1302,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE04/small5.png", 64);
-                    storyDisplay.ConversationDisplay.ConversationText = "I've redirected this detachment towards one of our port facilities on the Danube.";
+                    storyDisplay.ConversationDisplay.ConversationText = "I've redirected these supplies towards one of our port facilities on the Danube.";
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(63),
                 null,
@@ -1320,7 +1320,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(31,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Ensure that the port remains operational. Our retreating troops are expendable, but the supplies and equipment moving with them are not.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Ensure that the port remains operational, and protect our ships carrying those supplies until they successfully evacuate downriver.";
                 },
                 null,
                 null,
@@ -1329,7 +1329,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(32,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Any vehicles containing those materials must be protected until they can be evacuated downriver.";
+                    storyDisplay.ConversationDisplay.ConversationText = "You should know that we had other, smaller outposts in the area as well that I lost contact with during the first GDI attack.";
                 },
                 null,
                 null,
@@ -1338,7 +1338,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(33,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "I lost contact with other, smaller outposts we had in the area during the first GDI attack.";
+                    storyDisplay.ConversationDisplay.ConversationText = "You might be able to re-establish contact with those outposts if you can locate them before the bulk of General Howard's forces arrive.";
                 },
                 null,
                 null,
@@ -1351,7 +1351,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(34,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "You might be able to re-establish contact with those outposts if you can locate them before the bulk of General Howard's forces arrive.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Some of our retreating troops are even still trying to link up with this position, if you feel like playing the hero...";
                 },
                 null,
                 null,
@@ -1360,8 +1360,17 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.FindStoryImageById(60).AlphaRate = -crRAdisplayAlphaRate;
                     assets.bleep17.Play();
                 }));
-            ;
+
             phases.Add(new Phase(35,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Any or all of these assets might be useful, but you should consider them expendable - safeguarding the port and the supply ships is your top priority.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(36,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "No more games, Commander. You're in the thick of it now.";
@@ -3989,7 +3998,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(3,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "Unfortunately, in an attempt to avoid capture, General Korkut drew his weapon, and one of your Flamethrower infantry reacted in self-defense.";
+                    storyDisplay.ConversationDisplay.ConversationText = "Unfortunately, before General Korkut could be taken into custody, one of your Flamethrower infantry took matters into his own hands.";
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE10End/slide3.png", 3, 0f);
                 },
                 null,

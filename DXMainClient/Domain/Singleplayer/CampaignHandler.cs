@@ -403,7 +403,7 @@ namespace DTAClient.Domain.Singleplayer
 
                 foreach (var kvp in globalFlagInfo)
                 {
-                    globalFlagsSection.SetStringValue($"GlobalFlag{ kvp.Key.ToString(CultureInfo.InvariantCulture) }", kvp.Value ? "yes" : "no");
+                    globalFlagsSection.SetIntValue($"GlobalFlag{ kvp.Key.ToString(CultureInfo.InvariantCulture) }", kvp.Value ? 1 : 0);
                 }
 
                 spawnIni.WriteIniFile();

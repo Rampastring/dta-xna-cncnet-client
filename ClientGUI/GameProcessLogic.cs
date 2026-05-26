@@ -20,8 +20,6 @@ namespace ClientGUI
 
         public static event Action GameProcessExited;
 
-        public static GameSessionManager GameSessionManager { get; private set; }
-
         public static bool INIPreprocessingFailed = false;
 
         public static bool IsGameRunning = false;
@@ -29,10 +27,8 @@ namespace ClientGUI
         /// <summary>
         /// Starts the main game process.
         /// </summary>
-        public static void StartGameProcess(GameSessionManager sessionManager)
+        public static void StartGameProcess()
         {
-            GameSessionManager = sessionManager;
-
             Logger.Log("About to launch main game executable.");
 
             INIPreprocessingFailed = false;
@@ -125,7 +121,6 @@ namespace ClientGUI
             Process proc = (Process)sender;
             proc.Exited -= Process_Exited;
             proc.Dispose();
-            GameSessionManager.EndSession();
             GameProcessExited?.Invoke();
         }
     }

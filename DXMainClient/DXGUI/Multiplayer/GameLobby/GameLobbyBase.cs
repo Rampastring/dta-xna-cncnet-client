@@ -1364,9 +1364,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
             GameSessionType sessionType = isMultiplayer && Players.Count > 1 ? GameSessionType.MULTIPLAYER : GameSessionType.SKIRMISH;
-            var gameSessionInfo = new GameSessionManager(new GameSessionInfo(sessionType, DateTime.Now.Ticks), WindowManager.AddCallback);
-            gameSessionInfo.StartSession(false);
-            GameProcessLogic.StartGameProcess(gameSessionInfo);
+            var gameSessionInfo = new GameSessionInfo(sessionType, DateTime.Now.Ticks);
+            GameProcessLogic.StartGameProcess();
             UpdateDiscordPresence(true);
         }
 

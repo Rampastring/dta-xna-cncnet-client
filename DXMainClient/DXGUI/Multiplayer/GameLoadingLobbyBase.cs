@@ -315,19 +315,11 @@ namespace DTAClient.DXGUI.Multiplayer
 
             gameLoadTime = DateTime.Now;
 
-            string saveFilePath = ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAMES_MP_DIRECTORY + "/" + sgFileName;
-            string metaFilePath = Path.ChangeExtension(saveFilePath, GameSessionManager.SavedGameMetaExtension);
-            var meta = GameSessionInfo.ParseFromFile(metaFilePath);
-            if (meta == null)
-            {
-                XNAMessageBox.Show(WindowManager, "Failed to load saved multiplayer game", "Failed to load saved game: saved game meta could not be parsed!");
-                return;
-            }
+            string saveFilePath = ProgramConstants.GamePath + "Saved Games/" + sgFileName;
 
-            var gameSessionInfo = new GameSessionManager(new GameSessionInfo(GameSessionType.MULTIPLAYER, meta.UniqueId), WindowManager.AddCallback);
-            gameSessionInfo.StartSession(true);
+            var gameSessionInfo = new GameSessionInfo(GameSessionType.MULTIPLAYER, uniqueGameId);
             GameProcessLogic.GameProcessExited += SharedUILogic_GameProcessExited;
-            GameProcessLogic.StartGameProcess(gameSessionInfo);
+            GameProcessLogic.StartGameProcess();
 
             UpdateDiscordPresence(true);
         }

@@ -10,6 +10,8 @@ namespace ClientCore.Statistics
     /// </summary>
     public static class LogFileFinder
     {
+        private static string LastLogFileName;
+
         public static string GetLogFilePath()
         {
             string logFileName = ClientConfiguration.Instance.StatisticsLogFileName;
@@ -42,6 +44,13 @@ namespace ClientCore.Statistics
                 return null;
             }
 
+            // Do not parse the same log file multiple times.
+            if (logFileName == LastLogFileName)
+            {
+                return null;
+            }
+
+            LastLogFileName = logFileName;
             return logFileName;
         }
     }

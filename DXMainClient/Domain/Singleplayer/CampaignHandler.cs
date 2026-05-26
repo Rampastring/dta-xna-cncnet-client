@@ -328,7 +328,7 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         /// <param name="mission">The mission.</param>
         /// <param name="selectedDifficultyLevel">The difficulty level of the mission.</param>
-        public void WriteFilesForMission(Mission mission, DifficultyRank selectedDifficultyLevel, Dictionary<int, bool> globalFlagInfo, Difficulty bonusDifficultySetting)
+        public void WriteFilesForMission(Mission mission, DifficultyRank selectedDifficultyLevel, Dictionary<int, bool> globalFlagInfo, Difficulty bonusDifficultySetting, bool isCheatSession)
         {
             bool copyMapsToSpawnmapINI = ClientConfiguration.Instance.CopyMissionsToSpawnmapINI;
 
@@ -388,6 +388,11 @@ namespace DTAClient.Domain.Singleplayer
 
                 swriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : ingameDifficultyLevel.ToString(CultureInfo.InvariantCulture)));
                 swriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty(ingameDifficultyLevel));
+
+                swriter.WriteLine("MissionInternalName=" + mission.InternalName);
+                swriter.WriteLine("ClientDifficulty=" + (int)selectedDifficultyLevel);
+                swriter.WriteLine("CheatSession=" + (isCheatSession ? "yes" : "no"));
+                swriter.WriteLine("BonusName=" + bonusDifficultySetting.ININame);
 
                 swriter.WriteLine();
                 swriter.WriteLine();

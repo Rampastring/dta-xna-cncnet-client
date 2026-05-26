@@ -43,6 +43,8 @@ namespace DTAClient.DXGUI.Generic
 
         public int FoundSaveFileCount { get; private set; } = -1;
 
+        private GameSessionInfo gameSessionInfo;
+
         public override void Initialize()
         {
             Name = "GameLoadingWindow";
@@ -178,55 +180,61 @@ namespace DTAClient.DXGUI.Generic
 
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
 
-            if (sg.SessionInfo == null || sg.SessionInfo.SessionType == GameSessionType.UNKNOWN)
+            if (sg.PlaythroughID < 0)
             {
                 ClearSaveInformation(string.Empty);
                 lblSessionTypeValue.Text = "Unknown";
                 return;
             }
 
-            switch (sg.SessionInfo.SessionType)
+            switch (sg.GameType)
             {
-                case GameSessionType.SKIRMISH:
+                case TSEngineGameType.GAME_SKIRMISH:
                     ClearSaveInformation(string.Empty);
                     lblSessionTypeValue.Text = "Skirmish";
                     break;
-                case GameSessionType.MULTIPLAYER:
+                case TSEngineGameType.GAME_IPX:
+                case TSEngineGameType.GAME_INTERNET:
                     ClearSaveInformation(string.Empty);
                     lblSessionTypeValue.Text = "Multiplayer";
                     break;
-                case GameSessionType.SINGLEPLAYER:
-                    var mission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == sg.SessionInfo.MissionInternalName);
+                case TSEngineGameType.GAME_NORMAL:
+                    var mission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == sg.MissionInternalName);
                     if (mission == null)
                     {
                         ClearSaveInformation("Unknown");
                     }
                     else
                     {
-                        string difficultyName = mission.GetNameForDifficultyRankStylized(sg.SessionInfo.Difficulty);
+                        string difficultyName = mission.GetNameForDifficultyRankStylized(sg.ClientDifficulty);
 
                         string globalFlagInfo;
 
-                        if (sg.SessionInfo.GlobalFlagValues != null)
+                        if (sg.GlobalFlags != null)
                         {
                             globalFlagInfo = string.Empty;
 
-                            foreach (var kvp in sg.SessionInfo.GlobalFlagValues)
+                            for (int globalFlagIndex = 0; globalFlagIndex < sg.GlobalFlags.Length; globalFlagIndex++)
                             {
-                                int globalFlagIndex = kvp.Key;
-                                bool enabled = kvp.Value;
+                                bool enabled = sg.GlobalFlags[globalFlagIndex] > 0;
 
                                 if (CampaignHandler.Instance.GlobalVariables.Count > globalFlagIndex)
                                 {
                                     var globalVariable = CampaignHandler.Instance.GlobalVariables[globalFlagIndex];
-                                    globalFlagInfo += globalVariable.UIName + ": " + (enabled ? "Yes" : "No");
+                                    if (Array.Exists(mission.UsedGlobalVariables, globalName => globalVariable.InternalName == globalName))
+                                    {
+                                        globalFlagInfo += globalVariable.UIName + ": " + (enabled ? "Yes" : "No");
+                                        globalFlagInfo += Environment.NewLine;
+                                    }
                                 }
                                 else
                                 {
-                                    globalFlagInfo += "(Unknown variable) " + globalFlagIndex + ": " + (enabled ? "Yes" : "No");
+                                    if (sg.GlobalFlags[globalFlagIndex] > 0)
+                                    {
+                                        globalFlagInfo += "(Unknown variable) " + globalFlagIndex + ": " + (enabled ? "Yes" : "No");
+                                        globalFlagInfo += Environment.NewLine;
+                                    }
                                 }
-
-                                globalFlagInfo += Environment.NewLine;
                             }
                         }
                         else
@@ -261,16 +269,9 @@ namespace DTAClient.DXGUI.Generic
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
-            if (sg.SessionInfo.SessionType == GameSessionType.UNKNOWN)
+            if (sg.PlaythroughID < 0)
             {
-                var dialog = XNAMessageBox.ShowYesNoDialog(WindowManager, "Warning",
-                    "Metadata not found for selected saved game. Completing a mission from" + Environment.NewLine +
-                    "this save file will not proceed a campaign forward." + Environment.NewLine + Environment.NewLine +
-                    "If this is a campaign save and you want to make progress in the campaign," + Environment.NewLine +
-                    "you will have to launch the mission again from the New Campaign menu." + Environment.NewLine + Environment.NewLine +
-                    "Do you still wish to load the game?");
-
-                dialog.YesClickedAction = _ => DoLaunch();
+                XNAMessageBox.Show(WindowManager, "Error", "The selected saved game is not compatible with this version of Dawn of the Tiberium Age.");
 
                 return;
             }
@@ -278,36 +279,49 @@ namespace DTAClient.DXGUI.Generic
             DoLaunch();
         }
 
+        private GameSessionType TSEngineGameTypeToGameSessionType(TSEngineGameType gameType)
+        {
+            switch (gameType) 
+            {
+                case TSEngineGameType.GAME_NORMAL:
+                    return GameSessionType.SINGLEPLAYER;
+                case TSEngineGameType.GAME_SKIRMISH:
+                    return GameSessionType.SKIRMISH;
+                default:
+                    return GameSessionType.MULTIPLAYER;
+            }
+        }
+
         private void DoLaunch()
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
             Logger.Log("Loading saved game " + sg.FilePath);
 
-            var gameSessionInfo = new GameSessionManager(sg.SessionInfo, WindowManager.AddCallback);
-            gameSessionInfo.StartSession(true); // Starting the session copies the saved games for this session to the main saved games directory
-
             bool writeNewSpawnIni = true;
 
-            if (sg.SessionInfo.SessionType == GameSessionType.SINGLEPLAYER)
+            gameSessionInfo = new GameSessionInfo(TSEngineGameTypeToGameSessionType(sg.GameType), sg.PlaythroughID, sg.MissionInternalName,
+                sg.PlayerSide, sg.ClientDifficulty, null, sg.IsCheatSession, sg.BonusName);
+
+            if (sg.GameType == TSEngineGameType.GAME_NORMAL)
             {
-                var mission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == sg.SessionInfo.MissionInternalName);
+                var mission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == sg.MissionInternalName);
 
                 if (mission == null)
                 {
-                    Logger.Log("Mission entry for " + sg.SessionInfo.MissionInternalName + " not found when loading game, " +
+                    Logger.Log("Mission entry for " + sg.MissionInternalName + " not found when loading game, " +
                         "unable to write the actual singleplayer mission file to directory for restarts.");
                 }
                 else
                 {
                     Difficulty bonusDifficulty = null;
-                    if (!string.IsNullOrWhiteSpace(gameSessionInfo.SessionInfo.BonusName))
+                    if (!string.IsNullOrWhiteSpace(sg.BonusName))
                     {
-                        var bonus = CampaignHandler.Instance.Bonuses.Find(t => t.ININame == gameSessionInfo.SessionInfo.BonusName);
+                        var bonus = CampaignHandler.Instance.Bonuses.Find(t => t.ININame == sg.BonusName);
                         if (bonus != null)
                             bonusDifficulty = bonus.Difficulty;
                     }
 
-                    CampaignHandler.Instance.WriteFilesForMission(mission, sg.SessionInfo.Difficulty, sg.SessionInfo.GlobalFlagValues, bonusDifficulty);
+                    CampaignHandler.Instance.WriteFilesForMission(mission, gameSessionInfo.Difficulty, gameSessionInfo.GlobalFlagValues, bonusDifficulty, gameSessionInfo.IsCheatSession);
                     writeNewSpawnIni = false;
                 }
             }
@@ -379,7 +393,7 @@ namespace DTAClient.DXGUI.Generic
             Enabled = false;
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
-            GameProcessLogic.StartGameProcess(gameSessionInfo);
+            GameProcessLogic.StartGameProcess();
         }
 
         private void BtnDelete_LeftClick(object sender, EventArgs e)
@@ -412,7 +426,7 @@ namespace DTAClient.DXGUI.Generic
 
             Logger.Log("Deleting saved game " + sg.FileName);
             File.Delete(sg.FilePath);
-            File.Delete(Path.ChangeExtension(sg.FilePath, GameSessionManager.SavedGameMetaExtension));
+            File.Delete(Path.ChangeExtension(sg.FilePath, "sgmeta"));
             if (Directory.GetFiles(Path.GetDirectoryName(sg.FilePath)).Length == 0)
                 Directory.Delete(Path.GetDirectoryName(sg.FilePath));
 
@@ -435,9 +449,9 @@ namespace DTAClient.DXGUI.Generic
             GameProcessLogic.GameProcessExited -= GameProcessExited_Callback;
             discordHandler?.UpdatePresence();
 
-            if (GameProcessLogic.GameSessionManager.SessionType == GameSessionType.SINGLEPLAYER)
+            if (gameSessionInfo.SessionType == GameSessionType.SINGLEPLAYER)
             {
-                CampaignHandler.Instance.PostGameExitOnSingleplayerMission(GameProcessLogic.GameSessionManager.SessionInfo);
+                CampaignHandler.Instance.PostGameExitOnSingleplayerMission(gameSessionInfo);
             }
         }
 
@@ -461,16 +475,10 @@ namespace DTAClient.DXGUI.Generic
 
             foreach (string dirPath in directories)
             {
-                string _dirPath = dirPath.Replace('\\', '/');
-                int lastDirectorySeparatorIndex = _dirPath.LastIndexOf('/');
-                string dirName = _dirPath.Substring(lastDirectorySeparatorIndex + 1);
-
-                long.TryParse(dirName, NumberStyles.None, CultureInfo.InvariantCulture, out long uniqueSessionId);
-
                 string[] saveNames = Directory.GetFiles(dirPath, "*.SAV");
                 foreach (string file in saveNames)
                 {
-                    ParseSaveGame(file, uniqueSessionId);
+                    ParseSaveGame(file);
                 }
             }
 
@@ -489,9 +497,9 @@ namespace DTAClient.DXGUI.Generic
                 FoundSaveFileCount = savedGames.Count;
         }
 
-        private void ParseSaveGame(string filePath, long uniqueSessionId)
+        private void ParseSaveGame(string filePath)
         {
-            SavedGame sg = new SavedGame(filePath, uniqueSessionId);
+            SavedGame sg = new SavedGame(filePath);
             if (sg.ParseInfo())
                 savedGames.Add(sg);
         }

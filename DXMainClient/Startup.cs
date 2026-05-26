@@ -106,8 +106,6 @@ namespace DTAClient
 
             FinalSunSettings.WriteFinalSunIniAsync();
 
-            GameSessionManager.CheckForSavesInMainSaveDirectory();
-
             WriteInstallPathToRegistry();
 
             ClientConfiguration.Instance.RefreshSettings();

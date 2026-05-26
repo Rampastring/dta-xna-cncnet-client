@@ -1066,29 +1066,28 @@ namespace DTAClient.DXGUI.Generic
             }
         }
 
+        private GameSessionInfo gameSessionInfo;
+
         private void LaunchMission_PostStoryDisplay(object sender, EventArgs e)
         {
-            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, TrackbarValueToDiffRank(), globalFlagInfo, bonusDifficulty);
+            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, TrackbarValueToDiffRank(), globalFlagInfo, bonusDifficulty, isCheater);
             difficultyName = missionToLaunch.GetNameForDifficultyRankStylized(TrackbarValueToDiffRank());
 
             UserINISettings.Instance.ClientDifficulty.Value = trbDifficultySelector.Value;
             UserINISettings.Instance.SaveSettings();
 
             discordHandler?.UpdatePresence(missionToLaunch.GUIName, difficultyName, missionToLaunch.IconPath, true);
-            GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
-            var gameSessionManager = new GameSessionManager(
-                new GameSessionInfo(GameSessionType.SINGLEPLAYER,
+            gameSessionInfo = new GameSessionInfo(GameSessionType.SINGLEPLAYER,
                 DateTime.Now.Ticks,
                 missionToLaunch.InternalName,
                 missionToLaunch.Side,
                 TrackbarValueToDiffRank(),
                 globalFlagInfo,
-                isCheater),
-                WindowManager.AddCallback);
+                isCheater);
 
-            gameSessionManager.StartSession(false);
-            GameProcessLogic.StartGameProcess(gameSessionManager);
+            GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
+            GameProcessLogic.StartGameProcess();
 
             storyDisplay.Finished -= LaunchMission_PostStoryDisplay;
         }
@@ -1103,7 +1102,7 @@ namespace DTAClient.DXGUI.Generic
             GameProcessLogic.GameProcessExited -= GameProcessExited_Callback;
             // Logger.Log("GameProcessExited: Updating Discord Presence.");
             discordHandler?.UpdatePresence();
-            CampaignHandler.Instance.PostGameExitOnSingleplayerMission(GameProcessLogic.GameSessionManager.SessionInfo);
+            CampaignHandler.Instance.PostGameExitOnSingleplayerMission(gameSessionInfo);
         }
 
         public void ListBattles()

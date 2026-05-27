@@ -4,7 +4,7 @@ namespace DTAClient.Domain.Singleplayer
 {
     public class Difficulty
     {
-        public string ININame { get; set; } = "Normal";
+        public string ININame { get; set; } = "PlayerNormal";
 
         public double Groundspeed { get; set; } = 0.9;
         public double Airspeed { get; set; } = 1.0;

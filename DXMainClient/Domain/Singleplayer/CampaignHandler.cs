@@ -391,8 +391,12 @@ namespace DTAClient.Domain.Singleplayer
 
                 swriter.WriteLine("MissionInternalName=" + mission.InternalName);
                 swriter.WriteLine("ClientDifficulty=" + (int)selectedDifficultyLevel);
-                swriter.WriteLine("CheatSession=" + (isCheatSession ? "yes" : "no"));
-                swriter.WriteLine("BonusName=" + bonusDifficultySetting.ININame);
+
+                if (isCheatSession)
+                    swriter.WriteLine("CheatSession=yes");
+
+                if (bonusDifficultySetting != null)
+                    swriter.WriteLine("BonusName=" + bonusDifficultySetting.ININame);
 
                 swriter.WriteLine();
                 swriter.WriteLine();

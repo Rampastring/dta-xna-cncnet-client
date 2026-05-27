@@ -171,8 +171,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 return;
             }
 
-            IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + 
-                ProgramConstants.SAVED_GAME_SPAWN_INI);
+            IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI);
 
             string password = Utilities.CalculateSHA1ForString(
                 spawnSGIni.GetStringValue("Settings", "GameID", string.Empty)).Substring(0, 10);
@@ -245,11 +244,10 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
         private bool AllowLoadingGame()
         {
-            if (!File.Exists(ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI))
+            if (!File.Exists(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI))
                 return false;
 
-            IniFile iniFile = new IniFile(ProgramConstants.GamePath + 
-                ProgramConstants.SAVED_GAME_SPAWN_INI);
+            IniFile iniFile = new IniFile(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI);
 
             if (iniFile.GetStringValue("Settings", "Name", string.Empty) != ProgramConstants.PLAYERNAME)
                 return false;

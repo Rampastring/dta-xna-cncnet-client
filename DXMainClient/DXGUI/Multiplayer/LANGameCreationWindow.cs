@@ -100,7 +100,7 @@ namespace DTAClient.DXGUI.Multiplayer
             Disable();
 
             IniFile iniFile = new IniFile(ProgramConstants.GamePath +
-                ProgramConstants.SAVED_GAME_SPAWN_INI);
+                MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI);
 
             LoadGame?.Invoke(this, new GameLoadEventArgs(iniFile.GetIntValue("Settings", "GameID", -1)));
         }
@@ -119,11 +119,12 @@ namespace DTAClient.DXGUI.Multiplayer
         private bool AllowLoadingGame()
         {
             if (!File.Exists(ProgramConstants.GamePath +
-                ProgramConstants.SAVED_GAME_SPAWN_INI))
+                MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI))
+            {
                 return false;
+            }
 
-            IniFile iniFile = new IniFile(ProgramConstants.GamePath + 
-                ProgramConstants.SAVED_GAME_SPAWN_INI);
+            IniFile iniFile = new IniFile(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI);
 
             if (iniFile.GetStringValue("Settings", "Name", string.Empty) != ProgramConstants.PLAYERNAME)
                 return false;

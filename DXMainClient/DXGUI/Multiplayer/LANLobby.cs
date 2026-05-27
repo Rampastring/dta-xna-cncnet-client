@@ -567,8 +567,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
                 if (hg.IsLoadedGame)
                 {
-                    var spawnSGIni = new IniFile(ProgramConstants.GamePath +
-                        ProgramConstants.SAVED_GAME_SPAWN_INI);
+                    var spawnSGIni = new IniFile(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI);
 
                     int loadedGameId = spawnSGIni.GetIntValue("Settings", "GameID", -1);
 

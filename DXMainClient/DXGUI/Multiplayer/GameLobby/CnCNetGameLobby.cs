@@ -1756,7 +1756,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private string CheckErrorForSwitchingToGameLoadingLobby(out IniFile spawnSGIni)
         {
             spawnSGIni = null;
-            string spawnSGPath = ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI;
+            string spawnSGPath = ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI;
 
             if (!File.Exists(spawnSGPath))
             {

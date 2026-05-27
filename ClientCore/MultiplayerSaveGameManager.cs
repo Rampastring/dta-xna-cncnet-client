@@ -10,8 +10,8 @@ namespace ClientCore
     /// </summary>
     public static class MultiplayerSaveGameManager
     {
-        private const string SAVED_GAMES_DIRECTORY = "Saved Games";
-        public const string SPAWN_INI_NAME = "spawnSG.ini";
+        public const string SAVED_GAMES_DIRECTORY = "Saved Games";
+        public const string SAVED_GAME_SPAWN_INI = "Saved Games/spawnSG.ini";
 
         public static int GetSaveGameCount()
         {
@@ -62,27 +62,6 @@ namespace ClientCore
         private static string GetSaveGameDirectoryPath()
         {
             return ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY;
-        }
-
-        /// <summary>
-        /// Initializes saved MP games for a match.
-        /// </summary>
-        public static bool InitSavedGames()
-        {
-            try
-            {
-                Logger.Log("Writing spawn.ini for saved game.");
-                Directory.CreateDirectory(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY);
-                File.Delete(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + "/" + SPAWN_INI_NAME);
-                File.Copy(ProgramConstants.GamePath + "spawn.ini", ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + "/" + SPAWN_INI_NAME, true);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Writing spawn.ini for saved game failed! Exception message: " + ex.Message);
-                return false;
-            }
-
-            return true;
         }
     }
 }

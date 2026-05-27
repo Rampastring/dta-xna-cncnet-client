@@ -37,7 +37,6 @@ namespace ClientCore
 
         public const string SPAWNMAP_INI = "spawnmap.ini";
         public const string SPAWNER_SETTINGS = "spawn.ini";
-        public const string SAVED_GAME_SPAWN_INI = "Saved Games/Multiplayer/spawnSG.ini";
         public const string MAP_CACHE = "Client/MapCache.ini";
 
         public const string MP_SAVE_FILE_NAME_FORMAT = "SAVEGAME_{0}.NET";

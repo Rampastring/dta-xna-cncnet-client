@@ -269,7 +269,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             File.Delete(ProgramConstants.GamePath + "spawn.ini");
 
-            File.Copy(ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI, ProgramConstants.GamePath + "spawn.ini");
+            File.Copy(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI, ProgramConstants.GamePath + "spawn.ini");
 
             IniFile spawnIni = new IniFile(ProgramConstants.GamePath + "spawn.ini");
 
@@ -404,7 +404,7 @@ namespace DTAClient.DXGUI.Multiplayer
             ddSavedGame.AllowDropDown = isHost;
             btnLoadGame.Text = isHost ? "Load Game" : "I'm Ready";
 
-            IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + ProgramConstants.SAVED_GAME_SPAWN_INI);
+            IniFile spawnSGIni = new IniFile(ProgramConstants.GamePath + MultiplayerSaveGameManager.SAVED_GAME_SPAWN_INI);
 
             lblMapNameValue.Text = spawnSGIni.GetStringValue("Settings", "UIMapName", string.Empty);
             lblGameModeValue.Text = spawnSGIni.GetStringValue("Settings", "UIGameMode", string.Empty);

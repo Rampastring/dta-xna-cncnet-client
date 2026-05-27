@@ -40,6 +40,8 @@ namespace ClientCore
         public const string SAVED_GAME_SPAWN_INI = "Saved Games/Multiplayer/spawnSG.ini";
         public const string MAP_CACHE = "Client/MapCache.ini";
 
+        public const string MP_SAVE_FILE_NAME_FORMAT = "SAVEGAME_{0}.NET";
+
         public const int GAME_ID_MAX_LENGTH = 4;
 
         public static readonly Encoding LAN_ENCODING = Encoding.UTF8;
@@ -167,5 +169,7 @@ namespace ClientCore
                 }
             }
         }
+
+        public static string MultiplayerSaveGameFileNameFromIndex(int index) => string.Format(MP_SAVE_FILE_NAME_FORMAT, index.ToString("D3"));
     }
 }

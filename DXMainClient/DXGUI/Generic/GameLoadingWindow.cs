@@ -469,17 +469,11 @@ namespace DTAClient.DXGUI.Generic
 
             string[] files = Directory.GetFiles(ProgramConstants.GamePath + 
                 SAVED_GAMES_DIRECTORY + Path.DirectorySeparatorChar,
-                "*.SAV", SearchOption.TopDirectoryOnly);
+                "*.SAV", SearchOption.AllDirectories);
 
-            string[] directories = Directory.GetDirectories(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY);
-
-            foreach (string dirPath in directories)
+            foreach (string filePath in files)
             {
-                string[] saveNames = Directory.GetFiles(dirPath, "*.SAV");
-                foreach (string file in saveNames)
-                {
-                    ParseSaveGame(file);
-                }
+                ParseSaveGame(filePath);
             }
 
             savedGames = savedGames.OrderBy(sg => sg.LastModified.Ticks).ToList();
@@ -490,6 +484,7 @@ namespace DTAClient.DXGUI.Generic
                 string[] item = new string[] {
                     Renderer.GetSafeString(sg.GUIName, lbSaveGameList.FontIndex),
                     sg.LastModified.ToString() };
+
                 lbSaveGameList.AddItem(item, true);
             }
 

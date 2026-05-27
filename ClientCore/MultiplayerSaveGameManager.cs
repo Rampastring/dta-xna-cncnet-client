@@ -22,7 +22,7 @@ namespace ClientCore
 
             for (int i = 0; i < 1000; i++)
             {
-                if (!File.Exists(saveGameDirectory + string.Format("SVGM_{0}.NET", i.ToString("D3"))))
+                if (!File.Exists(saveGameDirectory + ProgramConstants.MultiplayerSaveGameFileNameFromIndex(i)))
                 {
                     return i;
                 }
@@ -41,7 +41,7 @@ namespace ClientCore
 
             for (int i = 0; i < saveGameCount; i++)
             {
-                string sgPath = saveGameDirectory + string.Format("SVGM_{0}.NET", i.ToString("D3"));
+                string sgPath = saveGameDirectory + ProgramConstants.MultiplayerSaveGameFileNameFromIndex(i);
 
                 DateTime dt = File.GetLastWriteTime(sgPath);
 

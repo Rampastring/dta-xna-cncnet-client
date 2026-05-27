@@ -61,13 +61,6 @@ namespace DTAClient.Domain
                 PlaythroughID = GetIntFromCompoundFile(cf, "Playthrough ID");
                 PlayerSide = GetIntFromCompoundFile(cf, "Player Side");
                 ClientDifficulty = (DifficultyRank)GetIntFromCompoundFile(cf, "Client Difficulty");
-
-                string gflags = GetStringFromCompoundFile(cf, "Global Flags");
-                if (gflags.Length != GlobalFlags.Length)
-                {
-                    throw new Exception($"Unexpected Global Flags length in saved game. Expected: {GlobalFlags.Length}, actual: {gflags.Length}");
-                }
-
                 GlobalFlags = GetIntArrayFromCompoundFile(cf, "Global Flags");
                 IsCheatSession = GetBoolFromCompoundFile(cf, "Cheat Session");
                 BonusName = GetStringFromCompoundFile(cf, "Bonus Name");

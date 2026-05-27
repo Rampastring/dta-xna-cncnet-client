@@ -274,7 +274,7 @@ namespace DTAClient.DXGUI.Multiplayer
             IniFile spawnIni = new IniFile(ProgramConstants.GamePath + "spawn.ini");
 
             int sgIndex = (ddSavedGame.Items.Count - 1) - ddSavedGame.SelectedIndex;
-            string sgFileName = string.Format("SVGM_{0}.NET", sgIndex.ToString("D3"));
+            string sgFileName = ProgramConstants.MultiplayerSaveGameFileNameFromIndex(sgIndex);
 
             spawnIni.SetStringValue("Settings", "SaveGameName", sgFileName);
             spawnIni.SetBooleanValue("Settings", "LoadSaveGame", true);

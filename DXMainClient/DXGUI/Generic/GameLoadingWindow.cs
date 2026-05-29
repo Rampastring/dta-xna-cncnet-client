@@ -37,6 +37,7 @@ namespace DTAClient.DXGUI.Generic
         private XNALabel lblSessionTypeValue;
         private XNALabel lblMissionNameValue;
         private XNALabel lblDifficultyLevelValue;
+        private XNALabel lblTotalPlayTimeValue;
         private XNALabel lblGlobalFlagsValue;
 
         private List<SavedGame> savedGames = new List<SavedGame>();
@@ -136,10 +137,25 @@ namespace DTAClient.DXGUI.Generic
             lblDifficultyLevelValue.Text = " ";
             AddChild(lblDifficultyLevelValue);
 
+            var lblTotalPlayTime = new XNALabel(WindowManager);
+            lblTotalPlayTime.Name = nameof(lblTotalPlayTime);
+            lblTotalPlayTime.Y = lblDifficultyLevelValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblTotalPlayTime.X = lblSaveInfoHeader.X;
+            lblTotalPlayTime.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblTotalPlayTime.Text = "Play Time:";
+            AddChild(lblTotalPlayTime);
+
+            lblTotalPlayTimeValue = new XNALabel(WindowManager);
+            lblTotalPlayTimeValue.Name = nameof(lblTotalPlayTimeValue);
+            lblTotalPlayTimeValue.Y = lblTotalPlayTime.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            lblTotalPlayTimeValue.X = lblSaveInfoHeader.X;
+            lblTotalPlayTimeValue.Text = " ";
+            AddChild(lblTotalPlayTimeValue);
+
             var lblGlobalFlags = new XNALabel(WindowManager);
             lblGlobalFlags.Name = nameof(lblGlobalFlags);
             lblGlobalFlags.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
-            lblGlobalFlags.Y = lblDifficultyLevelValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblGlobalFlags.Y = lblTotalPlayTimeValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
             lblGlobalFlags.X = lblSaveInfoHeader.X;
             lblGlobalFlags.Text = "Preconditions:";
             AddChild(lblGlobalFlags);
@@ -182,7 +198,7 @@ namespace DTAClient.DXGUI.Generic
 
             if (sg.PlaythroughID < 0)
             {
-                ClearSaveInformation(string.Empty);
+                ClearSaveInformation("Unknown");
                 lblSessionTypeValue.Text = "Unknown";
                 return;
             }
@@ -244,6 +260,7 @@ namespace DTAClient.DXGUI.Generic
 
                         lblMissionNameValue.Text = mission.GUIName;
                         lblDifficultyLevelValue.Text = difficultyName;
+                        lblTotalPlayTimeValue.Text = Helpers.TimeSpanToUserFriendlyString(sg.ElapsedTime, true);
                         lblGlobalFlagsValue.Text = globalFlagInfo;
                     }
 
@@ -258,6 +275,7 @@ namespace DTAClient.DXGUI.Generic
             lblSessionTypeValue.Text = defaultText;
             lblMissionNameValue.Text = defaultText;
             lblDifficultyLevelValue.Text = defaultText;
+            lblTotalPlayTimeValue.Text = defaultText;
             lblGlobalFlagsValue.Text = defaultText;
         }
 

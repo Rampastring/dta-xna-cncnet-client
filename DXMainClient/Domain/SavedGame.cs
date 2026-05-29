@@ -33,6 +33,7 @@ namespace DTAClient.Domain
         public string GUIName { get; private set; }
         public string PlayerHouseName { get; private set; }
         public DateTime LastModified { get; private set; }
+        public TimeSpan ElapsedTime { get; private set; }
 
         public TSEngineGameType GameType { get; private set; }
 
@@ -57,6 +58,7 @@ namespace DTAClient.Domain
 
             try
             {
+                ElapsedTime = TimeSpan.FromSeconds(GetIntFromCompoundFile(cf, "Elapsed Time") / 60);
                 MissionInternalName = GetStringFromCompoundFile(cf, "Mission Internal Name");
                 PlaythroughID = GetIntFromCompoundFile(cf, "Playthrough ID");
                 PlayerSide = GetIntFromCompoundFile(cf, "Player Side");

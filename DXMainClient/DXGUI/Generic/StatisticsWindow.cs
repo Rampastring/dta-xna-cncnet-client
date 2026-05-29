@@ -969,7 +969,7 @@ namespace DTAClient.DXGUI.Generic
 
             totalTimePlayedString += timePlayed.Hours.ToString(CultureInfo.InvariantCulture) + " h " + timePlayed.Minutes.ToString("D2", CultureInfo.InvariantCulture) + " m";
 
-            lblTotalTimePlayedValue.Text = totalTimePlayedString;
+            lblTotalTimePlayedValue.Text = Helpers.TimeSpanToUserFriendlyString(timePlayed, false);
             lblTotalKillsValue.Text = totalKills.ToString();
             lblTotalLossesValue.Text = totalLosses.ToString();
             lblTotalScoreValue.Text = totalScore.ToString();

@@ -33,9 +33,7 @@ namespace DTAClient.Domain.Singleplayer
 
         public void WriteToIni(IniFile iniFile)
         {
-            Difficulty.ININame = ININame;
-
-            Difficulty.WriteToFile(iniFile, false);
+            Difficulty.WriteToFile(iniFile, ININame, false);
 
             var section = iniFile.GetSection(ININame);
             section.SetStringValue(nameof(UIName), UIName);

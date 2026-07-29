@@ -4,7 +4,7 @@ namespace DTAClient.Domain.Singleplayer
 {
     public class Difficulty
     {
-        public string ININame { get; set; } = "PlayerNormal";
+        public string ININame { get; set; }
 
         public double Groundspeed { get; set; } = 0.9;
         public double Airspeed { get; set; } = 1.0;
@@ -19,16 +19,16 @@ namespace DTAClient.Domain.Singleplayer
         public bool DestroyWalls { get; set; } = true;
         public bool ContentScan { get; set; } = true;
 
-        public void WriteToFile(IniFile iniFile, bool moveSectionToFirst = true)
+        public void WriteToFile(IniFile iniFile, string sectionName, bool moveSectionToFirst)
         {
-            var section = iniFile.GetSection(ININame);
-            if (section ==  null)
+            var section = iniFile.GetSection(sectionName);
+            if (section == null)
             {
-                section = new IniSection(ININame);
+                section = new IniSection(sectionName);
                 iniFile.AddSection(section);
 
                 if (moveSectionToFirst)
-                    iniFile.MoveSectionToFirst(ININame);
+                    iniFile.MoveSectionToFirst(sectionName);
             }
             
             section.SetDoubleValue(nameof(Groundspeed), Groundspeed);

@@ -233,7 +233,6 @@ namespace DTAClient.DXGUI.Generic
         private Mission missionToLaunch;
         private bool isCheater;
         private Dictionary<int, bool> globalFlagInfo;
-        private Difficulty bonusDifficulty;
         private string difficultyName;
 
         private bool hasMissionBeenSelected = false;
@@ -667,6 +666,12 @@ namespace DTAClient.DXGUI.Generic
             {
                 lblBonus.Enable();
                 btnBonus.Enable();
+
+                if (bonusSelectionWindow.SelectedBonus != null && bonusSelectionWindow.SelectedBonus.CampaignID != mission.BonusCampaignID)
+                {
+                    bonusSelectionWindow.SelectedBonus = null;
+                    RefreshBonusButtonText();
+                }
             }
             else
             {
@@ -1024,10 +1029,6 @@ namespace DTAClient.DXGUI.Generic
                 }
             }
 
-            bonusDifficulty = null;
-            if (missionToLaunch.BonusCampaignID != null && bonusSelectionWindow.SelectedBonus != null)
-                bonusDifficulty = bonusSelectionWindow.SelectedBonus.Difficulty;
-
             ((MainMenuDarkeningPanel)Parent).Hide();
 
             storyDisplay.Finished += LaunchMission_PostStoryDisplay;
@@ -1070,7 +1071,11 @@ namespace DTAClient.DXGUI.Generic
 
         private void LaunchMission_PostStoryDisplay(object sender, EventArgs e)
         {
-            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, TrackbarValueToDiffRank(), globalFlagInfo, bonusDifficulty, isCheater);
+            Bonus bonus = null;
+            if (missionToLaunch.BonusCampaignID != null && bonusSelectionWindow.SelectedBonus != null)
+                bonus = bonusSelectionWindow.SelectedBonus;
+
+            CampaignHandler.Instance.WriteFilesForMission(missionToLaunch, TrackbarValueToDiffRank(), globalFlagInfo, bonus, isCheater);
             difficultyName = missionToLaunch.GetNameForDifficultyRankStylized(TrackbarValueToDiffRank());
 
             UserINISettings.Instance.ClientDifficulty.Value = trbDifficultySelector.Value;

@@ -8,10 +8,8 @@ using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -331,15 +329,13 @@ namespace DTAClient.DXGUI.Generic
                 }
                 else
                 {
-                    Difficulty bonusDifficulty = null;
+                    Bonus bonus = null;
                     if (!string.IsNullOrWhiteSpace(sg.BonusName))
                     {
-                        var bonus = CampaignHandler.Instance.Bonuses.Find(t => t.ININame == sg.BonusName);
-                        if (bonus != null)
-                            bonusDifficulty = bonus.Difficulty;
+                        bonus = CampaignHandler.Instance.Bonuses.Find(t => t.ININame == sg.BonusName);
                     }
 
-                    CampaignHandler.Instance.WriteFilesForMission(mission, gameSessionInfo.Difficulty, gameSessionInfo.GlobalFlagValues, bonusDifficulty, gameSessionInfo.IsCheatSession);
+                    CampaignHandler.Instance.WriteFilesForMission(mission, gameSessionInfo.Difficulty, gameSessionInfo.GlobalFlagValues, bonus, gameSessionInfo.IsCheatSession);
                     writeNewSpawnIni = false;
                 }
             }

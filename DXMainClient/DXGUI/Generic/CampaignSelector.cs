@@ -176,7 +176,7 @@ namespace DTAClient.DXGUI.Generic
 
     public class CampaignSelector : XNAWindow
     {
-        private const int MAX_GLOBAL_COUNT = 4;
+        private const int MAX_GLOBAL_COUNT = 5;
 
         private const int DEFAULT_WIDTH = 720;
         private const int DEFAULT_HEIGHT = 700;

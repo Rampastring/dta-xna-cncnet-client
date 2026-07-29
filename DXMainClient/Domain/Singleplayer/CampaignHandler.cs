@@ -43,7 +43,7 @@ namespace DTAClient.Domain.Singleplayer
     /// </summary>
     public class CampaignHandler
     {
-        private const int GLOBAL_VARIABLE_MAX = 50;
+        private const int GLOBAL_VARIABLE_MAX = 500;
 
         private CampaignHandler()
         {

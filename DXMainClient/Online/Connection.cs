@@ -647,18 +647,25 @@ namespace DTAClient.Online
                     return;
                 }
 
+                const char ctcpDelimiter = '\u0001';
+                const string actionMarker = "\u0001ACTION";
+
                 switch (command)
                 {
                     case "NOTICE":
                         int noticeExclamIndex = prefix.IndexOf('!');
                         if (noticeExclamIndex > -1)
                         {
-                            if (parameters.Count > 1 && parameters[1][0] == 1)//Conversions.IntFromString(parameters[1].Substring(0, 1), -1) == 1)
+                            if (parameters.Count > 1 && parameters[1][0] == 1)
                             {
                                 // CTCP
                                 string channelName = parameters[0];
                                 string ctcpMessage = parameters[1];
-                                ctcpMessage = ctcpMessage.Remove(0, 1).Remove(ctcpMessage.Length - 2);
+                                ctcpMessage = ctcpMessage.Remove(0, 1);
+
+                                if (ctcpMessage[ctcpMessage.Length - 1] == ctcpDelimiter)
+                                    ctcpMessage = ctcpMessage.Remove(ctcpMessage.Length - 1);
+
                                 string ctcpSender = prefix.Substring(0, noticeExclamIndex);
                                 connectionManager.OnCTCPParsed(channelName, ctcpSender, ctcpMessage);
 
@@ -696,7 +703,7 @@ namespace DTAClient.Online
                         connectionManager.OnUserQuitIRC(qUserName);
                         break;
                     case "PRIVMSG":
-                        if (parameters.Count > 1 && Convert.ToInt32(parameters[1][0]) == 1 && !parameters[1].Contains("ACTION"))
+                        if (parameters.Count > 1 && parameters[1][0] == ctcpDelimiter && !parameters[1].StartsWith(actionMarker, StringComparison.OrdinalIgnoreCase))
                         {
                             goto case "NOTICE";
                         }
@@ -706,18 +713,20 @@ namespace DTAClient.Online
                         for (int pid = 0; pid < parameters.Count - 1; pid++)
                             recipients[pid] = parameters[pid];
                         string privmsg = parameters[parameters.Count - 1];
-                        if (parameters[1].StartsWith('\u0001'.ToString() + "ACTION"))
-                            privmsg = privmsg.Substring(1).Remove(privmsg.Length - 2);
+                        if (parameters[1].StartsWith(actionMarker, StringComparison.OrdinalIgnoreCase))
+                        {
+                            privmsg = privmsg.Substring(1);
+
+                            if (privmsg[privmsg.Length - 1] == ctcpDelimiter)
+                                privmsg = privmsg.Remove(privmsg.Length - 1);
+                        }
+
                         foreach (string recipient in recipients)
                         {
                             if (recipient.StartsWith("#"))
                                 connectionManager.OnChatMessageReceived(recipient, pmsgUserName, pmsgIdent, privmsg);
                             else if (recipient == ProgramConstants.PLAYERNAME)
                                 connectionManager.OnPrivateMessageReceived(pmsgUserName, privmsg);
-                            //else if (pmsgUserName == ProgramConstants.PLAYERNAME)
-                            //{
-                            //    DoPrivateMessageSent(privmsg, recipient);
-                            //}
                         }
                         break;
                     case "MODE":

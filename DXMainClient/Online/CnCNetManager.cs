@@ -317,17 +317,21 @@ namespace DTAClient.Online
             Color foreColor;
 
             // Handle ACTION
-            if (message.Contains("ACTION"))
+            if (message.Equals("ACTION", StringComparison.OrdinalIgnoreCase) || message.StartsWith("ACTION ", StringComparison.OrdinalIgnoreCase))
             {
-                message = message.Remove(0, 7);
-                message = "====> " + senderName + " " + message;
+                string action;
+
+                if (message.Length <= 7)
+                {
+                    action = "empty action";
+                }
+                else
+                {
+                    action = message.Remove(0, 7);
+                }
+
+                message = "====> " + senderName + " " + action;
                 senderName = String.Empty;
-
-                // Replace Funky's game identifiers with real game names
-                for (int i = 0; i < gameCollection.GameList.Count; i++)
-                    message = message.Replace("new " + gameCollection.GetGameIdentifierFromIndex(i) + " game",
-                        "new " + gameCollection.GetFullGameNameFromIndex(i) + " game");
-
                 foreColor = Color.White;
             }
             else
@@ -352,7 +356,9 @@ namespace DTAClient.Online
                     }
                 }
                 else
+                {
                     foreColor = cDefaultChatColor;
+                }
             }
 
             if (message.Length > 1 && message[message.Length - 1] == '\u001f')

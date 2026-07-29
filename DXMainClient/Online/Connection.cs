@@ -43,13 +43,10 @@ namespace DTAClient.Online
             new Server("Stockholm.SE.EU.GameSurge.net", "GameSurge Stockholm, Sweden", new int[5] { 6660, 6666, 6667, 6668, 6669 }),
             new Server("Prothid.NY.US.GameSurge.Net", "GameSurge NYC, NY", new int[7] { 5960, 6660, 6666, 6667, 6668, 6669, 6697 }),
             new Server("TAL.DE.EU.GameSurge.net", "GameSurge Wuppertal, Germany", new int[5] { 6660, 6666, 6667, 6668, 6669 }),
-            new Server("208.167.237.120", "GameSurge IP 208.167.237.120", new int[7] {  6660, 6666, 6667, 6668, 6669, 7000, 8080 }),
             new Server("192.223.27.109", "GameSurge IP 192.223.27.109", new int[7] {  6660, 6666, 6667, 6668, 6669, 7000, 8080 }),
-            new Server("108.174.48.100", "GameSurge IP 108.174.48.100", new int[7] { 6660, 6666, 6667, 6668, 6669, 7000, 8080 }),
             new Server("208.146.35.105", "GameSurge IP 208.146.35.105", new int[7] { 6660, 6666, 6667, 6668, 6669, 7000, 8080 }),
             new Server("188.240.145.60", "GameSurge IP 188.240.145.60", new int[7] { 6660, 6666, 6667, 6668, 6669, 7000, 8080 }),
             new Server("91.217.189.76", "GameSurge IP 91.217.189.76", new int[7] { 6660, 6666, 6667, 6668, 6669, 7000, 8080 }),
-            new Server("195.68.206.250", "GameSurge IP 195.68.206.250", new int[7] { 6660, 6666, 6667, 6668, 6669, 7000, 8080 }),
             new Server("irc.gamesurge.net", "GameSurge", new int[1] { 6667 }),
         }.AsReadOnly();
 

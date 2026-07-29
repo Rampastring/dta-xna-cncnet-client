@@ -617,7 +617,7 @@ namespace DTAConfig.OptionPanels
                 lblGameCompatibilityFix.Right + 20,
                 lblGameCompatibilityFix.Y - 4, 133, 23);
             btnGameCompatibilityFix.FontIndex = 1;
-            btnGameCompatibilityFix.Text = "Enable";
+            btnGameCompatibilityFix.Text = "Disable";
             btnGameCompatibilityFix.LeftClick += BtnGameCompatibilityFix_LeftClick;
 
             lblMapEditorCompatibilityFix = new XNALabel(WindowManager);
@@ -635,7 +635,7 @@ namespace DTAConfig.OptionPanels
                 btnGameCompatibilityFix.Width,
                 btnGameCompatibilityFix.Height);
             btnMapEditorCompatibilityFix.FontIndex = 1;
-            btnMapEditorCompatibilityFix.Text = "Enable";
+            btnMapEditorCompatibilityFix.Text = "Disable";
             btnMapEditorCompatibilityFix.LeftClick += BtnMapEditorCompatibilityFix_LeftClick;
 
             AddChild(lblGameCompatibilityFix);
@@ -653,7 +653,6 @@ namespace DTAConfig.OptionPanels
                 if (tsCompatFixString == "Yes")
                 {
                     GameCompatFixInstalled = true;
-                    btnGameCompatibilityFix.Text = "Disable";
                 }
 
                 object fsCompatFixValue = regKey.GetValue("FSCompatFixInstalled", "No");
@@ -662,7 +661,6 @@ namespace DTAConfig.OptionPanels
                 if (fsCompatFixString == "Yes")
                 {
                     FinalSunCompatFixInstalled = true;
-                    btnMapEditorCompatibilityFix.Text = "Disable";
                 }
             }
 
@@ -672,13 +670,17 @@ namespace DTAConfig.OptionPanels
             {
                 lblMapEditorCompatibilityFix.Disable();
                 btnMapEditorCompatibilityFix.Disable();
+            }
 
-                if (!GameCompatFixInstalled)
-                {
-                    lblGameCompatibilityFix.Disable();
-                    btnGameCompatibilityFix.Disable();
-                    lblCompatibilityFixes.Disable();
-                }
+            if (!GameCompatFixInstalled)
+            {
+                lblGameCompatibilityFix.Disable();
+                btnGameCompatibilityFix.Disable();
+            }
+
+            if (!FinalSunCompatFixInstalled && !GameCompatFixInstalled)
+            {
+                lblCompatibilityFixes.Disable();
             }
         }
 

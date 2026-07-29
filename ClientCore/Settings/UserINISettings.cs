@@ -72,7 +72,6 @@ namespace ClientCore
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
             StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
             MessageSound = new BoolSetting(iniFile, AUDIO, "ChatMessageSound", true);
-            DisableScoreScreenAudio = new BoolSetting(iniFile, AUDIO, "DisableScoreScreenAudio", true);
 
             ScrollRate = new IntSetting(iniFile, OPTIONS, "ScrollRate", 3);
             TargetLines = new BoolSetting(iniFile, OPTIONS, "UnitActionLines", true);
@@ -198,7 +197,6 @@ namespace ClientCore
         public BoolSetting PlayMainMenuMusic { get; private set; }
         public BoolSetting StopMusicOnMenu { get; private set; }
         public BoolSetting MessageSound { get; private set; }
-        public BoolSetting DisableScoreScreenAudio { get; private set; }
 
         /***********/
         /* OPTIONS */

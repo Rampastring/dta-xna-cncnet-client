@@ -1216,8 +1216,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I've heard about your work in Brasov - what strife you've sown among the enemies of Kane! A pleasure to meet you - I am General Korkut.";
-                    storyDisplay.HeaderDisplay.Text = "KORKUT";
-                    assets.bleep11.Play();
                 },
                 null,
                 null,
@@ -2917,13 +2915,22 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11,
                 storyDisplay =>
                 {
-                    storyDisplay.ConversationDisplay.ConversationText = "We're not going to break that blockade with a flotilla of small boats and a few barely functional prototypes, Commander. We need an edge. Luckily, I know just where to find it.";
+                    storyDisplay.ConversationDisplay.ConversationText = "We're not going to break that blockade with a flotilla of small boats and a few barely functional prototypes, Commander. We need an edge.";
                 },
                 null,
                 null,
                 null));
 
             phases.Add(new Phase(12,
+                storyDisplay =>
+                {
+                    storyDisplay.ConversationDisplay.ConversationText = "Luckily, I know just where to find it.";
+                },
+                null,
+                null,
+                null));
+
+            phases.Add(new Phase(13,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/smallsub.png", 53);
@@ -2933,7 +2940,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new Phase(14,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE08/small4.png", 54);
@@ -2943,7 +2950,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new Phase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Any part of the city that gets in your way is expendable.";
@@ -2952,7 +2959,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new Phase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Once you have the location of the submarine base, I'll send a second team to you, including an... interesting asset R&D just spit out. Use that team to capture the submarines from drydock.";
@@ -2961,7 +2968,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new Phase(17,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE08/small5.png", 55);
@@ -2971,7 +2978,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new Phase(18,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I don't know if that sub is still there or what shape it might be in, but it could be a very valuable asset to us. Be on the lookout for it.";
@@ -2984,7 +2991,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(18,
+            phases.Add(new Phase(19,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "While the Russian government has been nominally aligned with GDI, political instability at home has largely kept their hands full.";
@@ -2997,7 +3004,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(19,
+            phases.Add(new Phase(20,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "They won't be expecting your attack - you should have the element of surprise.";
@@ -3007,7 +3014,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null));
             ;
 
-            phases.Add(new Phase(20,
+            phases.Add(new Phase(21,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I have to admit I didn't think much of you at first Commander, but you continue to surprise me. It seems like it might be time to discuss soon what might lie ahead for you and I.";
@@ -3016,7 +3023,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(21,
+            phases.Add(new Phase(22,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But that talk can wait until you bring back those subs. I'm counting on you. Don't screw this up.";
@@ -3025,7 +3032,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(55); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(22,
+            phases.Add(new Phase(23,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();

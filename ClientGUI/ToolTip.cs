@@ -24,6 +24,7 @@ namespace ClientGUI
         public ToolTip(WindowManager windowManager, XNAControl masterControl) : base(windowManager)
         {
             this.masterControl = masterControl ?? throw new ArgumentNullException("masterControl");
+            Name = masterControl.Name + "ToolTip";
             masterControl.MouseEnter += MasterControl_MouseEnter;
             masterControl.MouseLeave += MasterControl_MouseLeave;
             masterControl.MouseMove += MasterControl_MouseMove;

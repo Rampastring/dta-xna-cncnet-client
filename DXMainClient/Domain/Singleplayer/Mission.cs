@@ -14,9 +14,24 @@ namespace DTAClient.Domain.Singleplayer
         private const int DifficultyLabelCount = 3;
         private const int ExtendedDifficultyLabelCount = 4;
 
-        public Mission(IniSection iniSection, bool isCampaignMission, int index)
+        public Mission(string internalName, string scenario, string description, bool requiredAddOn, int side, string bonusCampaignId, string iconPath, bool requiresUnlocking, string previewImagePath, bool playerAlwaysOnNormalDifficulty, string author, string briefing)
         {
-            Index = index;
+            InternalName = internalName;
+            Scenario = scenario;
+            GUIName = description;
+            RequiredAddon = requiredAddOn;
+            Side = side;
+            BonusCampaignID = bonusCampaignId;
+            IconPath = iconPath;
+            RequiresUnlocking = requiresUnlocking;
+            PreviewImagePath = previewImagePath;
+            PlayerAlwaysOnNormalDifficulty = playerAlwaysOnNormalDifficulty;
+            Author = author;
+            GUIDescription = briefing;
+        }
+
+        public Mission(IniSection iniSection, bool isCampaignMission)
+        {
             InternalName = iniSection.SectionName;
             Side = iniSection.GetIntValue(nameof(Side), 0);
             Scenario = iniSection.GetStringValue(nameof(Scenario), string.Empty);
@@ -84,6 +99,21 @@ namespace DTAClient.Domain.Singleplayer
                 i++;
             }
 
+            // Parse bonus-dependent mission unlocks
+            i = 0;
+            while (true)
+            {
+                string bonusDependentMissionUnlockData = iniSection.GetStringValue("BonusDependentMissionUnlock" + i, null);
+                if (string.IsNullOrWhiteSpace(bonusDependentMissionUnlockData))
+                    break;
+
+                var bonusDependentMissionUnlock = BonusDependentMissionUnlock.FromString(bonusDependentMissionUnlockData);
+                if (bonusDependentMissionUnlock != null)
+                    BonusDependentMissionUnlocks.Add(bonusDependentMissionUnlock);
+
+                i++;
+            }
+
             // Parse global-specific INI values
             i = 0;
             while (true)
@@ -99,10 +129,8 @@ namespace DTAClient.Domain.Singleplayer
             }
 
             GUIDescription = GUIDescription.Replace("@", Environment.NewLine);
-            Index = index;
         }
 
-        public int Index { get; }
         public string InternalName { get; }
         public int Side { get; }
         public string Scenario { get; }
@@ -141,7 +169,7 @@ namespace DTAClient.Domain.Singleplayer
         /// Should the player be given a warning when starting 
         /// this mission on Hard if they haven't beat the mission on Medium first?
         /// </summary>
-        public bool WarnOnHardWithoutMediumPlayed { get; } = false;
+        public bool WarnOnHardWithoutMediumPlayed { get; }
 
         /// <summary>
         /// Determines which bonuses, if any, are available in this campaign.
@@ -170,25 +198,27 @@ namespace DTAClient.Domain.Singleplayer
         /// The internal names of missions that winning this mission unlocks
         /// directly.
         /// </summary>
-        public string[] UnlockMissions { get; private set; }
+        public string[] UnlockMissions { get; private set; } = Array.Empty<string>();
 
         public List<ConditionalMissionUnlock> ConditionalMissionUnlocks { get; } = new List<ConditionalMissionUnlock>(0);
+
+        public List<BonusDependentMissionUnlock> BonusDependentMissionUnlocks { get; } = new List<BonusDependentMissionUnlock>(0);
 
         /// <summary>
         /// The global variables that this mission utilizes.
         /// </summary>
-        public string[] UsedGlobalVariables { get; private set; }
+        public string[] UsedGlobalVariables { get; private set; } = Array.Empty<string>();
 
         /// <summary>
         /// The global variables that winning this mission unlocks.
         /// </summary>
-        public string[] UnlockGlobalVariables { get; private set; }
+        public string[] UnlockGlobalVariables { get; private set; } = Array.Empty<string>();
 
         /// <summary>
         /// Specifies an invalid global configuration. The user is unable to launch
         /// the mission if all of the globals specified in this array are enabled.
         /// </summary>
-        public string[] InvalidGlobalCombination { get; private set; }
+        public string[] InvalidGlobalCombination { get; private set; } = Array.Empty<string>();
 
         /// <summary>
         /// List of INI values that the client should write to the map file when

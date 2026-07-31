@@ -521,6 +521,7 @@ namespace DTAClient.DXGUI.Generic
             var followList = new List<string>();
             Array.ForEach(e.Mission.UnlockMissions, unlockedMissionName => followList.Add(unlockedMissionName));
             e.Mission.ConditionalMissionUnlocks.ForEach(c => followList.Add(c.UnlockMissionName));
+            e.Mission.BonusDependentMissionUnlocks.ForEach(u => followList.Add(u.UnlockMissionName));
 
             if (nextMission == null)
             {
@@ -1089,7 +1090,8 @@ namespace DTAClient.DXGUI.Generic
                 missionToLaunch.Side,
                 TrackbarValueToDiffRank(),
                 globalFlagInfo,
-                isCheater);
+                isCheater,
+                bonus?.ININame);
 
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
             GameProcessLogic.StartGameProcess();
@@ -1114,7 +1116,7 @@ namespace DTAClient.DXGUI.Generic
         {
             lbCampaignList.Clear();
 
-            CampaignHandler.Instance.BattleList.ForEach(mission =>
+            CampaignHandler.Instance.Missions.ForEach(mission =>
             {
                 XNAListBoxItem item = new XNAListBoxItem();
                 item.Tag = mission;

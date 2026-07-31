@@ -52,6 +52,15 @@ namespace DTAClient.Domain.Singleplayer
             ReadBattleIni("INI/Battle.ini");
             ReadBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
 
+            int se11Index = Missions.FindIndex(m => m.InternalName == "M_SE11");
+            if (se11Index > -1)
+            {
+                var seExt = new Mission("M_SEEXT", "Maps/Missions/SEEXT.MAP", "Exhaustion Mission: Full Frontal Attack",
+                    true, 1, "SE", "nodicon.png", true, "Story/SE/preview.png", true, "Rampastring", "TBD");
+                Missions[se11Index].BonusDependentMissionUnlocks.Add(new BonusDependentMissionUnlock("M_SEEXT", "Exhausted"));
+                Missions.Insert(se11Index + 1, seExt);
+            }
+
             SanityCheckCampaigns();
 
             MissionRankHandler.LoadData(Missions, GlobalVariables, Bonuses);
@@ -72,11 +81,6 @@ namespace DTAClient.Domain.Singleplayer
         /// A list of all missions in the entire game.
         /// </summary>
         public List<Mission> Missions = new List<Mission>();
-
-        /// <summary>
-        /// The combined mission and campaign list to be displayed in the main campaign selector menu.
-        /// </summary>
-        public List<Mission> BattleList = new List<Mission>();
 
         /// <summary>
         /// Singleton pattern. We only need one instance of this class.
@@ -227,11 +231,31 @@ namespace DTAClient.Domain.Singleplayer
         }
 
         /// <summary>
-        /// Verifies that all mission and global variable 
-        /// references point to valid missions and global variables.
+        /// Verifies that mission progression references point to
+        /// valid missions, global variables, and bonuses.
         /// </summary>
         private void SanityCheckCampaigns()
         {
+            foreach (var mission in Missions)
+            {
+                Array.ForEach(mission.UnlockMissions, VerifyMissionExists);
+                Array.ForEach(mission.UsedGlobalVariables, VerifyGlobalVariableExists);
+                Array.ForEach(mission.UnlockGlobalVariables, VerifyGlobalVariableExists);
+
+                mission.ConditionalMissionUnlocks.ForEach(conditionalMissionUnlock =>
+                {
+                    VerifyMissionExists(conditionalMissionUnlock.UnlockMissionName);
+                    conditionalMissionUnlock.PrerequisiteGlobalVariableStates.ForEach(
+                        globalVariableCondition => VerifyGlobalVariableExists(globalVariableCondition.GlobalVariableName));
+                });
+
+                mission.BonusDependentMissionUnlocks.ForEach(bonusDependentMissionUnlock =>
+                {
+                    VerifyMissionExists(bonusDependentMissionUnlock.UnlockMissionName);
+                    VerifyBonusExists(bonusDependentMissionUnlock.BonusName);
+                });
+            }
+
             foreach (var bonus in Bonuses)
             {
                 if (bonus.UnlockFromMission != null && !Missions.Exists(m => m.InternalName == bonus.UnlockFromMission))
@@ -245,10 +269,7 @@ namespace DTAClient.Domain.Singleplayer
         {
             if (!Missions.Exists(m => m.InternalName == missionName))
             {
-                throw new CampaignConfigException($"Reference to singleplayer campaign mission '{missionName}' defined, " +
-                    $"but the mission itself does not exist. Check the INI/Campaigns.ini file for mistakes." +
-                    Environment.NewLine + Environment.NewLine +
-                    $"If you are an end-user, please delete the INI/Campaigns.ini file and start the client then, or contact the game/mod authors for support.");
+                MessageBox.Show($"Reference to singleplayer campaign mission '{missionName}' defined, but the mission itself does not exist!", "Mission Configuration Error");
             }
         }
 
@@ -256,10 +277,15 @@ namespace DTAClient.Domain.Singleplayer
         {
             if (!GlobalVariables.Exists(m => m.InternalName == globalVariableName))
             {
-                throw new CampaignConfigException($"Reference to global variable '{globalVariableName}' defined, " +
-                    $"but the global variable itself does not exist. Check the INI/Campaigns.ini file for mistakes." +
-                    Environment.NewLine + Environment.NewLine + 
-                    $"If you are an end-user, please delete the INI/Campaigns.ini file and start the client then, or contact the game/mod authors for support.");
+                MessageBox.Show($"Reference to global variable '{globalVariableName}' defined, but the global variable itself does not exist!", "Global Variable Configuration Error");
+            }
+        }
+
+        private void VerifyBonusExists(string bonusName)
+        {
+            if (!Bonuses.Exists(b => b.ININame == bonusName))
+            {
+                MessageBox.Show($"Reference to bonus '{bonusName}' defined, but the bonus itself does not exist!", "Bonus Configuration Error");
             }
         }
 
@@ -290,9 +316,7 @@ namespace DTAClient.Domain.Singleplayer
 
                 IniSection section = battleIni.GetSection(battleSection);
 
-                var mission = new Mission(section, false, i);
-
-                BattleList.Add(mission);
+                var mission = new Mission(section, false);
 
                 if (Missions.Exists(m => m.InternalName == mission.InternalName && !string.IsNullOrWhiteSpace(m.Scenario)))
                     throw new CampaignConfigException("Mission named " + mission.InternalName + " exists multiple times! (Maybe it exists in both " + path + " and Campaigns.ini?)");
@@ -596,6 +620,27 @@ namespace DTAClient.Domain.Singleplayer
                         unlockedMissions.Add(otherMission);
                         Logger.Log("Unlocked conditional mission " + mission.InternalName);
                     }
+                }
+            }
+
+            Logger.Log("Finding and unlocking bonus-dependent missions related to " + mission.InternalName);
+            foreach (var bonusDependentMissionUnlock in mission.BonusDependentMissionUnlocks)
+            {
+                if (bonusDependentMissionUnlock.BonusName != sessionInfo.BonusName)
+                    continue;
+
+                Mission otherMission = Missions.Find(m => m.InternalName == bonusDependentMissionUnlock.UnlockMissionName);
+                if (otherMission == null)
+                {
+                    Logger.Log("FAILED to unlock bonus-dependent mission " + bonusDependentMissionUnlock.UnlockMissionName + " because it was not found!");
+                    continue;
+                }
+
+                if (!otherMission.IsUnlocked)
+                {
+                    otherMission.IsUnlocked = true;
+                    unlockedMissions.Add(otherMission);
+                    Logger.Log("Unlocked bonus-dependent mission " + otherMission.InternalName);
                 }
             }
 

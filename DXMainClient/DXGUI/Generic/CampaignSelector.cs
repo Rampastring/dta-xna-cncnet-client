@@ -49,13 +49,7 @@ namespace DTAClient.DXGUI.Generic
 
             base.Initialize();
 
-            RankTextures = new Texture2D[]
-            {
-                AssetLoader.LoadTexture("rankEasy.png"),
-                AssetLoader.LoadTexture("rankHard.png"),
-                AssetLoader.LoadTexture("rankBrutal.png"),
-                AssetLoader.LoadTexture("rankExtreme.png"),
-            };
+            RankTextures = MainClientConstants.SingleplayerRankTextureNames.Select(s => AssetLoader.LoadTexture(s)).ToArray();
 
             EnableScrollbar = true;
         }

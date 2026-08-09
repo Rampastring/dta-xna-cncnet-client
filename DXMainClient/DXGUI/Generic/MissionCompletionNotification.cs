@@ -1,11 +1,13 @@
 ﻿using ClientCore;
 using ClientGUI;
+using DTAClient.Domain;
 using DTAClient.Domain.Singleplayer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
+using System.Linq;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -41,13 +43,7 @@ namespace DTAClient.DXGUI.Generic
             BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 196), 2, 2);
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
-            rankTextures = new Texture2D[]
-            {
-                AssetLoader.LoadTexture("rankEasy.png"),
-                AssetLoader.LoadTexture("rankNormal.png"),
-                AssetLoader.LoadTexture("rankHard.png"),
-                AssetLoader.LoadTexture("rankBrutal.png"),
-            };
+            rankTextures = MainClientConstants.SingleplayerRankTextureNames.Select(s => AssetLoader.LoadTexture(s)).ToArray();
 
             Width = 300;
             Height = 70;

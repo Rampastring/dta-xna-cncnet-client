@@ -1,7 +1,4 @@
 ﻿using ClientCore;
-using System;
-using System.IO;
-using System.Windows.Forms;
 
 namespace DTAClient.Domain
 {
@@ -20,6 +17,11 @@ namespace DTAClient.Domain
         public static int MAP_CELL_SIZE_Y = 24;
 
         public static OSVersion OSId = OSVersion.UNKNOWN;
+
+        public static string[] SingleplayerRankTextureNames = new string[]
+        {
+            "rankEasy.png", "rankHard.png", "rankBrutal.png", "rankExtreme.png"
+        };
 
         public static void Initialize()
         {

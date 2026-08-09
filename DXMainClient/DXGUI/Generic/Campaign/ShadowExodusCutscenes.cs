@@ -4047,7 +4047,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             var phases = new List<Phase>();
             var vassalsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_MAJORITY_NOD_VASSALS_ALIVE");
-            var blueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_ALL_BLUEPRINTS");
+            var mamBlueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_MAMMOTH_BLUEPRINTS");
+            var enfBlueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_ENFORCER_BLUEPRINTS");
+            var behBlueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_BEHEMOTH_BLUEPRINTS");
 
             phases.Add(new Phase(1,
                 storyDisplay =>
@@ -4410,7 +4412,9 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            if (blueprintsVariable != null && blueprintsVariable.EnabledThroughPreviousScenario)
+            if ((mamBlueprintsVariable != null && mamBlueprintsVariable.EnabledThroughPreviousScenario) &&
+                (enfBlueprintsVariable != null && enfBlueprintsVariable.EnabledThroughPreviousScenario) &&
+                (behBlueprintsVariable != null && behBlueprintsVariable.EnabledThroughPreviousScenario))
             {
                 phases.Add(new Phase(35,
                     storyDisplay =>

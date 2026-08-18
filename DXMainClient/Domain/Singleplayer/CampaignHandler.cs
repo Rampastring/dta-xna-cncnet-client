@@ -55,8 +55,9 @@ namespace DTAClient.Domain.Singleplayer
             int se11Index = Missions.FindIndex(m => m.InternalName == "M_SE11");
             if (se11Index > -1)
             {
+                string longDescription = "You've been sent to direct a full frontal attack against the Pentagon, the iconic headquarters of the United States Department of Defense.\r\n\r\nAs your forces are moving across the Atlantic ocean, the operation seems extremely reckless, with limited military value.\r\n\r\nRegardless, orders are orders.\r\n\r\n\r\nObjective: Destroy the Pentagon.";
                 var seExt = new Mission("M_SEEXT", "Maps/Missions/SEEXT.MAP", "Exhaustion Mission: Full Frontal Attack",
-                    true, 1, "SE", "nodicon.png", true, "Story/SE/preview.png", true, "Rampastring", "TBD");
+                    true, 1, "SE", "nodicon.png", true, "Story/SE/preview.png", true, "Rampastring", longDescription, new string[] { "HARD", "BRUTAL", "EXTREME" });
                 Missions[se11Index].BonusDependentMissionUnlocks.Add(new BonusDependentMissionUnlock("M_SEEXT", "Exhausted"));
                 Missions.Insert(se11Index + 1, seExt);
             }

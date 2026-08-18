@@ -18,11 +18,6 @@ namespace DTAClient.Domain
 
         public static OSVersion OSId = OSVersion.UNKNOWN;
 
-        public static string[] SingleplayerRankTextureNames = new string[]
-        {
-            "rankEasy.png", "rankHard.png", "rankBrutal.png", "rankExtreme.png"
-        };
-
         public static void Initialize()
         {
             var clientConfiguration = ClientConfiguration.Instance;

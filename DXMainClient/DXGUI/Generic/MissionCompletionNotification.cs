@@ -43,8 +43,6 @@ namespace DTAClient.DXGUI.Generic
             BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 196), 2, 2);
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
-            rankTextures = MainClientConstants.SingleplayerRankTextureNames.Select(s => AssetLoader.LoadTexture(s)).ToArray();
-
             Width = 300;
             Height = 70;
             Y = 200;

@@ -27,6 +27,8 @@ namespace DTAClient.DXGUI.Generic
         {
         }
 
+        private static string[] defaultTextures = { "rankEasy.png", "rankHard.png", "rankBrutal.png", "rankUltimate.png" };
+
         public Texture2D[] RankTextures;
 
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
@@ -47,9 +49,9 @@ namespace DTAClient.DXGUI.Generic
         {
             EnableScrollbar = true;
 
-            base.Initialize();
+            RankTextures = defaultTextures.Select(s => AssetLoader.LoadTexture(s)).ToArray();
 
-            RankTextures = MainClientConstants.SingleplayerRankTextureNames.Select(s => AssetLoader.LoadTexture(s)).ToArray();
+            base.Initialize();
 
             EnableScrollbar = true;
         }

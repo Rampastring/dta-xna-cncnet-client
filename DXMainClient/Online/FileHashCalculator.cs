@@ -15,19 +15,7 @@ namespace DTAClient.Online
         private const string CONFIGNAME = "FHCConfig.ini";
         private bool calculateGameExeHash = true;
 
-        string[] fileNamesToCheck = new string[]
-        {
-            "rules.ini",
-            "ai.ini",
-            "art.ini",
-            "shroud.shp",
-            "INI/Base/Rules.ini",
-            "INI/Base/Enhance.ini",
-            "INI/Base/Art.ini",
-            "INI/ArtE.ini",
-            "INI/Base/AI.ini",
-            "INI/Base/AIE.ini",
-        };
+        private string[] fileNamesToCheck = Array.Empty<string>();
 
         public FileHashCalculator() => ParseConfigFile();
 
@@ -92,7 +80,7 @@ namespace DTAClient.Online
             fh.INIHashes = Utilities.CalculateSHA1ForString(fh.INIHashes);
         }
 
-        string AddToStringIfFileExists(string str, string path)
+        private string AddToStringIfFileExists(string str, string path)
         {
             if (File.Exists(path))
                 return str + Utilities.CalculateSHA1ForFile(ProgramConstants.GamePath + path);

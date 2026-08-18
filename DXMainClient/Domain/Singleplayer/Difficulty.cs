@@ -12,7 +12,7 @@ namespace DTAClient.Domain.Singleplayer
         public double Armor { get; set; } = 1.0;
         public double ROF { get; set; } = 0.91;
         public double Cost { get; set; } = 1.0;
-        public double Firepower { get; set; } = 1.0;
+        public double FirePower { get; set; } = 1.0;
         public double RepairDelay { get; set; } = .02;
         public double BuildDelay { get; set; } = .03;
         public bool BuildSlowdown { get; set; } = true;
@@ -37,7 +37,7 @@ namespace DTAClient.Domain.Singleplayer
             section.SetDoubleValue(nameof(Armor), Armor);
             section.SetDoubleValue(nameof(ROF), ROF);
             section.SetDoubleValue(nameof(Cost), Cost);
-            section.SetDoubleValue(nameof(Firepower), Firepower);
+            section.SetDoubleValue(nameof(FirePower), FirePower);
             section.SetDoubleValue(nameof(RepairDelay), RepairDelay);
             section.SetDoubleValue(nameof(BuildDelay), BuildDelay);
             section.SetBooleanValue(nameof(BuildSlowdown), BuildSlowdown);
@@ -53,7 +53,7 @@ namespace DTAClient.Domain.Singleplayer
             Armor = iniSection.GetDoubleValue(nameof(Armor), Armor);
             ROF = iniSection.GetDoubleValue(nameof(ROF), ROF);
             Cost = iniSection.GetDoubleValue(nameof(Cost), Cost);
-            Firepower = iniSection.GetDoubleValue(nameof(Firepower), Firepower);
+            FirePower = iniSection.GetDoubleValue(nameof(FirePower), FirePower);
             RepairDelay = iniSection.GetDoubleValue(nameof(RepairDelay), RepairDelay);
             BuildDelay = iniSection.GetDoubleValue(nameof(BuildDelay), BuildDelay);
             BuildSlowdown = iniSection.GetBooleanValue(nameof(BuildSlowdown), BuildSlowdown);

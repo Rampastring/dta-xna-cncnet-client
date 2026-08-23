@@ -58,6 +58,7 @@ namespace DTAClient.Domain.Singleplayer
             MusicRecommended = iniSection.GetBooleanValue(nameof(MusicRecommended), MusicRecommended);
             BonusCampaignID = iniSection.GetStringValue(nameof(BonusCampaignID), BonusCampaignID);
             HasExtendedDifficulty = iniSection.GetBooleanValue(nameof(HasExtendedDifficulty), HasExtendedDifficulty);
+            Categories = iniSection.GetListValue(nameof(Categories), ',', c => c);
 
             if (Enum.TryParse(iniSection.GetStringValue(nameof(StartCutscene), Cutscene.None.ToString()), out Cutscene startCutscene))
                 StartCutscene = startCutscene;
@@ -230,6 +231,7 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public List<GlobalSpecificINIValue> GlobalSpecificINIValues { get; } = new List<GlobalSpecificINIValue>(0);
 
+        public List<string> Categories { get; set; } = new List<string>();
 
         private int DifficultyRankToIndex(DifficultyRank rank)
         {

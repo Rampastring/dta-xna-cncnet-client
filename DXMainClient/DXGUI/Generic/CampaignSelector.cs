@@ -174,7 +174,7 @@ namespace DTAClient.DXGUI.Generic
     {
         private const int MAX_GLOBAL_COUNT = 5;
 
-        private const int DEFAULT_WIDTH = 720;
+        private const int DEFAULT_WIDTH = 890;
         private const int DEFAULT_HEIGHT = 700;
 
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
@@ -211,6 +211,7 @@ namespace DTAClient.DXGUI.Generic
         private BonusSelectionWindow bonusSelectionWindow;
 
         private MissionCompletionNotification missionCompletionNotification;
+        private Category currentCategory;
 
         private readonly string[] filesToCheck = new string[]
         {
@@ -243,17 +244,66 @@ namespace DTAClient.DXGUI.Generic
 
             Name = "CampaignSelector";
 
+            var lblCategory = new XNALabel(WindowManager);
+            lblCategory.Name = "lblcategory";
+            lblCategory.FontIndex = 1;
+            lblCategory.ClientRectangle = new Rectangle(12, 12, 0, 0);
+            lblCategory.Text = "CATEGORIES:";
+
+            int categoryPanelY = lblCategory.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            for (int i = 0; i < CampaignHandler.Instance.Categories.Count; i++)
+            {
+                int width = 150;
+                int height = 80;
+
+                if (i > 0)
+                {
+                    var divider = new XNAPanel(WindowManager);
+                    divider.X = lblCategory.X;
+                    divider.Y = categoryPanelY + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+                    divider.Width = width;
+                    divider.Height = 0;
+                }
+
+                var category = CampaignHandler.Instance.Categories[i];
+
+                var categoryPanel = new XNAPanel(WindowManager);
+                categoryPanel.Name = category.IniName;
+                categoryPanel.Tag = category;
+                categoryPanel.X = lblCategory.X;
+                categoryPanel.Y = categoryPanelY;
+                categoryPanel.Width = width;
+                categoryPanel.Height = height;
+                categoryPanel.BackgroundTexture = AssetLoader.LoadTextureUncached(category.ImagePath);
+                categoryPanel.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.CENTERED;
+                categoryPanel.MouseEnter += CategoryPanel_MouseEnter;
+                categoryPanel.MouseLeave += CategoryPanel_MouseLeave;
+                categoryPanel.LeftClick += CategoryPanel_LeftClick;                
+
+                AddChild(categoryPanel);
+
+                if (!string.IsNullOrEmpty(category.DisplayName))
+                {
+                    var tooltip = new ToolTip(WindowManager, categoryPanel);
+                    tooltip.Text = category.DisplayName;
+                }
+
+                categoryPanelY += height + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            }
+
             var lblSelectCampaign = new XNALabel(WindowManager);
             lblSelectCampaign.Name = "lblSelectCampaign";
             lblSelectCampaign.FontIndex = 1;
             lblSelectCampaign.ClientRectangle = new Rectangle(12, 12, 0, 0);
             lblSelectCampaign.Text = "MISSIONS:";
+            lblSelectCampaign.X = 180 + UIDesignConstants.EMPTY_SPACE_SIDES * 2;
+            lblSelectCampaign.Y = UIDesignConstants.EMPTY_SPACE_TOP * 2;
 
             lbCampaignList = new BattleListBox(WindowManager);
             lbCampaignList.Name = "lbCampaignList";
             lbCampaignList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 2, 2);
             lbCampaignList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            lbCampaignList.X = UIDesignConstants.EMPTY_SPACE_SIDES * 2;
+            lbCampaignList.X = lblSelectCampaign.X;
             lbCampaignList.Y = lblSelectCampaign.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             lbCampaignList.Width = 300;
             lbCampaignList.Height = Height - 200 - lbCampaignList.Y - (UIDesignConstants.CONTROL_VERTICAL_MARGIN * 4);
@@ -415,6 +465,7 @@ namespace DTAClient.DXGUI.Generic
 
             PreconditionUIConfig(null);
 
+            AddChild(lblCategory);
             AddChild(lblSelectCampaign);
             AddChild(lblMissionDescriptionHeader);
             AddChild(lbCampaignList);
@@ -634,6 +685,11 @@ namespace DTAClient.DXGUI.Generic
 
         private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            RefreshSelectedMission();
+        }
+
+        private void RefreshSelectedMission()
+        {
             var mission = lbCampaignList.SelectedItem != null ? lbCampaignList.SelectedItem.Tag as Mission : null;
 
             ConfigureDifficultySelectorForMission(mission);
@@ -700,6 +756,16 @@ namespace DTAClient.DXGUI.Generic
             }
 
             btnLaunch.AllowClick = true;
+        }
+
+        private void CategoryPanel_LeftClick(object sender, EventArgs e)
+        {
+            var categoryPanel = sender as XNAPanel;
+            currentCategory = categoryPanel.Tag as Category;
+
+            ListBattles();
+            lbCampaignList.SelectedIndex = 0;
+            RefreshSelectedMission();
         }
 
         private void RefreshBonusButtonText()
@@ -1123,28 +1189,26 @@ namespace DTAClient.DXGUI.Generic
                     return;
                 }
 
+                Mission referencedMission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == mission.HeaderFor);
+
+                if (referencedMission != null && referencedMission.RequiresUnlocking && !referencedMission.IsUnlocked)
+                {
+                    // Don't add this to the campaign list
+                    return;
+                }
+
+                if (currentCategory != null && !currentCategory.IsGeneric)
+                {
+                    if (!mission.Categories.Contains(currentCategory.IniName))
+                    {
+                        return;
+                    }
+                }                
+
                 if (!mission.Enabled)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
-                }
-                else if (string.IsNullOrEmpty(mission.Scenario))
-                {
-                    if (!string.IsNullOrEmpty(mission.HeaderFor))
-                    {
-                        Mission referencedMission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == mission.HeaderFor);
-
-                        if (referencedMission != null && referencedMission.RequiresUnlocking && !referencedMission.IsUnlocked)
-                        {
-                            // Don't add this to the campaign list
-                            return;
-                        }
-                    }
-
-                    item.TextColor = AssetLoader.GetColorFromString(
-                        ClientConfiguration.Instance.ListBoxHeaderColor);
-                    item.IsHeader = true;
-                    item.Selectable = false;
-                }
+                }                
                 else if (mission.RequiresUnlocking && !mission.IsUnlocked)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
@@ -1166,6 +1230,18 @@ namespace DTAClient.DXGUI.Generic
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+        }
+
+        private void CategoryPanel_MouseEnter(object sender, EventArgs e)
+        {
+            var categoryPanel = sender as XNAPanel;
+            categoryPanel.BorderColor = Color.GreenYellow;
+        }
+
+        private void CategoryPanel_MouseLeave(object sender, EventArgs e)
+        {
+            var categoryPanel = sender as XNAPanel;
+            categoryPanel.BorderColor = UISettings.ActiveSettings.PanelBorderColor;
         }
     }
 }

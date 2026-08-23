@@ -2,6 +2,7 @@
 using ClientCore.Statistics;
 using DTAClient.DXGUI.Generic.Campaign;
 using Rampastring.Tools;
+using Rampastring.XNAUI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -85,6 +86,8 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public List<Mission> Missions = new List<Mission>();
 
+        public List<Category> Categories = new List<Category>();
+
         /// <summary>
         /// Singleton pattern. We only need one instance of this class.
         /// </summary>
@@ -112,6 +115,7 @@ namespace DTAClient.Domain.Singleplayer
 
             ReadGlobalVariables(campaignsIni);
             ReadCampaigns(campaignsIni);
+            ReadCategories(campaignsIni);
             ReadBonuses();
         }
 
@@ -231,6 +235,50 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 #endif
+        }
+
+        private void ReadCategories(IniFile campaignsIni)
+        {
+            const string CategoriesSectionName = "Categories";
+            var categoriesSection = campaignsIni.GetSection(CategoriesSectionName);
+            if (categoriesSection == null)
+            {
+                Logger.Log($"{nameof(CampaignHandler)}: [{CategoriesSectionName}] not found from campaign config INI!");
+                return;
+            }
+
+            foreach (var kvp in categoriesSection.Keys)
+            {
+                string categoryIniName = kvp.Value;
+                if (string.IsNullOrWhiteSpace(categoryIniName))
+                    continue;
+
+                IniSection categorySection = campaignsIni.GetSection(categoryIniName);
+                if (categorySection == null)
+                {
+                    Logger.Log($"Section for defined category [{categoryIniName}] not found from campaign config INI!");
+                    continue;
+                }
+
+                string displayName = categorySection.GetStringValue("Name", "");
+                bool isGenericCategory = categorySection.GetBooleanValue("Generic", false);
+
+                string imagePath = categorySection.GetStringValue("ImagePath", "");
+                if (string.IsNullOrWhiteSpace(imagePath))
+                {
+                    Logger.Log($"Image path for section [{categorySection.SectionName}] not found!");
+                    continue;
+                }
+
+                if (!AssetLoader.AssetExists(imagePath))
+                {
+                    Logger.Log($"Image path '{imagePath}' for section [{categorySection.SectionName}] is not pointing towards an existing asset");
+                    continue;
+                }
+
+                var category = new Category(categoryIniName, displayName, imagePath, isGenericCategory);
+                Categories.Add(category);
+            }
         }
 
         /// <summary>

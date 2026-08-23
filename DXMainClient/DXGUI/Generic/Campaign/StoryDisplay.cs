@@ -6,7 +6,6 @@ using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace DTAClient.DXGUI.Generic.Campaign
 {
@@ -54,8 +53,6 @@ namespace DTAClient.DXGUI.Generic.Campaign
         public int Phase;
         public List<Phase> Phases = new List<Phase>();
         public Phase CurrentPhase;
-
-        public PhaseState PhaseState;
 
         public ConversationDisplay ConversationDisplay { get; private set; }
 
@@ -114,7 +111,24 @@ namespace DTAClient.DXGUI.Generic.Campaign
             escPressMilliseconds = 0f;
             skipGraphicTrailingTime = 0.0f;
 
-            Phases = cutscenes.GetPhases(cutscene, this, WindowManager);
+            Phases.Clear();
+
+            var legacyPhases = cutscenes.GetLegacyPhases(cutscene, this, WindowManager);
+            if (legacyPhases != null)
+            {
+                legacyPhases.ForEach(lp =>
+                {
+                    Phases.Add(new Phase(lp.ID, false, lp.Enter));
+                    Phases.Add(new Phase(lp.ID, true, lp.Ready));
+                    Phases.Add(new Phase(lp.ID, false, lp.Leave));
+                    Phases.Add(new Phase(lp.ID, false, lp.Left));
+                });
+            }
+            else
+            {
+                Phases = cutscenes.GetPhases(cutscene, this, WindowManager);
+            }
+
             Phase = -1;
 
             Keyboard.OnKeyPressed += Keyboard_OnKeyPressed;
@@ -197,9 +211,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 return;
             }
 
-            PhaseState = PhaseState.Appearing;
             CurrentPhase = Phases[Phase];
-            CurrentPhase.Enter?.Invoke(this);
+            CurrentPhase.Action?.Invoke(this);
         }
 
         public void Finish()
@@ -301,24 +314,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
         {
             if (cutsceneStarted)
             {
-                // Handle phase transition logic
-                if (PhaseState == PhaseState.Appearing)
-                {
-                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
-                    {
-                        PhaseState = PhaseState.Ready;
-                        CurrentPhase.Ready?.Invoke(this);
-                    }
-                }
-                else if (PhaseState == PhaseState.Disappearing)
-                {
-                    if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady))
-                    {
-                        PhaseState = PhaseState.Disappeared;
-                        CurrentPhase.Left?.Invoke(this);
-                    }
-                }
-                else if (PhaseState == PhaseState.Disappeared)
+                if (ConversationDisplay.IsReady() && StoryImages.TrueForAll(si => si.IsReady) && !CurrentPhase.WaitForPlayerInteraction)
                 {
                     NextPhase();
                 }
@@ -370,51 +366,23 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
         private void UserInput_ProgressCutscene()
         {
-            if (PhaseState == PhaseState.Appearing)
+            bool snapped = false;
+            if (!ConversationDisplay.IsReady())
             {
-                if (!ConversationDisplay.IsReady())
-                {
-                    ConversationDisplay.Snap();
-                }
-
-                foreach (StoryImage storyImage in StoryImages)
-                {
-                    if (!storyImage.IsReady)
-                    {
-                        storyImage.Snap();
-                    }
-                }
-
-                PhaseState = PhaseState.Ready;
-                CurrentPhase.Ready?.Invoke(this);
+                ConversationDisplay.Snap();
+                snapped = true;
             }
-            else if (PhaseState == PhaseState.Disappearing)
+
+            foreach (StoryImage storyImage in StoryImages)
             {
-                if (!ConversationDisplay.IsReady())
+                if (!storyImage.IsReady)
                 {
-                    ConversationDisplay.Snap();
+                    storyImage.Snap();
+                    snapped = true;
                 }
-
-                foreach (StoryImage storyImage in StoryImages)
-                {
-                    if (!storyImage.IsReady)
-                    {
-                        storyImage.Snap();
-                    }
-                }
-
-                PhaseState = PhaseState.Disappeared;
-                CurrentPhase.Left?.Invoke(this);
             }
-            else if (PhaseState == PhaseState.Ready)
-            {
-                PhaseState = PhaseState.Disappearing;
-                if (isDebriefing && Phase == Phases.Count - 1)
-                    alphaRate = -1.0f;
 
-                CurrentPhase.Leave?.Invoke(this);
-            }
-            else if (PhaseState == PhaseState.Disappeared)
+            if (!snapped && CurrentPhase.WaitForPlayerInteraction)
             {
                 NextPhase();
             }

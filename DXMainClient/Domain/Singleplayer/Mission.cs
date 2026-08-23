@@ -14,7 +14,9 @@ namespace DTAClient.Domain.Singleplayer
         private const int DifficultyLabelCount = 3;
         private const int ExtendedDifficultyLabelCount = 4;
 
-        public Mission(string internalName, string scenario, string description, bool requiredAddOn, int side, string bonusCampaignId, string iconPath, bool requiresUnlocking, string previewImagePath, bool playerAlwaysOnNormalDifficulty, string author, string briefing, string[] difficultyLabels)
+        public Mission(string internalName, string scenario, string description, bool requiredAddOn, int side, string bonusCampaignId, string iconPath,
+            bool requiresUnlocking, string previewImagePath, bool playerAlwaysOnNormalDifficulty, string author, string briefing, string[] difficultyLabels,
+            Cutscene startCutscene)
         {
             InternalName = internalName;
             Scenario = scenario;
@@ -29,6 +31,7 @@ namespace DTAClient.Domain.Singleplayer
             Author = author;
             GUIDescription = briefing;
             DifficultyLabels = difficultyLabels;
+            StartCutscene = startCutscene;
         }
 
         public Mission(IniSection iniSection, bool isCampaignMission)

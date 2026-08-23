@@ -88,6 +88,7 @@
         SE10,
         SE10End,
         SE11,
-        SE11End
+        SE11End,
+        SEEXT
     }
 }

@@ -25,6 +25,10 @@ namespace DTAClient.DXGUI.Generic.Campaign
         private readonly ICutsceneManager cutsceneManager;
         private readonly WindowManager windowManager;
 
+        private const float conversationMusicVolumeMultiplier = 0.3f;
+
+        private const float faceAnimAlphaRate = 2.5f;
+
         private const double crRAdisplayX = 4.0;
         private const double crRAdisplayY = 20.0;
         private const double crRAdisplayImageX = crRAdisplayX + 30.0; // the RA border thingies are 30 pixels wide at left and right
@@ -54,11 +58,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 assets.beepy3.Play();
         }
 
-        public List<Phase> SE01()
+        public List<LegacyPhase> SE01()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.tdmaptheme);
@@ -74,7 +78,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/LogoNodArchives.png", 2);
@@ -86,7 +90,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The Brotherhood springs from the lowest of places, offering unity and peace to otherwise neglected and abused nations.";
@@ -97,7 +101,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Tiberium heralds the dawn of a new age.";
@@ -108,7 +112,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The Brotherhood embraces this age, harvesting Tiberium to further expand our collective---";
@@ -128,7 +132,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -140,7 +144,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.Text = "???";
@@ -156,7 +160,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.Text = "LYDIA";
@@ -167,7 +171,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You may technically report to General Morgan, but the General is a busy man. It would be beneath him to meet and greet with every fresh faced officer that steps in to replace the last casualty.";
@@ -176,7 +180,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "As the General's adjutant, it therefore falls to me to assess whether or not you're worthy of command. Lucky me.";
@@ -186,7 +190,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Your task is simple. GDI has outstretched their supply lines along the Serbian-Romanian border, and they've left a moderately important logistics hub with nothing but a meager garrison force.";
@@ -196,7 +200,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "We can't afford to hold the area long-term, but a raiding party should be able to inflict serious damage and draw GDI scum away from battles that are actually important to the Brotherhood.";
@@ -206,7 +210,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Destroy everything. Kill them all.";
@@ -220,7 +224,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "If your forces get bogged down out there, GDI reinforcements will likely arrive before you can finish the job. So move with purpose.";
@@ -233,7 +237,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Remember, if you fail, it's your head on the chopping block - not mine.";
@@ -242,7 +246,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(53); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(8).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -262,12 +266,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE02()
+        public List<LegacyPhase> SE02()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var movedFastVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_GDI_BASE_DESTROYED_QUICKLY");
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -283,7 +287,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/Lydia.png", 2);
@@ -298,7 +302,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I'll put him through.";
@@ -309,7 +313,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { AddTDDisplayImage("Story/SE/Shared/SmallMorgan.png", 51); },
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(51);
@@ -328,7 +332,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (movedFastVariable != null && movedFastVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(5,
+                phases.Add(new LegacyPhase(5,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You were able to raze that logistics facility impressively quickly, Commander. You clearly know how to move rapidly.";
@@ -337,7 +341,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(6,
+                phases.Add(new LegacyPhase(6,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "I'll dispatch a few of my more experienced Recon Bike drivers to you for the next operation. Lydia will give you more details on the operation itself. Morgan out.";
@@ -346,7 +350,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(7,
+                phases.Add(new LegacyPhase(7,
                     storyDisplay =>
                     {
                         StoryImage borderDraw = storyDisplay.FindStoryImageById(51);
@@ -362,7 +366,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(8,
+                phases.Add(new LegacyPhase(8,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Let's see if you can repeat your little performance...";
@@ -374,7 +378,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             else
             {
-                phases.Add(new Phase(5,
+                phases.Add(new LegacyPhase(5,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Still, I'm unimpressed by how slowly you moved out there. You're not at the head of some GDI armored column, Commander.";
@@ -383,7 +387,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(6,
+                phases.Add(new LegacyPhase(6,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Try to keep that in mind during your next operation. Lydia will give you more details. Morgan out.";
@@ -392,7 +396,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(7,
+                phases.Add(new LegacyPhase(7,
                     storyDisplay =>
                     {
                         StoryImage borderDraw = storyDisplay.FindStoryImageById(51);
@@ -408,7 +412,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(8,
+                phases.Add(new LegacyPhase(8,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Well, you know what they say - second impressions are everything...";
@@ -418,7 +422,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null));
             }
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "As I predicted, GDI retook the area holding the former logistics hub relatively quickly.";
@@ -428,7 +432,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "However, the troops they used to launch their counteroffensive had to be pulled from other parts of their frontline.";
@@ -437,7 +441,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Notably, GDI vermin around the mountain town of Sinaia are now considerably weaker in military strength.";
@@ -447,7 +451,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Local government officials love to holiday there - which makes it a perfect place to manipulate public opinion and embarrass GDI.";
@@ -456,7 +460,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You see, the mountainous terrain surrounding Sinaia is difficult enough - and wartime conditions strenuous enough - that food now has to be imported into the town via supply truck convoys.";
@@ -466,7 +470,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Intercept these convoys and prevent them from reaching Sinaia.  Starve the population until they realize that no amount of GDI protection is worth an empty stomach.";
@@ -475,7 +479,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Keep in mind that while your troops should be able to roam relatively freely around the mountain passes, the enemy still has heavy defenses at the entrances to Sinaia itself.";
@@ -485,7 +489,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "These defenses include what seem like particularly well armed Advanced Guard Towers that will likely make short work of any raiding party you send too close to the town.";
@@ -494,7 +498,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Those GDI fools are relying on such static emplacements to make up for their sudden lack of manpower, but holing up behind those walls only cedes the mobility advantage to your forces.";
@@ -508,7 +512,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Get out there and drive a wedge between GDI and the locals. Any instability you can create here might help relieve pressure on our Commanders fighting elsewhere.";
@@ -521,7 +525,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You know - the Commanders we trust enough to give operations that are actually important.";
@@ -530,7 +534,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(57); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -550,11 +554,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE02End()
+        public List<LegacyPhase> SE02End()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.secondhand);
@@ -570,7 +574,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE02End/slide1.png", 2);
@@ -585,7 +589,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Why did GDI terrorists murder the citizens of Sinaia? There's a simple reason: the residents were hungry.";
@@ -595,7 +599,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "GDI's rationing regime has kept the town in a state of near starvation.";
@@ -604,7 +608,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "After the contents of several supply convoys were confiscated by GDI higher ups, the desperate townspeople could take no more.";
@@ -614,7 +618,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "They assembled in the center of town for a peaceful protest - only to be slaughtered by machine-gun and cannon fire at the hands of GDI war criminals.";
@@ -623,7 +627,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     assets.world2.Play();
@@ -634,7 +638,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But the only answer to be found in Sinaia is this: General Sheppard and those who serve him won't tolerate anyone who speaks out against the authoritarian rule of GDI's new world order.";
@@ -643,7 +647,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     assets.bleep17.Play();
@@ -654,7 +658,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(6).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -674,12 +678,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE03()
+        public List<LegacyPhase> SE03()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var blueprintVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_MAMMOTH_BLUEPRINTS");
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -695,7 +699,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/Lydia.png", 2);
@@ -712,7 +716,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (blueprintVariable != null && blueprintVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(3,
+                phases.Add(new LegacyPhase(3,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You even managed to steal what looks like Mammoth Tank blueprints from those GDI idiots. An interesting find, although I'm not sure we'll be able to make use of them right away.";
@@ -723,7 +727,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null));
             }
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "That being said, I think it's time for you to take a backseat for a while.";
@@ -733,7 +737,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "There's a large Tiberium harvesting facility south of the Danube that requires...";
@@ -743,7 +747,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "...hmm. General Morgan is calling.  Let me put him through.";
@@ -755,7 +759,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(52);
@@ -772,7 +776,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(52);
@@ -787,7 +791,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(52);
@@ -803,7 +807,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(52);
@@ -819,7 +823,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE03/small2.png", 54);
@@ -829,7 +833,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE03/small3.png", 55);
@@ -839,7 +843,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "This faction of politicians has requested a larger troop commitment from GDI.";
@@ -848,7 +852,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE03/small4.png", 56);
@@ -858,7 +862,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE03/small5.png", 57);
@@ -868,7 +872,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "This route is close to our frontlines - presenting us with an opportunity to drive the knife deeper into the wound you created at Sinaia.";
@@ -877,7 +881,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE03/small6.png", 58);
@@ -887,7 +891,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "It must be made absolutely clear who the real enemy of the people is. Make sure to leave the mayor alive, so that we have a credible authority who can testify to \"GDI's\" crimes. ";
@@ -900,7 +904,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "And keep Brotherhood equipment away from the locals - we can't have them figuring out who's really responsible for what's about to happen.";
@@ -913,7 +917,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You seem to have caught the General's interest. Pray you're worthy of it.";
@@ -922,7 +926,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(58); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -942,12 +946,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE04()
+        public List<LegacyPhase> SE04()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var powerVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_DESTROYED_POWER_STATION");
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.secondhand);
@@ -963,7 +967,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
@@ -974,7 +978,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The mayor of Brasov, who has lived in the area his entire life, stated today that \"the city has never seen such carnage, not even during the Soviet occupation decades ago.\" Most of Brasov now lies in ruin.";
@@ -986,7 +990,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (powerVariable != null && powerVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(4,
+                phases.Add(new LegacyPhase(4,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Electrical infrastructure was also destroyed during the attack, plunging the city into darkness. Deaths among the hospitalized and elderly have been attributed to the subsequent loss of power.";
@@ -996,7 +1000,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(5,
+                phases.Add(new LegacyPhase(5,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "The attack has caused tensions between local forces and GDI to boil over. Numerous skirmishes have broken out, and one local general has even called for the military to support the Brotherhood of Nod in their effort to push GDI out of the region.";
@@ -1008,7 +1012,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
             else
             {
-                phases.Add(new Phase(5,
+                phases.Add(new LegacyPhase(5,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "The attack has caused tensions between local forces and GDI to boil over. Numerous skirmishes have broken out between the two factions all across the country.";
@@ -1019,7 +1023,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.ClearStoryImages()));
             }
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "GDI General Mark Jamison Sheppard has denied responsibility for the incident, claiming that the assault on Brasov was a \"sinister Brotherhood trick.\"";
@@ -1029,7 +1033,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "However, it's easy to see how GDI troops may be choosing to vent their frustration elsewhere. A recent Brotherhood counter-offensive has pushed GDI forces back across several borders, and shows no sign of stopping.";
@@ -1039,7 +1043,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Who will police the world's police? How many towns, how many cities must suffer to ensure GDI's victory in this terrible war? Unfortunately, these are questions that right now, the free world has no answers to.";
@@ -1049,7 +1053,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => { storyDisplay.ClearStoryImages(); assets.toney4.Play(); }));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "* * * CLOSING CONNECTION * * *";
@@ -1060,7 +1064,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -1076,7 +1080,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/Morgan.png", 11);
@@ -1091,7 +1095,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You may have bloodied GDI's nose, but the reality is this: the enemy is winning this war.";
@@ -1101,7 +1105,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The Nod counterattack the reporters are making so much of was blunted nearly immediately. GDI is on the offensive again. Their forces outnumber ours everywhere.";
@@ -1111,7 +1115,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The GDI lapdog on our front, General Howard, is not leading a particularly rapid advance, especially because of the political mess you created at Brasov.";
@@ -1121,7 +1125,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "However, he still has overwhelming armor superiority, and his aviation is eating us alive.";
@@ -1130,7 +1134,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Even Kane's forces in Bosnia are under serious threat. GDI has closed the borders, and contact with Sarajevo has been cut off.";
@@ -1144,7 +1148,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You've proven that it's time to take you off the sideshows. I need you to consolidate what assets you can while we still have the opportunity to do so. Lydia will give you more specifics.";
@@ -1157,7 +1161,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
             ;
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "One last thing, Commander. Be careful who you share information with. The Brotherhood doesn't look kindly on \"defeatists.\"";
@@ -1166,7 +1170,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(53); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(11).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -1179,7 +1183,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/Lydia.png", 13);
@@ -1203,7 +1207,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Ah, it seems we have company. You must be General Morgan's new Commander.";
@@ -1212,7 +1216,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I've heard about your work in Brasov - what strife you've sown among the enemies of Kane! A pleasure to meet you - I am General Korkut.";
@@ -1221,7 +1225,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(23,
+            phases.Add(new LegacyPhase(23,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(61);
@@ -1236,7 +1240,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(24,
+            phases.Add(new LegacyPhase(24,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(61);
@@ -1252,7 +1256,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(25,
+            phases.Add(new LegacyPhase(25,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(61);
@@ -1268,7 +1272,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(26,
+            phases.Add(new LegacyPhase(26,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "General Morgan told me he would fill you in on the strategic situation. That means it's time to finally put you on something important.";
@@ -1277,7 +1281,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(27,
+            phases.Add(new LegacyPhase(27,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE04/small4.png", 63);
@@ -1287,7 +1291,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(28,
+            phases.Add(new LegacyPhase(28,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Luckily, there's at least one stockpile of critical supplies and equipment that has so far evaded the clutches of GDI's jack-booted thugs.";
@@ -1296,7 +1300,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(29,
+            phases.Add(new LegacyPhase(29,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE04/small5.png", 64);
@@ -1306,7 +1310,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(30,
+            phases.Add(new LegacyPhase(30,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "This base has already been hit by an oddly precise GDI attack, but it should still be intact enough for you to commandeer it for an evacuation operation.";
@@ -1315,7 +1319,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(31,
+            phases.Add(new LegacyPhase(31,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Ensure that the port remains operational, and protect our ships carrying those supplies until they successfully evacuate downriver.";
@@ -1324,7 +1328,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(32,
+            phases.Add(new LegacyPhase(32,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You should know that we had other, smaller outposts in the area as well that I lost contact with during the first GDI attack.";
@@ -1333,7 +1337,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(33,
+            phases.Add(new LegacyPhase(33,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You might be able to re-establish contact with those outposts if you can locate them before the bulk of General Howard's forces arrive.";
@@ -1346,7 +1350,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(34,
+            phases.Add(new LegacyPhase(34,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Some of our retreating troops are even still trying to link up with this position, if you feel like playing the hero...";
@@ -1359,7 +1363,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(35,
+            phases.Add(new LegacyPhase(35,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Any or all of these assets might be useful, but you should consider them expendable - safeguarding the port and the supply ships is your top priority.";
@@ -1368,7 +1372,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(36,
+            phases.Add(new LegacyPhase(36,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "No more games, Commander. You're in the thick of it now.";
@@ -1377,7 +1381,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(64); storyDisplay.RemoveStoryImageById(60); },
                 storyDisplay => { storyDisplay.FindStoryImageById(13).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(36,
+            phases.Add(new LegacyPhase(36,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -1397,12 +1401,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE05()
+        public List<LegacyPhase> SE05()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var radarVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_DESTROYED_RADAR_JAMMER");
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.secondhand);
@@ -1418,7 +1422,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE05/slide1.png", 2);
@@ -1433,7 +1437,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "...was the direct result of an orbiting satellite weapon described by officials as an Ion Cannon.";
@@ -1442,7 +1446,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Destruction of the site ended a three day siege which saw GDI and Nod forces engaged in mortal combat.";
@@ -1452,7 +1456,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE05/slide3.png", 4);
@@ -1463,7 +1467,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Quoting from a statement issued today, U.N. Secretary of Defense Charles Olivetti confirmed that heavy casualties were sustained by Nod forces.";
@@ -1474,7 +1478,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "However, the use of the star wars technology cut GDI and civilian losses to \"technically acceptable levels.\"";
@@ -1483,7 +1487,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Contradicting earlier U.N. Security Council denials, Dr. Olivetti confirmed that the Ion Cannon has in fact been under development for several years.";
@@ -1493,7 +1497,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Discovery and destruction of the Nod command center ends more than three years of continued escalating violence sparked by that organization's international terrorist activities.";
@@ -1503,7 +1507,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Spokesmen for the Nod consortium were unavailable for comment...";
@@ -1513,7 +1517,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(7).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -1526,7 +1530,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -1542,7 +1546,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     AddTDDisplay(50, "Story/CR/tdsides.png", false, 0.75f);
@@ -1560,7 +1564,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE05/small1.png", 52);
@@ -1570,7 +1574,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/SmallKorkut.png", 61, false);
@@ -1587,7 +1591,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Though I can't say I find the notion of working with you more closely very appealing, General.";
@@ -1596,7 +1600,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(61);
@@ -1611,7 +1615,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Make no mistake - despite what some are saying, the fall of Sarajevo doesn't mean we suddenly get to lay down arms.";
@@ -1620,7 +1624,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Surrender to GDI means prosecution at the hands of whatever war crimes tribunal the United Nations can string up for us.";
@@ -1629,7 +1633,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(61);
@@ -1645,7 +1649,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(61);
@@ -1660,7 +1664,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But we can't hold out in Eastern Europe, Commander. The situation here is completely untenable.";
@@ -1669,7 +1673,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(23,
+            phases.Add(new LegacyPhase(23,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE05/small2.png", 73);
@@ -1679,7 +1683,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(24,
+            phases.Add(new LegacyPhase(24,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/SmallKorkut.png", 74, false);
@@ -1696,7 +1700,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(25,
+            phases.Add(new LegacyPhase(25,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Needless to say I am prepared to assist your retreat however I can.";
@@ -1705,7 +1709,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(26,
+            phases.Add(new LegacyPhase(26,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "GDI will find it impossible to crack our combined defenses once your forces make it to Anatolia.  I am sure of this.";
@@ -1714,7 +1718,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(27,
+            phases.Add(new LegacyPhase(27,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(74);
@@ -1729,7 +1733,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(28,
+            phases.Add(new LegacyPhase(28,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(74);
@@ -1745,7 +1749,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(29,
+            phases.Add(new LegacyPhase(29,
                 storyDisplay =>
                 {
                     StoryImage borderDraw = storyDisplay.FindStoryImageById(74);
@@ -1761,7 +1765,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(30,
+            phases.Add(new LegacyPhase(30,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/SmallHoward.png", 76);
@@ -1771,7 +1775,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => storyDisplay.RemoveStoryImageById(75)));
 
-            phases.Add(new Phase(31,
+            phases.Add(new LegacyPhase(31,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE05/small3.png", 77);
@@ -1781,7 +1785,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(32,
+            phases.Add(new LegacyPhase(32,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I've ordered extraction of these vital assets via rail, but the train won't arrive before GDI does.";
@@ -1795,7 +1799,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(33,
+            phases.Add(new LegacyPhase(33,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I need you to hold the lab until extraction, no matter the cost. Even I'm not completely sure what's inside, but we can't afford to lose any technological advantages we may have in there.";
@@ -1808,7 +1812,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(34,
+            phases.Add(new LegacyPhase(34,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Unless you want to see the inside of a cell at the Hague, this is the plan. Get moving.";
@@ -1817,7 +1821,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(77); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(10).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(35,
+            phases.Add(new LegacyPhase(35,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -1836,7 +1840,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (radarVariable != null && radarVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(36,
+                phases.Add(new LegacyPhase(36,
                     storyDisplay =>
                     {
                         cutsceneManager.StopMusic();
@@ -1848,7 +1852,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(37,
+                phases.Add(new LegacyPhase(37,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "* * * FETCHING REPORT ITEM * * *";
@@ -1858,7 +1862,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(38,
+                phases.Add(new LegacyPhase(38,
                     storyDisplay =>
                     {
                         assets.country4.Play();
@@ -1871,7 +1875,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
                 const float briefingTextAlphaRate = 1.0f;
 
-                phases.Add(new Phase(39,
+                phases.Add(new LegacyPhase(39,
                     null,
                     storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE05/text1.png", 101, 0f).AlphaRate = briefingTextAlphaRate,
                     storyDisplay =>
@@ -1881,7 +1885,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     },
                     storyDisplay => storyDisplay.RemoveStoryImageById(101)));
 
-                phases.Add(new Phase(40,
+                phases.Add(new LegacyPhase(40,
                     null,
                     storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE05/text2.png", 102, 0f).AlphaRate = briefingTextAlphaRate,
                     storyDisplay =>
@@ -1891,7 +1895,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     },
                     storyDisplay => storyDisplay.RemoveStoryImageById(102)));
 
-                phases.Add(new Phase(41,
+                phases.Add(new LegacyPhase(41,
                     null,
                     storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE05/text3.png", 103, 0f).AlphaRate = briefingTextAlphaRate,
                     storyDisplay =>
@@ -1906,11 +1910,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE05End()
+        public List<LegacyPhase> SE05End()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.chrg226m);
@@ -1926,7 +1930,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The train containing those strategic assets departed not a moment too soon - for GDI's satellite-based Ion Cannon erased the lab shortly afterward.";
@@ -1936,7 +1940,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Despite your victory, the situation on the ground deteriorated quickly. Contact was lost unexpectedly with the former lab site as more of General Howard's troops arrived to secure the area.";
@@ -1946,7 +1950,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Worse still, somehow GDI learned of your location and launched a precision strike against your elite guard before you could react. Such an attack should have been impossible...";
@@ -1956,7 +1960,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You were able to escape the chaos of the GDI assault with a small number of your troops, but you are now cut off from the bulk of General Morgan's forces as they begin their retreat.";
@@ -1966,7 +1970,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The situation looks hopeless...";
@@ -1978,11 +1982,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE06()
+        public List<LegacyPhase> SE06()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.secondhand);
@@ -1998,7 +2002,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "United Nations investigators continue to dig through the burnt out rubble of what used to be the Brotherhood of Nod's Sarajevo headquarters.";
@@ -2009,7 +2013,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Despite days of excavation, the fate of Kane, the charismatic leader of the Brotherhood, remains unknown - although GDI General Mark Jamison Sheppard has publicly stated that \"there is no way Kane could have survived the destruction of his Temple.\"";
@@ -2019,7 +2023,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Kane is presumed to have been on-site at the time of the compound's destruction.";
@@ -2028,7 +2032,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "U.N. officials have meanwhile called for a formal end to hostilities, but their appeals have been met with mixed results.";
@@ -2038,7 +2042,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "While some of Nod's military forces have surrendered or chosen to disband, other Nod armies continue to fight on, and many areas remain under Brotherhood control.";
@@ -2047,7 +2051,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "What remains of Nod resistance may soon disintegrate, however. Sources within GDI report that the Brotherhood's trade network appears to have virtually collapsed following the fall of Sarajevo.";
@@ -2057,7 +2061,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "We here at W3N can only speculate that arms manufacturers and black market suppliers are reluctant to continue to back a client fighting for a lost cause - especially one who might soon be writing checks they can no longer cash.";
@@ -2066,7 +2070,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Unless Nod remnants can develop the industrial capacity to manufacture their own weapons of war, it seems that---";
@@ -2083,7 +2087,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.vector1a);
@@ -2096,7 +2100,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.Text = "HOWARD";
@@ -2112,7 +2116,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I ask for your unconditional surrender. Kane is dead. The war is over. Why do you continue to fight?";
@@ -2121,7 +2125,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You are surrounded. My men will soon arrive to take you and your troops into custody.";
@@ -2130,7 +2134,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I would prefer to end this matter without further bloodshed, but if you resist disarmament, GDI forces have my full authority to retaliate.";
@@ -2139,7 +2143,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I urge you to do the right thing. Stand down, Commander, and answer for your crimes. Surrender, so we can put an end to the killing.";
@@ -2148,7 +2152,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(8).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -2166,7 +2170,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "* * * REROUTING CONNECTION * * *";
@@ -2175,7 +2179,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -2191,7 +2195,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     AddTDDisplay(50, "Story/SE/SE06/tdsidesStatic25.png", false, 0.75f);
@@ -2209,7 +2213,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     AddTDDisplay(52, "Story/CR/tdsides.png", false, 0.75f);
@@ -2235,7 +2239,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE06/SmallMorganStatic75.png", 104, false, 1f);
@@ -2268,7 +2272,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     AddTDDisplay(57, "Story/CR/tdsides.png", false, 0.75f);
@@ -2291,7 +2295,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Listen. According to these coordinates, your current position is almost completely surrounded by GDI forces... almost.";
@@ -2303,7 +2307,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay.RemoveStoryImageById(108);
                 }));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You might still be able to escape if you move fast.";
@@ -2312,7 +2316,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE06/small1.png", 109);
@@ -2322,7 +2326,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     AddTDDisplay(60, "Story/SE/SE06/tdsidesStatic25.png", false, 0.75f);
@@ -2340,7 +2344,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     AddTDDisplay(61, "Story/CR/tdsides.png", false, 0.75f);
@@ -2358,7 +2362,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE06/small3.png", 113);
@@ -2371,7 +2375,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     AddTDDisplay(62, "Story/SE/SE06/tdsidesStatic25.png", false, 0.75f);
@@ -2388,7 +2392,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Likely the fat cats in charge are hoping to hand you over to GDI on a silver platter.";
@@ -2397,7 +2401,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     AddTDDisplay(63, "Story/CR/tdsides.png", false, 0.75f);
@@ -2414,7 +2418,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(23,
+            phases.Add(new LegacyPhase(23,
                 storyDisplay =>
                 {
                     AddTDDisplay(64, "Story/SE/SE06/tdsidesStatic25.png", false, 0.75f);
@@ -2431,7 +2435,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(24,
+            phases.Add(new LegacyPhase(24,
                 storyDisplay =>
                 {
                     AddTDDisplay(65, "Story/SE/SE06/tdsidesStatic50.png", false, 0.75f);
@@ -2448,7 +2452,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(25,
+            phases.Add(new LegacyPhase(25,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I'll transmit the relevant vehicle schematics to your Engineers now - once you've reactivated that facility, you should be able to produce our vehicles there, including a new MCV. You'll need it.";
@@ -2457,7 +2461,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(26,
+            phases.Add(new LegacyPhase(26,
                 storyDisplay =>
                 {
                     AddTDDisplay(66, "Story/SE/SE06/tdsidesStatic25.png", false, 0.75f);
@@ -2474,7 +2478,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(27,
+            phases.Add(new LegacyPhase(27,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "He may decide to commit those reserves to the battlefield if he feels sufficiently threatened.";
@@ -2483,7 +2487,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(28,
+            phases.Add(new LegacyPhase(28,
                 storyDisplay =>
                 {
                     AddTDDisplay(67, "Story/CR/tdsides.png", false, 0.75f);
@@ -2500,7 +2504,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(29,
+            phases.Add(new LegacyPhase(29,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Assuage the good General's sense of danger.";
@@ -2509,7 +2513,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(30,
+            phases.Add(new LegacyPhase(30,
                 storyDisplay =>
                 {
                     AddTDDisplay(68, "Story/SE/SE06/tdsidesStatic25.png", false, 0.75f);
@@ -2526,7 +2530,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(31,
+            phases.Add(new LegacyPhase(31,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You will likely need to abandon several of your base sites and rebuild further to the east as you push towards the edge of the valley.";
@@ -2539,7 +2543,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(32,
+            phases.Add(new LegacyPhase(32,
                 storyDisplay =>
                 {
                     AddTDDisplay(69, "Story/SE/SE06/tdsidesStatic50.png", false, 0.75f);
@@ -2558,7 +2562,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(33,
+            phases.Add(new LegacyPhase(33,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE06/LydiaStatic75.png", 25);
@@ -2571,7 +2575,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(120); storyDisplay.RemoveStoryImageById(69); },
                 null));
 
-            phases.Add(new Phase(34,
+            phases.Add(new LegacyPhase(34,
                 storyDisplay =>
                 {
                     cutsceneManager.StopMusic();
@@ -2590,11 +2594,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE07()
+        public List<LegacyPhase> SE07()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.tdmaptheme);
@@ -2610,7 +2614,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE07/NodLogoStatic25.png", 2);
@@ -2621,7 +2625,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.IsCentered = false;
@@ -2633,7 +2637,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The Brotherhood works with the leading minds of top research and development teams, offering them the chance to help build a peaceful future.";
@@ -2644,7 +2648,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The technology of peace takes many forms.";
@@ -2654,7 +2658,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "High-power laser systems safeguard many Brotherhood sanctuaries, and efforts to develop mobile applications continue.";
@@ -2665,7 +2669,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The Lazarus Shield, responsible for the unique stealth capabilities of the Ezekiel's Wheel, has seen intensive study as our scientists work to enhance its functionality.";
@@ -2676,7 +2680,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Other experimental technologies and prototypes, including advanced Tiberium research projects, also remain in development.";
@@ -2687,7 +2691,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(8).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.TextColor = Color.White;
@@ -2703,7 +2707,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     cutsceneManager.StopMusic();
@@ -2715,7 +2719,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "* * * FETCHING BRIEFING ITEM * * *";
@@ -2725,7 +2729,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     assets.country4.Play();
@@ -2738,7 +2742,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             const float briefingTextAlphaRate = 1.0f;
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 null,
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE07/text1.png", 101, 0f).AlphaRate = briefingTextAlphaRate,
                 storyDisplay =>
@@ -2748,7 +2752,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(101)));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 null,
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE07/text2.png", 102, 0f).AlphaRate = briefingTextAlphaRate,
                 storyDisplay =>
@@ -2758,7 +2762,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(102)));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 null,
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE07/text3.png", 103, 0f).AlphaRate = briefingTextAlphaRate,
                 storyDisplay =>
@@ -2768,7 +2772,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(103)));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 null,
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE07/text4.png", 104, 0f).AlphaRate = briefingTextAlphaRate,
                 storyDisplay =>
@@ -2778,7 +2782,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(104)));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 null,
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE07/text5.png", 105, 0f).AlphaRate = briefingTextAlphaRate,
                 storyDisplay =>
@@ -2788,7 +2792,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.RemoveStoryImageById(105)));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 null,
                 storyDisplay => storyDisplay.AddSimpleStoryImage("Story/SE/SE07/text6.png", 106, 0f).AlphaRate = briefingTextAlphaRate,
                 storyDisplay =>
@@ -2802,11 +2806,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE08()
+        public List<LegacyPhase> SE08()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -2822,7 +2826,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/Morgan.png", 2);
@@ -2837,7 +2841,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Let me be blunt. The attacks on the port and the lab, the attempted decapitation strike on your position, the disruption of our communications...";
@@ -2846,7 +2850,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "...none of it would have been possible without someone on the inside.";
@@ -2855,7 +2859,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Clearly, a traitor within the Brotherhood has been trying to sabotage our operations for some time now.";
@@ -2864,7 +2868,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I ask that you keep your eyes and ears open until I can flush out whichever disloyal rat is responsible and purge them from our ranks.";
@@ -2873,7 +2877,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     AddTDDisplay(50);
@@ -2883,7 +2887,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE08/small1.png", 51);
@@ -2893,7 +2897,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Unfortunately, General Howard and his GDI lackeys remain in close pursuit.";
@@ -2902,7 +2906,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE08/small2.png", 52);
@@ -2912,7 +2916,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "We're not going to break that blockade with a flotilla of small boats and a few barely functional prototypes, Commander. We need an edge.";
@@ -2921,7 +2925,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Luckily, I know just where to find it.";
@@ -2930,7 +2934,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/smallsub.png", 53);
@@ -2940,7 +2944,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE08/small4.png", 54);
@@ -2950,7 +2954,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Any part of the city that gets in your way is expendable.";
@@ -2959,7 +2963,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Once you have the location of the submarine base, I'll send a second team to you, including an... interesting asset R&D just spit out. Use that team to capture the submarines from drydock.";
@@ -2968,7 +2972,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE08/small5.png", 55);
@@ -2978,7 +2982,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I don't know if that sub is still there or what shape it might be in, but it could be a very valuable asset to us. Be on the lookout for it.";
@@ -2991,7 +2995,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "While the Russian government has been nominally aligned with GDI, political instability at home has largely kept their hands full.";
@@ -3004,7 +3008,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "They won't be expecting your attack - you should have the element of surprise.";
@@ -3014,7 +3018,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null));
             ;
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I have to admit I didn't think much of you at first Commander, but you continue to surprise me. It seems like it might be time to discuss soon what might lie ahead for you and I.";
@@ -3023,7 +3027,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But that talk can wait until you bring back those subs. I'm counting on you. Don't screw this up.";
@@ -3032,7 +3036,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(55); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(23,
+            phases.Add(new LegacyPhase(23,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -3052,11 +3056,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE08End()
+        public List<LegacyPhase> SE08End()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.stopthem);
@@ -3072,7 +3076,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/Shared/Lydia.png", 2);
@@ -3087,7 +3091,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => AddTDDisplay(50),
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE08End/small6.png", 51);
@@ -3097,7 +3101,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "There were no survivors.";
@@ -3110,7 +3114,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Convenient that it happened while you were away. Convenient that it leaves you as the highest ranking officer in charge of our retreating forces.";
@@ -3123,7 +3127,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "If you're coming for me next, at least look me in the eye when you take your knife out.";
@@ -3132,7 +3136,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(51); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -3152,11 +3156,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE09()
+        public List<LegacyPhase> SE09()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -3172,7 +3176,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     AddTDDisplay(50, "Story/CR/tdsides.png", false, 0.75f);
@@ -3190,7 +3194,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE09/small1.png", 52);
@@ -3200,7 +3204,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/SmallKorkut.png", 53, false);
@@ -3218,7 +3222,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I was just informing Lydia of the specific port facilities I have prepared to receive your troops.";
@@ -3228,7 +3232,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Unfortunately, due to the termination of support from our suppliers, I have had to devote significant resources to establishing local weapons production.";
@@ -3237,7 +3241,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "As a result of this unexpected development, I do not have spare assets that can assist in the crossing of the strait.";
@@ -3246,7 +3250,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "If Kane wills it, you will succeed in your efforts today, and I will shake your hand on Turkish soil.  Good luck.";
@@ -3260,7 +3264,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/SmallTerm.png", 54);
@@ -3273,7 +3277,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/smallsub.png", 55);
@@ -3283,7 +3287,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "GDI's sailors will be easy marks - completely unprepared to engage in anti-submarine warfare.";
@@ -3292,7 +3296,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "You should be able to ambush enemy ships from whatever position and angle of attack you deem appropriate. Send GDI's ships to the bottom of the ocean.";
@@ -3301,7 +3305,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/Shared/small941.png", 56);
@@ -3311,7 +3315,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE09/small3.png", 57);
@@ -3321,7 +3325,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Our technicians are having what sounds like just a spectacular time trying to figure out how it all works from Russian instruction manuals.";
@@ -3330,7 +3334,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "In the meantime, I've had the 941 loaded with standard torpedoes.";
@@ -3339,7 +3343,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "That sub should prove useful here - but losing it in the battle for the strait would be a costly mistake, considering its potential capabilities. So try not to do that, hmm?";
@@ -3352,7 +3356,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Once you clear the strait of GDI ships, I'll signal the rest of our fleet to move in, and we can make a dash for Korkut's ports on the western shores of Anatolia.";
@@ -3365,7 +3369,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "There's nowhere for us to regroup if this goes wrong, Commander. Failure is not an option.";
@@ -3374,7 +3378,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(57); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -3391,7 +3395,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     cutsceneManager.StopMusic();
@@ -3403,7 +3407,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.terminat);
@@ -3416,7 +3420,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(23,
+            phases.Add(new LegacyPhase(23,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.Show();
@@ -3432,7 +3436,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(24,
+            phases.Add(new LegacyPhase(24,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "My ships block your passage through the strait, and my tanks are on the shores behind you. You have nowhere to go.";
@@ -3441,7 +3445,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(25,
+            phases.Add(new LegacyPhase(25,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I urge you again to surrender. Consider the reality of your situation.";
@@ -3450,7 +3454,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(26,
+            phases.Add(new LegacyPhase(26,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Your improvised squadron of small boats and transport craft will not stand up to the full power of the GDI navy.";
@@ -3459,7 +3463,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(27,
+            phases.Add(new LegacyPhase(27,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "If you try to push through the strait, you will ensure nothing but the destruction of your ships and the deaths of your men.";
@@ -3468,7 +3472,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(28,
+            phases.Add(new LegacyPhase(28,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Maybe it's a mistake to appeal to your conscience. I know your superior officer had an \"accident.\" I heard too about what you did in Sevastopol.";
@@ -3477,7 +3481,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(29,
+            phases.Add(new LegacyPhase(29,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Senseless carnage. And for what?";
@@ -3486,7 +3490,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(30,
+            phases.Add(new LegacyPhase(30,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Enough. I expect your surrender within the hour. If you do not comply, I will be forced to take aggressive action.";
@@ -3495,7 +3499,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(31,
+            phases.Add(new LegacyPhase(31,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The lives of your troops are in your hands, Commander.";
@@ -3504,7 +3508,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(102).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(32,
+            phases.Add(new LegacyPhase(32,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -3525,11 +3529,11 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE09End()
+        public List<LegacyPhase> SE09End()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.chrg226m);
@@ -3545,7 +3549,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Once your vessels passed near Istanbul, the remaining assets GDI had in the area were forced to disengage for fear of inflicting collateral damage upon the city itself.";
@@ -3555,7 +3559,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Your forces soon disembarked in General Korkut's port bases to raucous cheers and applause from the soldiers stationed there. The garrisons had heard the Battle of the Bosporus from shore and seen it on TV.";
@@ -3565,7 +3569,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Just as you seemed to be riding high on a new wave of popularity with the troops, one of Korkut's officers asked for a private aside.";
@@ -3574,7 +3578,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The officer handed you a copy of his orders from General Korkut - orders that stated the port garrisons were to open fire on your \"traitorous\" forces before they could reach the shore.";
@@ -3584,7 +3588,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "It soon became clear that Korkut had issued these orders to every port he had \"prepared\" for you. Only the audacity of your battle plans and your personal popularity had saved you and your men from a watery grave in the Mediterranean.";
@@ -3593,7 +3597,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "And so, after you consolidated the port garrisons into your existing forces, you began a march on Korkut's headquarters...";
@@ -3603,7 +3607,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "There is only one punishment acceptable for Korkut's betrayal. Death.";
@@ -3614,13 +3618,13 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             return phases;
         }
-        public List<Phase> SE10()
+        public List<LegacyPhase> SE10()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var enforcerVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_ENFORCER_BLUEPRINTS");
             var behemothVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_BEHEMOTH_BLUEPRINTS");
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.stopthem);
@@ -3636,7 +3640,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE10/Korkut.png", 2);
@@ -3651,7 +3655,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "So. You made it here in one piece.";
@@ -3660,7 +3664,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I have to admit I did not expect your little convoy to survive contact with GDI's navy, but those submarines you pulled from nowhere were certainly a neat trick.";
@@ -3669,7 +3673,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "If that irritating woman hadn't figured out that your communications systems were compromised when she did, perhaps you and I would not be sitting here, having this conversation...";
@@ -3678,7 +3682,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Then again, the GDI general pursuing you is a buffoon who has utterly failed to put you down at every turn...";
@@ -3687,7 +3691,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "...even when he still had the aid of my jammers and leaked information regarding your troop strength and positions.";
@@ -3696,7 +3700,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "So perhaps this outcome was inevitable after all.";
@@ -3705,7 +3709,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "At least General Morgan is dead...";
@@ -3714,7 +3718,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I've gotten to know his routine over the years. It was surprisingly easy to ensure a little... malfunction occurred on his helicopter, even after I was locked out of your network.";
@@ -3723,7 +3727,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Morgan was a fool.  Worse than that, he was a Judas.";
@@ -3732,7 +3736,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "When he had that woman reach out to me to coordinate a retreat, Sarajevo was still standing!";
@@ -3741,7 +3745,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "He should have pushed to relieve Kane's forces, but instead, he was focused on SAVING HIS OWN SKIN!";
@@ -3750,7 +3754,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "And so... in the end, here you are, Morgan's protege, your forces massing outside my temple grounds. You will claim I am a traitor, and I will claim you are a traitor.";
@@ -3759,7 +3763,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But we both know the truth. Only one of us has the spirit hand of Kane guiding them today, and it is not you, Commander.";
@@ -3768,7 +3772,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "In the end, you will beg for Kane's forgiveness. This much, I promise you.";
@@ -3777,7 +3781,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(2).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -3790,7 +3794,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -3801,7 +3805,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.Show();
@@ -3817,7 +3821,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The loyalty of many of your troops, however, remains in question.";
@@ -3826,7 +3830,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     AddTDDisplay(50);
@@ -3836,7 +3840,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE10/small1.png", 51);
@@ -3846,7 +3850,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(23,
+            phases.Add(new LegacyPhase(23,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE10/small2.png", 52);
@@ -3856,7 +3860,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(24,
+            phases.Add(new LegacyPhase(24,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "To make matters worse, Korkut had access to our systems for so long that we can't expect to have any technological advantage.";
@@ -3867,7 +3871,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (enforcerVariable != null && enforcerVariable.EnabledThroughPreviousScenario || behemothVariable != null && behemothVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(25,
+                phases.Add(new LegacyPhase(25,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "The only thing he might not have pilfered from us is the research related to the blueprints you acquired during previous operations...";
@@ -3876,7 +3880,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(26,
+                phases.Add(new LegacyPhase(26,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "....which has remained isolated from our primary network in the haste of our retreat.";
@@ -3886,7 +3890,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null));
             }
 
-            phases.Add(new Phase(27,
+            phases.Add(new LegacyPhase(27,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE10/small3.png", 53);
@@ -3896,7 +3900,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(28,
+            phases.Add(new LegacyPhase(28,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Just don't destroy it unless you want to become the newest heretic in Anatolia.";
@@ -3909,7 +3913,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.beepy3.Play();
                 }));
 
-            phases.Add(new Phase(29,
+            phases.Add(new LegacyPhase(29,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "It's time for you to take control, Commander. Storm Korkut's compound and put down that miserable snake.";
@@ -3922,7 +3926,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     assets.bleep17.Play();
                 }));
 
-            phases.Add(new Phase(30,
+            phases.Add(new LegacyPhase(30,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "If anyone dares to oppose you - silence them.";
@@ -3931,7 +3935,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => { storyDisplay.RemoveStoryImageById(53); storyDisplay.RemoveStoryImageById(50); },
                 storyDisplay => { storyDisplay.FindStoryImageById(13).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(31,
+            phases.Add(new LegacyPhase(31,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -3951,14 +3955,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE10End()
+        public List<LegacyPhase> SE10End()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var vassalsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_MAJORITY_NOD_VASSALS_ALIVE");
 
             if (vassalsVariable != null && vassalsVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(1,
+                phases.Add(new LegacyPhase(1,
                     storyDisplay =>
                     {
                         cutsceneManager.TryPlaySong(assets.stopthem);
@@ -3976,7 +3980,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
             else
             {
-                phases.Add(new Phase(1,
+                phases.Add(new LegacyPhase(1,
                     storyDisplay =>
                     {
                         cutsceneManager.TryPlaySong(assets.stopthem);
@@ -3993,7 +3997,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null));
             }
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Korkut himself was only located several hours after the battle's conclusion, following a thorough investigation of his underground bunker complex.";
@@ -4002,7 +4006,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Unfortunately, before General Korkut could be taken into custody, one of your Flamethrower infantry took matters into his own hands.";
@@ -4012,7 +4016,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Although the offending soldier was subsequently executed for his rash action, the fact is that nothing remains of General Korkut but a charred corpse.";
@@ -4021,7 +4025,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Despite your victory, there's no time to sit on your laurels - you're urgently needed back at the coast, as reports indicate General Howard has begun staging his forces for an amphibious invasion while you've been away.";
@@ -4031,7 +4035,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "It seems nothing can make him break off his pursuit...";
@@ -4043,15 +4047,15 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE11()
+        public List<LegacyPhase> SE11()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var vassalsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_MAJORITY_NOD_VASSALS_ALIVE");
             var mamBlueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_MAMMOTH_BLUEPRINTS");
             var enfBlueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_ENFORCER_BLUEPRINTS");
             var behBlueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_BEHEMOTH_BLUEPRINTS");
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.secondhand);
@@ -4067,7 +4071,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Tension is in the air tonight among GDI forces in the Mediterranean, as General Howard continues his buildup of land, air and sea assets off the western shores of Turkey.";
@@ -4078,7 +4082,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "His aim? To capture the Brotherhood Commander who has so far defied every GDI attempt to disarm and disband their forces.";
@@ -4087,7 +4091,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     assets.country1.Play();
@@ -4098,7 +4102,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(5,
+            phases.Add(new LegacyPhase(5,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Now, more powerful than ever before, they've built a new Nod Temple on the Anatolian coast.";
@@ -4107,7 +4111,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(6,
+            phases.Add(new LegacyPhase(6,
                 storyDisplay =>
                 {
                     assets.country1.Play();
@@ -4118,7 +4122,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(7,
+            phases.Add(new LegacyPhase(7,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Public furor over these casualties has some analysts questioning whether combat operations of this scale are sustainable in an increasingly weary post-war atmosphere.";
@@ -4127,7 +4131,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(8,
+            phases.Add(new LegacyPhase(8,
                 storyDisplay =>
                 {
                     assets.country1.Play();
@@ -4138,7 +4142,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(5).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "* * * CLOSING CONNECTION * * *";
@@ -4149,7 +4153,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.fac2226m);
@@ -4163,7 +4167,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.Text = "HOWARD";
@@ -4179,7 +4183,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But if you thought that I was going to let you just slip away, you're wrong. Especially now that the Russians tell me you have a submarine with nuclear weapons on-board.";
@@ -4188,7 +4192,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I wouldn't be able to live with myself if I pulled back from these shores knowing you had access to such a vessel...";
@@ -4197,7 +4201,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "...let alone this Anatolian power base you seem to have inherited after your little Nod civil war.";
@@ -4206,7 +4210,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "So we'll meet on the field of battle once more. I see no alternative.";
@@ -4215,7 +4219,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Of course, my terms still stand - offer your unconditional surrender, and we can end this at any point.";
@@ -4224,7 +4228,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(17,
+            phases.Add(new LegacyPhase(17,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "But I know you won't.";
@@ -4233,7 +4237,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 storyDisplay => { storyDisplay.FindStoryImageById(9).AlphaRate = -2.0f; assets.toney4.Play(); }));
 
-            phases.Add(new Phase(18,
+            phases.Add(new LegacyPhase(18,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -4251,7 +4255,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 },
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(19,
+            phases.Add(new LegacyPhase(19,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.recon);
@@ -4262,7 +4266,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(20,
+            phases.Add(new LegacyPhase(20,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
@@ -4272,7 +4276,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(21,
+            phases.Add(new LegacyPhase(21,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.Show();
@@ -4288,7 +4292,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(22,
+            phases.Add(new LegacyPhase(22,
                 storyDisplay =>
                 {
                     AddTDDisplay(50);
@@ -4298,7 +4302,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(23,
+            phases.Add(new LegacyPhase(23,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE10/small3.png", 51);
@@ -4308,7 +4312,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(24,
+            phases.Add(new LegacyPhase(24,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE06/small6.png", 52);
@@ -4318,7 +4322,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(25,
+            phases.Add(new LegacyPhase(25,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE11/small3.png", 53);
@@ -4328,7 +4332,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(26,
+            phases.Add(new LegacyPhase(26,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "It's only a matter of time, therefore, before GDI and Russian forces launch a combined offensive on your Temple.";
@@ -4337,7 +4341,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(27,
+            phases.Add(new LegacyPhase(27,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "How lovely to see that they've taken the bait.";
@@ -4346,7 +4350,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(28,
+            phases.Add(new LegacyPhase(28,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE11/small2.png", 54);
@@ -4356,7 +4360,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(29,
+            phases.Add(new LegacyPhase(29,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "How amusing it will be to watch you ruin their carefully prepared battle plans with your new toys...";
@@ -4365,7 +4369,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(30,
+            phases.Add(new LegacyPhase(30,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE11/small4.png", 55);
@@ -4375,7 +4379,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(31,
+            phases.Add(new LegacyPhase(31,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The warheads are nearly ready for use - the longer you can hold on, the more missile silos we can bring online, and the uglier the situation will become for Howard and his allies of convenience.";
@@ -4384,7 +4388,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(32,
+            phases.Add(new LegacyPhase(32,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE11/small5.png", 56);
@@ -4394,7 +4398,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(33,
+            phases.Add(new LegacyPhase(33,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Keep in mind that the devices are small, and power-hungry.  I've uploaded the schematics to your construction facilities.";
@@ -4403,7 +4407,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(34,
+            phases.Add(new LegacyPhase(34,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "I would thank the General for these contributions, if he wasn't already a pile of ash...";
@@ -4416,7 +4420,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 (enfBlueprintsVariable != null && enfBlueprintsVariable.EnabledThroughPreviousScenario) &&
                 (behBlueprintsVariable != null && behBlueprintsVariable.EnabledThroughPreviousScenario))
             {
-                phases.Add(new Phase(35,
+                phases.Add(new LegacyPhase(35,
                     storyDisplay =>
                     {
                         AddTDDisplayImage("Story/SE/SE11/small7.png", 57);
@@ -4426,7 +4430,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(36,
+                phases.Add(new LegacyPhase(36,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "They've apparently created functional prototypes of a new combat vehicle based on the various blueprints you've acquired.";
@@ -4435,7 +4439,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(37,
+                phases.Add(new LegacyPhase(37,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Given enough time, they should be able to deploy these vehicles for your use in the field.";
@@ -4444,7 +4448,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(38,
+                phases.Add(new LegacyPhase(38,
                     storyDisplay =>
                     {
                         AddTDDisplayImage("Story/SE/Shared/small941.png", 58);
@@ -4456,7 +4460,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
             else
             {
-                phases.Add(new Phase(38,
+                phases.Add(new LegacyPhase(38,
                     storyDisplay =>
                     {
                         AddTDDisplayImage("Story/SE/Shared/small941.png", 58);
@@ -4467,7 +4471,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null));
             }
 
-            phases.Add(new Phase(39,
+            phases.Add(new LegacyPhase(39,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "As with the silos, it will take some time before Project 941's nuclear capabilities come online. However, once they do, that submarine will cause immense devastation to enemy forces.";
@@ -4476,7 +4480,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(40,
+            phases.Add(new LegacyPhase(40,
                 storyDisplay =>
                 {
                     AddTDDisplayImage("Story/SE/SE11/small6.png", 59);
@@ -4486,7 +4490,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(41,
+            phases.Add(new LegacyPhase(41,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "...but I doubt the defenses are strong enough to withstand a barrage of nuclear warheads from Project 941's missile racks.";
@@ -4497,7 +4501,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (vassalsVariable != null && vassalsVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(41,
+                phases.Add(new LegacyPhase(41,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "It's time to force the good General into retirement.  Permanently.";
@@ -4506,7 +4510,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(42,
+                phases.Add(new LegacyPhase(42,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "One last thing - the armies of several of your officers are currently cut off by damaged infrastructure.";
@@ -4516,7 +4520,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(43,
+                phases.Add(new LegacyPhase(43,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "If you can repair the relevant bridges, these troops should be able to reinforce your position and help take the pressure off of your forces while you prepare for the killing blow.";
@@ -4529,7 +4533,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         assets.beepy3.Play();
                     }));
 
-                phases.Add(new Phase(44,
+                phases.Add(new LegacyPhase(44,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "I never thought I'd say this, but it's been a singular pleasure to watch you work. I'm intrigued to see how you handle this particular bloodbath.";
@@ -4542,7 +4546,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         assets.bleep17.Play();
                     }));
 
-                phases.Add(new Phase(45,
+                phases.Add(new LegacyPhase(45,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Go out there and show them who they're dealing with.";
@@ -4553,7 +4557,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
             else
             {
-                phases.Add(new Phase(42,
+                phases.Add(new LegacyPhase(42,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "It's time to force the good General into retirement.  Permanently.";
@@ -4566,7 +4570,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         assets.beepy3.Play();
                     }));
 
-                phases.Add(new Phase(43,
+                phases.Add(new LegacyPhase(43,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "I never thought I'd say this, but it's been a singular pleasure to watch you work. I'm intrigued to see how you handle this particular bloodbath.";
@@ -4579,7 +4583,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                         assets.bleep17.Play();
                     }));
 
-                phases.Add(new Phase(44,
+                phases.Add(new LegacyPhase(44,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Go out there and show them who they're dealing with.";
@@ -4589,7 +4593,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => { storyDisplay.FindStoryImageById(13).AlphaRate = -2.0f; assets.toney4.Play(); }));
             }
 
-            phases.Add(new Phase(46,
+            phases.Add(new LegacyPhase(46,
                 storyDisplay =>
                 {
                     storyDisplay.HeaderDisplay.InstantHide();
@@ -4609,14 +4613,14 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        public List<Phase> SE11End()
+        public List<LegacyPhase> SE11End()
         {
-            var phases = new List<Phase>();
+            var phases = new List<LegacyPhase>();
             var vassalsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_MAJORITY_NOD_VASSALS_ALIVE");
             var blueprintsVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_CAPTURED_ALL_BLUEPRINTS");
             var microwaveVariable = CampaignHandler.Instance.GlobalVariables.Find(gv => gv.InternalName == "GV_SE_PURGED_MICROWAVE_SCHEMATICS");
 
-            phases.Add(new Phase(1,
+            phases.Add(new LegacyPhase(1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.stopthem);
@@ -4632,7 +4636,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(2,
+            phases.Add(new LegacyPhase(2,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "None of your enemies on the battlefield that day survived.";
@@ -4641,7 +4645,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(3,
+            phases.Add(new LegacyPhase(3,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Still reeling from the political instability occurring at home, the Russian government begrudgingly accepted its military's defeat in Anatolia, and refused to send more assets to the region, choosing instead to focus on internal affairs.";
@@ -4651,7 +4655,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(4,
+            phases.Add(new LegacyPhase(4,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "Vanguard was effectively shattered as a fighting force, its elite assets squandered in what had proven to be costly battles against your forces, and the private mercenary company soon had to file for bankruptcy.";
@@ -4663,7 +4667,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             if (microwaveVariable != null && !microwaveVariable.EnabledThroughPreviousScenario)
             {
-                phases.Add(new Phase(5,
+                phases.Add(new LegacyPhase(5,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "In the years to come, a splinter faction of Vanguard attempted to further develop and monetize the Microwave Tank vehicle they had reverse-engineered from Nod technological data.";
@@ -4673,7 +4677,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(6,
+                phases.Add(new LegacyPhase(6,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "However, when GDI demanded they hand over their schematics and prototypes, the ex-Vanguard staff refused.";
@@ -4682,7 +4686,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(7,
+                phases.Add(new LegacyPhase(7,
                     storyDisplay =>
                     {
                         assets.country1.Play();
@@ -4693,7 +4697,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(8,
+                phases.Add(new LegacyPhase(8,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "In an act of defiance, the last surviving staff members of the base activated a self-destruct mechanism that destroyed not just all of the Microwave Tank data, but killed everyone on-site.";
@@ -4703,7 +4707,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.ClearStoryImages()));
             }
 
-            phases.Add(new Phase(9,
+            phases.Add(new LegacyPhase(9,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide6.png", 6, 0f);
@@ -4713,7 +4717,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(10,
+            phases.Add(new LegacyPhase(10,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The political fallout led to a shift in United Nations policy.  While eliminating Brotherhood remnants remained GDI's top priority, the defeat of Nod's scattered armies could no longer come at an equivalent exchange in human lives.";
@@ -4722,7 +4726,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(11,
+            phases.Add(new LegacyPhase(11,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "As long as GDI believed you sat on a stockpile of nuclear weapons, you would never be their first target in this new world.";
@@ -4731,7 +4735,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(12,
+            phases.Add(new LegacyPhase(12,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "They didn't need to know that you had very few remaining - that you had spent most of them just trying to keep the eagle at bay.";
@@ -4740,7 +4744,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(13,
+            phases.Add(new LegacyPhase(13,
                 storyDisplay =>
                 {
                     storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide7.png", 7, 0f);
@@ -4750,7 +4754,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(14,
+            phases.Add(new LegacyPhase(14,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "In turn, you kept Lydia on as your unofficial second in command. There were still a great many things you would need her competent eye to sort out for the foreseeable future, both military and domestic.";
@@ -4759,7 +4763,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 null,
                 null));
 
-            phases.Add(new Phase(15,
+            phases.Add(new LegacyPhase(15,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "And... keeping her close meant you could make sure her activities were always being focused outwards, rather than inwards.";
@@ -4768,7 +4772,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                 storyDisplay => storyDisplay.ClearStoryImages()));
 
-            phases.Add(new Phase(16,
+            phases.Add(new LegacyPhase(16,
                 storyDisplay =>
                 {
                     storyDisplay.ConversationDisplay.ConversationText = "The road ahead would not be easy. You and your troops were effectively outcasts, building a new type of state for a new type of society - though, always in the name of Kane, of course...";
@@ -4781,7 +4785,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             if ((vassalsVariable != null && vassalsVariable.EnabledThroughPreviousScenario) & (blueprintsVariable != null && blueprintsVariable.EnabledThroughPreviousScenario))
             {
 
-                phases.Add(new Phase(17,
+                phases.Add(new LegacyPhase(17,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/officers.png", 9, 0f);
@@ -4791,7 +4795,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(19,
+                phases.Add(new LegacyPhase(19,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "During the subsequent battle with Howard, Korkut's former troops fought bravely, and proved their dedication to your cause.";
@@ -4800,7 +4804,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(20,
+                phases.Add(new LegacyPhase(20,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "In the aftermath, you found yourself with a devoted and competent army composed of the best of the two combined forces.";
@@ -4809,7 +4813,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(21,
+                phases.Add(new LegacyPhase(21,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Better yet, you still had significant reserves.";
@@ -4818,7 +4822,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(22,
+                phases.Add(new LegacyPhase(22,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide10.png", 10, 0f);
@@ -4828,7 +4832,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(23,
+                phases.Add(new LegacyPhase(23,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You soon realized that keeping your research team motivated was a critical priority, and you went out of your way to acquire whatever interesting technology you could via various covert operations.";
@@ -4837,7 +4841,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(24,
+                phases.Add(new LegacyPhase(24,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Friend and foe alike came to respect the bewildering array of advanced technologies your forces came to employ.";
@@ -4846,7 +4850,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(25,
+                phases.Add(new LegacyPhase(25,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide11.png", 11, 0f);
@@ -4856,7 +4860,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(26,
+                phases.Add(new LegacyPhase(26,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide12.png", 12, 0f);
@@ -4866,7 +4870,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(27,
+                phases.Add(new LegacyPhase(27,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You watched from the highest window in your temple as your troops chanted your name below you, and your newest advanced aircraft prototypes flew overhead.";
@@ -4875,7 +4879,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(28,
+                phases.Add(new LegacyPhase(28,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide13.png", 13, 0f);
@@ -4889,7 +4893,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     },
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(29,
+                phases.Add(new LegacyPhase(29,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/endingtitle.png", 14);
@@ -4909,7 +4913,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             else if (vassalsVariable != null && vassalsVariable.EnabledThroughPreviousScenario)
             {
 
-                phases.Add(new Phase(17,
+                phases.Add(new LegacyPhase(17,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/officers.png", 9, 0f);
@@ -4919,7 +4923,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(19,
+                phases.Add(new LegacyPhase(19,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "During the subsequent battle with Howard, Korkut's former troops fought bravely, and proved their dedication to your cause.";
@@ -4928,7 +4932,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(20,
+                phases.Add(new LegacyPhase(20,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "In the aftermath, you found yourself with a devoted and competent army composed of the best of the two combined forces.";
@@ -4937,7 +4941,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(21,
+                phases.Add(new LegacyPhase(21,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Better yet, you still had significant reserves.";
@@ -4946,7 +4950,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(22,
+                phases.Add(new LegacyPhase(22,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide9.png", 10, 0f);
@@ -4956,7 +4960,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(23,
+                phases.Add(new LegacyPhase(23,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Your research staff were poached by other Nod warlords over the years, and rumors of new Brotherhood weapon development seemed to indicate that your arsenal was gradually falling behind.";
@@ -4965,7 +4969,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(25,
+                phases.Add(new LegacyPhase(25,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide11.png", 11, 0f);
@@ -4975,7 +4979,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(26,
+                phases.Add(new LegacyPhase(26,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "When inevitably, a rival warlord came crashing over your border with a huge force, your troops charged his with incredible zeal and forced the enemy back in an incredible rout - although your casualties were tremendous.";
@@ -4984,7 +4988,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(27,
+                phases.Add(new LegacyPhase(27,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You watched from the highest window in your temple as your warriors paraded those who had surrendered before you - then cut their throats, one by one.";
@@ -4993,7 +4997,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(28,
+                phases.Add(new LegacyPhase(28,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide13.png", 12, 0f);
@@ -5007,7 +5011,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     },
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(29,
+                phases.Add(new LegacyPhase(29,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/endingtitle.png", 12);
@@ -5027,7 +5031,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             else if (blueprintsVariable != null && blueprintsVariable.EnabledThroughPreviousScenario)
             {
 
-                phases.Add(new Phase(17,
+                phases.Add(new LegacyPhase(17,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/wrecks.png", 9, 0f);
@@ -5037,7 +5041,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(18,
+                phases.Add(new LegacyPhase(18,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "In the aftermath of the subsequent battle with Howard, you found your forces running critically low on manpower.";
@@ -5046,7 +5050,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(19,
+                phases.Add(new LegacyPhase(19,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You were soon forced to resort to conscripting unwilling locals just to bolster your ranks against the various threats on your borders.";
@@ -5055,7 +5059,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(20,
+                phases.Add(new LegacyPhase(20,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Many of your exhausted troops were not enthusiastic about merging with the new arrivals, and quickly grew sullen. Only the utter ferocity with which you had dispatched Korkut's men kept them from taking up arms against you.";
@@ -5064,7 +5068,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(21,
+                phases.Add(new LegacyPhase(21,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "It turns out some things are hard to forget.";
@@ -5073,7 +5077,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(22,
+                phases.Add(new LegacyPhase(22,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide10.png", 10, 0f);
@@ -5083,7 +5087,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(23,
+                phases.Add(new LegacyPhase(23,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You soon realized that keeping your research team motivated was a critical priority, and you went out of your way to acquire whatever interesting technology you could via various covert operations.";
@@ -5092,7 +5096,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(24,
+                phases.Add(new LegacyPhase(24,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Friend and foe alike came to respect the bewildering array of advanced technologies your forces came to employ.";
@@ -5101,7 +5105,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(25,
+                phases.Add(new LegacyPhase(25,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide12.png", 11, 0f);
@@ -5111,7 +5115,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(26,
+                phases.Add(new LegacyPhase(26,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "When inevitably, an internal revolt blossomed from within your ranks, you were able to use cybernetic soldiers, high tech vehicles, and never before seen weapons to crush the traitors.";
@@ -5120,7 +5124,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(27,
+                phases.Add(new LegacyPhase(27,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You watched from the highest window in your temple as your cyborgs corralled those who had surrendered and paraded them before you.  Soon enough the disloyal would be led to their fate.";
@@ -5129,7 +5133,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(28,
+                phases.Add(new LegacyPhase(28,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide13.png", 12, 0f);
@@ -5143,7 +5147,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     },
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(29,
+                phases.Add(new LegacyPhase(29,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/endingtitle.png", 12);
@@ -5162,7 +5166,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             }
             else
             {
-                phases.Add(new Phase(17,
+                phases.Add(new LegacyPhase(17,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/wrecks.png", 9, 0f);
@@ -5172,7 +5176,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(18,
+                phases.Add(new LegacyPhase(18,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "In the aftermath of the subsequent battle with Howard, you found your forces running critically low on manpower.";
@@ -5181,7 +5185,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(19,
+                phases.Add(new LegacyPhase(19,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You were soon forced to resort to conscripting unwilling locals just to bolster your ranks against the various threats on your borders.";
@@ -5190,7 +5194,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(20,
+                phases.Add(new LegacyPhase(20,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Many of your exhausted troops were not enthusiastic about merging with the new arrivals, and quickly grew sullen. Only the utter ferocity with which you had dispatched Korkut's men kept them from taking up arms against you.";
@@ -5199,7 +5203,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(21,
+                phases.Add(new LegacyPhase(21,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "It turns out some things are hard to forget.";
@@ -5208,7 +5212,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => cutsceneManager.HideAllStoryImagesWithSound(assets.country1),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(22,
+                phases.Add(new LegacyPhase(22,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide9.png", 10, 0f);
@@ -5218,7 +5222,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(23,
+                phases.Add(new LegacyPhase(23,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "Your research staff were poached by other Nod warlords over the years, and rumors of new Brotherhood weapon development seemed to indicate that your arsenal was gradually falling behind.";
@@ -5227,7 +5231,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     storyDisplay => storyDisplay.GetAllStoryImages().ForEach(sti => sti.AlphaRate = -1.0f),
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(24,
+                phases.Add(new LegacyPhase(24,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "As your enemies gradually encroached on your territory, the culture of fear you had established amongst your followers seemed to slowly disintegrate.";
@@ -5236,7 +5240,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(25,
+                phases.Add(new LegacyPhase(25,
                     storyDisplay =>
                     {
                         storyDisplay.ConversationDisplay.ConversationText = "You began to see danger around every corner of your Temple.";
@@ -5245,7 +5249,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     null,
                     null));
 
-                phases.Add(new Phase(26,
+                phases.Add(new LegacyPhase(26,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/SE11End/slide13.png", 11, 0f);
@@ -5259,7 +5263,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                     },
                     storyDisplay => storyDisplay.ClearStoryImages()));
 
-                phases.Add(new Phase(27,
+                phases.Add(new LegacyPhase(27,
                     storyDisplay =>
                     {
                         storyDisplay.AddSimpleStoryImage("Story/SE/Shared/endingtitle.png", 12);
@@ -5282,11 +5286,316 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
-        private void AddSECreditPhases(List<Phase> phases, Color color)
+        public List<Phase> SEExtraMission()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0, true, storyDisplay =>
+            {
+                cutsceneManager.TryPlaySong(assets.chrg226m);
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * conversationMusicVolumeMultiplier;
+
+                storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                storyDisplay.ConversationDisplay.IsCentered = true;
+                storyDisplay.AddSimpleStoryImage("Story/SE/Shared/LogoNod.png", 0);
+                assets.mapwipe5.Play();
+            }));
+
+            phases.Add(new Phase(1, false, storyDisplay =>
+            {
+                storyDisplay.HeaderDisplay.InstantHide();
+                storyDisplay.HeaderDisplay.SetColors(Color.Tomato);
+                storyDisplay.HeaderDisplay.Text = "Seth";
+                storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
+                storyDisplay.ConversationDisplay.IsCentered = false;
+                storyDisplay.ConversationDisplay.ConversationText = "";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/brief.png", 1);
+                assets.country1.Play();
+            }));
+
+            phases.Add(new Phase(2, true, storyDisplay =>
+            {
+                storyDisplay.HeaderDisplay.Show();
+                storyDisplay.ConversationDisplay.ConversationText = "Well done.";
+                storyDisplay.RemoveStoryImageById(0);
+            }));
+
+            phases.Add(new Phase(3, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "You are truly becoming Kane's favourite.";
+            }));
+
+            phases.Add(new Phase(4, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "How would you like to ensure your place in the highest echelons of Nod?";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/brief2.png", 4).AlphaRate = faceAnimAlphaRate;
+            }));
+
+            phases.Add(new Phase(5, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Surely you are ambitious enough to take on a mission of tremendous magnitude.";
+                storyDisplay.RemoveStoryImageById(1);
+            }));
+
+            phases.Add(new Phase(6, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Your goal is so secret, even Kane knows nothing out it yet.";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/brief.png", 1).AlphaRate = faceAnimAlphaRate;
+            }));
+
+            phases.Add(new Phase(7, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "You see, power shifts quickly in the Brotherhood.";
+            }));
+
+            phases.Add(new Phase(8, false, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/briefn.png", 8).AlphaRate = faceAnimAlphaRate / 2f;
+                storyDisplay.RemoveStoryImageById(4);
+            }));
+
+            phases.Add(new Phase(9, false, storyDisplay =>
+            {
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/briefn2.png", 9).AlphaRate = faceAnimAlphaRate / 2f;
+                storyDisplay.RemoveStoryImageById(1);
+            }));
+
+            phases.Add(new Phase(10, true, storyDisplay =>
+            {
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/brief.png", 10).AlphaRate = faceAnimAlphaRate / 2f;
+                storyDisplay.RemoveStoryImageById(8);
+                storyDisplay.ConversationDisplay.ConversationText = "I've taken the liberty of dispatching your troops to the U.S.";
+            }));
+
+            phases.Add(new Phase(11, true, storyDisplay =>
+            {
+                storyDisplay.RemoveStoryImageById(9);
+                storyDisplay.ConversationDisplay.ConversationText = "Kane's been loath to attack America, but I feel that it's time.";
+            }));
+
+            phases.Add(new Phase(12, true, storyDisplay =>
+            {
+                AddTDDisplay(12);
+                storyDisplay.FindStoryImageById(12).DrawOrder = int.MaxValue - 2;
+                storyDisplay.FindStoryImageById(12).UpdateOrder = int.MaxValue - 2;
+                storyDisplay.ConversationDisplay.ConversationText = "And you're the one to do it.";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/brief2.png", 1012).AlphaRate = faceAnimAlphaRate;
+            }));
+
+            phases.Add(new Phase(13, true, storyDisplay =>
+            {
+                AddTDDisplayImage("Story/SE/SEEXT/small.png", 13);
+                storyDisplay.FindStoryImageById(13).DrawOrder = int.MaxValue - 1;
+                storyDisplay.FindStoryImageById(13).UpdateOrder = int.MaxValue - 1;
+                storyDisplay.ConversationDisplay.ConversationText = "This is the Pentagon.";
+                storyDisplay.RemoveStoryImageById(10);
+            }));
+
+            phases.Add(new Phase(14, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "A full frontal attack with your strongest forces should render their military center of operations inoperable.";
+            }));
+
+            phases.Add(new Phase(15, false, storyDisplay =>
+            {
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/brief.png", 15);
+                storyDisplay.ConversationDisplay.ConversationText = "Do this, and your place within Nod will be cemented for the foreseeable future.";
+            }));
+
+            phases.Add(new Phase(16, true, storyDisplay =>
+            {
+                storyDisplay.RemoveStoryImageById(1012);
+                storyDisplay.FindStoryImageById(13).AlphaRate = crTDdisplayImageDisappearAlphaRate;
+                assets.beepy3.Play();
+            }));
+
+            phases.Add(new Phase(17, false, storyDisplay =>
+            {
+                storyDisplay.FindStoryImageById(12).UpdateOrder = int.MaxValue;
+                storyDisplay.FindStoryImageById(12).DrawOrder = int.MaxValue;
+                storyDisplay.FindStoryImageById(12).AlphaRate = -crRAdisplayAlphaRate;
+                assets.bleep17.Play();
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/briefend.png", 17);
+                storyDisplay.ConversationDisplay.ConversationText = "";
+            }));
+
+            phases.Add(new Phase(172, false, storyDisplay =>
+            {
+                storyDisplay.RemoveStoryImageById(15);
+            }));
+
+            phases.Add(new Phase(18, true, storyDisplay =>
+            {
+                cutsceneManager.StopMusic();
+                storyDisplay.HeaderDisplay.InstantHide();
+                storyDisplay.FindStoryImageById(17).AlphaRate = -2.0f;
+                storyDisplay.HeaderDisplay.InstantHide();
+                storyDisplay.ConversationDisplay.TextColor = Color.White;
+                storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+                storyDisplay.ConversationDisplay.IsCentered = true;
+                storyDisplay.AddSimpleStoryImage("Story/SE/Shared/LogoNod.png", 18);
+                assets.toney4.Play();
+            }));
+
+            phases.Add(new Phase(19, false, storyDisplay => 
+            {
+                storyDisplay.RemoveStoryImageById(12);
+                storyDisplay.RemoveStoryImageById(13);
+                storyDisplay.RemoveStoryImageById(17);
+                storyDisplay.FindStoryImageById(18).AlphaRate = -2.0f;
+            }));
+
+            phases.Add(new Phase(20, true, storyDisplay =>
+            {
+                MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value;
+                cutsceneManager.TryPlaySong(assets.tdmaptheme);
+                storyDisplay.ConversationDisplay.IsCentered = false;
+                storyDisplay.ConversationDisplay.ConversationText = "There are countless ways in which this operation could go wrong.";
+            }));
+
+            phases.Add(new Phase(21, true, storyDisplay =>
+            {
+                storyDisplay.RemoveStoryImageById(18);
+                assets.country1.Play();
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/nodnavy.png", 21);
+                storyDisplay.ConversationDisplay.ConversationText = "Both GDI and the national US military would easily have the firepower to intercept your navy on the Atlantic.";
+            }));
+
+            phases.Add(new Phase(22, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "However, your forces have got surprisingly close to Washington D.C.";
+            }));
+
+            phases.Add(new Phase(23, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "It appears neither GDI nor the US military properly anticipated a direct attack on the American capital.";
+            }));
+
+            phases.Add(new Phase(24, true, storyDisplay =>
+            {
+                MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * conversationMusicVolumeMultiplier;
+                cutsceneManager.TryPlaySong(assets.stopthem);
+                storyDisplay.ConversationDisplay.IsCentered = true;
+                storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/usflag.png", 24);
+                assets.mapwipe5.Play();
+            }));
+
+            phases.Add(new Phase(25, true, storyDisplay =>
+            {
+                storyDisplay.RemoveStoryImageById(21);
+                storyDisplay.HeaderDisplay.SetColors(Color.CornflowerBlue);
+                storyDisplay.HeaderDisplay.Text = "???";
+                storyDisplay.HeaderDisplay.Show();
+                storyDisplay.ConversationDisplay.IsCentered = false;
+                storyDisplay.ConversationDisplay.TextColor = Color.CornflowerBlue;
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/uscmdr.png", 25);
+                storyDisplay.ConversationDisplay.ConversationText = "What the hell are you planning on doing with those boats of yours, Commander?";
+                assets.country1.Play();
+            }));
+
+            phases.Add(new Phase(26, true, storyDisplay =>
+            {
+                storyDisplay.RemoveStoryImageById(24);
+                storyDisplay.ConversationDisplay.ConversationText = "Attack our capital?";
+            }));
+
+            phases.Add(new Phase(27, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Seriously?";
+            }));
+
+            phases.Add(new Phase(28, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "I know Kane is a madman, but I wouldn't have expected him to suicide one of his generals like this.";
+            }));
+
+            phases.Add(new Phase(29, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Listen, boy...";
+            }));
+
+            phases.Add(new Phase(30, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "We have more tanks than you.";
+            }));
+
+            phases.Add(new Phase(31, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "We have more boats than you, and they are much bigger than yours.";
+            }));
+
+            phases.Add(new Phase(32, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "We have way more manpower than you, and it's trained according to American standards.";
+            }));
+
+            phases.Add(new Phase(33, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "We have enough aircraft to block out the Sun.";
+            }));
+
+            phases.Add(new Phase(34, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "You have no way to resupply your forces on US soil, because we control the Atlantic.";
+            }));
+
+            phases.Add(new Phase(35, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Even if you were fighting on your home turf in backwater Africa or the Balkans, our economy, military, and everything would be overwhelmingly stronger than yours.";
+            }));
+
+            phases.Add(new Phase(36, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "I don't know what you are thinking. But... now that you are here, let me get the point across.";
+            }));
+
+            phases.Add(new Phase(37, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "In the States, everything is bigger.";
+            }));
+
+            phases.Add(new Phase(38, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "That means...";
+            }));
+
+            phases.Add(new Phase(39, true, storyDisplay =>
+            {
+                storyDisplay.HeaderDisplay.SetColors(Color.Red);
+                storyDisplay.ConversationDisplay.TextColor = Color.Red;
+                var storyImage = storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/uscmdrmurderous.png", 39).AlphaRate = faceAnimAlphaRate;
+                storyDisplay.ConversationDisplay.ConversationText = "You're gonna get fucked up BIG TIME!";
+            }));
+
+            phases.Add(new Phase(40, false, storyDisplay =>
+            {
+                storyDisplay.HeaderDisplay.InstantHide();
+                assets.bleep17.Play();
+                storyDisplay.RemoveStoryImageById(25);
+                storyDisplay.FindStoryImageById(39).AlphaRate = -0.5f;
+                storyDisplay.ConversationDisplay.ConversationText = "";
+            }));
+
+            phases.Add(new Phase(41, false, storyDisplay =>
+            {
+                assets.bleep17.Play();
+                storyDisplay.RemoveStoryImageById(39);
+                storyDisplay.ConversationDisplay.IsCentered = true;
+                storyDisplay.ConversationDisplay.TextColor = Color.White;
+                storyDisplay.ConversationDisplay.ConversationText = "* * * END OF TRANSMISSION * * *";
+            }));
+
+            return phases;
+        }
+
+        private void AddSECreditPhases(List<LegacyPhase> phases, Color color)
         {
             int lastPhaseID = phases[phases.Count - 1].ID;
 
-            phases.Add(new Phase(lastPhaseID + 1,
+            phases.Add(new LegacyPhase(lastPhaseID + 1,
                 storyDisplay =>
                 {
                     cutsceneManager.TryPlaySong(assets.tdmaptheme);

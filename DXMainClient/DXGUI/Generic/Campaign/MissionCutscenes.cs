@@ -69,6 +69,20 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             switch (cutscene)
             {
+                case Cutscene.SEEXT:
+                    return CreateShadowExodusCutsceneContainer().SEExtraMission();
+            }
+
+            return null;
+        }
+
+        public List<LegacyPhase> GetLegacyPhases(Cutscene cutscene, IStoryDisplay storyDisplay, WindowManager windowManager)
+        {
+            this.storyDisplay = storyDisplay;
+            this.windowManager = windowManager;
+
+            switch (cutscene)
+            {
                 case Cutscene.None:
                     return null;
                 case Cutscene.CR01:

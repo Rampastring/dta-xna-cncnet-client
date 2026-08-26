@@ -174,8 +174,9 @@ namespace DTAClient.DXGUI.Generic
     {
         private const int MAX_GLOBAL_COUNT = 5;
 
-        private const int DEFAULT_WIDTH = 890;
+        private const int DEFAULT_WIDTH = 900;
         private const int DEFAULT_HEIGHT = 700;
+        private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 180;
 
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
@@ -212,6 +213,11 @@ namespace DTAClient.DXGUI.Generic
 
         private MissionCompletionNotification missionCompletionNotification;
         private Category currentCategory;
+        private List<XNAPanel> Categories = new List<XNAPanel>();
+        private XNAClientButton btnToggleCategories;
+        private XNALabel lblCategory;
+        private XNALabel lblSelectCampaign;
+        private bool categoriesEnabled = true;
 
         private readonly string[] filesToCheck = new string[]
         {
@@ -244,8 +250,8 @@ namespace DTAClient.DXGUI.Generic
 
             Name = "CampaignSelector";
 
-            var lblCategory = new XNALabel(WindowManager);
-            lblCategory.Name = "lblcategory";
+            lblCategory = new XNALabel(WindowManager);
+            lblCategory.Name = nameof(lblCategory);
             lblCategory.FontIndex = 1;
             lblCategory.ClientRectangle = new Rectangle(12, 12, 0, 0);
             lblCategory.Text = "CATEGORIES:";
@@ -253,7 +259,7 @@ namespace DTAClient.DXGUI.Generic
             int categoryPanelY = lblCategory.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             for (int i = 0; i < CampaignHandler.Instance.Categories.Count; i++)
             {
-                int width = 150;
+                int width = DEFAULT_CATEGORIES_PANEL_WIDTH - 30;
                 int height = 80;
 
                 if (i > 0)
@@ -278,7 +284,8 @@ namespace DTAClient.DXGUI.Generic
                 categoryPanel.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.CENTERED;
                 categoryPanel.MouseEnter += CategoryPanel_MouseEnter;
                 categoryPanel.MouseLeave += CategoryPanel_MouseLeave;
-                categoryPanel.LeftClick += CategoryPanel_LeftClick;                
+                categoryPanel.LeftClick += CategoryPanel_LeftClick;
+                Categories.Add(categoryPanel);
 
                 AddChild(categoryPanel);
 
@@ -291,12 +298,23 @@ namespace DTAClient.DXGUI.Generic
                 categoryPanelY += height + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             }
 
-            var lblSelectCampaign = new XNALabel(WindowManager);
+            btnToggleCategories = new XNAClientButton(WindowManager);
+            btnToggleCategories.Name = nameof(btnToggleCategories);
+            btnToggleCategories.X = DEFAULT_CATEGORIES_PANEL_WIDTH - 10;
+            btnToggleCategories.Y = Height / 2;
+            btnToggleCategories.Width = 20;
+            btnToggleCategories.Height = 23;
+            btnToggleCategories.Text = "->";
+            btnToggleCategories.ClientRectangle = new Rectangle(btnToggleCategories.X, btnToggleCategories.Y - 1, btnToggleCategories.Width, UIDesignConstants.BUTTON_HEIGHT);
+            btnToggleCategories.LeftClick += BtnToggleCategories_LeftClick;
+            AddChild(btnToggleCategories);
+
+            lblSelectCampaign = new XNALabel(WindowManager);
             lblSelectCampaign.Name = "lblSelectCampaign";
             lblSelectCampaign.FontIndex = 1;
             lblSelectCampaign.ClientRectangle = new Rectangle(12, 12, 0, 0);
             lblSelectCampaign.Text = "MISSIONS:";
-            lblSelectCampaign.X = 180 + UIDesignConstants.EMPTY_SPACE_SIDES * 2;
+            lblSelectCampaign.X = DEFAULT_CATEGORIES_PANEL_WIDTH + UIDesignConstants.EMPTY_SPACE_SIDES * 2;
             lblSelectCampaign.Y = UIDesignConstants.EMPTY_SPACE_TOP * 2;
 
             lbCampaignList = new BattleListBox(WindowManager);
@@ -423,7 +441,8 @@ namespace DTAClient.DXGUI.Generic
 
             // Create controls for global variable customization
             // The indexes increase from bottom to top, meaning
-            // that with 4 lines the global indexes go like this:
+            // that with 5 lines the global indexes go like this:
+			// global slot #4
             // global slot #3
             // global slot #2
             // global slot #1
@@ -527,6 +546,18 @@ namespace DTAClient.DXGUI.Generic
             bonusSelectionWindow.Disable();
             RefreshBonusButtonText();
             bonusSelectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
+        }        
+
+        private void BtnToggleCategories_LeftClick(object sender, EventArgs e)
+        {
+            if (categoriesEnabled)
+            {
+                DisableCategories();
+            }
+            else
+            {
+                EnableCategories();
+            }
         }
 
         private Mission GetSelectedMission()
@@ -1242,6 +1273,78 @@ namespace DTAClient.DXGUI.Generic
         {
             var categoryPanel = sender as XNAPanel;
             categoryPanel.BorderColor = UISettings.ActiveSettings.PanelBorderColor;
+        }
+
+        private void EnableCategories()
+        {
+            categoriesEnabled = true;
+            btnToggleCategories.Text = "->";
+            lblCategory.Enable();
+
+            Width += DEFAULT_CATEGORIES_PANEL_WIDTH;
+            X -= DEFAULT_CATEGORIES_PANEL_WIDTH;
+
+            RefreshSize();
+
+            string[] boxesControlNames = { "box1", "box2" };
+            string[] frameControlNames = { "gwtdcl" };
+
+            foreach (var child in Children)
+            {
+                if (boxesControlNames.Contains(child.Name))
+                {
+                    child.Width += DEFAULT_CATEGORIES_PANEL_WIDTH;
+                    continue;
+                }
+
+                if (frameControlNames.Contains(child.Name))
+                {                    
+                    continue;
+                }
+
+                child.X += DEFAULT_CATEGORIES_PANEL_WIDTH;
+            }
+
+            foreach (var category in Categories)
+            {
+                category.Enable();
+            }
+        }
+
+        private void DisableCategories()
+        {
+            categoriesEnabled = false;
+            btnToggleCategories.Text = "<-";
+            lblCategory.Disable();
+
+            Width -= DEFAULT_CATEGORIES_PANEL_WIDTH;
+            X += DEFAULT_CATEGORIES_PANEL_WIDTH;
+
+            RefreshSize();
+
+            string[] boxesControlNames = { "box1", "box2" };
+            string[] frameControlNames = { "gwtdcl" };
+
+            foreach (var child in Children)
+            {
+                if (boxesControlNames.Contains(child.Name))
+                {
+                    child.Width -= DEFAULT_CATEGORIES_PANEL_WIDTH;
+                    continue;
+                }
+
+                if (frameControlNames.Contains(child.Name))
+                {                    
+                    continue;
+                }
+
+                child.X -= DEFAULT_CATEGORIES_PANEL_WIDTH;
+            }
+
+            foreach (var category in Categories)
+            {
+                category.Disable();
+            }
         }
     }
 }

@@ -176,7 +176,7 @@ namespace DTAClient.DXGUI.Generic
 
         private const int DEFAULT_WIDTH = 900;
         private const int DEFAULT_HEIGHT = 700;
-        private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 170;
+        private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 180;
 
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 

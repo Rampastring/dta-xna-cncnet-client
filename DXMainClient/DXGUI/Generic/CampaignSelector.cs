@@ -304,7 +304,8 @@ namespace DTAClient.DXGUI.Generic
             btnToggleCategories.Y = Height / 2;
             btnToggleCategories.Width = 20;
             btnToggleCategories.Height = UIDesignConstants.BUTTON_HEIGHT;
-            btnToggleCategories.Text = "->";
+            btnToggleCategories.IdleTexture = AssetLoader.LoadTexture("categoriesCollapse.png");
+            btnToggleCategories.HoverTexture = AssetLoader.LoadTexture("categoriesCollapse.png");
             btnToggleCategories.ClientRectangle = new Rectangle(btnToggleCategories.X, btnToggleCategories.Y - 1, btnToggleCategories.Width, UIDesignConstants.BUTTON_HEIGHT);
             btnToggleCategories.LeftClick += BtnToggleCategories_LeftClick;
             AddChild(btnToggleCategories);
@@ -1294,7 +1295,8 @@ namespace DTAClient.DXGUI.Generic
         private void EnableCategories()
         {
             categoriesEnabled = true;
-            btnToggleCategories.Text = "->";
+            btnToggleCategories.IdleTexture = AssetLoader.LoadTexture("categoriesCollapse.png");
+            btnToggleCategories.HoverTexture = AssetLoader.LoadTexture("categoriesCollapse.png");
             lblCategory.Enable();
             UserINISettings.Instance.MissionCategoriesEnabled.Value = true;
             UserINISettings.Instance.SaveSettings();
@@ -1309,8 +1311,10 @@ namespace DTAClient.DXGUI.Generic
 
         private void DisableCategories()
         {
-            categoriesEnabled = false;
-            btnToggleCategories.Text = "<-";
+            categoriesEnabled = false;            
+            btnToggleCategories.IdleTexture = AssetLoader.LoadTexture("categoriesExpand.png");
+            btnToggleCategories.HoverTexture = AssetLoader.LoadTexture("categoriesExpand.png");
+
             lblCategory.Disable();
             UserINISettings.Instance.MissionCategoriesEnabled.Value = false;
             UserINISettings.Instance.SaveSettings();

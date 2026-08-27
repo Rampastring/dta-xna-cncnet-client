@@ -546,6 +546,12 @@ namespace DTAClient.DXGUI.Generic
             bonusSelectionWindow.Disable();
             RefreshBonusButtonText();
             bonusSelectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
+
+            bool categoriesEnabled = UserINISettings.Instance.MissionCategoriesEnabled.Value;
+            if (!categoriesEnabled)
+            {
+                DisableCategories();
+            }
         }        
 
         private void BtnToggleCategories_LeftClick(object sender, EventArgs e)
@@ -1290,6 +1296,8 @@ namespace DTAClient.DXGUI.Generic
             categoriesEnabled = true;
             btnToggleCategories.Text = "->";
             lblCategory.Enable();
+            UserINISettings.Instance.MissionCategoriesEnabled.Value = true;
+            UserINISettings.Instance.SaveSettings();
 
             ResizeWindow(DEFAULT_CATEGORIES_PANEL_WIDTH);
 
@@ -1304,6 +1312,8 @@ namespace DTAClient.DXGUI.Generic
             categoriesEnabled = false;
             btnToggleCategories.Text = "<-";
             lblCategory.Disable();
+            UserINISettings.Instance.MissionCategoriesEnabled.Value = false;
+            UserINISettings.Instance.SaveSettings();
 
             ResizeWindow(-(DEFAULT_CATEGORIES_PANEL_WIDTH));
 

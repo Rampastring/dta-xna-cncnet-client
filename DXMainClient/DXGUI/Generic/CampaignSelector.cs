@@ -214,16 +214,20 @@ namespace DTAClient.DXGUI.Generic
 
         private readonly string[] filesToCheck = new string[]
         {
+            "INI/AI.ini",
+            "INI/AIE.ini",
+            "INI/Art.ini",
             "INI/ArtE.ini",
-            "INI/Base/AI.ini",
-            "INI/Base/AIE.ini",
-            "INI/Base/Art.ini",
-            "INI/Base/Rules.ini",
-            "INI/Base/Enhance.ini",
+            "INI/Rules.ini",
+            "INI/Enhance.ini",
             "INI/CampaignBonuses.ini",
+            "INI/Vinifera.ini",
             "INI/Map Code/Difficulty Hard.ini",
             "INI/Map Code/Difficulty Medium.ini",
-            "INI/Map Code/Difficulty Easy.ini"
+            "INI/Map Code/Difficulty Easy.ini",
+            "Rules.ini",
+            "Enhance.ini",
+            "Resources/ClientDefinitions.ini"
         };
 
         private Mission missionToLaunch;

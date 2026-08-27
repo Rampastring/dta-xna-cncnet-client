@@ -4433,7 +4433,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new LegacyPhase(36,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "They've apparently created functional prototypes of a new combat vehicle based on the various blueprints you've acquired.";
+                        storyDisplay.ConversationDisplay.ConversationText = "They've apparently created a functional prototype of a new combat vehicle based on the various blueprints you've acquired.";
                     },
                     null,
                     null,
@@ -4442,7 +4442,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 phases.Add(new LegacyPhase(37,
                     storyDisplay =>
                     {
-                        storyDisplay.ConversationDisplay.ConversationText = "Given enough time, they should be able to deploy these vehicles for your use in the field.";
+                        storyDisplay.ConversationDisplay.ConversationText = "Given enough time, they should be able to deploy this vehicle for your use in the field.";
                     },
                     null,
                     null,
@@ -5323,7 +5323,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             phases.Add(new Phase(3, true, storyDisplay =>
             {
-                storyDisplay.ConversationDisplay.ConversationText = "You are truly becoming Kane's favourite.";
+                storyDisplay.ConversationDisplay.ConversationText = "You are truly becoming Kane's favorite.";
             }));
 
             phases.Add(new Phase(4, true, storyDisplay =>
@@ -5340,7 +5340,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             phases.Add(new Phase(6, true, storyDisplay =>
             {
-                storyDisplay.ConversationDisplay.ConversationText = "Your goal is so secret, even Kane knows nothing out it yet.";
+                storyDisplay.ConversationDisplay.ConversationText = "Your goal is so secret, even Kane knows nothing of it yet.";
                 storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/brief.png", 1).AlphaRate = faceAnimAlphaRate;
             }));
 
@@ -5372,7 +5372,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(11, true, storyDisplay =>
             {
                 storyDisplay.RemoveStoryImageById(9);
-                storyDisplay.ConversationDisplay.ConversationText = "Kane's been loath to attack America, but I feel that it's time.";
+                storyDisplay.ConversationDisplay.ConversationText = "Kane's been loath to attack America, but I feel that it's time...";
             }));
 
             phases.Add(new Phase(12, true, storyDisplay =>
@@ -5439,7 +5439,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 assets.toney4.Play();
             }));
 
-            phases.Add(new Phase(19, false, storyDisplay => 
+            phases.Add(new Phase(19, false, storyDisplay =>
             {
                 storyDisplay.RemoveStoryImageById(12);
                 storyDisplay.RemoveStoryImageById(13);
@@ -5460,12 +5460,12 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay.RemoveStoryImageById(18);
                 assets.country1.Play();
                 storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/nodnavy.png", 21);
-                storyDisplay.ConversationDisplay.ConversationText = "Both GDI and the national US military would easily have the firepower to intercept your navy on the Atlantic.";
+                storyDisplay.ConversationDisplay.ConversationText = "Both GDI and the national U.S. military easily have enough firepower to intercept your transport fleet before it ever reaches the U.S.";
             }));
 
             phases.Add(new Phase(22, true, storyDisplay =>
             {
-                storyDisplay.ConversationDisplay.ConversationText = "However, your forces have got surprisingly close to Washington D.C.";
+                storyDisplay.ConversationDisplay.ConversationText = "Despite the enemy's naval capabilities, however, your forces manage to get surprisingly close to Washington D.C.";
             }));
 
             phases.Add(new Phase(23, true, storyDisplay =>
@@ -5499,7 +5499,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
             phases.Add(new Phase(26, true, storyDisplay =>
             {
                 storyDisplay.RemoveStoryImageById(24);
-                storyDisplay.ConversationDisplay.ConversationText = "Attack our capital?";
+                storyDisplay.ConversationDisplay.ConversationText = "Are you attacking D.C.?";
             }));
 
             phases.Add(new Phase(27, true, storyDisplay =>
@@ -5509,7 +5509,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             phases.Add(new Phase(28, true, storyDisplay =>
             {
-                storyDisplay.ConversationDisplay.ConversationText = "I know Kane is a madman, but I wouldn't have expected him to suicide one of his generals like this.";
+                storyDisplay.ConversationDisplay.ConversationText = "I know Kane is a madman, but I wouldn't have expected him to send one of his generals to die like this.";
             }));
 
             phases.Add(new Phase(29, true, storyDisplay =>
@@ -5539,12 +5539,22 @@ namespace DTAClient.DXGUI.Generic.Campaign
 
             phases.Add(new Phase(34, true, storyDisplay =>
             {
-                storyDisplay.ConversationDisplay.ConversationText = "You have no way to resupply your forces on US soil, because we control the Atlantic.";
+                storyDisplay.ConversationDisplay.ConversationText = "Our economy, military, and everything is overwhelmingly stronger than yours.";
             }));
 
             phases.Add(new Phase(35, true, storyDisplay =>
             {
-                storyDisplay.ConversationDisplay.ConversationText = "Even if you were fighting on your home turf in backwater Africa or the Balkans, our economy, military, and everything would be overwhelmingly stronger than yours.";
+                storyDisplay.ConversationDisplay.ConversationText = "You have no way to resupply your forces on US soil, because we control the Atlantic.";
+            }));
+
+            phases.Add(new Phase(351, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Maybe y'all are big fish back in backwater Africa and the Balkans, even if we are still beating you out there...";
+            }));
+
+            phases.Add(new Phase(352, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Here you're on my home turf, and you're nothing but small fry.";
             }));
 
             phases.Add(new Phase(36, true, storyDisplay =>
@@ -5567,7 +5577,7 @@ namespace DTAClient.DXGUI.Generic.Campaign
                 storyDisplay.HeaderDisplay.SetColors(Color.Red);
                 storyDisplay.ConversationDisplay.TextColor = Color.Red;
                 var storyImage = storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/uscmdrmurderous.png", 39).AlphaRate = faceAnimAlphaRate;
-                storyDisplay.ConversationDisplay.ConversationText = "You're gonna get fucked up BIG TIME!";
+                storyDisplay.ConversationDisplay.ConversationText = "You're gonna die BIG TIME!";
             }));
 
             phases.Add(new Phase(40, false, storyDisplay =>

@@ -176,7 +176,7 @@ namespace DTAClient.DXGUI.Generic
 
         private const int DEFAULT_WIDTH = 900;
         private const int DEFAULT_HEIGHT = 700;
-        private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 180;
+        private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 170;
 
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
@@ -260,7 +260,7 @@ namespace DTAClient.DXGUI.Generic
             for (int i = 0; i < CampaignHandler.Instance.Categories.Count; i++)
             {
                 int width = DEFAULT_CATEGORIES_PANEL_WIDTH - 30;
-                int height = 80;
+                int height = 50;
 
                 if (i > 0)
                 {
@@ -300,10 +300,10 @@ namespace DTAClient.DXGUI.Generic
 
             btnToggleCategories = new XNAClientButton(WindowManager);
             btnToggleCategories.Name = nameof(btnToggleCategories);
-            btnToggleCategories.X = DEFAULT_CATEGORIES_PANEL_WIDTH - 10;
+            btnToggleCategories.X = DEFAULT_CATEGORIES_PANEL_WIDTH - UIDesignConstants.EMPTY_SPACE_SIDES;
             btnToggleCategories.Y = Height / 2;
             btnToggleCategories.Width = 20;
-            btnToggleCategories.Height = 23;
+            btnToggleCategories.Height = UIDesignConstants.BUTTON_HEIGHT;
             btnToggleCategories.Text = "->";
             btnToggleCategories.ClientRectangle = new Rectangle(btnToggleCategories.X, btnToggleCategories.Y - 1, btnToggleCategories.Width, UIDesignConstants.BUTTON_HEIGHT);
             btnToggleCategories.LeftClick += BtnToggleCategories_LeftClick;
@@ -314,7 +314,7 @@ namespace DTAClient.DXGUI.Generic
             lblSelectCampaign.FontIndex = 1;
             lblSelectCampaign.ClientRectangle = new Rectangle(12, 12, 0, 0);
             lblSelectCampaign.Text = "MISSIONS:";
-            lblSelectCampaign.X = DEFAULT_CATEGORIES_PANEL_WIDTH + UIDesignConstants.EMPTY_SPACE_SIDES * 2;
+            lblSelectCampaign.X = DEFAULT_CATEGORIES_PANEL_WIDTH + UIDesignConstants.EMPTY_SPACE_SIDES * 3;
             lblSelectCampaign.Y = UIDesignConstants.EMPTY_SPACE_TOP * 2;
 
             lbCampaignList = new BattleListBox(WindowManager);
@@ -1281,29 +1281,7 @@ namespace DTAClient.DXGUI.Generic
             btnToggleCategories.Text = "->";
             lblCategory.Enable();
 
-            Width += DEFAULT_CATEGORIES_PANEL_WIDTH;
-            X -= DEFAULT_CATEGORIES_PANEL_WIDTH;
-
-            RefreshSize();
-
-            string[] boxesControlNames = { "box1", "box2" };
-            string[] frameControlNames = { "gwtdcl" };
-
-            foreach (var child in Children)
-            {
-                if (boxesControlNames.Contains(child.Name))
-                {
-                    child.Width += DEFAULT_CATEGORIES_PANEL_WIDTH;
-                    continue;
-                }
-
-                if (frameControlNames.Contains(child.Name))
-                {                    
-                    continue;
-                }
-
-                child.X += DEFAULT_CATEGORIES_PANEL_WIDTH;
-            }
+            ResizeWindow(DEFAULT_CATEGORIES_PANEL_WIDTH);
 
             foreach (var category in Categories)
             {
@@ -1317,8 +1295,18 @@ namespace DTAClient.DXGUI.Generic
             btnToggleCategories.Text = "<-";
             lblCategory.Disable();
 
-            Width -= DEFAULT_CATEGORIES_PANEL_WIDTH;
-            X += DEFAULT_CATEGORIES_PANEL_WIDTH;
+            ResizeWindow(-(DEFAULT_CATEGORIES_PANEL_WIDTH));
+
+            foreach (var category in Categories)
+            {
+                category.Disable();
+            }
+        }
+
+        private void ResizeWindow(int offset)
+        {
+            Width += offset;
+            X -= offset;
 
             RefreshSize();
 
@@ -1329,21 +1317,16 @@ namespace DTAClient.DXGUI.Generic
             {
                 if (boxesControlNames.Contains(child.Name))
                 {
-                    child.Width -= DEFAULT_CATEGORIES_PANEL_WIDTH;
+                    child.Width += offset;
                     continue;
                 }
 
                 if (frameControlNames.Contains(child.Name))
-                {                    
+                {
                     continue;
                 }
 
-                child.X -= DEFAULT_CATEGORIES_PANEL_WIDTH;
-            }
-
-            foreach (var category in Categories)
-            {
-                category.Disable();
+                child.X += offset;
             }
         }
     }

@@ -1218,15 +1218,7 @@ namespace DTAClient.DXGUI.Generic
                 if (!mission.Visible)
                 {
                     return;
-                }
-
-                Mission referencedMission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == mission.HeaderFor);
-
-                if (referencedMission != null && referencedMission.RequiresUnlocking && !referencedMission.IsUnlocked)
-                {
-                    // Don't add this to the campaign list
-                    return;
-                }
+                }                
 
                 if (currentCategory != null && !currentCategory.IsGeneric)
                 {
@@ -1234,12 +1226,30 @@ namespace DTAClient.DXGUI.Generic
                     {
                         return;
                     }
-                }                
+                }
 
                 if (!mission.Enabled)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
-                }                
+                }
+                else if (string.IsNullOrEmpty(mission.Scenario))
+                {
+                    if (!string.IsNullOrEmpty(mission.HeaderFor))
+                    {
+                        Mission referencedMission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == mission.HeaderFor);
+
+                        if (referencedMission != null && referencedMission.RequiresUnlocking && !referencedMission.IsUnlocked)
+                        {
+                            // Don't add this to the campaign list
+                            return;
+                        }
+                    }
+
+                    item.TextColor = AssetLoader.GetColorFromString(
+                        ClientConfiguration.Instance.ListBoxHeaderColor);
+                    item.IsHeader = true;
+                    item.Selectable = false;
+                }
                 else if (mission.RequiresUnlocking && !mission.IsUnlocked)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;

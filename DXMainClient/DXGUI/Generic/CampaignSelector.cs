@@ -176,7 +176,7 @@ namespace DTAClient.DXGUI.Generic
 
         private const int DEFAULT_WIDTH = 900;
         private const int DEFAULT_HEIGHT = 700;
-        private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 180;
+        private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 200;
 
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
@@ -213,7 +213,7 @@ namespace DTAClient.DXGUI.Generic
 
         private MissionCompletionNotification missionCompletionNotification;
         private Category currentCategory;
-        private List<XNAPanel> Categories = new List<XNAPanel>();
+        private List<CategoryXNAClientButton> categories = new List<CategoryXNAClientButton>();
         private XNAClientButton btnToggleCategories;
         private XNALabel lblCategory;
         private XNALabel lblSelectCampaign;
@@ -259,8 +259,8 @@ namespace DTAClient.DXGUI.Generic
             int categoryPanelY = lblCategory.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             for (int i = 0; i < CampaignHandler.Instance.Categories.Count; i++)
             {
-                int width = DEFAULT_CATEGORIES_PANEL_WIDTH - 30;
-                int height = 50;
+                int width = DEFAULT_CATEGORIES_PANEL_WIDTH - 20;
+                int height = 35;
 
                 if (i > 0)
                 {
@@ -273,19 +273,18 @@ namespace DTAClient.DXGUI.Generic
 
                 var category = CampaignHandler.Instance.Categories[i];
 
-                var categoryPanel = new XNAPanel(WindowManager);
+                var categoryPanel = new CategoryXNAClientButton(WindowManager);
                 categoryPanel.Name = category.IniName;
                 categoryPanel.Tag = category;
                 categoryPanel.X = lblCategory.X;
                 categoryPanel.Y = categoryPanelY;
                 categoryPanel.Width = width;
                 categoryPanel.Height = height;
-                categoryPanel.BackgroundTexture = AssetLoader.LoadTextureUncached(category.ImagePath);
-                categoryPanel.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.CENTERED;
-                categoryPanel.MouseEnter += CategoryPanel_MouseEnter;
-                categoryPanel.MouseLeave += CategoryPanel_MouseLeave;
+                categoryPanel.Text = category.DisplayName;
+                categoryPanel.FontIndex = 1;
+                categoryPanel.InitCategoryIcon(category.ImagePath);
                 categoryPanel.LeftClick += CategoryPanel_LeftClick;
-                Categories.Add(categoryPanel);
+                categories.Add(categoryPanel);
 
                 AddChild(categoryPanel);
 
@@ -548,8 +547,8 @@ namespace DTAClient.DXGUI.Generic
             RefreshBonusButtonText();
             bonusSelectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
 
-            bool categoriesEnabled = UserINISettings.Instance.MissionCategoriesEnabled.Value;
-            if (!categoriesEnabled)
+            bool missionCategoriesEnabled = UserINISettings.Instance.MissionCategoriesEnabled.Value;
+            if (!missionCategoriesEnabled)
             {
                 DisableCategories();
             }
@@ -798,7 +797,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void CategoryPanel_LeftClick(object sender, EventArgs e)
         {
-            var categoryPanel = sender as XNAPanel;
+            var categoryPanel = sender as CategoryXNAClientButton;
             currentCategory = categoryPanel.Tag as Category;
 
             ListBattles();
@@ -1280,18 +1279,6 @@ namespace DTAClient.DXGUI.Generic
             base.Draw(gameTime);
         }
 
-        private void CategoryPanel_MouseEnter(object sender, EventArgs e)
-        {
-            var categoryPanel = sender as XNAPanel;
-            categoryPanel.BorderColor = Color.GreenYellow;
-        }
-
-        private void CategoryPanel_MouseLeave(object sender, EventArgs e)
-        {
-            var categoryPanel = sender as XNAPanel;
-            categoryPanel.BorderColor = UISettings.ActiveSettings.PanelBorderColor;
-        }
-
         private void EnableCategories()
         {
             categoriesEnabled = true;
@@ -1303,7 +1290,7 @@ namespace DTAClient.DXGUI.Generic
 
             ResizeWindow(DEFAULT_CATEGORIES_PANEL_WIDTH);
 
-            foreach (var category in Categories)
+            foreach (var category in categories)
             {
                 category.Enable();
             }
@@ -1321,7 +1308,7 @@ namespace DTAClient.DXGUI.Generic
 
             ResizeWindow(-(DEFAULT_CATEGORIES_PANEL_WIDTH));
 
-            foreach (var category in Categories)
+            foreach (var category in categories)
             {
                 category.Disable();
             }

@@ -131,6 +131,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CategoryXNAClientButton.cs" />
     <Compile Include="ClientGUICreator.cs" />
     <Compile Include="INIConfigException.cs" />
     <Compile Include="INItializableWindow.cs" />

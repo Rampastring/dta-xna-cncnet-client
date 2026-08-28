@@ -43,12 +43,12 @@ namespace ClientGUI
                 return;
 
             categoryIcon.Y = (Height - categoryIcon.Height) / 2;
-            categoryIcon.X = (15 - categoryIcon.Width / 2);
+            categoryIcon.X = 15 - categoryIcon.Width / 2; // centers images with different widths
         }
 
         public override void Draw(GameTime gameTime)
         {
-            TextXPosition = 30;
+            TextXPosition = 30; // hack to force the text to be left-aligned rather than centered
             base.Draw(gameTime);
         }
     }
@@ -71,7 +71,7 @@ namespace ClientGUI
         }
 
         public override void Draw(GameTime gameTime)
-        {            
+        {
             DrawTexture(texture, Point.Zero, Color.White);
             base.Draw(gameTime);
         }

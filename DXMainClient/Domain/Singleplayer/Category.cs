@@ -17,8 +17,6 @@ namespace DTAClient.Domain.Singleplayer
             AltDisplayName = altDisplayName;
             ImagePath = imagePath;
             IsGeneric = isGeneric;
-
-            Logger.Log($"Created category instance with values: DisplayName: {DisplayName}, AltDisplayName: {AltDisplayName}");
         }
     }
 }

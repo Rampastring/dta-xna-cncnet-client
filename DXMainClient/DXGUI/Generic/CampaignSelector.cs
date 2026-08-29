@@ -179,8 +179,10 @@ namespace DTAClient.DXGUI.Generic
         private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 180;
         private const double WIDTH_TRANSITION_RATE = 4.5;
         
-        private bool categoriesEnabled = true;
         private int targetWidth = DEFAULT_WIDTH;
+
+        private bool categoriesEnabled = true;
+        private Category currentCategory;
 
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
 
@@ -216,11 +218,10 @@ namespace DTAClient.DXGUI.Generic
         private BonusSelectionWindow bonusSelectionWindow;
 
         private MissionCompletionNotification missionCompletionNotification;
-
-        private Category currentCategory;
+        
         private List<CategoryXNAClientButton> categories = new List<CategoryXNAClientButton>();
         private XNAClientButton btnToggleCategories;
-        private XNALabel lblCategory;        
+        private XNALabel lblCategory;
 
         private readonly string[] filesToCheck = new string[]
         {
@@ -291,7 +292,7 @@ namespace DTAClient.DXGUI.Generic
             lblSelectCampaign.Name = "lblSelectCampaign";
             lblSelectCampaign.FontIndex = 1;
             lblSelectCampaign.Text = "MISSIONS:";
-            lblSelectCampaign.X = DEFAULT_CATEGORIES_PANEL_WIDTH + UIDesignConstants.EMPTY_SPACE_SIDES * 4;
+            lblSelectCampaign.X = DEFAULT_CATEGORIES_PANEL_WIDTH + UIDesignConstants.EMPTY_SPACE_SIDES_NEW * 2;
             lblSelectCampaign.Y = UIDesignConstants.EMPTY_SPACE_TOP_NEW;
 
             lbCampaignList = new BattleListBox(WindowManager);
@@ -342,12 +343,12 @@ namespace DTAClient.DXGUI.Generic
             btnToggleCategories.Height = panelPreview.Bottom - btnToggleCategories.Y;
             btnToggleCategories.Text = ">";
             btnToggleCategories.ClientRectangle = new Rectangle(btnToggleCategories.X, btnToggleCategories.Y, btnToggleCategories.Width, btnToggleCategories.Height);
-            btnToggleCategories.LeftClick += BtnToggleCategories_LeftClick;
             btnToggleCategories.IdleTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.HoverOnGameColor), 2, 2);
             btnToggleCategories.HoverTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.ListBoxFocusColor), 2, 2);
             btnToggleCategories.TextColorIdle = AssetLoader.GetColorFromString(ClientConfiguration.Instance.UILabelColor);
             btnToggleCategories.TextColorHover = AssetLoader.GetColorFromString(ClientConfiguration.Instance.AltUIColor);
             btnToggleCategories.Alpha = 0.33f;
+            btnToggleCategories.LeftClick += BtnToggleCategories_LeftClick;
             AddChild(btnToggleCategories);
 
             // must be done after addChild to take effect
@@ -796,11 +797,16 @@ namespace DTAClient.DXGUI.Generic
         private void CategoryButton_LeftClick(object sender, EventArgs e)
         {
             var categoryPanel = sender as CategoryXNAClientButton;
-            currentCategory = categoryPanel.Tag as Category;
+            var category = categoryPanel.Tag as Category;
+
+            if (currentCategory == category)
+                return;
+
+            currentCategory = category;
 
             ListBattles();
             lbCampaignList.SelectedIndex = 1; // select the first playable mission, skipping over the header
-            lbCampaignList.ViewTop = 0; // force the list to scroll all the way up
+            lbCampaignList.ViewTop = 0; // force the list to scroll all the way to the top
             RefreshSelectedMission();
         }
 

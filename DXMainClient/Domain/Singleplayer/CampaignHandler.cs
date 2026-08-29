@@ -86,6 +86,9 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public List<Mission> Missions = new List<Mission>();
 
+        /// <summary>
+        /// A list of all defined mission categories.
+        /// </summary>
         public List<Category> Categories = new List<Category>();
 
         /// <summary>
@@ -237,6 +240,11 @@ namespace DTAClient.Domain.Singleplayer
 #endif
         }
 
+        /// <summary>
+        /// Reads categories from the [Categories] section and creates category class instances for each valid category.
+        /// In order to be considered a valid category, it must have a valid image path for a logo.
+        /// </summary>
+        /// <param name="campaignsIni"></param>
         private void ReadCategories(IniFile campaignsIni)
         {
             const string CategoriesSectionName = "Categories";
@@ -260,7 +268,8 @@ namespace DTAClient.Domain.Singleplayer
                     continue;
                 }
 
-                string displayName = categorySection.GetStringValue("Name", "");
+                string displayName = categorySection.GetStringValue("DisplayName", "");
+                string altDisplayName = categorySection.GetStringValue("AltDisplayName", "");
                 bool isGenericCategory = categorySection.GetBooleanValue("Generic", false);
 
                 string imagePath = categorySection.GetStringValue("ImagePath", "");
@@ -272,11 +281,11 @@ namespace DTAClient.Domain.Singleplayer
 
                 if (!AssetLoader.AssetExists(imagePath))
                 {
-                    Logger.Log($"Image path '{imagePath}' for section [{categorySection.SectionName}] is not pointing towards an existing asset");
+                    Logger.Log($"Image path '{imagePath}' for section [{categorySection.SectionName}] is not pointing towards an existing texture");
                     continue;
                 }
 
-                var category = new Category(categoryIniName, displayName, imagePath, isGenericCategory);
+                var category = new Category(categoryIniName, displayName, altDisplayName, imagePath, isGenericCategory);
                 Categories.Add(category);
             }
         }

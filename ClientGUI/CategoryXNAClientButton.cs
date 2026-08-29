@@ -17,7 +17,7 @@ namespace ClientGUI
         public void InitCategoryIcon(string imagePath)
         {
             if (categoryIcon != null)
-                throw new InvalidOperationException("The star display is already initialized!");
+                throw new InvalidOperationException("The category icon is already initialized!");
 
             categoryIcon = new CategoryIconDisplay(WindowManager, imagePath);
             categoryIcon.InputEnabled = false;

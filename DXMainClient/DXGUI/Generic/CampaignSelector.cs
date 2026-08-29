@@ -174,11 +174,12 @@ namespace DTAClient.DXGUI.Generic
     {
         private const int MAX_GLOBAL_COUNT = 5;
 
-        private const int DEFAULT_WIDTH = 880;
+        private const int DEFAULT_WIDTH = 920;
         private const int DEFAULT_HEIGHT = 700;
         private const int DEFAULT_CATEGORIES_PANEL_WIDTH = 180;
         private const double WIDTH_TRANSITION_RATE = 4.5;
-
+        
+        private bool categoriesEnabled = true;
         private int targetWidth = DEFAULT_WIDTH;
 
         private static readonly string[] DifficultyNamesUIDefault = new string[] { "EASY", "NORMAL", "HARD", "BRUTAL" };
@@ -219,8 +220,7 @@ namespace DTAClient.DXGUI.Generic
         private Category currentCategory;
         private List<CategoryXNAClientButton> categories = new List<CategoryXNAClientButton>();
         private XNAClientButton btnToggleCategories;
-        private XNALabel lblCategory;
-        private bool categoriesEnabled = true;
+        private XNALabel lblCategory;        
 
         private readonly string[] filesToCheck = new string[]
         {
@@ -262,9 +262,7 @@ namespace DTAClient.DXGUI.Generic
             int categoryButtonY = lblCategory.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             int categoryButtonWidth = DEFAULT_CATEGORIES_PANEL_WIDTH;
             for (int i = 0; i < CampaignHandler.Instance.Categories.Count; i++)
-            {                
-                int height = 35;
-
+            {
                 var category = CampaignHandler.Instance.Categories[i];
 
                 var categoryButton = new CategoryXNAClientButton(WindowManager);
@@ -273,30 +271,28 @@ namespace DTAClient.DXGUI.Generic
                 categoryButton.X = lblCategory.X;
                 categoryButton.Y = categoryButtonY;
                 categoryButton.Width = categoryButtonWidth;
-                categoryButton.Height = height;
+                categoryButton.Height = 35;
                 categoryButton.Text = category.DisplayName;
                 categoryButton.FontIndex = 1;
                 categoryButton.InitCategoryIcon(category.ImagePath);
                 categoryButton.LeftClick += CategoryButton_LeftClick;
-                categories.Add(categoryButton);
 
                 AddChild(categoryButton);
+                categories.Add(categoryButton);
 
-                if (!string.IsNullOrEmpty(category.DisplayName))
-                {
-                    var tooltip = new ToolTip(WindowManager, categoryButton);
-                    tooltip.Text = category.DisplayName;
-                }
-
-                categoryButtonY += height + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+                var tooltip = new ToolTip(WindowManager, categoryButton);
+                string tooltipText = !string.IsNullOrEmpty(category.AltDisplayName) ? category.AltDisplayName : category.DisplayName;
+                tooltip.Text = tooltipText;
+                
+                categoryButtonY += categoryButton.Height + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
             }            
 
             var lblSelectCampaign = new XNALabel(WindowManager);
             lblSelectCampaign.Name = "lblSelectCampaign";
-            lblSelectCampaign.FontIndex = 1;            
+            lblSelectCampaign.FontIndex = 1;
             lblSelectCampaign.Text = "MISSIONS:";
             lblSelectCampaign.X = DEFAULT_CATEGORIES_PANEL_WIDTH + UIDesignConstants.EMPTY_SPACE_SIDES * 4;
-            lblSelectCampaign.Y = UIDesignConstants.EMPTY_SPACE_TOP * 2;
+            lblSelectCampaign.Y = UIDesignConstants.EMPTY_SPACE_TOP_NEW;
 
             lbCampaignList = new BattleListBox(WindowManager);
             lbCampaignList.Name = "lbCampaignList";
@@ -337,6 +333,26 @@ namespace DTAClient.DXGUI.Generic
             panelPreview.Width = lbCampaignList.Width;
             panelPreview.Height = 200;
             AddChild(panelPreview);
+
+            btnToggleCategories = new XNAClientButton(WindowManager);
+            btnToggleCategories.Name = nameof(btnToggleCategories);
+            btnToggleCategories.X = lblCategory.X + categoryButtonWidth;
+            btnToggleCategories.Y = lbCampaignList.Y;
+            btnToggleCategories.Width = UIDesignConstants.EMPTY_SPACE_SIDES_NEW;
+            btnToggleCategories.Height = panelPreview.Bottom - btnToggleCategories.Y;
+            btnToggleCategories.Text = ">";
+            btnToggleCategories.ClientRectangle = new Rectangle(btnToggleCategories.X, btnToggleCategories.Y, btnToggleCategories.Width, btnToggleCategories.Height);
+            btnToggleCategories.LeftClick += BtnToggleCategories_LeftClick;
+            btnToggleCategories.IdleTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.HoverOnGameColor), 2, 2);
+            btnToggleCategories.HoverTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.ListBoxFocusColor), 2, 2);
+            btnToggleCategories.TextColorIdle = AssetLoader.GetColorFromString(ClientConfiguration.Instance.UILabelColor);
+            btnToggleCategories.TextColorHover = AssetLoader.GetColorFromString(ClientConfiguration.Instance.AltUIColor);
+            btnToggleCategories.Alpha = 0.33f;
+            AddChild(btnToggleCategories);
+
+            // must be done after addChild to take effect
+            btnToggleCategories.HoverSoundEffect = null;
+            btnToggleCategories.ClickSoundEffect = null;
 
             tbMissionDescription = new MissionDescriptionBox(WindowManager);
             tbMissionDescription.Name = "tbMissionDescription";
@@ -527,31 +543,11 @@ namespace DTAClient.DXGUI.Generic
             bonusSelectionWindow.Disable();
             RefreshBonusButtonText();
             bonusSelectionWindow.Bonuseselected += (s, e) => RefreshBonusButtonText();
-
-            btnToggleCategories = new XNAClientButton(WindowManager);
-            btnToggleCategories.Name = nameof(btnToggleCategories);
-            btnToggleCategories.X = lblCategory.X + categoryButtonWidth;
-            btnToggleCategories.Y = lbCampaignList.Y;
-            btnToggleCategories.Width = UIDesignConstants.EMPTY_SPACE_SIDES_NEW;
-            btnToggleCategories.Height = panelPreview.Bottom - btnToggleCategories.Y;
-            btnToggleCategories.Text = ">";
-            btnToggleCategories.ClientRectangle = new Rectangle(btnToggleCategories.X, btnToggleCategories.Y, btnToggleCategories.Width, btnToggleCategories.Height);            
-            btnToggleCategories.LeftClick += BtnToggleCategories_LeftClick;            
-            btnToggleCategories.IdleTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.HoverOnGameColor), 2, 2);
-            btnToggleCategories.HoverTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.ListBoxFocusColor), 2, 2);
-            btnToggleCategories.TextColorIdle = AssetLoader.GetColorFromString(ClientConfiguration.Instance.UILabelColor);
-            btnToggleCategories.TextColorHover = AssetLoader.GetColorFromString(ClientConfiguration.Instance.AltUIColor);
-            btnToggleCategories.Alpha = 0.33f;
-            AddChild(btnToggleCategories);
-
-            // must be done after addChild to take effect
-            btnToggleCategories.HoverSoundEffect = null;
-            btnToggleCategories.ClickSoundEffect = null;
-
-            // Previous session was closed with categories in disabled state, so start with them disabled
+            
             bool missionCategoriesEnabled = UserINISettings.Instance.MissionCategoriesEnabled.Value;
             if (!missionCategoriesEnabled)
             {
+                // Previous session ended with categories in disabled state, so start with them disabled in this session as well
                 DisableCategories(true);
             }
         }
@@ -803,7 +799,8 @@ namespace DTAClient.DXGUI.Generic
             currentCategory = categoryPanel.Tag as Category;
 
             ListBattles();
-            lbCampaignList.SelectedIndex = 1;
+            lbCampaignList.SelectedIndex = 1; // select the first playable mission, skipping over the header
+            lbCampaignList.ViewTop = 0; // force the list to scroll all the way up
             RefreshSelectedMission();
         }
 
@@ -1226,11 +1223,10 @@ namespace DTAClient.DXGUI.Generic
                 if (!mission.Visible)
                 {
                     return;
-                }                
+                }
 
                 // If a category was selected, then the mission would only be included in the mission list if the category is generic
-                // or the mission is listed to belong to that category.
-                // Note that this also applies to headers.
+                // or the mission is listed to belong to that category. This also applies to headers.
                 if (currentCategory != null && !currentCategory.IsGeneric)
                 {
                     if (!mission.Categories.Contains(currentCategory.IniName))
@@ -1287,7 +1283,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 int offset = (int)Math.Ceiling(WIDTH_TRANSITION_RATE * (gameTime.ElapsedGameTime.TotalMilliseconds / 10.0));
 
-                // Calculate if the width needs to increase or decrease, and clamp the width if it goes beyond the desired amount
+                // Calculate if the width needs to increase or decrease. The width clamps to the target if it goes over it.
                 if (targetWidth > Width)
                 {
                     if (Width + offset > targetWidth)
@@ -1300,7 +1296,7 @@ namespace DTAClient.DXGUI.Generic
                     // If we finished the expansion transition, show the category elements that were hidden.
                     if (targetWidth == Width)
                     {
-                        ShowCategoryElements();                        
+                        ShowCategoryElements();
                     }
                 }
                 else
@@ -1320,11 +1316,11 @@ namespace DTAClient.DXGUI.Generic
         /// <summary>
         /// Enables the category selection logic.
         /// This instructs the system to widen the window so the category buttons will have the appropriate space to exist in.
-        /// Due to the time it takes for the window to transition, the category buttons are only shown once the transition completes.
+        /// Due to the time it takes for the window to transition, the category buttons are only shown once the transition is finished.
         /// </summary>
         private void EnableCategories()
         {
-            categoriesEnabled = true;            
+            categoriesEnabled = true;
             btnToggleCategories.Text = ">";
 
             UserINISettings.Instance.MissionCategoriesEnabled.Value = true;
@@ -1360,13 +1356,15 @@ namespace DTAClient.DXGUI.Generic
         /// <summary>
         /// Disables the category selection logic.
         /// This instructs the system to shorten the window to collapse the category buttons.
-        /// Unlike when enabling, category buttons are immediately hidden when disabled as the window collapses.
+        /// Unlike when enabling, category buttons are immediately hidden when disabled as the window starts collapsing.
         /// </summary>
-        /// <param name="immediate">should the window collapse immediately? Used when the window opens in disabled categories state</param>
+        /// <param name="immediate">Should the window collapse immediately? Used when the window opens in disabled categories state</param>
         private void DisableCategories(bool immediate)
         {
-            categoriesEnabled = false;            
+            categoriesEnabled = false;
             btnToggleCategories.Text = "<";
+
+            HideCategoryElements();
 
             UserINISettings.Instance.MissionCategoriesEnabled.Value = false;
             UserINISettings.Instance.SaveSettings();
@@ -1377,12 +1375,10 @@ namespace DTAClient.DXGUI.Generic
             {
                 ResizeWindowWidth(-DEFAULT_CATEGORIES_PANEL_WIDTH);
             }
-
-            HideCategoryElements();
         }
 
         /// <summary>
-        /// Increases or decreases the window's width by an amount, moving all children alongside with the appropriate handling.
+        /// Increases or decreases the window's width by an amount, moving all children alongside it with the appropriate handling.
         /// </summary>
         /// <param name="offset">the amount of width to add or reduce from the window.</param>
         private void ResizeWindowWidth(int offset)
@@ -1399,17 +1395,15 @@ namespace DTAClient.DXGUI.Generic
             foreach (var child in Children)
             {
                 // Those are two boxes used to give the panel a border and an outer layer.
-                // They should also scale with the window for it to be smooth.
+                // They should also scale with the window for it to look correct.
                 if (boxesControlNames.Contains(child.Name))
                 {
                     child.Width += offset;
                     continue;
                 }
 
-                // The top left insginia of the window. Since it always stays on the top left regardless of width,
-                // A window losing or being added width doesn't change its X position - it will always still in the same relative
-                // position to the window's top left position, so it is skipped.
-                // Note that the top right insignia must move and so is not included here.
+                // The top left insginia of the window. Since it always stays on the top left regardless
+                // of changes to the window's width, its X position remains the same, and so should be skipped.
                 if (frameControlNames.Contains(child.Name))
                 {
                     continue;

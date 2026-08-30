@@ -1127,7 +1127,13 @@ namespace DTAClient.DXGUI.Generic
                     return;
                 }
 
-                if (!mission.Enabled)
+                if (mission.RequiresUnlocking && !mission.IsUnlocked)
+                {
+                    item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
+                    item.Text = "Locked Mission";
+                    item.Texture = AssetLoader.LoadTexture("randomicon.png");
+                }
+                else if (!mission.Enabled)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
                 }
@@ -1148,12 +1154,6 @@ namespace DTAClient.DXGUI.Generic
                         ClientConfiguration.Instance.ListBoxHeaderColor);
                     item.IsHeader = true;
                     item.Selectable = false;
-                }
-                else if (mission.RequiresUnlocking && !mission.IsUnlocked)
-                {
-                    item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
-                    item.Text = "Locked Mission";
-                    item.Texture = AssetLoader.LoadTexture("randomicon.png");
                 }
                 else
                 {

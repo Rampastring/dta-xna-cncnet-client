@@ -90,10 +90,9 @@ namespace DTAClient.Domain
         {
             byte[] bytes = cf.RootStorage.GetStream(streamName).GetData();
 
-            // COM stores bool as VT_BOOL which has VARIANT_TRUE (0xFFFF) and VARIANT_FALSE (0x0000)
-            // instead of a typical bool structure
-            short raw = BitConverter.ToInt16(bytes, 0);
-            return raw != 0;
+            // COM often stores bools as VT_BOOL which has VARIANT_TRUE (0xFFFF) and VARIANT_FALSE (0x0000)
+            // instead of a typical bool structure. However current Vinifera writes the boolean data manually.
+            return bytes[0] > 0;
         }
 
         private int[] GetIntArrayFromCompoundFile(CompoundFile cf, string streamName)

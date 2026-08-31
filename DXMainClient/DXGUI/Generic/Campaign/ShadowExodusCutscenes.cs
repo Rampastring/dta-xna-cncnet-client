@@ -5601,6 +5601,78 @@ namespace DTAClient.DXGUI.Generic.Campaign
             return phases;
         }
 
+        public List<Phase> SEExtraMissionEnd()
+        {
+            var phases = new List<Phase>();
+
+            phases.Add(new Phase(0, true, storyDisplay =>
+            {
+                cutsceneManager.TryPlaySong(assets.tdmaptheme);
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = (float)UserINISettings.Instance.ScoreVolume.Value * conversationMusicVolumeMultiplier;
+
+                storyDisplay.ConversationDisplay.ConversationText = "* * * INCOMING TRANSMISSION * * *";
+                storyDisplay.ConversationDisplay.IsCentered = true;
+                storyDisplay.AddSimpleStoryImage("Story/SE/Shared/LogoNod.png", 0);
+                assets.mapwipe5.Play();
+            }));
+
+            phases.Add(new Phase(1, false, storyDisplay =>
+            {
+                storyDisplay.HeaderDisplay.InstantHide();
+                storyDisplay.HeaderDisplay.SetColors(Color.Tomato);
+                storyDisplay.HeaderDisplay.Text = "Kane";
+                storyDisplay.ConversationDisplay.TextColor = Color.Tomato;
+                storyDisplay.ConversationDisplay.IsCentered = false;
+                storyDisplay.ConversationDisplay.ConversationText = "";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/end1.png", 1);
+                assets.country1.Play();
+            }));
+
+            phases.Add(new Phase(2, true, storyDisplay =>
+            {
+                storyDisplay.HeaderDisplay.Show();
+                storyDisplay.ConversationDisplay.ConversationText = "...Oh.";
+                storyDisplay.RemoveStoryImageById(0);
+            }));
+
+            phases.Add(new Phase(3, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Seth sent you to the States on a suicide mission, but you.. actually made it.";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/end2.png", 2).AlphaRate = faceAnimAlphaRate;
+            }));
+
+            phases.Add(new Phase(4, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Impressive.";
+                storyDisplay.RemoveStoryImageById(1);
+            }));
+
+            phases.Add(new Phase(5, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "His betrayal caused us heavy losses, but hopefully the propaganda victory makes up for it.";
+            }));
+
+            phases.Add(new Phase(6, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "I have disposed of the traitor, so you may now take his place as my right hand.";
+            }));
+
+            phases.Add(new Phase(7, true, storyDisplay =>
+            {
+                storyDisplay.ConversationDisplay.ConversationText = "Congratulations on your promotion.";
+                storyDisplay.AddSimpleStoryImage("Story/SE/SEEXT/end3.png", 2).AlphaRate = faceAnimAlphaRate;
+            }));
+
+            phases.Add(new Phase(8, false, storyDisplay =>
+            {
+                storyDisplay.HeaderDisplay.InstantHide();
+                assets.bleep17.Play();
+            }));
+
+            return phases;
+        }
+
         private void AddSECreditPhases(List<LegacyPhase> phases, Color color)
         {
             int lastPhaseID = phases[phases.Count - 1].ID;

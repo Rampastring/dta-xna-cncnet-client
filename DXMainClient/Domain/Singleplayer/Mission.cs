@@ -16,7 +16,7 @@ namespace DTAClient.Domain.Singleplayer
 
         public Mission(string internalName, string scenario, string description, bool requiredAddOn, int side, string bonusCampaignId, string iconPath,
             bool requiresUnlocking, string previewImagePath, bool playerAlwaysOnNormalDifficulty, string author, string briefing, string[] difficultyLabels,
-            Cutscene startCutscene)
+            Cutscene startCutscene, Cutscene endCutscene)
         {
             InternalName = internalName;
             Scenario = scenario;
@@ -32,6 +32,7 @@ namespace DTAClient.Domain.Singleplayer
             GUIDescription = briefing;
             DifficultyLabels = difficultyLabels;
             StartCutscene = startCutscene;
+            EndCutscene = endCutscene;
         }
 
         public Mission(IniSection iniSection, bool isCampaignMission)

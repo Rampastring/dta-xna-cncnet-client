@@ -383,7 +383,7 @@ namespace DTAClient.Domain.Singleplayer
             Logger.Log("    Bonus: " + (bonus != null ? bonus.ININame : "none"));
             Logger.Log("    Difficulty: " + selectedDifficultyLevel);
             Logger.Log("    Invalid: " + isCheatSession);
-            Logger.Log("    Global Flags: " + globalFlagInfo == null ? "none" : string.Join(", ", globalFlagInfo.Keys.Select(k => k.ToString() + "=" + (globalFlagInfo[k] ? "true" : "false"))));
+            Logger.Log("    Global Flags: " + (globalFlagInfo == null ? "none" : string.Join(", ", globalFlagInfo.Keys.Select(k => k.ToString() + "=" + (globalFlagInfo[k] ? "true" : "false")))));
 
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
             using (StreamWriter swriter = new StreamWriter(File.OpenWrite(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS), Encoding.GetEncoding(1252)))

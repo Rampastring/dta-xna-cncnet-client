@@ -462,8 +462,18 @@ namespace DTAClient.DXGUI.Generic
             Logger.Log("Deleting saved game " + sg.FileName);
             File.Delete(sg.FilePath);
             File.Delete(Path.ChangeExtension(sg.FilePath, "sgmeta"));
-            if (Directory.GetFiles(Path.GetDirectoryName(sg.FilePath)).Length == 0)
-                Directory.Delete(Path.GetDirectoryName(sg.FilePath));
+
+            if (!Directory.EnumerateFileSystemEntries(Path.GetDirectoryName(sg.FilePath)).Any())
+            {
+                try
+                {
+                    Directory.Delete(Path.GetDirectoryName(sg.FilePath));
+                }
+                catch (IOException ex)
+                {
+                    Logger.Log($"Failed to delete directory of save {sg.FilePath}. Exception: {ex.Message}");
+                }
+            }
 
             int selectedIndex = lbSaveGameList.SelectedIndex;
 

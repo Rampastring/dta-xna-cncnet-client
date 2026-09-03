@@ -2,6 +2,7 @@
 using ClientCore.Statistics;
 using DTAClient.DXGUI.Generic.Campaign;
 using Rampastring.Tools;
+using Rampastring.XNAUI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -87,6 +88,11 @@ namespace DTAClient.Domain.Singleplayer
         public List<Mission> Missions = new List<Mission>();
 
         /// <summary>
+        /// A list of all defined mission categories.
+        /// </summary>
+        public List<Category> Categories = new List<Category>();
+
+        /// <summary>
         /// Singleton pattern. We only need one instance of this class.
         /// </summary>
         public static CampaignHandler Instance
@@ -113,6 +119,7 @@ namespace DTAClient.Domain.Singleplayer
 
             ReadGlobalVariables(campaignsIni);
             ReadCampaigns(campaignsIni);
+            ReadCategories(campaignsIni);
             ReadBonuses();
         }
 
@@ -232,6 +239,56 @@ namespace DTAClient.Domain.Singleplayer
                 }
             }
 #endif
+        }
+
+        /// <summary>
+        /// Reads categories from the [Categories] section and creates category class instances for each valid category.
+        /// In order to be considered a valid category, it must have a valid image path for a logo.
+        /// </summary>
+        /// <param name="campaignsIni"></param>
+        private void ReadCategories(IniFile campaignsIni)
+        {
+            const string CategoriesSectionName = "Categories";
+            var categoriesSection = campaignsIni.GetSection(CategoriesSectionName);
+            if (categoriesSection == null)
+            {
+                Logger.Log($"{nameof(CampaignHandler)}: [{CategoriesSectionName}] not found from campaign config INI!");
+                return;
+            }
+
+            foreach (var kvp in categoriesSection.Keys)
+            {
+                string categoryIniName = kvp.Value;
+                if (string.IsNullOrWhiteSpace(categoryIniName))
+                    continue;
+
+                IniSection categorySection = campaignsIni.GetSection(categoryIniName);
+                if (categorySection == null)
+                {
+                    Logger.Log($"Section for defined category [{categoryIniName}] not found from campaign config INI!");
+                    continue;
+                }
+
+                string displayName = categorySection.GetStringValue("DisplayName", "");
+                string altDisplayName = categorySection.GetStringValue("AltDisplayName", "");
+                bool isGenericCategory = categorySection.GetBooleanValue("Generic", false);
+
+                string imagePath = categorySection.GetStringValue("ImagePath", "");
+                if (string.IsNullOrWhiteSpace(imagePath))
+                {
+                    Logger.Log($"Image path for section [{categorySection.SectionName}] not found!");
+                    continue;
+                }
+
+                if (!AssetLoader.AssetExists(imagePath))
+                {
+                    Logger.Log($"Image path '{imagePath}' for section [{categorySection.SectionName}] is not pointing towards an existing texture");
+                    continue;
+                }
+
+                var category = new Category(categoryIniName, displayName, altDisplayName, imagePath, isGenericCategory);
+                Categories.Add(category);
+            }
         }
 
         /// <summary>

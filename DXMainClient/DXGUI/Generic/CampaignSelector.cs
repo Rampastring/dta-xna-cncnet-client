@@ -225,16 +225,20 @@ namespace DTAClient.DXGUI.Generic
 
         private readonly string[] filesToCheck = new string[]
         {
+            "INI/AI.ini",
+            "INI/AIE.ini",
+            "INI/Art.ini",
             "INI/ArtE.ini",
-            "INI/Base/AI.ini",
-            "INI/Base/AIE.ini",
-            "INI/Base/Art.ini",
-            "INI/Base/Rules.ini",
-            "INI/Base/Enhance.ini",
+            "INI/Rules.ini",
+            "INI/Enhance.ini",
             "INI/CampaignBonuses.ini",
+            "INI/Vinifera.ini",
             "INI/Map Code/Difficulty Hard.ini",
             "INI/Map Code/Difficulty Medium.ini",
-            "INI/Map Code/Difficulty Easy.ini"
+            "INI/Map Code/Difficulty Easy.ini",
+            "Rules.ini",
+            "Enhance.ini",
+            "Resources/ClientDefinitions.ini"
         };
 
         private Mission missionToLaunch;
@@ -1240,8 +1244,14 @@ namespace DTAClient.DXGUI.Generic
                         return;
                     }
                 }
-
-                if (!mission.Enabled)
+                
+                if (mission.RequiresUnlocking && !mission.IsUnlocked)
+                {
+                    item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
+                    item.Text = "Locked Mission";
+                    item.Texture = AssetLoader.LoadTexture("randomicon.png");
+                }
+                else if (!mission.Enabled)
                 {
                     item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
                 }
@@ -1262,12 +1272,6 @@ namespace DTAClient.DXGUI.Generic
                         ClientConfiguration.Instance.ListBoxHeaderColor);
                     item.IsHeader = true;
                     item.Selectable = false;
-                }
-                else if (mission.RequiresUnlocking && !mission.IsUnlocked)
-                {
-                    item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
-                    item.Text = "Locked Mission";
-                    item.Texture = AssetLoader.LoadTexture("randomicon.png");
                 }
                 else
                 {

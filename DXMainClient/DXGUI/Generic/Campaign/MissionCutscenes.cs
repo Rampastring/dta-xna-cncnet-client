@@ -71,6 +71,8 @@ namespace DTAClient.DXGUI.Generic.Campaign
             {
                 case Cutscene.SEEXT:
                     return CreateShadowExodusCutsceneContainer().SEExtraMission();
+                case Cutscene.SEEXTEnd:
+                    return CreateShadowExodusCutsceneContainer().SEExtraMissionEnd();
             }
 
             return null;

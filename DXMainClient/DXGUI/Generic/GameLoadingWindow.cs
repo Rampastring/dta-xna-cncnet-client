@@ -36,6 +36,7 @@ namespace DTAClient.DXGUI.Generic
         private XNALabel lblMissionNameValue;
         private XNALabel lblDifficultyLevelValue;
         private XNALabel lblTotalPlayTimeValue;
+        private XNALabel lblBonusValue;
         private XNALabel lblGlobalFlagsValue;
 
         private List<SavedGame> savedGames = new List<SavedGame>();
@@ -46,15 +47,12 @@ namespace DTAClient.DXGUI.Generic
 
         public override void Initialize()
         {
-            Name = "GameLoadingWindow";
+            Name = nameof(GameLoadingWindow);
             BackgroundTexture = AssetLoader.LoadTexture("loadmissionbg.png");
-
-            ClientRectangle = new Rectangle(0, 0, 800, 380);
-            CenterOnParent();
 
             lbSaveGameList = new XNAMultiColumnListBox(WindowManager);
             lbSaveGameList.Name = nameof(lbSaveGameList);
-            lbSaveGameList.ClientRectangle = new Rectangle(13, 13, 574, 317);
+            lbSaveGameList.ClientRectangle = new Rectangle(13, 13, 574, 357);
             lbSaveGameList.AddColumn("SAVED GAME NAME", 400);
             lbSaveGameList.AddColumn("DATE / TIME", 174);
             lbSaveGameList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
@@ -64,7 +62,7 @@ namespace DTAClient.DXGUI.Generic
 
             btnLaunch = new XNAClientButton(WindowManager);
             btnLaunch.Name = nameof(btnLaunch);
-            btnLaunch.ClientRectangle = new Rectangle(0, 345, 110, 23);
+            btnLaunch.ClientRectangle = new Rectangle(0, lbSaveGameList.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2, 110, 23);
             btnLaunch.Text = "Load";
             btnLaunch.AllowClick = false;
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
@@ -81,6 +79,10 @@ namespace DTAClient.DXGUI.Generic
             btnCancel.ClientRectangle = new Rectangle(0, btnLaunch.Y, 110, 23);
             btnCancel.Text = "Cancel";
             btnCancel.LeftClick += BtnCancel_LeftClick;
+
+            Width = 840;
+            Height = btnLaunch.Bottom + UIDesignConstants.EMPTY_SPACE_BOTTOM_NEW;
+            CenterOnParent();
 
             var lblSaveInfoHeader = new XNALabel(WindowManager);
             lblSaveInfoHeader.Name = nameof(lblSaveInfoHeader);
@@ -150,10 +152,25 @@ namespace DTAClient.DXGUI.Generic
             lblTotalPlayTimeValue.Text = " ";
             AddChild(lblTotalPlayTimeValue);
 
+            var lblBonus = new XNALabel(WindowManager);
+            lblBonus.Name = nameof(lblBonus);
+            lblBonus.Y = lblTotalPlayTimeValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblBonus.X = lblSaveInfoHeader.X;
+            lblBonus.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblBonus.Text = "Bonus:";
+            AddChild(lblBonus);
+
+            lblBonusValue = new XNALabel(WindowManager);
+            lblBonusValue.Name = nameof(lblBonusValue);
+            lblBonusValue.Y = lblBonus.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
+            lblBonusValue.X = lblSaveInfoHeader.X;
+            lblBonusValue.Text = " ";
+            AddChild(lblBonusValue);
+
             var lblGlobalFlags = new XNALabel(WindowManager);
             lblGlobalFlags.Name = nameof(lblGlobalFlags);
             lblGlobalFlags.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
-            lblGlobalFlags.Y = lblTotalPlayTimeValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
+            lblGlobalFlags.Y = lblBonusValue.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN * 2;
             lblGlobalFlags.X = lblSaveInfoHeader.X;
             lblGlobalFlags.Text = "Preconditions:";
             AddChild(lblGlobalFlags);
@@ -206,11 +223,13 @@ namespace DTAClient.DXGUI.Generic
                 case TSEngineGameType.GAME_SKIRMISH:
                     ClearSaveInformation(string.Empty);
                     lblSessionTypeValue.Text = "Skirmish";
+                    lblTotalPlayTimeValue.Text = Helpers.TimeSpanToUserFriendlyString(sg.ElapsedTime, true);
                     break;
                 case TSEngineGameType.GAME_IPX:
                 case TSEngineGameType.GAME_INTERNET:
                     ClearSaveInformation(string.Empty);
                     lblSessionTypeValue.Text = "Multiplayer";
+                    lblTotalPlayTimeValue.Text = Helpers.TimeSpanToUserFriendlyString(sg.ElapsedTime, true);
                     break;
                 case TSEngineGameType.GAME_NORMAL:
                     var mission = CampaignHandler.Instance.Missions.Find(m => m.InternalName == sg.MissionInternalName);
@@ -259,6 +278,7 @@ namespace DTAClient.DXGUI.Generic
                         lblMissionNameValue.Text = mission.GUIName;
                         lblDifficultyLevelValue.Text = difficultyName;
                         lblTotalPlayTimeValue.Text = Helpers.TimeSpanToUserFriendlyString(sg.ElapsedTime, true);
+                        lblBonusValue.Text = sg.BonusName ?? "None";
                         lblGlobalFlagsValue.Text = globalFlagInfo;
                     }
 
@@ -274,6 +294,7 @@ namespace DTAClient.DXGUI.Generic
             lblMissionNameValue.Text = defaultText;
             lblDifficultyLevelValue.Text = defaultText;
             lblTotalPlayTimeValue.Text = defaultText;
+            lblBonusValue.Text = defaultText;
             lblGlobalFlagsValue.Text = defaultText;
         }
 
@@ -441,8 +462,18 @@ namespace DTAClient.DXGUI.Generic
             Logger.Log("Deleting saved game " + sg.FileName);
             File.Delete(sg.FilePath);
             File.Delete(Path.ChangeExtension(sg.FilePath, "sgmeta"));
-            if (Directory.GetFiles(Path.GetDirectoryName(sg.FilePath)).Length == 0)
-                Directory.Delete(Path.GetDirectoryName(sg.FilePath));
+
+            if (!Directory.EnumerateFileSystemEntries(Path.GetDirectoryName(sg.FilePath)).Any())
+            {
+                try
+                {
+                    Directory.Delete(Path.GetDirectoryName(sg.FilePath));
+                }
+                catch (IOException ex)
+                {
+                    Logger.Log($"Failed to delete directory of save {sg.FilePath}. Exception: {ex.Message}");
+                }
+            }
 
             int selectedIndex = lbSaveGameList.SelectedIndex;
 

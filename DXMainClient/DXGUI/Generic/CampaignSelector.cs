@@ -260,8 +260,9 @@ namespace DTAClient.DXGUI.Generic
 
             lblCategory = new XNALabel(WindowManager);
             lblCategory.Name = nameof(lblCategory);
-            lblCategory.FontIndex = 1;
-            lblCategory.ClientRectangle = new Rectangle(12, 12, 0, 0);
+            lblCategory.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
+            lblCategory.X = UIDesignConstants.EMPTY_SPACE_SIDES_NEW;
+            lblCategory.Y = UIDesignConstants.EMPTY_SPACE_TOP_NEW;
             lblCategory.Text = "CATEGORIES:";
 
             int categoryButtonY = lblCategory.Bottom + UIDesignConstants.CONTROL_VERTICAL_MARGIN;
@@ -278,7 +279,7 @@ namespace DTAClient.DXGUI.Generic
                 categoryButton.Width = categoryButtonWidth;
                 categoryButton.Height = 35;
                 categoryButton.Text = category.DisplayName;
-                categoryButton.FontIndex = 1;
+                categoryButton.FontIndex = UIDesignConstants.BOLD_FONT_INDEX;
                 categoryButton.InitCategoryIcon(category.ImagePath);
                 categoryButton.LeftClick += CategoryButton_LeftClick;
 
@@ -1297,24 +1298,18 @@ namespace DTAClient.DXGUI.Generic
                 if (targetWidth > Width)
                 {
                     if (Width + offset > targetWidth)
-                    {
                         offset = targetWidth - Width;
-                    }
 
                     ResizeWindowWidth(offset);
 
                     // If we finished the expansion transition, show the category elements that were hidden.
                     if (targetWidth == Width)
-                    {
                         ShowCategoryElements();
-                    }
                 }
                 else
                 {
                     if (Width - offset < targetWidth)
-                    {
                         offset = Width - targetWidth;
-                    }
 
                     ResizeWindowWidth(-offset);
                 }
@@ -1346,9 +1341,7 @@ namespace DTAClient.DXGUI.Generic
         {
             lblCategory.Enable();
             foreach (var category in categories)
-            {
                 category.Enable();
-            }
         }
 
         /// <summary>
@@ -1358,9 +1351,7 @@ namespace DTAClient.DXGUI.Generic
         {
             lblCategory.Disable();
             foreach (var category in categories)
-            {
                 category.Disable();
-            }
         }
 
         /// <summary>
@@ -1368,7 +1359,7 @@ namespace DTAClient.DXGUI.Generic
         /// This instructs the system to shorten the window to collapse the category buttons.
         /// Unlike when enabling, category buttons are immediately hidden when disabled as the window starts collapsing.
         /// </summary>
-        /// <param name="immediate">Should the window collapse immediately? Used when the window opens in disabled categories state</param>
+        /// <param name="immediate">Should the window collapse immediately? Used when the window opens in disabled categories state.</param>
         private void DisableCategories(bool immediate)
         {
             categoriesEnabled = false;

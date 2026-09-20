@@ -1395,7 +1395,7 @@ namespace DTAClient.DXGUI.Generic
 
             foreach (var child in Children)
             {
-                // Those are two boxes used to give the panel a border and an outer layer.
+                // Those are images used to give the panel a border and an outer layer.
                 // They should also scale with the window for it to look correct.
                 if (boxesControlNames.Contains(child.Name))
                 {
@@ -1403,8 +1403,8 @@ namespace DTAClient.DXGUI.Generic
                     continue;
                 }
 
-                // The top left insginia of the window. Since it always stays on the top left regardless
-                // of changes to the window's width, its X position remains the same, and so should be skipped.
+                // The left side frames of the window such as corners and insignias. Since those elements always stays on the left regardless
+                // of changes to the window's width, their X position need to remain the same, and so should be skipped.
                 if (frameControlNames.Contains(child.Name))
                 {
                     continue;

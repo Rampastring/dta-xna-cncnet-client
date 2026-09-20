@@ -271,19 +271,7 @@ namespace DTAClient.Domain.Singleplayer
                 string displayName = categorySection.GetStringValue("DisplayName", "");
                 string altDisplayName = categorySection.GetStringValue("AltDisplayName", "");
                 bool isGenericCategory = categorySection.GetBooleanValue("Generic", false);
-
                 string imagePath = categorySection.GetStringValue("ImagePath", "");
-                if (string.IsNullOrWhiteSpace(imagePath))
-                {
-                    Logger.Log($"Image path for section [{categorySection.SectionName}] not found!");
-                    continue;
-                }
-
-                if (!AssetLoader.AssetExists(imagePath))
-                {
-                    Logger.Log($"Image path '{imagePath}' for section [{categorySection.SectionName}] is not pointing towards an existing texture");
-                    continue;
-                }
 
                 var category = new Category(categoryIniName, displayName, altDisplayName, imagePath, isGenericCategory);
                 Categories.Add(category);

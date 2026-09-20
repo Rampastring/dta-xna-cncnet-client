@@ -58,7 +58,14 @@ namespace ClientGUI
         public CategoryIconDisplay(WindowManager windowManager, string imagePath) : base(windowManager)
         {
             Name = nameof(CategoryIconDisplay);
-            texture = AssetLoader.LoadTexture(imagePath);
+
+            // If the asset is valid, use it. If not, then create a dummy pink 15x15 texture.
+            // this is needed because the default dummy texture is 100x100 and takes too much space for a dummy.
+            if (AssetLoader.AssetExists(imagePath))
+                texture = AssetLoader.LoadTexture(imagePath);
+            else
+                texture = AssetLoader.CreateTexture(new Microsoft.Xna.Framework.Color(255, 54, 244), 15, 15);
+
             Width = texture.Width;
             Height = texture.Height;
         }

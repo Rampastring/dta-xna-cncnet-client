@@ -1390,8 +1390,8 @@ namespace DTAClient.DXGUI.Generic
             RefreshSize();
             CenterOnParent();
 
-            string[] boxesControlNames = { "box1", "box2" };
-            string[] frameControlNames = { "gwtdcl" };
+            string[] boxesControlNames = { "box1", "box2", "rabb", "rabt" };
+            string[] frameControlNames = { "gwtdcl", "rabl", "racbl", "ractl" };
 
             foreach (var child in Children)
             {

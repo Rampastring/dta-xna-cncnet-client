@@ -244,8 +244,7 @@ namespace DTAClient.Domain.Singleplayer
         /// <summary>
         /// Reads categories from the [Categories] section and creates category class instances for each valid category.
         /// In order to be considered a valid category, it must have a valid image path for a logo.
-        /// </summary>
-        /// <param name="campaignsIni"></param>
+        /// </summary>        
         private void ReadCategories(IniFile campaignsIni)
         {
             const string CategoriesSectionName = "Categories";

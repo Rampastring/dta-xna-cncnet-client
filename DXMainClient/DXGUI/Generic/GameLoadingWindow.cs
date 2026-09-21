@@ -275,10 +275,14 @@ namespace DTAClient.DXGUI.Generic
                             globalFlagInfo = "None";
                         }
 
+                        Bonus bonus = null;
+                        if (!string.IsNullOrWhiteSpace(sg.BonusName))
+                            bonus = CampaignHandler.Instance.Bonuses.Find(bns => bns.ININame == sg.BonusName);
+
                         lblMissionNameValue.Text = mission.GUIName;
                         lblDifficultyLevelValue.Text = difficultyName;
                         lblTotalPlayTimeValue.Text = Helpers.TimeSpanToUserFriendlyString(sg.ElapsedTime, true);
-                        lblBonusValue.Text = sg.BonusName ?? "None";
+                        lblBonusValue.Text = bonus != null ? bonus.UIName : "None";
                         lblGlobalFlagsValue.Text = globalFlagInfo;
                     }
 

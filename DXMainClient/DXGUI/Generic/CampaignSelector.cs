@@ -84,8 +84,12 @@ namespace DTAClient.DXGUI.Generic
             Texture2D rankTexture = DifficultyRankToTexture(mission.Rank);
             if (rankTexture != null)
             {
+                int rankTextureX = Width - rankTexture.Width - TextBorderDistance;
+                if (ScrollBar.IsDrawn())
+                    rankTextureX -= ScrollBar.Width;
+
                 DrawTexture(rankTexture,
-                    new Rectangle(Width - rankTexture.Width - TextBorderDistance - ScrollBar.Width, y + (LineHeight - rankTexture.Height) / 2,
+                    new Rectangle(rankTextureX, y + (LineHeight - rankTexture.Height) / 2,
                     rankTexture.Width, rankTexture.Height), Color.White);
             }
         }

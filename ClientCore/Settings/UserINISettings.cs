@@ -120,6 +120,7 @@ namespace ClientCore
             MinimizeWindowsOnGameStart = new BoolSetting(iniFile, OPTIONS, "MinimizeWindowsOnGameStart", true);
             AutoRemoveUnderscoresFromName = new BoolSetting(iniFile, OPTIONS, "AutoRemoveUnderscoresFromName", true);
             SettingsVersion = new IntSetting(iniFile, "Meta", nameof(SettingsVersion), 0);
+            MissionCategoriesEnabled = new BoolSetting(iniFile, OPTIONS, "MissionCategoriesEnabled", true);
 
             SettingsVersionFixes();
         }
@@ -270,6 +271,8 @@ namespace ClientCore
         public BoolSetting AutoRemoveUnderscoresFromName { get; private set; }
 
         public IntSetting SettingsVersion { get; private set; }
+
+        public BoolSetting MissionCategoriesEnabled { get; private set; }
 
         public void SetValue(string section, string key, string value)
             => SettingsIni.SetStringValue(section, key, value);

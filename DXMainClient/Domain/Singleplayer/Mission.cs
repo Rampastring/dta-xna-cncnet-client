@@ -59,6 +59,7 @@ namespace DTAClient.Domain.Singleplayer
             MusicRecommended = iniSection.GetBooleanValue(nameof(MusicRecommended), MusicRecommended);
             BonusCampaignID = iniSection.GetStringValue(nameof(BonusCampaignID), BonusCampaignID);
             HasExtendedDifficulty = iniSection.GetBooleanValue(nameof(HasExtendedDifficulty), HasExtendedDifficulty);
+            Categories = iniSection.GetListValue(nameof(Categories), ',', category => category);
 
             if (Enum.TryParse(iniSection.GetStringValue(nameof(StartCutscene), Cutscene.None.ToString()), out Cutscene startCutscene))
                 StartCutscene = startCutscene;
@@ -231,6 +232,12 @@ namespace DTAClient.Domain.Singleplayer
         /// </summary>
         public List<GlobalSpecificINIValue> GlobalSpecificINIValues { get; } = new List<GlobalSpecificINIValue>(0);
 
+        /// <summary>
+        /// List of categories that this mission is associated with.
+        /// When a category is chosen in the client, the mission would only appear in the client if
+        /// the chosen category appears as an item in this list.
+        /// </summary>
+        public List<string> Categories { get; set; } = new List<string>();
 
         private int DifficultyRankToIndex(DifficultyRank rank)
         {

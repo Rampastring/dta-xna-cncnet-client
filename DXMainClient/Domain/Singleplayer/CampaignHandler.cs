@@ -54,18 +54,6 @@ namespace DTAClient.Domain.Singleplayer
 
             ReadBattleIni("INI/Battle.ini");
             ReadBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
-
-            int se11Index = Missions.FindIndex(m => m.InternalName == "M_SE11");
-            if (se11Index > -1)
-            {
-                string longDescription = "You've been sent to direct a full frontal attack on the Pentagon, the iconic headquarters of the United States Department of Defense.\r\n\r\nThe operation seems extremely reckless, with limited military value. Your forces are moving across the Atlantic Ocean, exposed to enemy naval assets and far from Brotherhood supply lines.\r\n\r\nRegardless, orders are orders...";
-                var seExt = new Mission("M_SEEXT", "Maps/Missions/SEEXT.MAP", "Exhaustion Mission: Full Frontal Attack",
-                    true, 1, "SE", "nodicon.png", true, "Story/SE/preview.png", true, "Rampastring", longDescription, new string[] { "HARD", "BRUTAL", "EXTREME" },
-                    Cutscene.SEEXT, Cutscene.SEEXTEnd);
-                Missions[se11Index].BonusDependentMissionUnlocks.Add(new BonusDependentMissionUnlock("M_SEEXT", "Exhausted"));
-                Missions.Insert(se11Index + 1, seExt);
-            }
-
             SanityCheckCampaigns();
 
             MissionRankHandler.LoadData(Missions, GlobalVariables, Bonuses);

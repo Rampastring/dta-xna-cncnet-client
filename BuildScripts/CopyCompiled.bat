@@ -35,6 +35,10 @@ copy Newtonsoft.Json.dll %commonBinaries%Newtonsoft.Json.dll
 copy DiscordRPC.dll %commonBinaries%DiscordRPC.dll
 copy lzo.net.dll %commonBinaries%lzo.net.dll
 copy OpenMcdf.dll %commonBinaries%OpenMcdf.dll
+copy System.Memory.dll %commonBinaries%System.Memory.dll
+copy System.Buffers.dll %commonBinaries%System.Buffers.dll
+copy System.Numerics.Vectors.dll %commonBinaries%System.Numerics.Vectors.dll
+copy System.Runtime.CompilerServices.Unsafe.dll %commonBinaries%System.Runtime.CompilerServices.Unsafe.dll
 
 echo Windows
 copy DTAClient.exe %cr%clientdx.exe

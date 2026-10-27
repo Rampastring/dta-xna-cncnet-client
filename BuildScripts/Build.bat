@@ -23,7 +23,7 @@ ECHO.
 echo Compiling %configuration% %platform%
 ECHO.
 
-"%msbuild%" ..\DXClient.sln /t:Rebuild /p:Platform=%platform% /p:Configuration=%configuration%
+"%msbuild%" ..\DXClient.sln /restore /t:Rebuild /p:Platform=%platform% /p:Configuration=%configuration%
 if errorlevel 1 goto error
 
 ECHO.

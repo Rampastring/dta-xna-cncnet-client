@@ -21,7 +21,7 @@ using System.Text;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
-    public class CnCNetGameLobby : MultiplayerGameLobby
+    public partial class CnCNetGameLobby : MultiplayerGameLobby
     {
         private const int HUMAN_PLAYER_OPTIONS_LENGTH = 3;
         private const int AI_PLAYER_OPTIONS_LENGTH = 2;
@@ -52,6 +52,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             this.connectionManager = connectionManager;
             localGame = ClientConfiguration.Instance.LocalGame;
             this.tunnelHandler = tunnelHandler;
+            tunnelSession = new V3LobbySession(tunnelHandler, windowManager, () => Players, () => channel,
+                () => IsHost, AddNotice, UpdatePlayerPingIndicator);
             this.gameCollection = gameCollection;
             this.cncnetUserData = cncnetUserData;
 
@@ -84,6 +86,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 new StringCommandHandler("MM", CheaterNotification),
                 new StringCommandHandler(DICE_ROLL_MESSAGE, HandleDiceRollResult),
                 new NoParamCommandHandler(CHEAT_DETECTED_MESSAGE, HandleCheatDetectedMessage),
+                new StringCommandHandler("STARTV3", NonHostLaunchGameV3),
+                new StringCommandHandler(TunnelNegotiationCommands.NegotiationReport, tunnelSession.HandleReport),
+                new NoParamCommandHandler(TunnelNegotiationCommands.RenegotiateAll, sender => tunnelSession.HandleRenegotiate(sender, hostName)),
                 new StringCommandHandler(CHANGE_TUNNEL_SERVER_MESSAGE, HandleTunnelServerChangeMessage),
                 new NoParamCommandHandler(SWITCH_TO_LOAD_GAME_MESSAGE, HandleSwitchToLoadGameMessage),
             };
@@ -95,6 +100,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             AddChatBoxCommand(new ChatBoxCommand("TUNNELINFO",
                 "View tunnel server information", false, PrintTunnelServerInformation));
+            AddChatBoxCommand(new ChatBoxCommand("NEGSTATUS",
+                "Toggle the tunnel negotiation status display", false, ToggleNegotiationStatus));
+            AddChatBoxCommand(new ChatBoxCommand("NS",
+                "Shorthand for /NEGSTATUS", false, ToggleNegotiationStatus));
             AddChatBoxCommand(new ChatBoxCommand("CHANGETUNNEL",
                 "Change the used CnCNet tunnel server (game host only)",
                 true, (s) => ShowTunnelSelectionWindow("Select tunnel server:")));
@@ -106,6 +115,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         public event EventHandler GameLeft;
         public event EventHandler<SwitchLobbyEventArgs> SwitchToGameLoadingLobby;
 
+        private readonly V3LobbySession tunnelSession;
         private TunnelHandler tunnelHandler;
         private TunnelSelectionWindow tunnelSelectionWindow;
         private XNAClientButton btnChangeTunnel;
@@ -162,6 +172,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (btnLoadGame != null)
                 btnLoadGame.LeftClick += BtnSwitchLobby_LeftClick;
 
+            InitializeNegotiationStatusPanel();
+
             gameBroadcastTimer = new XNATimerControl(WindowManager);
             gameBroadcastTimer.AutoReset = true;
             gameBroadcastTimer.Interval = TimeSpan.FromSeconds(GAME_BROADCAST_INTERVAL);
@@ -176,6 +188,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             tunnelSelectionWindow.CenterOnParent();
             tunnelSelectionWindow.Disable();
             tunnelSelectionWindow.TunnelSelected += TunnelSelectionWindow_TunnelSelected;
+            AddChatBoxCommand(new ChatBoxCommand("RENEGOTIATE", "Retry all V3 connections (host only)",
+                true, s => tunnelSession.Renegotiate()));
 
             mapSharingConfirmationPanel = new MapSharingConfirmationPanel(WindowManager);
             MapPreviewBox.AddChild(mapSharingConfirmationPanel);
@@ -237,6 +251,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             connectionManager.Disconnected += ConnectionManager_Disconnected;
 
             Refresh(isHost);
+            tunnelSession.UpdatePlayers();
         }
 
         /// <summary>
@@ -296,6 +311,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             connectionManager.Disconnected += ConnectionManager_Disconnected;
 
             Refresh(isHost);
+            tunnelSession.UpdatePlayers();
 
             // Populate Players from the existing channel user list
             channel.Users.DoForAllUsers(user =>
@@ -305,6 +321,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             });
 
             CopyPlayerDataToUI();
+
+            tunnelSession.UpdatePlayers();
 
             // Perform OnJoined-equivalent actions
             FileHashCalculator fhc = new FileHashCalculator();
@@ -450,7 +468,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             if (tunnelHandler.CurrentTunnel == null)
             {
-                AddNotice("Tunnel server unavailable!");
+                AddNotice("Automatic V3 connections:");
+                foreach (var player in tunnelSession.Negotiator.PlayerInfos.Where(p => p.Name != ProgramConstants.PLAYERNAME))
+                    AddNotice($"{player.Name}: {player.Tunnel?.Name ?? "Not connected"}");
             }
             else
             {
@@ -462,14 +482,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private void ShowTunnelSelectionWindow(string description)
         {
             tunnelSelectionWindow.Open(description,
-                tunnelHandler.CurrentTunnel?.Address);
+                tunnelHandler.CurrentTunnel);
         }
 
         private void TunnelSelectionWindow_TunnelSelected(object sender, TunnelEventArgs e)
         {
-            channel.SendCTCPMessage($"{CHANGE_TUNNEL_SERVER_MESSAGE} {e.Tunnel.Address}:{e.Tunnel.Port}",
-                QueuedMessageType.SYSTEM_MESSAGE, 10);
+            if (!IsHost)
+                return;
+
             HandleTunnelServerChange(e.Tunnel);
+            tunnelSession.BroadcastTunnel();
         }
 
         public void ChangeChatColor(IRCColor chatColor)
@@ -513,6 +535,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         public void DetachFromChannel()
         {
+            negotiationStatusPanel.Disable();
+            if (channel != null)
+                tunnelSession.Clear();
+
             base.Clear();
 
             if (channel != null)
@@ -574,6 +600,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerNames[index].Items[0].Text = player.Name;
                 AddNotice("Player " + e.OldUserName + " changed their name to " + e.User.Name);
             }
+            tunnelSession.UpdatePlayers();
         }
 
         protected override void BtnLeaveGame_LeftClick(object sender, EventArgs e) => LeaveGameLobby();
@@ -641,6 +668,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             if (index > -1)
             {
+                tunnelSession.Negotiator.RemovePlayer(e.UserName);
+                tunnelSession.InvalidateLaunch();
                 Players.RemoveAt(index);
                 CopyPlayerDataToUI();
                 UpdateDiscordPresence();
@@ -666,6 +695,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             PlayerInfo pInfo = new PlayerInfo(e.User.IRCUser.Name);
             Players.Add(pInfo);
+            tunnelSession.UpdatePlayers();
 
             if (Players.Count + AIPlayers.Count > MAX_PLAYER_COUNT && AIPlayers.Count > 0)
                 AIPlayers.RemoveAt(AIPlayers.Count - 1);
@@ -705,6 +735,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void RemovePlayer(string playerName)
         {
+            tunnelSession.Negotiator.RemovePlayer(playerName);
+            tunnelSession.InvalidateLaunch();
+
             PlayerInfo pInfo = Players.Find(p => p.Name == playerName);
 
             if (pInfo != null)
@@ -775,6 +808,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected override void HostLaunchGame()
         {
+            if (tunnelSession.UsesV3)
+            {
+                HostLaunchGameV3();
+                return;
+            }
+
             if (Players.Count > 1)
             {
                 AddNotice("Contacting tunnel server...");
@@ -938,6 +977,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected override void BroadcastPlayerOptions()
         {
+            tunnelSession.InvalidateLaunch();
             // Broadcast player options
             StringBuilder sb = new StringBuilder("PO ");
             foreach (PlayerInfo pInfo in Players.Concat(AIPlayers))
@@ -1070,6 +1110,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
+            tunnelSession.UpdatePlayers();
             CopyPlayerDataToUI();
         }
 
@@ -1079,10 +1120,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected override void OnGameOptionChanged()
         {
+            tunnelSession.InvalidateLaunch();
+
             base.OnGameOptionChanged();
 
             if (!IsHost)
                 return;
+
+            tunnelSession.BroadcastTunnel();
 
             bool[] optionValues = new bool[CheckBoxes.Count];
             for (int i = 0; i < CheckBoxes.Count; i++)
@@ -1358,7 +1403,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected override void GameProcessExited()
         {
+            tunnelHandler.StopGameBridge();
             base.GameProcessExited();
+            if (channel == null)
+            {
+                tunnelHandler.ReleaseLocalGamePort();
+                return;
+            }
 
             channel.SendCTCPMessage("RETURN", QueuedMessageType.SYSTEM_MESSAGE, 20);
             ReturnNotification(ProgramConstants.PLAYERNAME);
@@ -1381,6 +1432,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         private void NonHostLaunchGame(string sender, string message)
         {
+            if (tunnelSession.UsesV3 || !tunnelSession.CanAcceptStart || ProgramConstants.IsInGame)
+                return;
+
             if (sender != hostName)
                 return;
 
@@ -1435,15 +1489,24 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 HandleCheatDetectedMessage(ProgramConstants.PLAYERNAME);
             }
 
-            base.StartGame();
+            try
+            {
+                base.StartGame();
+            }
+            catch
+            {
+                tunnelHandler.StopGameBridge();
+                Players.ForEach(p => p.IsInGame = false);
+                throw;
+            }
         }
 
         protected override void WriteSpawnIniAdditions(IniFile iniFile)
         {
             base.WriteSpawnIniAdditions(iniFile);
 
-            iniFile.SetStringValue("Tunnel", "Ip", tunnelHandler.CurrentTunnel.Address);
-            iniFile.SetIntValue("Tunnel", "Port", tunnelHandler.CurrentTunnel.Port);
+            iniFile.SetStringValue("Tunnel", "Ip", tunnelSession.UsesV3 ? "127.0.0.1" : tunnelHandler.CurrentTunnel.Address);
+            iniFile.SetIntValue("Tunnel", "Port", tunnelSession.UsesV3 ? tunnelHandler.ReservedGamePort.Value : tunnelHandler.CurrentTunnel.Port);
 
             iniFile.SetIntValue("Settings", "GameID", UniqueGameID);
             iniFile.SetBooleanValue("Settings", "Host", IsHost);
@@ -1718,26 +1781,19 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void HandleTunnelServerChangeMessage(string sender, string tunnelAddressAndPort)
         {
-            if (sender != hostName)
+            if (sender != hostName || IsHost)
                 return;
 
-            string[] split = tunnelAddressAndPort.Split(':');
-            string tunnelAddress = split[0];
-            int tunnelPort = int.Parse(split[1]);
-
-            CnCNetTunnel tunnel = tunnelHandler.Tunnels.Find(t => t.Address == tunnelAddress && t.Port == tunnelPort);
-            if (tunnel == null)
+            if (!tunnelHandler.TryGetGameTunnel(tunnelAddressAndPort, out var tunnel))
             {
-                AddNotice("The game host has selected an invalid tunnel server! " +
-                    "The game host needs to change the server or you will be unable " +
-                    "to participate in the match.",
-                    Color.Yellow);
-                btnLaunchGame.AllowClick = false;
+                tunnelSession.MarkTunnelUnavailable();
+                AddNotice("The game host selected an unavailable tunnel server.", Color.Yellow);
                 return;
             }
 
-            HandleTunnelServerChange(tunnel);
-            btnLaunchGame.AllowClick = true;
+            tunnelSession.ConfirmTunnel();
+            if (tunnel != tunnelHandler.CurrentTunnel)
+                HandleTunnelServerChange(tunnel);
         }
 
         /// <summary>
@@ -1746,8 +1802,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <param name="tunnel">The new tunnel server to use.</param>
         private void HandleTunnelServerChange(CnCNetTunnel tunnel)
         {
-            tunnelHandler.CurrentTunnel = tunnel;
-            AddNotice($"The game host has changed the tunnel server to: {tunnel.Name}");
+            if (!tunnelSession.ChangeTunnel(tunnel))
+                return;
+            AddNotice($"The game host has changed the tunnel server to: {(tunnel == null ? "Automatic (V3 per-player)" : tunnel.Name)}");
             UpdatePing();
         }
 
@@ -2117,7 +2174,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             sb.Append(";");
             sb.Append(GameMode.UIName);
             sb.Append(";");
-            sb.Append(tunnelHandler.CurrentTunnel.Address + ":" + tunnelHandler.CurrentTunnel.Port);
+            sb.Append(TunnelHandler.GetTunnelAddress(tunnelHandler.CurrentTunnel));
             sb.Append(";");
             sb.Append(0); // LoadedGameId
 

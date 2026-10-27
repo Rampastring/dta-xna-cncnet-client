@@ -35,7 +35,7 @@ namespace DTAClient.Domain.Multiplayer.CnCNet
         {
             get
             {
-                return TunnelServer.PingInMs;
+                return TunnelServer?.PingInMs ?? -1;
             }
         }
     }

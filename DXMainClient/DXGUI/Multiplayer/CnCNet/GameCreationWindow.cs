@@ -178,7 +178,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             GameCreationEventArgs ea = new GameCreationEventArgs(gameName,
                 spawnSGIni.GetIntValue("Settings", "PlayerCount", 2), password,
-                tunnelHandler.Tunnels[lbTunnelList.SelectedIndex]);
+                lbTunnelList.SelectedTunnel);
 
             LoadedGameCreated?.Invoke(this, ea);
         }
@@ -206,7 +206,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             GameCreated?.Invoke(this, new GameCreationEventArgs(gameName, 
                 int.Parse(ddMaxPlayers.SelectedItem.Text), tbPassword.Text,
-                tunnelHandler.Tunnels[lbTunnelList.SelectedIndex]));
+                lbTunnelList.SelectedTunnel));
         }
 
         private void BtnDisplayAdvancedOptions_LeftClick(object sender, EventArgs e)

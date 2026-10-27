@@ -6,27 +6,19 @@ using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTAClient.DXGUI.Multiplayer.CnCNet
 {
-    /// <summary>
-    /// A list box for listing CnCNet tunnel servers.
-    /// </summary>
+    /// <summary>A list of game tunnels, with automatic per-pair V3 selection first.</summary>
     class TunnelListBox : XNAMultiColumnListBox
     {
         public TunnelListBox(WindowManager windowManager, TunnelHandler tunnelHandler) : base(windowManager)
         {
             this.tunnelHandler = tunnelHandler;
-
             tunnelHandler.TunnelsRefreshed += TunnelHandler_TunnelsRefreshed;
             tunnelHandler.TunnelPinged += TunnelHandler_TunnelPinged;
 
-            SelectedIndexChanged += TunnelListBox_SelectedIndexChanged;
-
             int headerHeight = (int)Renderer.GetTextDimensions("Name", HeaderFontIndex).Y;
-
             Width = 466;
             Height = LineHeight * 12 + headerHeight + 3;
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
@@ -37,145 +29,54 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             AddColumn("Players", 90);
             AllowRightClickUnselect = false;
             AllowKeyboardInput = true;
+            TunnelHandler_TunnelsRefreshed(this, EventArgs.Empty);
         }
 
         public event EventHandler ListRefreshed;
-
         private readonly TunnelHandler tunnelHandler;
+        private List<CnCNetTunnel> displayedTunnels = new List<CnCNetTunnel>();
 
-        private int bestTunnelIndex = 0;
-        private int lowestTunnelRating = int.MaxValue;
+        // Null is the upstream representation of dynamic V3 mode.
+        public CnCNetTunnel SelectedTunnel => SelectedIndex > 0 && SelectedIndex <= displayedTunnels.Count
+            ? displayedTunnels[SelectedIndex - 1] : null;
 
-        private bool isManuallySelectedTunnel;
-        private string manuallySelectedTunnelAddress;
-
-
-        /// <summary>
-        /// Selects a tunnel from the list with the given address.
-        /// </summary>
-        /// <param name="address">The address of the tunnel server to select.</param>
-        public void SelectTunnel(string address)
+        public void SelectTunnel(CnCNetTunnel tunnel)
         {
-            int index = tunnelHandler.Tunnels.FindIndex(t => t.Address == address);
-            if (index > -1)
-            {
-                SelectedIndex = index;
-                isManuallySelectedTunnel = true;
-                manuallySelectedTunnelAddress = address;
-            }
+            SelectedIndex = tunnel == null ? 0 : displayedTunnels.FindIndex(t => t == tunnel) + 1;
         }
 
-        /// <summary>
-        /// Gets whether or not a tunnel from the list with the given address is selected.
-        /// </summary>
-        /// <param name="address">The address of the tunnel server</param>
-        /// <returns>True if tunnel with given address is selected, otherwise false.</returns>
-        public bool IsTunnelSelected(string address)
-        {
-            int index = tunnelHandler.Tunnels.FindIndex(t => t.Address == address);
-            return index == SelectedIndex;
-        }
+        public bool IsTunnelSelected(CnCNetTunnel tunnel) => IsValidIndexSelected() && SelectedTunnel == tunnel;
 
         private void TunnelHandler_TunnelsRefreshed(object sender, EventArgs e)
         {
+            var selected = SelectedTunnel;
             ClearItems();
+            displayedTunnels = tunnelHandler.Tunnels.Where(t => t.Version == 2 || t.Version == 3).ToList();
+            AddItem(new List<string> { "Automatic (V3 per-player)", "", "", "" }, true);
 
-            int tunnelIndex = 0;
-
-            foreach (CnCNetTunnel tunnel in tunnelHandler.Tunnels)
+            foreach (var tunnel in displayedTunnels)
             {
-                List<string> info = new List<string>();
-
-                info.Add(tunnel.Name);
-                info.Add(Conversions.BooleanToString(tunnel.Official, BooleanStringStyle.YESNO));
-                if (tunnel.PingInMs < 0)
-                    info.Add("Unknown");
-                else
-                    info.Add(tunnel.PingInMs + " ms");
-                info.Add(tunnel.Clients + " / " + tunnel.MaxClients);
-
-                AddItem(info, true);
-
-                if ((tunnel.Official || tunnel.Recommended) && tunnel.PingInMs > -1)
+                AddItem(new List<string>
                 {
-                    int rating = GetTunnelRating(tunnel);
-                    if (rating < lowestTunnelRating)
-                    {
-                        bestTunnelIndex = tunnelIndex;
-                        lowestTunnelRating = rating;
-                    }
-                }
-
-                tunnelIndex++;
+                    $"[V{tunnel.Version}] {tunnel.Name}",
+                    Conversions.BooleanToString(tunnel.Official, BooleanStringStyle.YESNO),
+                    tunnel.PingInMs < 0 ? "Unknown" : tunnel.PingInMs + " ms",
+                    tunnel.Clients + " / " + tunnel.MaxClients
+                }, true);
             }
 
-            if (tunnelHandler.Tunnels.Count > 0)
-            {
-                if (!isManuallySelectedTunnel)
-                {
-                    SelectedIndex = bestTunnelIndex;
-                    isManuallySelectedTunnel = false;
-                }
-                else
-                {
-                    int manuallySelectedIndex = tunnelHandler.Tunnels.FindIndex(t => t.Address == manuallySelectedTunnelAddress);
-
-                    if (manuallySelectedIndex == -1)
-                    {
-                        SelectedIndex = bestTunnelIndex;
-                        isManuallySelectedTunnel = false;
-                    }
-                    else
-                        SelectedIndex = manuallySelectedIndex;
-                }
-            }
-
+            SelectTunnel(selected);
             ListRefreshed?.Invoke(this, EventArgs.Empty);
         }
 
-        private void TunnelHandler_TunnelPinged(int tunnelIndex)
+        private void TunnelHandler_TunnelPinged(string address, int port)
         {
-            XNAListBoxItem lbItem = GetItem(2, tunnelIndex);
-            CnCNetTunnel tunnel = tunnelHandler.Tunnels[tunnelIndex];
-
-            if (tunnel.PingInMs == -1)
-                lbItem.Text = "Unknown";
-            else
-            {
-                lbItem.Text = tunnel.PingInMs + " ms";
-                int rating = GetTunnelRating(tunnel);
-
-                if (isManuallySelectedTunnel)
-                    return;
-
-                if ((tunnel.Recommended || tunnel.Official) && rating < lowestTunnelRating)
-                {
-                    bestTunnelIndex = tunnelIndex;
-                    lowestTunnelRating = rating;
-                    SelectedIndex = tunnelIndex;
-                }
-            }
-        }
-
-        private int GetTunnelRating(CnCNetTunnel tunnel)
-        {
-            double usageRatio = (double)tunnel.Clients / tunnel.MaxClients;
-
-            if (usageRatio == 0)
-                usageRatio = 0.1;
-
-            usageRatio *= 100.0;
-
-            return Convert.ToInt32(Math.Pow(tunnel.PingInMs, 2.0) * usageRatio);
-        }
-
-        private void TunnelListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!IsValidIndexSelected())
+            int index = displayedTunnels.FindIndex(t => t.Address == address && t.Port == port);
+            if (index < 0)
                 return;
 
-            isManuallySelectedTunnel = true;
-            manuallySelectedTunnelAddress = tunnelHandler.Tunnels[SelectedIndex].Address;
+            var tunnel = displayedTunnels[index];
+            GetItem(2, index + 1).Text = tunnel.PingInMs < 0 ? "Unknown" : tunnel.PingInMs + " ms";
         }
     }
 }

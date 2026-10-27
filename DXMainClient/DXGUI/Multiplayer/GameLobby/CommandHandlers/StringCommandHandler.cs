@@ -16,7 +16,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby.CommandHandlers
             if (message.Length < CommandName.Length + 1)
                 return false;
 
-            if (message.StartsWith(CommandName))
+            if (message.StartsWith(CommandName + " ", StringComparison.Ordinal))
             {
                 string parameters = message.Substring(CommandName.Length + 1);
 

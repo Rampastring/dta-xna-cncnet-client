@@ -59,6 +59,10 @@ namespace DTAClient
             "DiscordRPC",
             "lzo.net",
             "OpenMcdf",
+            "System.Memory",
+            "System.Buffers",
+            "System.Numerics.Vectors",
+            "System.Runtime.CompilerServices.Unsafe",
         };
 
         static List<string> SPECIFIC_LIBRARIES = new List<string>()

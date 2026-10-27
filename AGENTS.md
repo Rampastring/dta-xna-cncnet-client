@@ -1,0 +1,1 @@
+Always use CRLF line endings. This is a Windows-based project.

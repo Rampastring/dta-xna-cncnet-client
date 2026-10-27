@@ -27,7 +27,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         private XNALabel lblDescription;
         private XNAClientButton btnApply;
 
-        private string originalTunnelAddress;
+        private CnCNetTunnel originalTunnel;
 
         public override void Initialize()
         {
@@ -86,7 +86,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             if (!lbTunnelList.IsValidIndexSelected())
                 return;
 
-            CnCNetTunnel tunnel = tunnelHandler.Tunnels[lbTunnelList.SelectedIndex];
+            CnCNetTunnel tunnel = lbTunnelList.SelectedTunnel;
             TunnelSelected?.Invoke(this, new TunnelEventArgs(tunnel));
         }
 
@@ -97,7 +97,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
         private void LbTunnelList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnApply.AllowClick = !lbTunnelList.IsTunnelSelected(originalTunnelAddress) && lbTunnelList.IsValidIndexSelected();
+            btnApply.AllowClick = !lbTunnelList.IsTunnelSelected(originalTunnel) && lbTunnelList.IsValidIndexSelected();
         }
 
         /// <summary>
@@ -105,16 +105,13 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         /// with the given address.
         /// </summary>
         /// <param name="description">The window description.</param>
-        /// <param name="tunnelAddress">The address of the tunnel server to select.</param>
-        public void Open(string description, string tunnelAddress = null)
+        /// <param name="tunnel">The tunnel to select, or null for automatic V3 selection.</param>
+        public void Open(string description, CnCNetTunnel tunnel = null)
         {
             lblDescription.Text = description;
-            originalTunnelAddress = tunnelAddress;
+            originalTunnel = tunnel;
 
-            if (!string.IsNullOrWhiteSpace(tunnelAddress))
-                lbTunnelList.SelectTunnel(tunnelAddress);
-            else
-                lbTunnelList.SelectedIndex = -1;
+            lbTunnelList.SelectTunnel(tunnel);
 
             if (lbTunnelList.SelectedIndex > -1)
             {

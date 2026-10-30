@@ -883,6 +883,7 @@ namespace DTAClient.DXGUI.Generic
 
                     globalVariableNames[i].Text = global.UIName;
                     globalVariableNames[i].TextColor = UISettings.ActiveSettings.TextColor;
+                    globalVariableNames[i].AnchorPoint = new Vector2(btnLaunch.X, globalVariableNames[i].AnchorPoint.Y);
                     globalVariableNames[i].Enable();
                     globalVariableToolTips[i].Text = global.ToolTip ?? string.Empty;
 
